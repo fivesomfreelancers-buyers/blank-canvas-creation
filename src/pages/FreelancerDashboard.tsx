@@ -1,0 +1,319 @@
+
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Link } from 'react-router-dom';
+import { 
+  Home, Briefcase, ShoppingBag, MessageSquare, Package, Wallet, Settings, User,
+  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
+  SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
+  SidebarProvider, SidebarInset, SidebarTrigger,
+} from '@/components/ui/sidebar';
+import { Badge } from '@/components/ui/badge';
+import FreelancerOrders from './freelancer/FreelancerOrders';
+import FreelancerMessages from './freelancer/FreelancerMessages';
+import FreelancerDeliverWork from './freelancer/FreelancerDeliverWork';
+import FreelancerGigs from './freelancer/FreelancerGigs';
+import FreelancerWallet from './freelancer/FreelancerWallet';
+import FreelancerHelp from './freelancer/FreelancerHelp';
+import FreelancerSettings from './freelancer/FreelancerSettings';
+import FreelancerProfile from './freelancer/FreelancerProfile';
+import FreelancerVerify from './freelancer/FreelancerVerify';
+
+interface UserProfile {
+  full_name: string;
+  email: string;
+  profile_image_url: string | null;
+}
+
+const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userProfile }: { 
+  activeSection: string; setActiveSection: (section: string) => void; isVerified: boolean; userProfile: UserProfile | null 
+}) => {
+  const allSidebarItems = [
+    { title: "Dashboard", icon: Home, key: "dashboard" },
+    { title: "My Gigs", icon: Briefcase, key: "gigs" },
+    { title: "Orders Received", icon: ShoppingBag, key: "orders" },
+    { title: "Messages", icon: MessageSquare, key: "messages" },
+    { title: "Deliver Work", icon: Package, key: "deliver" },
+    { title: "Wallet", icon: Wallet, key: "wallet" },
+    { title: "Help Center", icon: HelpCircle, key: "help" },
+    { title: "Settings", icon: Settings, key: "settings" },
+    { title: "My Profile", icon: User, key: "profile" },
+    { title: "Verify Your Account", icon: UserCheck, key: "verify", special: true }
+  ];
+
+  const sidebarItems = allSidebarItems.filter(item => 
+    item.key !== 'verify' || !isVerified
+  );
+
+  return (
+    <Sidebar>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>
+            <Link to="/" className="flex items-center space-x-2 p-2">
+              <img 
+                src="https://i.postimg.cc/SsmSvr3z/Logo-with-Glowing-Fist-Silhouette-removebg-preview.png" 
+                alt="FIVESOM Logo" 
+                width="40" height="40"
+                className="w-[40px] h-[40px] object-contain cursor-pointer"
+              />
+              <span className="font-bold text-lg">FIVESOM</span>
+            </Link>
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarItems.map((item) => (
+                <SidebarMenuItem key={item.key}>
+                  <SidebarMenuButton asChild>
+                    <button 
+                      onClick={() => setActiveSection(item.key)}
+                      className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-colors ${
+                        activeSection === item.key 
+                          ? 'bg-primary text-primary-foreground' 
+                          : item.special
+                          ? 'text-red-600 hover:text-red-700 hover:bg-red-50'
+                          : 'text-foreground hover:bg-accent'
+                      }`}
+                    >
+                      <item.icon className="w-5 h-5" />
+                      <span>{item.title}</span>
+                    </button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter>
+        <div className="p-4 border-t">
+          <div className="flex items-center space-x-3">
+            {userProfile?.profile_image_url ? (
+              <img src={userProfile.profile_image_url} alt="" className="w-8 h-8 rounded-full object-cover" />
+            ) : (
+              <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                {userProfile?.full_name?.[0]?.toUpperCase() || 'F'}
+              </div>
+            )}
+            <div className="min-w-0">
+              <p className="text-sm font-medium truncate">{userProfile?.full_name || 'Freelancer'}</p>
+              <p className="text-xs text-muted-foreground truncate">{userProfile?.email || 'Online'}</p>
+            </div>
+          </div>
+        </div>
+      </SidebarFooter>
+    </Sidebar>
+  );
+};
+
+const FreelancerDashboard = () => {
+  const [activeSection, setActiveSection] = useState('dashboard');
+  const [isVerified, setIsVerified] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [stats, setStats] = useState({ totalGigs: 0, activeOrders: 0, pendingEarnings: 0, completedOrders: 0 });
+
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Fetch profile
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('full_name, email, profile_image_url')
+        .eq('id', user.id)
+        .single();
+      
+      if (profileData) setUserProfile(profileData);
+
+      const { data: freelancer } = await supabase
+        .from('freelancers')
+        .select('is_verified, total_earnings, completed_orders, id')
+        .eq('user_id', user.id)
+        .single();
+      
+      if (freelancer) {
+        setIsVerified(freelancer.is_verified || false);
+
+        const { count: gigsCount } = await supabase
+          .from('gigs')
+          .select('*', { count: 'exact', head: true })
+          .eq('freelancer_id', freelancer.id);
+
+        const { count: ordersCount } = await supabase
+          .from('orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('freelancer_id', freelancer.id)
+          .in('status', ['pending', 'in_progress']);
+
+        const { data: pendingOrders } = await supabase
+          .from('orders')
+          .select('amount')
+          .eq('freelancer_id', freelancer.id)
+          .in('status', ['in_progress', 'delivered']);
+
+        const pendingEarnings = pendingOrders?.reduce((sum, o) => sum + Number(o.amount), 0) || 0;
+
+        setStats({
+          totalGigs: gigsCount || 0,
+          activeOrders: ordersCount || 0,
+          pendingEarnings,
+          completedOrders: freelancer.completed_orders || 0
+        });
+      }
+    };
+
+    loadDashboardData();
+  }, [activeSection]);
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'dashboard':
+        return (
+          <div className="space-y-6">
+            <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-4 sm:p-6 rounded-lg">
+              <h1 className="text-xl sm:text-2xl font-bold mb-2">Welcome back, {userProfile?.full_name?.split(' ')[0] || 'Freelancer'}! 👋</h1>
+              <p className="text-cyan-100 text-sm sm:text-base">Ready to take on new challenges today?</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Gigs</CardTitle>
+                  <Briefcase className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats.totalGigs}</div>
+                  <p className="text-xs text-muted-foreground">{stats.totalGigs === 0 ? 'Create your first gig' : 'Active service offerings'}</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Active Orders</CardTitle>
+                  <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats.activeOrders}</div>
+                  <p className="text-xs text-muted-foreground">{stats.activeOrders === 0 ? 'No active orders' : 'Orders in progress'}</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Pending Earnings</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">${stats.pendingEarnings.toFixed(2)}</div>
+                  <p className="text-xs text-muted-foreground">{stats.pendingEarnings === 0 ? 'Complete orders to earn' : 'From active orders'}</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Completed Orders</CardTitle>
+                  <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats.completedOrders}</div>
+                  <p className="text-xs text-muted-foreground">{stats.completedOrders === 0 ? 'Start delivering' : 'Successfully delivered'}</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card className="border-blue-200 bg-blue-50">
+              <CardHeader>
+                <CardTitle className="text-blue-800 flex items-center">
+                  <Clock className="w-5 h-5 mr-2" />
+                  Getting Started
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-white rounded-lg border gap-3">
+                    <div className="flex-1">
+                      <p className="font-medium text-sm sm:text-base">Create Your First Gig</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Start by creating a service to offer clients</p>
+                    </div>
+                    <Button size="sm" onClick={() => setActiveSection('gigs')} className="text-xs px-2 py-1 self-start sm:self-center">
+                      <Briefcase className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                      Create Gig
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader><CardTitle>Recent Notifications</CardTitle></CardHeader>
+              <CardContent>
+                <div className="text-center py-8 text-muted-foreground">No notifications yet</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader><CardTitle>Quick Actions</CardTitle></CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <Button className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2" onClick={() => setActiveSection('gigs')}>
+                    <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span className="text-xs sm:text-sm">Create New Gig</span>
+                  </Button>
+                  <Button variant="outline" className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2" onClick={() => setActiveSection('wallet')}>
+                    <Eye className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span className="text-xs sm:text-sm">View Wallet</span>
+                  </Button>
+                  <Button variant="outline" className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2" onClick={() => setActiveSection('messages')}>
+                    <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span className="text-xs sm:text-sm">Check Messages</span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+      case 'gigs': return <FreelancerGigs />;
+      case 'orders': return <FreelancerOrders />;
+      case 'messages': return <FreelancerMessages />;
+      case 'deliver': return <FreelancerDeliverWork />;
+      case 'wallet': return <FreelancerWallet />;
+      case 'help': return <FreelancerHelp />;
+      case 'profile': return <FreelancerProfile />;
+      case 'settings': return <FreelancerSettings />;
+      case 'verify': return <FreelancerVerify />;
+      default:
+        return (
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-foreground mb-2">Coming Soon</h2>
+              <p className="text-muted-foreground">This section is under development</p>
+            </div>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <FreelancerSidebar activeSection={activeSection} setActiveSection={setActiveSection} isVerified={isVerified} userProfile={userProfile} />
+        <SidebarInset>
+          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+            <SidebarTrigger className="-ml-1" />
+            <div className="ml-auto flex items-center space-x-4">
+              <Badge variant="outline">Freelancer</Badge>
+            </div>
+          </header>
+          <div className="flex-1 p-4 sm:p-6">
+            {renderContent()}
+          </div>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
+  );
+};
+
+export default FreelancerDashboard;

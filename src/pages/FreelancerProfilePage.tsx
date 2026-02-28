@@ -1,0 +1,271 @@
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Textarea } from '@/components/ui/textarea';
+import { Star, MapPin, Calendar, MessageSquare, Clock, CheckCircle, Globe } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from '@/hooks/use-toast';
+
+const FreelancerProfilePage = () => {
+  const { freelancerId } = useParams();
+  const { user } = useAuth();
+  const [profileData, setProfileData] = useState<any>(null);
+  const [gigs, setGigs] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [contactMessage, setContactMessage] = useState('');
+  const [sendingMessage, setSendingMessage] = useState(false);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!freelancerId) return;
+
+      // freelancerId here is the freelancers table id
+      const { data: freelancer } = await supabase
+        .from('freelancers')
+        .select('*')
+        .eq('id', freelancerId)
+        .single();
+
+      if (!freelancer) {
+        setLoading(false);
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', freelancer.user_id)
+        .single();
+
+      // Fetch gigs by this freelancer
+      const { data: gigsData } = await supabase
+        .from('gigs')
+        .select('*')
+        .eq('freelancer_id', freelancerId)
+        .eq('status', 'active');
+
+      // Fetch reviews for all gigs
+      const gigIds = (gigsData || []).map(g => g.id);
+      let allReviews: any[] = [];
+      if (gigIds.length > 0) {
+        const { data: reviewsData } = await supabase
+          .from('gig_reviews')
+          .select('rating, comment, created_at, buyer_id')
+          .in('gig_id', gigIds);
+
+        allReviews = await Promise.all((reviewsData || []).map(async (r) => {
+          const { data: bp } = await supabase.from('profiles').select('full_name').eq('id', r.buyer_id).single();
+          return { ...r, buyerName: bp?.full_name || 'Anonymous' };
+        }));
+      }
+
+      const avgRating = allReviews.length > 0
+        ? allReviews.reduce((s, r) => s + r.rating, 0) / allReviews.length
+        : freelancer.rating || 0;
+
+      setProfileData({
+        ...freelancer,
+        name: profile?.full_name || 'Anonymous',
+        imageUrl: profile?.profile_image_url,
+        location: profile?.location || 'Not specified',
+        memberSince: new Date(profile?.created_at || '').toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+        avgRating,
+        totalReviews: allReviews.length,
+        userId: freelancer.user_id,
+      });
+      setGigs(gigsData || []);
+      setReviews(allReviews);
+      setLoading(false);
+    };
+
+    fetchProfile();
+  }, [freelancerId]);
+
+  const handleContact = async () => {
+    if (!user) {
+      toast({ title: "Please log in", description: "You need to be logged in to contact.", variant: "destructive" });
+      return;
+    }
+    if (!contactMessage.trim() || !profileData?.userId) return;
+    setSendingMessage(true);
+    try {
+      await supabase.from('messages').insert({
+        sender_id: user.id,
+        receiver_id: profileData.userId,
+        message: contactMessage.trim(),
+      });
+      toast({ title: "Message Sent!", description: `Your message has been sent to ${profileData.name}.` });
+      setContactMessage('');
+    } catch {
+      toast({ title: "Error", description: "Failed to send message.", variant: "destructive" });
+    } finally {
+      setSendingMessage(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="max-w-6xl mx-auto px-4 py-8 pt-24 text-center text-muted-foreground">Loading profile...</div>
+      </div>
+    );
+  }
+
+  if (!profileData) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="max-w-6xl mx-auto px-4 py-8 pt-24 text-center">
+          <h2 className="text-2xl font-bold">Freelancer not found</h2>
+        </div>
+      </div>
+    );
+  }
+
+  const initials = profileData.name.split(' ').map((n: string) => n[0]).join('').toUpperCase();
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <div className="max-w-6xl mx-auto px-4 py-8 pt-24">
+        {/* Profile Header */}
+        <Card className="mb-8">
+          <CardContent className="p-6">
+            <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-6">
+              <Avatar className="w-24 h-24">
+                <AvatarImage src={profileData.imageUrl || ''} alt={profileData.name} />
+                <AvatarFallback className="text-2xl bg-primary text-primary-foreground">{initials}</AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <div className="flex items-center space-x-3 mb-2">
+                  <h1 className="text-3xl font-bold text-foreground">{profileData.name}</h1>
+                  {profileData.is_verified && (
+                    <Badge variant="secondary" className="text-green-600">
+                      <CheckCircle className="w-3 h-3 mr-1" /> Verified
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-muted-foreground mb-4">{profileData.bio || 'No bio provided'}</p>
+                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
+                  <div className="flex items-center"><MapPin className="w-4 h-4 mr-1" />{profileData.location}</div>
+                  <div className="flex items-center"><Calendar className="w-4 h-4 mr-1" />Member since {profileData.memberSince}</div>
+                </div>
+                <div className="flex items-center gap-6 mb-4">
+                  <div className="flex items-center">
+                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
+                    <span className="font-semibold">{profileData.avgRating > 0 ? profileData.avgRating.toFixed(1) : 'New'}</span>
+                    <span className="text-muted-foreground ml-1">({profileData.totalReviews})</span>
+                  </div>
+                  <div className="flex items-center text-muted-foreground">
+                    <CheckCircle className="w-4 h-4 mr-1" />
+                    {profileData.completed_orders || 0} orders
+                  </div>
+                </div>
+                {profileData.skills && profileData.skills.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {profileData.skills.map((skill: string) => (
+                      <Badge key={skill} variant="secondary">{skill}</Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Contact Section */}
+            <div className="mt-6 border-t border-border pt-4">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Textarea
+                  placeholder="Send a message to this freelancer..."
+                  value={contactMessage}
+                  onChange={(e) => setContactMessage(e.target.value)}
+                  rows={2}
+                  className="flex-1"
+                />
+                <Button onClick={handleContact} disabled={sendingMessage} className="sm:self-end">
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  {sendingMessage ? 'Sending...' : 'Contact Me'}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Tabs */}
+        <Tabs defaultValue="services" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="services">Services ({gigs.length})</TabsTrigger>
+            <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
+            <TabsTrigger value="about">About</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="services">
+            {gigs.length === 0 ? (
+              <Card><CardContent className="p-8 text-center text-muted-foreground">No services listed yet</CardContent></Card>
+            ) : (
+              <div className="grid gap-6 sm:grid-cols-2">
+                {gigs.map((gig) => (
+                  <Card key={gig.id} className="hover:shadow-lg transition-shadow">
+                    {gig.images?.[0] && (
+                      <img src={gig.images[0]} alt={gig.title} className="w-full h-48 object-cover rounded-t-lg" />
+                    )}
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold text-foreground mb-2">{gig.title}</h3>
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-bold text-primary">${Number(gig.base_price).toFixed(0)}</span>
+                        <span className="text-sm text-muted-foreground">{gig.delivery_time_days} days</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="reviews">
+            {reviews.length === 0 ? (
+              <Card><CardContent className="p-8 text-center text-muted-foreground">No reviews yet</CardContent></Card>
+            ) : (
+              <div className="space-y-4">
+                {reviews.map((review, idx) => (
+                  <Card key={idx}>
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium">{review.buyerName}</span>
+                        <span className="text-xs text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</span>
+                      </div>
+                      <div className="flex items-center mb-2">
+                        {[1,2,3,4,5].map((star) => (
+                          <Star key={star} className={`w-4 h-4 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} />
+                        ))}
+                      </div>
+                      {review.comment && <p className="text-muted-foreground">{review.comment}</p>}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="about">
+            <Card>
+              <CardHeader><CardTitle>About Me</CardTitle></CardHeader>
+              <CardContent>
+                <p className="text-foreground leading-relaxed">{profileData.bio || 'No information provided.'}</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+};
+
+export default FreelancerProfilePage;
