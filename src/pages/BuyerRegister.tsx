@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 
 const BuyerRegister = () => {
@@ -22,7 +23,6 @@ const BuyerRegister = () => {
   const { signUp, user, userRole, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect if already logged in
   useEffect(() => {
     if (!authLoading && user && userRole) {
       if (userRole === 'freelancer') {
@@ -33,24 +33,41 @@ const BuyerRegister = () => {
     }
   }, [user, userRole, authLoading, navigate]);
 
+  const uploadProfileImage = async (userId: string, file: File): Promise<string | null> => {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${userId}/avatar.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('profile-images')
+        .upload(fileName, file, { upsert: true });
+
+      if (uploadError) {
+        console.error('Profile image upload error:', uploadError);
+        return null;
+      }
+
+      const { data: publicUrl } = supabase.storage
+        .from('profile-images')
+        .getPublicUrl(fileName);
+
+      return publicUrl.publicUrl;
+    } catch (err) {
+      console.error('Error uploading profile image:', err);
+      return null;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Password Mismatch",
-        description: "Please ensure both passwords match.",
-        variant: "destructive"
-      });
+      toast({ title: "Password Mismatch", description: "Please ensure both passwords match.", variant: "destructive" });
       return;
     }
 
     if (formData.password.length < 6) {
-      toast({
-        title: "Password Too Short",
-        description: "Password must be at least 6 characters long.",
-        variant: "destructive"
-      });
+      toast({ title: "Password Too Short", description: "Password must be at least 6 characters long.", variant: "destructive" });
       return;
     }
 
@@ -66,22 +83,23 @@ const BuyerRegister = () => {
     
     if (error) {
       let errorMessage = "Registration failed. Please try again.";
-      
       if (error.message.includes('User already registered')) {
         errorMessage = "An account with this email already exists. Please login instead.";
-      } else if (error.message.includes('Invalid email')) {
-        errorMessage = "Please enter a valid email address.";
-      } else if (error.message.includes('Password')) {
-        errorMessage = "Password must be at least 6 characters long.";
       }
-      
-      toast({
-        title: "Registration Failed",
-        description: errorMessage,
-        variant: "destructive"
-      });
+      toast({ title: "Registration Failed", description: errorMessage, variant: "destructive" });
       setIsLoading(false);
       return;
+    }
+
+    // Upload profile image if provided
+    const { data: { user: newUser } } = await supabase.auth.getUser();
+    if (newUser && formData.profileImage) {
+      const profileImageUrl = await uploadProfileImage(newUser.id, formData.profileImage);
+      if (profileImageUrl) {
+        await (supabase as any).from('profiles').update({
+          profile_image_url: profileImageUrl
+        }).eq('id', newUser.id);
+      }
     }
     
     toast({
@@ -90,10 +108,9 @@ const BuyerRegister = () => {
     });
     setIsLoading(false);
     
-    // Redirect to buyer dashboard after successful registration
     setTimeout(() => {
       navigate('/buyer/dashboard');
-    }, 1500);
+    }, 1000);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,88 +129,46 @@ const BuyerRegister = () => {
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10 py-8 px-4 pt-20">
         <div className="max-w-xl mx-auto">
-          {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-foreground mb-2">Join as a Buyer</h1>
             <p className="text-muted-foreground">Create your account and start finding amazing services</p>
           </div>
 
-          {/* Registration Form */}
           <div className="bg-card/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-border">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Full Name */}
               <div>
                 <Label htmlFor="fullName" className="text-foreground font-medium">Full Name *</Label>
                 <div className="relative mt-1">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                  <Input
-                    id="fullName"
-                    name="fullName"
-                    required
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    className="pl-10 h-12"
-                    placeholder="Enter your full name"
-                  />
+                  <Input id="fullName" name="fullName" required value={formData.fullName} onChange={handleInputChange} className="pl-10 h-12" placeholder="Enter your full name" />
                 </div>
               </div>
 
-              {/* Email */}
               <div>
                 <Label htmlFor="email" className="text-foreground font-medium">Email Address *</Label>
                 <div className="relative mt-1">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="pl-10 h-12"
-                    placeholder="Enter your email"
-                  />
+                  <Input id="email" name="email" type="email" required value={formData.email} onChange={handleInputChange} className="pl-10 h-12" placeholder="Enter your email" />
                 </div>
               </div>
 
-              {/* Password Fields */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="password" className="text-foreground font-medium">Password *</Label>
                   <div className="relative mt-1">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                    <Input
-                      id="password"
-                      name="password"
-                      type="password"
-                      required
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      className="pl-10 h-12"
-                      placeholder="Create a password (min 6 chars)"
-                    />
+                    <Input id="password" name="password" type="password" required value={formData.password} onChange={handleInputChange} className="pl-10 h-12" placeholder="Create a password (min 6 chars)" />
                   </div>
                 </div>
-
                 <div>
                   <Label htmlFor="confirmPassword" className="text-foreground font-medium">Confirm Password *</Label>
                   <div className="relative mt-1">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                    <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      required
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                      className="pl-10 h-12"
-                      placeholder="Confirm your password"
-                    />
+                    <Input id="confirmPassword" name="confirmPassword" type="password" required value={formData.confirmPassword} onChange={handleInputChange} className="pl-10 h-12" placeholder="Confirm your password" />
                   </div>
                 </div>
               </div>
 
-              {/* Profile Image Upload (Optional) */}
               <div>
                 <Label htmlFor="profileImage" className="text-foreground font-medium">Profile Image (Optional)</Label>
                 <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-border border-dashed rounded-md hover:border-primary transition-colors">
@@ -214,28 +189,15 @@ const BuyerRegister = () => {
                 </div>
               </div>
 
-              {/* Location (Optional) */}
               <div>
                 <Label htmlFor="location" className="text-foreground font-medium">Location (Optional)</Label>
                 <div className="relative mt-1">
                   <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                  <Input
-                    id="location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    className="pl-10 h-12"
-                    placeholder="City, Country (optional)"
-                  />
+                  <Input id="location" name="location" value={formData.location} onChange={handleInputChange} className="pl-10 h-12" placeholder="City, Country (optional)" />
                 </div>
               </div>
 
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full h-12"
-              >
+              <Button type="submit" disabled={isLoading} className="w-full h-12">
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
@@ -247,13 +209,10 @@ const BuyerRegister = () => {
               </Button>
             </form>
 
-            {/* Login Link */}
             <div className="mt-8 pt-6 border-t border-border text-center">
               <p className="text-muted-foreground">
                 Already have an account?{' '}
-                <Link to="/login" className="text-primary hover:text-primary/80 font-medium">
-                  Sign in here
-                </Link>
+                <Link to="/login" className="text-primary hover:text-primary/80 font-medium">Sign in here</Link>
               </p>
             </div>
           </div>
