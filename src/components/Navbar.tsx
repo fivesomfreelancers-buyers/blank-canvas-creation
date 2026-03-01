@@ -24,12 +24,12 @@ const Navbar = () => {
 
   useEffect(() => {
     if (user) {
-      supabase
+      (supabase as any)
         .from('profiles')
         .select('full_name, profile_image_url')
         .eq('id', user.id)
         .single()
-        .then(({ data }) => {
+        .then(({ data }: any) => {
           if (data) setProfile(data);
         });
     } else {
@@ -47,8 +47,8 @@ const Navbar = () => {
   };
 
   const initials = profile?.full_name
-    ? profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase()
-    : 'U';
+    ? profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : user?.email?.[0]?.toUpperCase() || 'U';
 
   return (
     <nav className="fixed top-0 w-full z-50 backdrop-blur-[12px] bg-background/80 border-b border-border/20 shadow-lg supports-[backdrop-filter]:bg-background/60 transition-all duration-300">
@@ -76,7 +76,9 @@ const Navbar = () => {
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center space-x-2 focus:outline-none">
                     <Avatar className="h-9 w-9 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/50 transition-all">
-                      <AvatarImage src={profile?.profile_image_url || ''} alt={profile?.full_name || 'User'} />
+                      {profile?.profile_image_url ? (
+                        <AvatarImage src={profile.profile_image_url} alt={profile?.full_name || 'User'} />
+                      ) : null}
                       <AvatarFallback className="bg-primary text-primary-foreground text-sm font-medium">
                         {initials}
                       </AvatarFallback>
@@ -85,8 +87,8 @@ const Navbar = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <div className="px-3 py-2">
-                    <p className="text-sm font-medium text-foreground">{profile?.full_name || 'User'}</p>
-                    <p className="text-xs text-muted-foreground capitalize">{userRole}</p>
+                    <p className="text-sm font-medium text-foreground">{profile?.full_name || user.email}</p>
+                    <p className="text-xs text-muted-foreground capitalize">{userRole || 'User'}</p>
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => navigate(dashboardPath)}>
@@ -144,6 +146,18 @@ const Navbar = () => {
             </button>
             {user ? (
               <>
+                <div className="flex items-center space-x-3 py-2 border-t border-border pt-4">
+                  <Avatar className="h-8 w-8">
+                    {profile?.profile_image_url ? (
+                      <AvatarImage src={profile.profile_image_url} alt={profile?.full_name || 'User'} />
+                    ) : null}
+                    <AvatarFallback className="bg-primary text-primary-foreground text-xs">{initials}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{profile?.full_name || user.email}</p>
+                    <p className="text-xs text-muted-foreground capitalize">{userRole}</p>
+                  </div>
+                </div>
                 <Link to={dashboardPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
                 <Link to={profilePath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>My Profile</Link>
                 <Link to={settingsPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Settings</Link>

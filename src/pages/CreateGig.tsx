@@ -151,7 +151,7 @@ const CreateGig = () => {
       if (error) throw error;
 
       toast({ title: "Gig Published Successfully!", description: "Your gig is now live on the Explore page." });
-      navigate('/freelancer/dashboard');
+      navigate('/freelancer/gigs');
     } catch (error) {
       console.error('Error publishing gig:', error);
       toast({ title: "Error Publishing Gig", description: "Please try again later.", variant: "destructive" });
