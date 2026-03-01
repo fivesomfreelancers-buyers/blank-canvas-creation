@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchUserRole = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('profiles')
         .select('role')
         .eq('id', userId)
@@ -105,9 +105,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Create freelancer or buyer record if user was created
       if (data?.user) {
         if (role === 'freelancer') {
-          await supabase.from('freelancers').upsert({ user_id: data.user.id }, { onConflict: 'user_id' });
+          await (supabase as any).from('freelancers').upsert({ user_id: data.user.id }, { onConflict: 'user_id' });
         } else {
-          await supabase.from('buyers').upsert({ user_id: data.user.id }, { onConflict: 'user_id' });
+          await (supabase as any).from('buyers').upsert({ user_id: data.user.id }, { onConflict: 'user_id' });
         }
       }
 

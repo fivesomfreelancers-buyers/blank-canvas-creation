@@ -40,7 +40,7 @@ const Contact = () => {
       }
 
       const { error } = await supabase
-        .from('support_requests')
+        .from('support_tickets')
         .insert({
           user_id: user.id,
           subject: formData.subject,
