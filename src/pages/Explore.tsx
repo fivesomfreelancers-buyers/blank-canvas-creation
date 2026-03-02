@@ -46,7 +46,7 @@ const Explore = () => {
             .from('profiles')
             .select('full_name, profile_image_url')
             .eq('id', gig.freelancers?.user_id)
-            .single();
+            .maybeSingle();
 
           const { data: reviews } = await supabase
             .from('gig_reviews')

@@ -127,9 +127,18 @@ const FreelancerDashboard = () => {
         .from('profiles')
         .select('full_name, email, profile_image_url')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
       
-      if (profileData) setUserProfile(profileData);
+      if (profileData) {
+        setUserProfile(profileData);
+      } else {
+        // Fallback to user_metadata
+        setUserProfile({
+          full_name: user.user_metadata?.full_name || 'Freelancer',
+          email: user.email || '',
+          profile_image_url: null
+        });
+      }
 
       const { data: freelancer } = await supabase
         .from('freelancers')
