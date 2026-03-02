@@ -23,18 +23,21 @@ const Navbar = () => {
   const [profile, setProfile] = useState<{ full_name: string; profile_image_url: string | null } | null>(null);
 
   useEffect(() => {
-    if (user) {
-      (supabase as any)
+    const fetchProfile = async () => {
+      if (!user) {
+        setProfile(null);
+        return;
+      }
+      const { data, error } = await supabase
         .from('profiles')
         .select('full_name, profile_image_url')
         .eq('id', user.id)
-        .single()
-        .then(({ data }: any) => {
-          if (data) setProfile(data);
-        });
-    } else {
-      setProfile(null);
-    }
+        .maybeSingle();
+      
+      if (data) setProfile(data);
+      if (error) console.error('Navbar profile fetch error:', error);
+    };
+    fetchProfile();
   }, [user]);
 
   const dashboardPath = userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard';
@@ -118,7 +121,7 @@ const Navbar = () => {
                   </button>
                 </Link>
                 <Link to="/register">
-                  <button className="px-6 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors">
+                  <button className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
                     Join
                   </button>
                 </Link>
@@ -169,7 +172,7 @@ const Navbar = () => {
                   <button className="w-full px-6 py-2 border border-border rounded-lg hover:bg-accent transition-colors">Sign In</button>
                 </Link>
                 <Link to="/register" onClick={() => setIsMenuOpen(false)}>
-                  <button className="w-full px-6 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors">Join</button>
+                  <button className="w-full px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">Join</button>
                 </Link>
               </>
             )}

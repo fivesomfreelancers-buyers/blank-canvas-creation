@@ -53,29 +53,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchUserRole = async (userId: string) => {
     try {
-      // Fetch role from user_roles table (secure, separate from profiles)
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
         .maybeSingle();
 
-      if (error) {
-        console.error('Error fetching user role from user_roles:', error);
-        // Fallback: try profiles table
-        const { data: profileData } = await (supabase as any)
-          .from('profiles')
-          .select('role')
-          .eq('id', userId)
-          .maybeSingle();
-        if (profileData?.role) {
-          setUserRole(profileData.role as UserRole);
-        }
+      if (!error && data?.role) {
+        setUserRole(data.role as UserRole);
         return;
       }
 
-      if (data?.role) {
-        setUserRole(data.role as UserRole);
+      // Fallback to profiles table
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .maybeSingle();
+      
+      if (profileData?.role) {
+        setUserRole(profileData.role as UserRole);
       }
     } catch (error) {
       console.error('Error fetching user role:', error);
@@ -113,9 +110,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // We also create the freelancer/buyer record explicitly for immediate use.
       if (data?.user) {
         if (role === 'freelancer') {
-          await (supabase as any).from('freelancers').upsert({ user_id: data.user.id }, { onConflict: 'user_id' });
+          await supabase.from('freelancers').upsert({ user_id: data.user.id } as any, { onConflict: 'user_id' });
         } else {
-          await (supabase as any).from('buyers').upsert({ user_id: data.user.id }, { onConflict: 'user_id' });
+          await supabase.from('buyers').upsert({ user_id: data.user.id } as any, { onConflict: 'user_id' });
         }
         // Set role immediately so redirect works without waiting for refetch
         setUserRole(role);
