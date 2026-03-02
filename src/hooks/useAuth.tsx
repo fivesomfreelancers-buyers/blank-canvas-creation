@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         if (session?.user) {
           setTimeout(() => {
+            ensureProfileExists(session.user);
             fetchUserRole(session.user.id);
           }, 0);
         } else {
@@ -43,6 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(session?.user ?? null);
       
       if (session?.user) {
+        ensureProfileExists(session.user);
         fetchUserRole(session.user.id);
       }
       setIsLoading(false);
@@ -50,6 +52,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const ensureProfileExists = async (authUser: User) => {
+    try {
+      const { data } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', authUser.id)
+        .maybeSingle();
+
+      if (!data) {
+        // Profile doesn't exist - create it from user_metadata
+        const meta = authUser.user_metadata || {};
+        await supabase.from('profiles').insert({
+          id: authUser.id,
+          full_name: meta.full_name || '',
+          email: authUser.email || '',
+          role: (meta.role as 'freelancer' | 'buyer') || 'buyer',
+          location: meta.location || null,
+        });
+
+        // Also ensure user_roles entry exists
+        const role = (meta.role as 'freelancer' | 'buyer') || 'buyer';
+        await supabase.from('user_roles').upsert(
+          { user_id: authUser.id, role } as any,
+          { onConflict: 'user_id,role' }
+        );
+      }
+    } catch (err) {
+      console.error('ensureProfileExists error:', err);
+    }
+  };
 
   const fetchUserRole = async (userId: string) => {
     try {
@@ -73,6 +106,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (profileData?.role) {
         setUserRole(profileData.role as UserRole);
+        return;
+      }
+
+      // Last fallback: user_metadata
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.user_metadata?.role) {
+        setUserRole(user.user_metadata.role as UserRole);
       }
     } catch (error) {
       console.error('Error fetching user role:', error);
@@ -106,15 +146,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return { error };
       }
 
-      // The handle_new_user trigger creates profile, user_roles, and wallet automatically.
-      // We also create the freelancer/buyer record explicitly for immediate use.
       if (data?.user) {
         if (role === 'freelancer') {
           await supabase.from('freelancers').upsert({ user_id: data.user.id } as any, { onConflict: 'user_id' });
         } else {
           await supabase.from('buyers').upsert({ user_id: data.user.id } as any, { onConflict: 'user_id' });
         }
-        // Set role immediately so redirect works without waiting for refetch
         setUserRole(role);
       }
 
