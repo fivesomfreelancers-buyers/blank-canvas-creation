@@ -136,6 +136,9 @@ const CreateGig = () => {
         return;
       }
 
+      // Set thumbnail from first image
+      const thumbnailUrl = imageUrls.length > 0 ? imageUrls[0] : null;
+
       const { error } = await supabase
         .from('gigs')
         .insert({
@@ -145,6 +148,7 @@ const CreateGig = () => {
           base_price: parseFloat(activePackage.price),
           delivery_time_days: parseInt(activePackage.deliveryTime) || 7,
           images: imageUrls.length > 0 ? imageUrls : null,
+          thumbnail_url: thumbnailUrl,
           status: 'active'
         });
 

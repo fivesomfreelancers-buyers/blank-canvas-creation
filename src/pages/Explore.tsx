@@ -66,7 +66,7 @@ const Explore = () => {
             rating: avgRating,
             reviews: reviews?.length || 0,
             price: Number(gig.base_price),
-            image: gig.images?.[0] || '',
+            image: gig.thumbnail_url || gig.images?.[0] || '',
             category: gig.category_id
           };
         }));
