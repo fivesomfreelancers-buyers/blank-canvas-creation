@@ -2,6 +2,7 @@
 import React from 'react';
 import { Palette, Video, Monitor, PenTool, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import freelancersBg from '../assets/freelancers-hero-bg.jpg';
 
 const FeaturedCategories = () => {
   const categories = [
@@ -48,15 +49,22 @@ const FeaturedCategories = () => {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
-      <div className="max-w-6xl mx-auto">
+    <section className="relative py-20 px-4 sm:px-6 lg:px-8">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${freelancersBg})` }}
+      />
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/50" />
+      <div className="max-w-6xl mx-auto relative z-10">
         <div className="max-w-4xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
               Explore Our Featured Categories
             </h2>
-            <p className="text-lg max-w-2xl mx-auto text-muted-foreground">
+            <p className="text-lg max-w-2xl mx-auto text-white/80">
               Discover professional services across specialized categories, 
               each designed to help your business grow and succeed.
             </p>
@@ -118,11 +126,11 @@ const FeaturedCategories = () => {
                       Featured Category
                     </div>
                     
-                    <h3 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">
+                    <h3 className="text-3xl md:text-4xl font-bold mb-6 text-white">
                       Professional {category.title}
                     </h3>
                     
-                    <p className="text-xl leading-relaxed mb-8 text-muted-foreground">
+                    <p className="text-xl leading-relaxed mb-8 text-white/80">
                       Connect with expert freelancers who specialize in {category.title.toLowerCase()}. 
                       From concept to completion, get professional results that exceed your expectations.
                     </p>
@@ -132,7 +140,7 @@ const FeaturedCategories = () => {
                           <div className="text-2xl font-bold mb-1 text-primary">
                             500+
                           </div>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-white/70">
                             Expert Freelancers
                           </p>
                         </div>
@@ -140,7 +148,7 @@ const FeaturedCategories = () => {
                           <div className="text-2xl font-bold mb-1 text-primary">
                             4.9★
                           </div>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-white/70">
                           Average Rating
                         </p>
                       </div>
