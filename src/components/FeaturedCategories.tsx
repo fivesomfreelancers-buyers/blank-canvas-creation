@@ -56,7 +56,7 @@ const FeaturedCategories = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">
               Explore Our Featured Categories
             </h2>
-            <p className="text-lg max-w-2xl mx-auto text-white/80">
+            <p className="text-lg max-w-2xl mx-auto text-muted-foreground">
               Discover professional services across specialized categories, 
               each designed to help your business grow and succeed.
             </p>
