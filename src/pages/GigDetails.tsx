@@ -110,7 +110,7 @@ const GigDetails = () => {
   const handleOrder = () => {
     navigate('/payment', {
       state: {
-        gig: { id: gig.id, title: gig.title, freelancer: { name: gig.freelancerName, avatar: gig.freelancerName?.[0] || 'F', profileImage: gig.profileImageUrl || '' } },
+        gig: { id: gig.id, title: gig.title, freelancer: { name: gig.freelancerName, avatar: gig.freelancerName?.[0] || 'F', profileImage: gig.freelancerImageUrl || '' } },
         selectedPackage: { name: 'Standard', price: gig.base_price, delivery: `${gig.delivery_time_days} days`, revisions: '2', features: [] }
       }
     });
