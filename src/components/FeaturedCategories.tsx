@@ -140,7 +140,7 @@ const FeaturedCategories = () => {
                           <div className="text-2xl font-bold mb-1 text-primary">
                             4.9★
                           </div>
-                          <p className="text-sm text-white/70">
+                          <p className="text-sm text-muted-foreground">
                           Average Rating
                         </p>
                       </div>
