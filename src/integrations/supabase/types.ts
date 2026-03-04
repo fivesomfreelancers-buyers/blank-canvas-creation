@@ -71,6 +71,38 @@ export type Database = {
         }
         Relationships: []
       }
+      freelancer_faqs: {
+        Row: {
+          answer: string
+          created_at: string | null
+          freelancer_id: string
+          id: string
+          question: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string | null
+          freelancer_id: string
+          id?: string
+          question: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string | null
+          freelancer_id?: string
+          id?: string
+          question?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "freelancer_faqs_freelancer_id_fkey"
+            columns: ["freelancer_id"]
+            isOneToOne: false
+            referencedRelation: "freelancers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       freelancers: {
         Row: {
           bio: string | null
