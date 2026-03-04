@@ -2,7 +2,6 @@
 import React from 'react';
 import { Palette, Video, Monitor, PenTool, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import freelancersBg from '../assets/freelancers-hero-bg.jpg';
 
 const FeaturedCategories = () => {
   const categories = [
