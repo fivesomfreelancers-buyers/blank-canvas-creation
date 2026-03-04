@@ -49,19 +49,12 @@ const FeaturedCategories = () => {
   ];
 
   return (
-    <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${freelancersBg})` }}
-      />
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/50" />
-      <div className="max-w-6xl mx-auto relative z-10">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
+      <div className="max-w-6xl mx-auto">
         <div className="max-w-4xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">
               Explore Our Featured Categories
             </h2>
             <p className="text-lg max-w-2xl mx-auto text-white/80">
