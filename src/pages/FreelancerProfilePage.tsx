@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
 import { Star, MapPin, Calendar, MessageSquare, Clock, CheckCircle, Globe } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import FreelancerFAQDisplay from '@/components/faq/FreelancerFAQDisplay';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
