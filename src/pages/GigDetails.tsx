@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Star, MessageSquare, Shield, Clock, CheckCircle } from 'lucide-react';
+import { Star, MessageSquare, Shield, Clock, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import Navbar from '@/components/Navbar';
+import FreelancerFAQDisplay from '@/components/faq/FreelancerFAQDisplay';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -151,7 +152,36 @@ const GigDetails = () => {
             {images.length > 0 && (
               <Card>
                 <CardContent className="p-0">
-                  <img src={images[selectedImageIdx]} alt={gig.title} className="w-full h-96 object-cover rounded-t-lg" />
+                  <div className="relative group">
+                    <img src={images[selectedImageIdx]} alt={gig.title} className="w-full h-96 object-cover rounded-t-lg" />
+                    {images.length > 1 && (
+                      <>
+                        <button
+                          onClick={() => setSelectedImageIdx((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
+                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                          aria-label="Previous image"
+                        >
+                          <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={() => setSelectedImageIdx((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                          aria-label="Next image"
+                        >
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                          {images.map((_: string, idx: number) => (
+                            <button
+                              key={idx}
+                              onClick={() => setSelectedImageIdx(idx)}
+                              className={`w-2.5 h-2.5 rounded-full transition-colors ${idx === selectedImageIdx ? 'bg-primary' : 'bg-background/60'}`}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
                   {images.length > 1 && (
                     <div className="flex gap-2 p-3">
                       {images.map((img: string, idx: number) => (
@@ -245,6 +275,9 @@ const GigDetails = () => {
                 </Tabs>
               </CardContent>
             </Card>
+
+            {/* FAQ Section */}
+            {gig.freelancer_id && <FreelancerFAQDisplay freelancerId={gig.freelancer_id} />}
           </div>
 
           {/* Right Column */}
