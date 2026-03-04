@@ -275,6 +275,9 @@ const GigDetails = () => {
                 </Tabs>
               </CardContent>
             </Card>
+
+            {/* FAQ Section */}
+            {gig.freelancer_id && <FreelancerFAQDisplay freelancerId={gig.freelancer_id} />}
           </div>
 
           {/* Right Column */}

@@ -174,6 +174,11 @@ const FreelancerProfile = () => {
             </CardContent>
           </Card>
 
+          {/* FAQ Manager */}
+          {freelancerData?.id && (
+            <FreelancerFAQManager freelancerId={freelancerData.id} />
+          )}
+
           {/* Feedback Display */}
           <FeedbackDisplay 
             feedback={feedback} 

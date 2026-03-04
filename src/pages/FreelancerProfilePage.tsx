@@ -255,13 +255,14 @@ const FreelancerProfilePage = () => {
             )}
           </TabsContent>
 
-          <TabsContent value="about">
+          <TabsContent value="about" className="space-y-6">
             <Card>
               <CardHeader><CardTitle>About Me</CardTitle></CardHeader>
               <CardContent>
                 <p className="text-foreground leading-relaxed">{profileData.bio || 'No information provided.'}</p>
               </CardContent>
             </Card>
+            {freelancerId && <FreelancerFAQDisplay freelancerId={freelancerId} />}
           </TabsContent>
         </Tabs>
       </div>
