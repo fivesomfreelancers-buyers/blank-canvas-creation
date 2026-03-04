@@ -118,7 +118,7 @@ const FeaturedCategories = () => {
                       Featured Category
                     </div>
                     
-                    <h3 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+                    <h3 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">
                       Professional {category.title}
                     </h3>
                     
