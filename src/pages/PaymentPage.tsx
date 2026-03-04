@@ -3,16 +3,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Clock, CheckCircle, Shield, CreditCard, Wallet, Upload, Smartphone, AlertCircle } from 'lucide-react';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Clock, CheckCircle, Shield, CreditCard, Wallet, Upload, Smartphone, AlertCircle, Phone } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { useTheme } from '@/components/ThemeProvider';
 import { useToast } from '@/hooks/use-toast';
 
-// Import mobile money logos
 import zaadLogo from '@/assets/zaad-logo.png';
 import evcLogo from '@/assets/evc-logo.png';
 import edahabLogo from '@/assets/edahab-logo.png';
@@ -25,6 +24,7 @@ interface PaymentPageState {
     freelancer: {
       name: string;
       avatar: string;
+      profileImage?: string;
     };
   };
   selectedPackage: {
@@ -36,11 +36,58 @@ interface PaymentPageState {
   };
 }
 
-const mobileMoneyOptions = [
-  { id: 'zaad', name: 'ZAAD', logo: zaadLogo, paymentNumber: '*123*1*1*MERCHANT_NUMBER#' },
-  { id: 'evc', name: 'EVC', logo: evcLogo, paymentNumber: '*712*MERCHANT_NUMBER*AMOUNT#' },
-  { id: 'edahab', name: 'eDahab', logo: ebirrLogo, paymentNumber: '*880*MERCHANT_NUMBER*AMOUNT#' },
-  { id: 'ebiir', name: 'eBiir', logo: edahabLogo, paymentNumber: '*789*MERCHANT_NUMBER*AMOUNT#' },
+interface CurrencyOption {
+  label: string;
+  ussdPrefix: string;
+}
+
+interface MobileMoneyOption {
+  id: string;
+  name: string;
+  logo: string;
+  receiverNumber: string;
+  currencies: CurrencyOption[];
+}
+
+const mobileMoneyOptions: MobileMoneyOption[] = [
+  {
+    id: 'zaad',
+    name: 'ZAAD',
+    logo: zaadLogo,
+    receiverNumber: '0631234567',
+    currencies: [
+      { label: 'USD ($)', ussdPrefix: '*880' },
+      { label: 'SL Shillings', ussdPrefix: '*220' },
+    ],
+  },
+  {
+    id: 'evc',
+    name: 'EVC',
+    logo: evcLogo,
+    receiverNumber: '912345678',
+    currencies: [
+      { label: 'USD ($)', ussdPrefix: '*711' },
+      { label: 'SO Shillings', ussdPrefix: '*770' },
+    ],
+  },
+  {
+    id: 'edahab',
+    name: 'eDahab',
+    logo: edahabLogo,
+    receiverNumber: '0651234567',
+    currencies: [
+      { label: 'SL Shillings', ussdPrefix: '*110' },
+    ],
+  },
+  {
+    id: 'ebiir',
+    name: 'eBiir',
+    logo: ebirrLogo,
+    receiverNumber: '091234567',
+    currencies: [
+      { label: 'ETB', ussdPrefix: '*681' },
+    ],
+  },
 ];
 
 const PaymentPage = () => {
@@ -49,21 +96,21 @@ const PaymentPage = () => {
   const { theme } = useTheme();
   const { toast } = useToast();
   const isDarkMode = theme === 'dark';
-  
+
   const [paymentType, setPaymentType] = useState<'card' | 'mobile'>('card');
   const [selectedMobileMethod, setSelectedMobileMethod] = useState<string>('');
+  const [selectedCurrencyIndex, setSelectedCurrencyIndex] = useState<number>(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const [cardDetails, setCardDetails] = useState({
     cardNumber: '',
     expiry: '',
     cvv: '',
-    cardholderName: ''
+    cardholderName: '',
   });
 
-  // Get data from navigation state
   const state = location.state as PaymentPageState;
-  
+
   if (!state) {
     navigate('/');
     return null;
@@ -73,15 +120,27 @@ const PaymentPage = () => {
   const serviceFee = Math.round(selectedPackage.price * 0.05);
   const totalAmount = selectedPackage.price + serviceFee;
 
+  const selectedMobileOption = mobileMoneyOptions.find(m => m.id === selectedMobileMethod);
+  const selectedCurrency = selectedMobileOption?.currencies[selectedCurrencyIndex];
+
+  const getUssdCode = () => {
+    if (!selectedMobileOption || !selectedCurrency) return '';
+    return `${selectedCurrency.ussdPrefix}*${selectedMobileOption.receiverNumber}*${totalAmount}#`;
+  };
+
+  const handleSendMoney = () => {
+    const ussd = getUssdCode();
+    if (!ussd) return;
+    // Encode the USSD for tel: URI — # becomes %23
+    const encoded = `tel:${ussd.replace(/#/g, '%23')}`;
+    window.location.href = encoded;
+  };
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        toast({
-          title: "File too large",
-          description: "Please upload an image smaller than 5MB",
-          variant: "destructive",
-        });
+        toast({ title: "File too large", description: "Please upload an image smaller than 5MB", variant: "destructive" });
         return;
       }
       setPaymentProof(file);
@@ -92,37 +151,22 @@ const PaymentPage = () => {
     setCardDetails(prev => ({ ...prev, [field]: value }));
   };
 
-  const isCardFormValid = cardDetails.cardNumber.length >= 16 && 
-    cardDetails.expiry.length >= 4 && 
-    cardDetails.cvv.length >= 3 && 
-    cardDetails.cardholderName.length > 0;
-
+  const isCardFormValid = cardDetails.cardNumber.length >= 16 && cardDetails.expiry.length >= 4 && cardDetails.cvv.length >= 3 && cardDetails.cardholderName.length > 0;
   const isMobileFormValid = selectedMobileMethod && paymentProof;
 
   const handlePayment = async () => {
     if (paymentType === 'card' && !isCardFormValid) {
-      toast({
-        title: "Invalid Card Details",
-        description: "Please fill in all card details correctly.",
-        variant: "destructive",
-      });
+      toast({ title: "Invalid Card Details", description: "Please fill in all card details correctly.", variant: "destructive" });
       return;
     }
-
     if (paymentType === 'mobile' && !isMobileFormValid) {
-      toast({
-        title: "Missing Payment Proof",
-        description: "Please select a payment method and upload your payment screenshot.",
-        variant: "destructive",
-      });
+      toast({ title: "Missing Payment Proof", description: "Please select a payment method and upload your payment screenshot.", variant: "destructive" });
       return;
     }
 
     setIsProcessing(true);
-    
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
       const orderData = {
         id: Date.now(),
         gigId: gig.id,
@@ -135,33 +179,26 @@ const PaymentPage = () => {
         status: paymentType === 'card' ? 'Active' : 'Pending Verification',
         orderDate: new Date().toISOString().split('T')[0],
         deadline: `${selectedPackage.delivery}`,
-        description: `${selectedPackage.name} package for ${gig.title}`
+        description: `${selectedPackage.name} package for ${gig.title}`,
       };
-
       const existingOrders = JSON.parse(localStorage.getItem('buyerOrders') || '[]');
       existingOrders.unshift(orderData);
       localStorage.setItem('buyerOrders', JSON.stringify(existingOrders));
-
       toast({
         title: paymentType === 'card' ? "Payment Successful!" : "Payment Submitted for Verification",
-        description: paymentType === 'card' 
-          ? `Your order has been placed. The freelancer has been notified.`
-          : `Your payment proof has been submitted. We'll verify it within 24 hours.`,
+        description: paymentType === 'card'
+          ? "Your order has been placed. The freelancer has been notified."
+          : "Your payment proof has been submitted. We'll verify it within 24 hours.",
       });
-
       navigate('/buyer/orders');
-    } catch (error) {
-      toast({
-        title: "Payment Failed",
-        description: "There was an error processing your payment. Please try again.",
-        variant: "destructive",
-      });
+    } catch {
+      toast({ title: "Payment Failed", description: "There was an error processing your payment. Please try again.", variant: "destructive" });
     } finally {
       setIsProcessing(false);
     }
   };
 
-  const selectedMobileOption = mobileMoneyOptions.find(m => m.id === selectedMobileMethod);
+  const freelancerInitials = gig.freelancer.name.split(' ').map(n => n[0]).join('').toUpperCase();
 
   return (
     <div className={`${isDarkMode ? "bg-gray-900" : "bg-gray-50"} min-h-screen`}>
@@ -180,12 +217,17 @@ const PaymentPage = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <h3 className="font-semibold text-lg mb-2">{gig.title}</h3>
-                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
-                    {gig.freelancer.avatar}
-                  </div>
-                  <span>by {gig.freelancer.name}</span>
+                <h3 className="font-semibold text-lg mb-3">{gig.title}</h3>
+                <div className="flex items-center space-x-3">
+                  <Avatar className="w-8 h-8">
+                    {gig.freelancer.profileImage ? (
+                      <AvatarImage src={gig.freelancer.profileImage} alt={gig.freelancer.name} />
+                    ) : null}
+                    <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                      {freelancerInitials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm text-muted-foreground">by <span className="font-medium text-foreground">{gig.freelancer.name}</span></span>
                 </div>
               </div>
 
@@ -196,7 +238,6 @@ const PaymentPage = () => {
                   <h4 className="font-medium">{selectedPackage.name} Package</h4>
                   <Badge variant="outline">${selectedPackage.price}</Badge>
                 </div>
-                
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm mb-3">
                   <div className="flex items-center">
                     <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-muted-foreground flex-shrink-0" />
@@ -207,7 +248,6 @@ const PaymentPage = () => {
                     <span>{selectedPackage.revisions} revisions</span>
                   </div>
                 </div>
-
                 <div className="space-y-2">
                   <p className="text-xs sm:text-sm font-medium">What's included:</p>
                   <ul className="space-y-1">
@@ -224,41 +264,23 @@ const PaymentPage = () => {
               <Separator />
 
               <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Package Price</span>
-                  <span>${selectedPackage.price}</span>
-                </div>
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Service Fee (5%)</span>
-                  <span>${serviceFee}</span>
-                </div>
+                <div className="flex justify-between"><span>Package Price</span><span>${selectedPackage.price}</span></div>
+                <div className="flex justify-between text-sm text-muted-foreground"><span>Service Fee (5%)</span><span>${serviceFee}</span></div>
                 <Separator />
-                <div className="flex justify-between font-semibold text-lg">
-                  <span>Total</span>
-                  <span>${totalAmount}</span>
-                </div>
+                <div className="flex justify-between font-semibold text-lg"><span>Total</span><span>${totalAmount}</span></div>
               </div>
             </CardContent>
           </Card>
 
           {/* Payment Method Selection */}
           <div className="space-y-6">
-            {/* Payment Type Tabs */}
             <div className="grid grid-cols-2 gap-4">
-              <Button
-                variant={paymentType === 'card' ? 'default' : 'outline'}
-                onClick={() => setPaymentType('card')}
-                className="h-auto py-4 flex flex-col items-center gap-2"
-              >
+              <Button variant={paymentType === 'card' ? 'default' : 'outline'} onClick={() => setPaymentType('card')} className="h-auto py-4 flex flex-col items-center gap-2">
                 <CreditCard className="w-6 h-6" />
                 <span>Card Payment</span>
                 <span className="text-xs opacity-70">Visa / Mastercard</span>
               </Button>
-              <Button
-                variant={paymentType === 'mobile' ? 'default' : 'outline'}
-                onClick={() => setPaymentType('mobile')}
-                className="h-auto py-4 flex flex-col items-center gap-2"
-              >
+              <Button variant={paymentType === 'mobile' ? 'default' : 'outline'} onClick={() => setPaymentType('mobile')} className="h-auto py-4 flex flex-col items-center gap-2">
                 <Smartphone className="w-6 h-6" />
                 <span>Mobile Money</span>
                 <span className="text-xs opacity-70">ZAAD, EVC, eDahab, eBiir</span>
@@ -269,10 +291,7 @@ const PaymentPage = () => {
             {paymentType === 'card' && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <CreditCard className="w-5 h-5" />
-                    Card Payment
-                  </CardTitle>
+                  <CardTitle className="flex items-center gap-2"><CreditCard className="w-5 h-5" />Card Payment</CardTitle>
                   <p className="text-sm text-muted-foreground">Secure automatic payment</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -280,52 +299,24 @@ const PaymentPage = () => {
                     <img src="https://img.icons8.com/color/48/visa.png" alt="Visa" className="h-8" />
                     <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard" className="h-8" />
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="cardNumber">Card Number</Label>
-                    <Input
-                      id="cardNumber"
-                      placeholder="1234 5678 9012 3456"
-                      value={cardDetails.cardNumber}
-                      onChange={(e) => handleCardInput('cardNumber', e.target.value.replace(/\D/g, '').slice(0, 16))}
-                      maxLength={16}
-                    />
+                    <Input id="cardNumber" placeholder="1234 5678 9012 3456" value={cardDetails.cardNumber} onChange={(e) => handleCardInput('cardNumber', e.target.value.replace(/\D/g, '').slice(0, 16))} maxLength={16} />
                   </div>
-
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="expiry">Expiry Date</Label>
-                      <Input
-                        id="expiry"
-                        placeholder="MM/YY"
-                        value={cardDetails.expiry}
-                        onChange={(e) => handleCardInput('expiry', e.target.value)}
-                        maxLength={5}
-                      />
+                      <Input id="expiry" placeholder="MM/YY" value={cardDetails.expiry} onChange={(e) => handleCardInput('expiry', e.target.value)} maxLength={5} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="cvv">CVV</Label>
-                      <Input
-                        id="cvv"
-                        placeholder="123"
-                        type="password"
-                        value={cardDetails.cvv}
-                        onChange={(e) => handleCardInput('cvv', e.target.value.replace(/\D/g, '').slice(0, 4))}
-                        maxLength={4}
-                      />
+                      <Input id="cvv" placeholder="123" type="password" value={cardDetails.cvv} onChange={(e) => handleCardInput('cvv', e.target.value.replace(/\D/g, '').slice(0, 4))} maxLength={4} />
                     </div>
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="cardholderName">Cardholder Name</Label>
-                    <Input
-                      id="cardholderName"
-                      placeholder="John Doe"
-                      value={cardDetails.cardholderName}
-                      onChange={(e) => handleCardInput('cardholderName', e.target.value)}
-                    />
+                    <Input id="cardholderName" placeholder="John Doe" value={cardDetails.cardholderName} onChange={(e) => handleCardInput('cardholderName', e.target.value)} />
                   </div>
-
                   <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg text-sm text-green-700 dark:text-green-300">
                     <Shield className="w-4 h-4" />
                     <span>Payment processed automatically & securely</span>
@@ -338,23 +329,18 @@ const PaymentPage = () => {
             {paymentType === 'mobile' && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Smartphone className="w-5 h-5" />
-                    Somali Mobile Money
-                  </CardTitle>
+                  <CardTitle className="flex items-center gap-2"><Smartphone className="w-5 h-5" />Somali Mobile Money</CardTitle>
                   <p className="text-sm text-muted-foreground">Select your provider and upload payment proof</p>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {/* Mobile Money Options */}
+                  {/* Provider Selection */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {mobileMoneyOptions.map((option) => (
                       <button
                         key={option.id}
-                        onClick={() => setSelectedMobileMethod(option.id)}
+                        onClick={() => { setSelectedMobileMethod(option.id); setSelectedCurrencyIndex(0); }}
                         className={`p-3 rounded-lg border-2 transition-all flex flex-col items-center gap-2 ${
-                          selectedMobileMethod === option.id
-                            ? 'border-primary bg-primary/5'
-                            : 'border-border hover:border-primary/50'
+                          selectedMobileMethod === option.id ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
                         }`}
                       >
                         <img src={option.logo} alt={option.name} className="w-12 h-12 object-contain" />
@@ -363,19 +349,54 @@ const PaymentPage = () => {
                     ))}
                   </div>
 
-                  {/* Payment Instructions */}
+                  {/* Payment Details & USSD */}
                   {selectedMobileOption && (
-                    <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                      <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-2">
-                        Send Payment via {selectedMobileOption.name}
-                      </h4>
-                      <div className="space-y-2 text-sm text-blue-700 dark:text-blue-300">
-                        <p><strong>Amount:</strong> ${totalAmount}</p>
-                        <p><strong>Dial:</strong> {selectedMobileOption.paymentNumber}</p>
-                        <p className="text-xs mt-2">
+                    <div className="space-y-4">
+                      {/* Currency selector (if multiple) */}
+                      {selectedMobileOption.currencies.length > 1 && (
+                        <div className="space-y-2">
+                          <Label className="text-sm font-medium">Select Currency</Label>
+                          <div className="flex gap-2">
+                            {selectedMobileOption.currencies.map((cur, idx) => (
+                              <Button
+                                key={idx}
+                                size="sm"
+                                variant={selectedCurrencyIndex === idx ? 'default' : 'outline'}
+                                onClick={() => setSelectedCurrencyIndex(idx)}
+                              >
+                                {cur.label}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Payment info box */}
+                      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 space-y-3">
+                        <h4 className="font-semibold text-blue-800 dark:text-blue-200">
+                          Send Payment via {selectedMobileOption.name}
+                        </h4>
+                        <div className="space-y-1.5 text-sm text-blue-700 dark:text-blue-300">
+                          <p><strong>Receiver Number:</strong> {selectedMobileOption.receiverNumber}</p>
+                          <p><strong>Amount:</strong> ${totalAmount}</p>
+                          {selectedCurrency && (
+                            <p><strong>Dial:</strong> <code className="bg-blue-100 dark:bg-blue-800 px-2 py-0.5 rounded font-mono text-xs">{getUssdCode()}</code></p>
+                          )}
+                        </div>
+                        <p className="text-xs text-blue-600 dark:text-blue-400">
                           After sending the payment, take a screenshot of the confirmation and upload it below.
                         </p>
                       </div>
+
+                      {/* Send Money Button */}
+                      <Button
+                        onClick={handleSendMoney}
+                        className="w-full bg-green-600 hover:bg-green-700 text-white"
+                        size="lg"
+                      >
+                        <Phone className="w-5 h-5 mr-2" />
+                        Send Money via {selectedMobileOption.name}
+                      </Button>
                     </div>
                   )}
 
@@ -386,13 +407,7 @@ const PaymentPage = () => {
                       Upload Payment Proof (Required)
                     </Label>
                     <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileUpload}
-                        className="hidden"
-                        id="payment-proof"
-                      />
+                      <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" id="payment-proof" />
                       <label htmlFor="payment-proof" className="cursor-pointer">
                         {paymentProof ? (
                           <div className="flex items-center justify-center gap-2 text-green-600">
@@ -402,12 +417,8 @@ const PaymentPage = () => {
                         ) : (
                           <div className="space-y-2">
                             <Upload className="w-8 h-8 mx-auto text-muted-foreground" />
-                            <p className="text-sm text-muted-foreground">
-                              Click to upload your payment screenshot
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              PNG, JPG up to 5MB
-                            </p>
+                            <p className="text-sm text-muted-foreground">Click to upload your payment screenshot</p>
+                            <p className="text-xs text-muted-foreground">PNG, JPG up to 5MB</p>
                           </div>
                         )}
                       </label>
@@ -423,15 +434,10 @@ const PaymentPage = () => {
             )}
 
             {/* Submit Button */}
-            <Button 
-              onClick={handlePayment} 
-              className="w-full" 
-              size="lg"
-              disabled={isProcessing || (paymentType === 'card' ? !isCardFormValid : !isMobileFormValid)}
-            >
+            <Button onClick={handlePayment} className="w-full" size="lg" disabled={isProcessing || (paymentType === 'card' ? !isCardFormValid : !isMobileFormValid)}>
               {isProcessing ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
                   Processing...
                 </>
               ) : (
