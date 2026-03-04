@@ -122,7 +122,7 @@ const FeaturedCategories = () => {
                       Professional {category.title}
                     </h3>
                     
-                    <p className="text-xl leading-relaxed mb-8 text-white/80">
+                    <p className="text-xl leading-relaxed mb-8 text-muted-foreground">
                       Connect with expert freelancers who specialize in {category.title.toLowerCase()}. 
                       From concept to completion, get professional results that exceed your expectations.
                     </p>
