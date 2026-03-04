@@ -7,6 +7,7 @@ import { Star, MapPin, Calendar, Edit, Eye } from 'lucide-react';
 import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
 import EditProfileModal from '@/components/profile/EditProfileModal';
 import ProfilePreviewModal from '@/components/profile/ProfilePreviewModal';
+import FreelancerFAQManager from '@/components/faq/FreelancerFAQManager';
 import { supabase } from '@/integrations/supabase/client';
 
 const FreelancerProfile = () => {
