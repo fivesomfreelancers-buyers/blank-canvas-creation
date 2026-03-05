@@ -1,21 +1,32 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, Bell, Shield, CreditCard, Trash2 } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { User, Bell, Shield, Camera, Loader2 } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
-const BuyerSettings = () => {
+interface BuyerSettingsProps {
+  onProfileUpdated?: () => void;
+}
+
+const BuyerSettings = ({ onProfileUpdated }: BuyerSettingsProps) => {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [profile, setProfile] = useState({
-    firstName: 'Jane',
-    lastName: 'Buyer',
-    email: 'jane@example.com',
-    phone: '+1234567890',
-    company: 'Tech Innovations Inc.',
-    location: 'San Francisco, USA'
+    full_name: '',
+    username: '',
+    email: '',
+    location: '',
+    bio: '',
+    profile_image_url: '',
   });
 
   const [notifications, setNotifications] = useState({
@@ -26,16 +37,121 @@ const BuyerSettings = () => {
     projectReminders: true
   });
 
+  const [passwords, setPasswords] = useState({
+    newPassword: '',
+    confirmPassword: '',
+  });
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchProfile = async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('full_name, username, email, location, bio, profile_image_url')
+        .eq('id', user.id)
+        .maybeSingle();
+      if (data) {
+        setProfile({
+          full_name: data.full_name || '',
+          username: data.username || '',
+          email: data.email || user.email || '',
+          location: data.location || '',
+          bio: data.bio || '',
+          profile_image_url: data.profile_image_url || '',
+        });
+      }
+    };
+    fetchProfile();
+  }, [user]);
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+    setLoading(true);
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        full_name: profile.full_name,
+        username: profile.username,
+        location: profile.location,
+        bio: profile.bio,
+      })
+      .eq('id', user.id);
+    setLoading(false);
+    if (error) {
+      toast.error('Failed to save profile');
+    } else {
+      toast.success('Profile updated successfully');
+      onProfileUpdated?.();
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    setUploading(true);
+    const ext = file.name.split('.').pop();
+    const path = `${user.id}/avatar.${ext}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from('profile-images')
+      .upload(path, file, { upsert: true });
+
+    if (uploadError) {
+      toast.error('Failed to upload image');
+      setUploading(false);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage.from('profile-images').getPublicUrl(path);
+    const publicUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ profile_image_url: publicUrl })
+      .eq('id', user.id);
+
+    setUploading(false);
+    if (updateError) {
+      toast.error('Failed to update profile image');
+    } else {
+      setProfile(prev => ({ ...prev, profile_image_url: publicUrl }));
+      toast.success('Profile image updated');
+      onProfileUpdated?.();
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (passwords.newPassword.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+    if (passwords.newPassword !== passwords.confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    setLoading(true);
+    const { error } = await supabase.auth.updateUser({ password: passwords.newPassword });
+    setLoading(false);
+    if (error) {
+      toast.error('Failed to update password');
+    } else {
+      toast.success('Password updated successfully');
+      setPasswords({ newPassword: '', confirmPassword: '' });
+    }
+  };
+
+  const initials = profile.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'B';
+
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-4 sm:p-6">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Account Settings</h1>
-          <p className="text-gray-600 mt-2">Manage your account preferences and information</p>
+          <h1 className="text-3xl font-bold">Account Settings</h1>
+          <p className="text-muted-foreground mt-2">Manage your account preferences and information</p>
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="profile" className="flex items-center space-x-2">
               <User className="w-4 h-4" />
               <span>Profile</span>
@@ -48,10 +164,6 @@ const BuyerSettings = () => {
               <Shield className="w-4 h-4" />
               <span>Security</span>
             </TabsTrigger>
-            <TabsTrigger value="billing" className="flex items-center space-x-2">
-              <CreditCard className="w-4 h-4" />
-              <span>Billing</span>
-            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="profile">
@@ -60,58 +172,50 @@ const BuyerSettings = () => {
                 <CardTitle>Profile Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input
-                      id="firstName"
-                      value={profile.firstName}
-                      onChange={(e) => setProfile({...profile, firstName: e.target.value})}
-                    />
+                {/* Profile Image */}
+                <div className="flex items-center gap-6">
+                  <div className="relative group">
+                    <Avatar className="h-20 w-20">
+                      <AvatarImage src={profile.profile_image_url || undefined} />
+                      <AvatarFallback className="bg-purple-500 text-white text-xl">{initials}</AvatarFallback>
+                    </Avatar>
+                    <label className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
+                      {uploading ? <Loader2 className="w-5 h-5 text-white animate-spin" /> : <Camera className="w-5 h-5 text-white" />}
+                      <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploading} />
+                    </label>
                   </div>
                   <div>
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input
-                      id="lastName"
-                      value={profile.lastName}
-                      onChange={(e) => setProfile({...profile, lastName: e.target.value})}
-                    />
+                    <p className="font-medium">{profile.full_name || 'Your Name'}</p>
+                    <p className="text-sm text-muted-foreground">Click the avatar to change your photo</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="fullName">Full Name</Label>
+                    <Input id="fullName" value={profile.full_name} onChange={(e) => setProfile({ ...profile, full_name: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label htmlFor="username">Username</Label>
+                    <Input id="username" value={profile.username} onChange={(e) => setProfile({ ...profile, username: e.target.value })} />
                   </div>
                 </div>
                 <div>
                   <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={profile.email}
-                    onChange={(e) => setProfile({...profile, email: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    value={profile.phone}
-                    onChange={(e) => setProfile({...profile, phone: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="company">Company (Optional)</Label>
-                  <Input
-                    id="company"
-                    value={profile.company}
-                    onChange={(e) => setProfile({...profile, company: e.target.value})}
-                  />
+                  <Input id="email" type="email" value={profile.email} disabled className="bg-muted" />
+                  <p className="text-xs text-muted-foreground mt-1">Email cannot be changed here</p>
                 </div>
                 <div>
                   <Label htmlFor="location">Location</Label>
-                  <Input
-                    id="location"
-                    value={profile.location}
-                    onChange={(e) => setProfile({...profile, location: e.target.value})}
-                  />
+                  <Input id="location" value={profile.location} onChange={(e) => setProfile({ ...profile, location: e.target.value })} />
                 </div>
-                <Button>Save Changes</Button>
+                <div>
+                  <Label htmlFor="bio">Bio</Label>
+                  <Input id="bio" value={profile.bio} onChange={(e) => setProfile({ ...profile, bio: e.target.value })} />
+                </div>
+                <Button onClick={handleSaveProfile} disabled={loading}>
+                  {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</> : 'Save Changes'}
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -122,57 +226,25 @@ const BuyerSettings = () => {
                 <CardTitle>Notification Preferences</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium">Order Updates</h3>
-                    <p className="text-sm text-gray-600">Get notified about order status changes and deliveries</p>
+                {[
+                  { key: 'orderUpdates', label: 'Order Updates', desc: 'Get notified about order status changes and deliveries' },
+                  { key: 'messages', label: 'Messages', desc: 'Receive notifications for new messages from freelancers' },
+                  { key: 'promotions', label: 'Promotions', desc: 'Receive special offers and promotional content' },
+                  { key: 'newsletters', label: 'Newsletters', desc: 'Get monthly newsletters with platform updates' },
+                  { key: 'projectReminders', label: 'Project Reminders', desc: 'Reminders about pending project actions' },
+                ].map(item => (
+                  <div key={item.key} className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-medium">{item.label}</h3>
+                      <p className="text-sm text-muted-foreground">{item.desc}</p>
+                    </div>
+                    <Switch
+                      checked={notifications[item.key as keyof typeof notifications]}
+                      onCheckedChange={(checked) => setNotifications({ ...notifications, [item.key]: checked })}
+                    />
                   </div>
-                  <Switch
-                    checked={notifications.orderUpdates}
-                    onCheckedChange={(checked) => setNotifications({...notifications, orderUpdates: checked})}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium">Messages</h3>
-                    <p className="text-sm text-gray-600">Receive notifications for new messages from freelancers</p>
-                  </div>
-                  <Switch
-                    checked={notifications.messages}
-                    onCheckedChange={(checked) => setNotifications({...notifications, messages: checked})}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium">Promotions</h3>
-                    <p className="text-sm text-gray-600">Receive special offers and promotional content</p>
-                  </div>
-                  <Switch
-                    checked={notifications.promotions}
-                    onCheckedChange={(checked) => setNotifications({...notifications, promotions: checked})}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium">Newsletters</h3>
-                    <p className="text-sm text-gray-600">Get monthly newsletters with platform updates</p>
-                  </div>
-                  <Switch
-                    checked={notifications.newsletters}
-                    onCheckedChange={(checked) => setNotifications({...notifications, newsletters: checked})}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium">Project Reminders</h3>
-                    <p className="text-sm text-gray-600">Reminders about pending project actions</p>
-                  </div>
-                  <Switch
-                    checked={notifications.projectReminders}
-                    onCheckedChange={(checked) => setNotifications({...notifications, projectReminders: checked})}
-                  />
-                </div>
-                <Button>Save Preferences</Button>
+                ))}
+                <Button onClick={() => toast.success('Preferences saved')}>Save Preferences</Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -187,94 +259,17 @@ const BuyerSettings = () => {
                   <h3 className="font-medium mb-4">Change Password</h3>
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="currentPassword">Current Password</Label>
-                      <Input id="currentPassword" type="password" />
-                    </div>
-                    <div>
                       <Label htmlFor="newPassword">New Password</Label>
-                      <Input id="newPassword" type="password" />
+                      <Input id="newPassword" type="password" value={passwords.newPassword} onChange={e => setPasswords({ ...passwords, newPassword: e.target.value })} />
                     </div>
                     <div>
                       <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                      <Input id="confirmPassword" type="password" />
+                      <Input id="confirmPassword" type="password" value={passwords.confirmPassword} onChange={e => setPasswords({ ...passwords, confirmPassword: e.target.value })} />
                     </div>
-                    <Button>Update Password</Button>
+                    <Button onClick={handleChangePassword} disabled={loading}>
+                      {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Updating...</> : 'Update Password'}
+                    </Button>
                   </div>
-                </div>
-                
-                <div className="border-t pt-6">
-                  <h3 className="font-medium mb-4">Two-Factor Authentication</h3>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">Enable 2FA</p>
-                      <p className="text-sm text-gray-600">Add an extra layer of security to your account</p>
-                    </div>
-                    <Button variant="outline">Setup 2FA</Button>
-                  </div>
-                </div>
-
-                <div className="border-t pt-6">
-                  <h3 className="font-medium mb-4 text-red-600">Danger Zone</h3>
-                  <div className="bg-red-50 p-4 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium text-red-800">Delete Account</p>
-                        <p className="text-sm text-red-600">Permanently delete your account and all data</p>
-                      </div>
-                      <Button variant="destructive">
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Delete Account
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="billing">
-            <Card>
-              <CardHeader>
-                <CardTitle>Billing & Payment Methods</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <h3 className="font-medium mb-4">Payment Methods</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex items-center">
-                        <div className="w-12 h-8 bg-blue-600 rounded mr-3 flex items-center justify-center text-white text-xs font-bold">
-                          VISA
-                        </div>
-                        <div>
-                          <p className="font-medium">•••• •••• •••• 1234</p>
-                          <p className="text-sm text-gray-600">Expires 12/25</p>
-                        </div>
-                      </div>
-                      <div className="flex space-x-2">
-                        <Button variant="outline" size="sm">Edit</Button>
-                        <Button variant="outline" size="sm">Remove</Button>
-                      </div>
-                    </div>
-                    <Button variant="outline">Add New Payment Method</Button>
-                  </div>
-                </div>
-
-                <div className="border-t pt-6">
-                  <h3 className="font-medium mb-4">Billing Address</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input placeholder="Street Address" />
-                    <Input placeholder="City" />
-                    <Input placeholder="State/Province" />
-                    <Input placeholder="ZIP/Postal Code" />
-                  </div>
-                  <Button className="mt-4">Save Billing Address</Button>
-                </div>
-
-                <div className="border-t pt-6">
-                  <h3 className="font-medium mb-4">Invoices & Receipts</h3>
-                  <p className="text-gray-600 mb-4">Download your payment history and receipts</p>
-                  <Button variant="outline">Download Invoice History</Button>
                 </div>
               </CardContent>
             </Card>
