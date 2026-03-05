@@ -1,12 +1,10 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Home, 
-  Search, 
   ShoppingBag, 
   MessageSquare, 
-  CreditCard, 
   HelpCircle, 
   Settings, 
   User,
@@ -32,24 +30,34 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Badge } from '@/components/ui/badge';
-import BuyerBrowse from './buyer/BuyerBrowse';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import BuyerOrders from './buyer/BuyerOrders';
 import BuyerMessages from './buyer/BuyerMessages';
-import BuyerPayments from './buyer/BuyerPayments';
 import BuyerHelp from './buyer/BuyerHelp';
 import BuyerSettings from './buyer/BuyerSettings';
 
 const sidebarItems = [
   { title: "Dashboard", icon: Home, key: "dashboard" },
-  { title: "Browse Services", icon: Search, key: "browse" },
   { title: "My Orders", icon: ShoppingBag, key: "orders" },
   { title: "Messages", icon: MessageSquare, key: "messages" },
-  { title: "Payments", icon: CreditCard, key: "payments" },
   { title: "Help Center", icon: HelpCircle, key: "help" },
   { title: "Settings", icon: Settings, key: "settings" },
 ];
 
-const BuyerSidebar = ({ activeSection, setActiveSection }: { activeSection: string; setActiveSection: (section: string) => void }) => {
+interface ProfileData {
+  full_name: string | null;
+  username: string | null;
+  email: string | null;
+  profile_image_url: string | null;
+  location: string | null;
+  bio: string | null;
+}
+
+const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSection: string; setActiveSection: (section: string) => void; profile: ProfileData | null }) => {
+  const initials = profile?.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'B';
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -74,7 +82,7 @@ const BuyerSidebar = ({ activeSection, setActiveSection }: { activeSection: stri
                     <button 
                       onClick={() => setActiveSection(item.key)}
                       className={`flex items-center space-x-2 w-full ${
-                        activeSection === item.key ? 'text-blue-600 font-medium' : ''
+                        activeSection === item.key ? 'text-primary font-medium' : ''
                       }`}
                     >
                       <item.icon className="w-4 h-4" />
@@ -90,12 +98,13 @@ const BuyerSidebar = ({ activeSection, setActiveSection }: { activeSection: stri
       <SidebarFooter>
         <div className="p-4 border-t">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-              <User className="w-4 h-4 text-white" />
-            </div>
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={profile?.profile_image_url || undefined} />
+              <AvatarFallback className="bg-purple-500 text-white text-xs">{initials}</AvatarFallback>
+            </Avatar>
             <div>
-              <p className="text-sm font-medium">Buyer</p>
-              <p className="text-xs text-gray-500">Online</p>
+              <p className="text-sm font-medium">{profile?.full_name || 'Buyer'}</p>
+              <p className="text-xs text-muted-foreground">Online</p>
             </div>
           </div>
         </div>
@@ -106,19 +115,45 @@ const BuyerSidebar = ({ activeSection, setActiveSection }: { activeSection: stri
 
 const BuyerDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const { user } = useAuth();
+
+  const fetchProfile = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from('profiles')
+      .select('full_name, username, email, profile_image_url, location, bio')
+      .eq('id', user.id)
+      .maybeSingle();
+    if (data) setProfile(data);
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, [user]);
+
+  const initials = profile?.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'B';
 
   const renderContent = () => {
     switch (activeSection) {
       case 'dashboard':
         return (
           <div className="space-y-6">
-            {/* Welcome Message */}
             <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 sm:p-6 rounded-lg">
-              <h1 className="text-xl sm:text-2xl font-bold mb-2">Welcome back! 👋</h1>
-              <p className="text-purple-100 text-sm sm:text-base">Ready to find amazing talent for your projects?</p>
+              <div className="flex items-center gap-4">
+                <Avatar className="h-14 w-14 border-2 border-white/50">
+                  <AvatarImage src={profile?.profile_image_url || undefined} />
+                  <AvatarFallback className="bg-white/20 text-white text-lg">{initials}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold mb-1">Welcome back, {profile?.full_name || 'Buyer'}! 👋</h1>
+                  <p className="text-purple-100 text-sm sm:text-base">
+                    {profile?.email}{profile?.location ? ` · ${profile.location}` : ''}
+                  </p>
+                </div>
+              </div>
             </div>
 
-            {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -130,7 +165,6 @@ const BuyerDashboard = () => {
                   <p className="text-xs text-muted-foreground">No active orders</p>
                 </CardContent>
               </Card>
-
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Completed Projects</CardTitle>
@@ -141,7 +175,6 @@ const BuyerDashboard = () => {
                   <p className="text-xs text-muted-foreground">Start ordering services</p>
                 </CardContent>
               </Card>
-
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
@@ -152,7 +185,6 @@ const BuyerDashboard = () => {
                   <p className="text-xs text-muted-foreground">All time</p>
                 </CardContent>
               </Card>
-
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Avg. Rating Given</CardTitle>
@@ -165,7 +197,6 @@ const BuyerDashboard = () => {
               </Card>
             </div>
 
-            {/* Active Orders */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -179,66 +210,34 @@ const BuyerDashboard = () => {
                 </div>
               </CardContent>
             </Card>
-
-            {/* Recommended Services */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Get Started</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-4">
-                    Browse our marketplace to find talented freelancers for your projects
-                  </p>
-                  <Button 
-                    onClick={() => setActiveSection('browse')}
-                  >
-                    Browse All Services
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         );
-
-      case 'browse':
-        return <BuyerBrowse />;
 
       case 'orders':
         return <BuyerOrders />;
-
       case 'messages':
         return <BuyerMessages />;
-
-      case 'payments':
-        return <BuyerPayments />;
-
       case 'help':
         return <BuyerHelp />;
-
       case 'settings':
-        return <BuyerSettings />;
-
+        return <BuyerSettings onProfileUpdated={fetchProfile} />;
       default:
-        return (
-          <div className="flex items-center justify-center h-64">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Coming Soon</h2>
-              <p className="text-gray-600">This section is under development</p>
-            </div>
-          </div>
-        );
+        return null;
     }
   };
 
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <BuyerSidebar activeSection={activeSection} setActiveSection={setActiveSection} />
+        <BuyerSidebar activeSection={activeSection} setActiveSection={setActiveSection} profile={profile} />
         <SidebarInset>
           <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
             <SidebarTrigger className="-ml-1" />
             <div className="ml-auto flex items-center space-x-4">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={profile?.profile_image_url || undefined} />
+                <AvatarFallback className="bg-purple-500 text-white text-xs">{initials}</AvatarFallback>
+              </Avatar>
               <Badge variant="outline">Buyer</Badge>
             </div>
           </header>
