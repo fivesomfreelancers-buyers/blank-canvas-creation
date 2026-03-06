@@ -227,7 +227,10 @@ const HowItWorks = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className={`p-6 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
                 <p className={`text-sm mb-4 italic ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  "FIVESOM helped me grow my design business from a side hustle to a full-time career. The platform's tools and support made all the difference."
+                  ""FIVESOM helped me grow my design business from a side hustle to a full-time career. The platform's tools and support made all the difference."
+
+
+
                 </p>
                 <p className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>- Rahma Xamuud, Graphic Designer
 
@@ -359,10 +362,7 @@ const HowItWorks = () => {
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              {[{
-                question: 'How does the escrow system work?',
-                answer: 'Your payment is held securely until you approve the delivered work. This protects both buyers and freelancers.'
-              }, {
+              {[{ question: 'How does the escrow system work?', answer: 'Your payment is held securely until you approve the delivered work. This protects both buyers and freelancers.' }, {
                 question: 'What if I\'m not satisfied with the work?',
                 answer: 'You can request revisions or work with our support team to resolve any issues before releasing payment.'
               }, {
