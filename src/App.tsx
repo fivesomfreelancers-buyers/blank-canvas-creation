@@ -60,6 +60,7 @@ const App = () => (
               <Route path="/seller/payment" element={<SellerPayment />} />
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/create-gig" element={<CreateGig />} />
+              <Route path="/edit-gig/:gigId" element={<CreateGig />} />
               
               {/* Public Freelancer Profile Route */}
               <Route path="/profile/:freelancerId" element={<FreelancerProfilePage />} />

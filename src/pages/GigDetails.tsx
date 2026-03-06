@@ -4,10 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Star, MessageSquare, Shield, Clock, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, MessageSquare, Shield, Clock, CheckCircle, ChevronLeft, ChevronRight, Package } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Navbar from '@/components/Navbar';
-import FreelancerFAQDisplay from '@/components/faq/FreelancerFAQDisplay';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -21,6 +21,9 @@ const GigDetails = () => {
   const [contactMessage, setContactMessage] = useState('');
   const [sendingMessage, setSendingMessage] = useState(false);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
+  const [packages, setPackages] = useState<any[]>([]);
+  const [selectedPackage, setSelectedPackage] = useState<string>('basic');
+  const [faqs, setFaqs] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchGig = async () => {
@@ -28,45 +31,42 @@ const GigDetails = () => {
 
       const { data: gigData, error } = await supabase
         .from('gigs')
-        .select(`*, freelancers ( user_id, rating, completed_orders, is_verified, bio )`)
+        .select(`*, freelancers ( id, user_id, rating, completed_orders, is_verified, bio )`)
         .eq('id', id)
         .single();
 
-      if (error || !gigData) {
-        setLoading(false);
-        return;
-      }
+      if (error || !gigData) { setLoading(false); return; }
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('full_name, profile_image_url')
-        .eq('id', gigData.freelancers?.user_id)
-        .single();
+      const { data: profile } = await supabase.from('profiles').select('full_name, profile_image_url').eq('id', gigData.freelancers?.user_id).single();
 
-      const { data: reviews } = await supabase
-        .from('gig_reviews')
-        .select('rating, comment, created_at, buyer_id')
-        .eq('gig_id', id);
+      const { data: reviews } = await supabase.from('gig_reviews').select('rating, comment, created_at, buyer_id').eq('gig_id', id);
 
-      // Fetch buyer names for reviews
       const reviewsWithNames = await Promise.all((reviews || []).map(async (review) => {
-        const { data: buyerProfile } = await supabase
-          .from('profiles')
-          .select('full_name')
-          .eq('id', review.buyer_id)
-          .single();
+        const { data: buyerProfile } = await supabase.from('profiles').select('full_name').eq('id', review.buyer_id).single();
         return { ...review, buyerName: buyerProfile?.full_name || 'Anonymous Buyer' };
       }));
 
-      const avgRating = reviews && reviews.length > 0
-        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-        : 0;
+      const avgRating = reviews && reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
+
+      // Fetch packages
+      const { data: pkgData } = await supabase.from('gig_packages').select('*').eq('gig_id', id).eq('is_active', true).order('price', { ascending: true });
+      setPackages(pkgData || []);
+      if (pkgData && pkgData.length > 0) {
+        setSelectedPackage(pkgData[0].package_type);
+      }
+
+      // Fetch FAQs
+      if (gigData.freelancers?.id) {
+        const { data: faqData } = await supabase.from('freelancer_faqs').select('*').eq('freelancer_id', gigData.freelancers.id);
+        setFaqs(faqData || []);
+      }
 
       setGig({
         ...gigData,
         freelancerName: profile?.full_name || 'Anonymous',
         freelancerImageUrl: profile?.profile_image_url,
         freelancerUserId: gigData.freelancers?.user_id,
+        freelancerId: gigData.freelancers?.id,
         rating: avgRating,
         totalReviews: reviews?.length || 0,
         reviews: reviewsWithNames,
@@ -81,37 +81,26 @@ const GigDetails = () => {
   }, [id]);
 
   const handleContact = async () => {
-    if (!user) {
-      toast({ title: "Please log in", description: "You need to be logged in to contact a freelancer.", variant: "destructive" });
-      return;
-    }
-    if (!contactMessage.trim()) {
-      toast({ title: "Empty message", description: "Please type a message.", variant: "destructive" });
-      return;
-    }
+    if (!user) { toast({ title: "Please log in", description: "You need to be logged in to contact a freelancer.", variant: "destructive" }); return; }
+    if (!contactMessage.trim()) { toast({ title: "Empty message", description: "Please type a message.", variant: "destructive" }); return; }
     setSendingMessage(true);
     try {
-      const { error } = await supabase.from('messages').insert({
-        sender_id: user.id,
-        receiver_id: gig.freelancerUserId,
-        message: contactMessage.trim(),
-      });
+      const { error } = await supabase.from('messages').insert({ sender_id: user.id, receiver_id: gig.freelancerUserId, message: contactMessage.trim() });
       if (error) throw error;
       toast({ title: "Message Sent!", description: `Your message has been sent to ${gig.freelancerName}.` });
       setContactMessage('');
     } catch (err) {
       console.error(err);
       toast({ title: "Error", description: "Failed to send message.", variant: "destructive" });
-    } finally {
-      setSendingMessage(false);
-    }
+    } finally { setSendingMessage(false); }
   };
 
-  const handleOrder = () => {
+  const handleOrder = (pkg?: any) => {
+    const orderPkg = pkg || packages.find(p => p.package_type === selectedPackage) || { name: 'Standard', price: gig.base_price, delivery_time: `${gig.delivery_time_days} days`, revisions: '2', features: [] };
     navigate('/payment', {
       state: {
         gig: { id: gig.id, title: gig.title, freelancer: { name: gig.freelancerName, avatar: gig.freelancerName?.[0] || 'F', profileImage: gig.freelancerImageUrl || '' } },
-        selectedPackage: { name: 'Standard', price: gig.base_price, delivery: `${gig.delivery_time_days} days`, revisions: '2', features: [] }
+        selectedPackage: { name: orderPkg.name, price: orderPkg.price, delivery: orderPkg.delivery_time || `${gig.delivery_time_days} days`, revisions: orderPkg.revisions || '2', features: orderPkg.features || [] }
       }
     });
   };
@@ -119,27 +108,14 @@ const GigDetails = () => {
   const initials = gig?.freelancerName?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'F';
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="max-w-7xl mx-auto px-4 py-8 pt-24 text-center text-muted-foreground">Loading gig details...</div>
-      </div>
-    );
+    return (<div className="min-h-screen bg-background"><Navbar /><div className="max-w-7xl mx-auto px-4 py-8 pt-24 text-center text-muted-foreground">Loading gig details...</div></div>);
   }
-
   if (!gig) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="max-w-7xl mx-auto px-4 py-8 pt-24 text-center">
-          <h2 className="text-2xl font-bold text-foreground">Gig not found</h2>
-          <Button onClick={() => navigate('/explore')} className="mt-4">Browse Services</Button>
-        </div>
-      </div>
-    );
+    return (<div className="min-h-screen bg-background"><Navbar /><div className="max-w-7xl mx-auto px-4 py-8 pt-24 text-center"><h2 className="text-2xl font-bold text-foreground">Gig not found</h2><Button onClick={() => navigate('/explore')} className="mt-4">Browse Services</Button></div></div>);
   }
 
   const images = gig.images && gig.images.length > 0 ? gig.images : [];
+  const currentPkg = packages.find(p => p.package_type === selectedPackage);
 
   return (
     <div className="min-h-screen bg-background">
@@ -156,27 +132,11 @@ const GigDetails = () => {
                     <img src={images[selectedImageIdx]} alt={gig.title} className="w-full h-96 object-cover rounded-t-lg" />
                     {images.length > 1 && (
                       <>
-                        <button
-                          onClick={() => setSelectedImageIdx((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
-                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                          aria-label="Previous image"
-                        >
-                          <ChevronLeft className="w-5 h-5" />
-                        </button>
-                        <button
-                          onClick={() => setSelectedImageIdx((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                          aria-label="Next image"
-                        >
-                          <ChevronRight className="w-5 h-5" />
-                        </button>
+                        <button onClick={() => setSelectedImageIdx((prev) => (prev === 0 ? images.length - 1 : prev - 1))} className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity" aria-label="Previous image"><ChevronLeft className="w-5 h-5" /></button>
+                        <button onClick={() => setSelectedImageIdx((prev) => (prev === images.length - 1 ? 0 : prev + 1))} className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity" aria-label="Next image"><ChevronRight className="w-5 h-5" /></button>
                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
                           {images.map((_: string, idx: number) => (
-                            <button
-                              key={idx}
-                              onClick={() => setSelectedImageIdx(idx)}
-                              className={`w-2.5 h-2.5 rounded-full transition-colors ${idx === selectedImageIdx ? 'bg-primary' : 'bg-background/60'}`}
-                            />
+                            <button key={idx} onClick={() => setSelectedImageIdx(idx)} className={`w-2.5 h-2.5 rounded-full transition-colors ${idx === selectedImageIdx ? 'bg-primary' : 'bg-background/60'}`} />
                           ))}
                         </div>
                       </>
@@ -185,13 +145,7 @@ const GigDetails = () => {
                   {images.length > 1 && (
                     <div className="flex gap-2 p-3">
                       {images.map((img: string, idx: number) => (
-                        <button
-                          key={idx}
-                          onClick={() => setSelectedImageIdx(idx)}
-                          className={`w-16 h-16 rounded-md overflow-hidden border-2 transition-colors ${
-                            idx === selectedImageIdx ? 'border-primary' : 'border-transparent'
-                          }`}
-                        >
+                        <button key={idx} onClick={() => setSelectedImageIdx(idx)} className={`w-16 h-16 rounded-md overflow-hidden border-2 transition-colors ${idx === selectedImageIdx ? 'border-primary' : 'border-transparent'}`}>
                           <img src={img} alt="" className="w-full h-full object-cover" />
                         </button>
                       ))}
@@ -229,11 +183,9 @@ const GigDetails = () => {
                     <TabsTrigger value="reviews">Reviews ({gig.totalReviews})</TabsTrigger>
                     <TabsTrigger value="about">About Seller</TabsTrigger>
                   </TabsList>
-                  
                   <TabsContent value="description" className="mt-4">
                     <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">{gig.description}</p>
                   </TabsContent>
-                  
                   <TabsContent value="reviews" className="mt-4">
                     {gig.reviews.length > 0 ? (
                       <div className="space-y-4">
@@ -241,9 +193,7 @@ const GigDetails = () => {
                           <div key={idx} className="border-b border-border pb-4">
                             <div className="flex items-center justify-between mb-2">
                               <span className="font-medium text-sm">{review.buyerName}</span>
-                              <span className="text-xs text-muted-foreground">
-                                {new Date(review.created_at).toLocaleDateString()}
-                              </span>
+                              <span className="text-xs text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</span>
                             </div>
                             <div className="flex items-center mb-2">
                               {[1,2,3,4,5].map((star) => (
@@ -258,7 +208,6 @@ const GigDetails = () => {
                       <p className="text-muted-foreground text-center py-8">No reviews yet</p>
                     )}
                   </TabsContent>
-                  
                   <TabsContent value="about" className="mt-4">
                     <div className="flex items-center space-x-4">
                       <Avatar className="w-16 h-16">
@@ -277,25 +226,91 @@ const GigDetails = () => {
             </Card>
 
             {/* FAQ Section */}
-            {gig.freelancer_id && <FreelancerFAQDisplay freelancerId={gig.freelancer_id} />}
+            {faqs.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Frequently Asked Questions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Accordion type="single" collapsible className="w-full">
+                    {faqs.map((faq, idx) => (
+                      <AccordionItem key={faq.id || idx} value={`faq-${idx}`}>
+                        <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
+                        <AccordionContent className="text-muted-foreground">{faq.answer}</AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Right Column */}
           <div className="space-y-6">
-            {/* Order Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Order This Gig</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <span className="text-2xl font-bold text-green-600">${Number(gig.base_price).toFixed(2)}</span>
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4 mr-2" />
-                  <span>{gig.delivery_time_days} days delivery</span>
-                </div>
-                <Button onClick={handleOrder} className="w-full">Continue (${Number(gig.base_price).toFixed(2)})</Button>
-              </CardContent>
-            </Card>
+            {/* Package Selection */}
+            {packages.length > 0 ? (
+              <Card>
+                <CardHeader className="pb-3">
+                  <div className="flex border-b border-border">
+                    {packages.map((pkg) => (
+                      <button
+                        key={pkg.package_type}
+                        onClick={() => setSelectedPackage(pkg.package_type)}
+                        className={`flex-1 py-3 text-sm font-medium text-center capitalize transition-colors border-b-2 ${
+                          selectedPackage === pkg.package_type
+                            ? 'border-primary text-primary'
+                            : 'border-transparent text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        {pkg.package_type}
+                      </button>
+                    ))}
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {currentPkg && (
+                    <>
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-lg">{currentPkg.name}</h3>
+                        <span className="text-2xl font-bold text-green-600">${Number(currentPkg.price).toFixed(2)}</span>
+                      </div>
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <Clock className="w-4 h-4 mr-2" />
+                        <span>{currentPkg.delivery_time} delivery</span>
+                      </div>
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <span>🔄 {currentPkg.revisions} revision{currentPkg.revisions !== '1' ? 's' : ''}</span>
+                      </div>
+                      {currentPkg.features && currentPkg.features.length > 0 && (
+                        <div className="space-y-2 pt-2 border-t border-border">
+                          {currentPkg.features.map((feat: string, idx: number) => (
+                            <div key={idx} className="flex items-center text-sm">
+                              <CheckCircle className="w-4 h-4 mr-2 text-green-500 flex-shrink-0" />
+                              <span>{feat}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <Button onClick={() => handleOrder(currentPkg)} className="w-full">
+                        Continue (${Number(currentPkg.price).toFixed(2)})
+                      </Button>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardHeader><CardTitle>Order This Gig</CardTitle></CardHeader>
+                <CardContent className="space-y-4">
+                  <span className="text-2xl font-bold text-green-600">${Number(gig.base_price).toFixed(2)}</span>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Clock className="w-4 h-4 mr-2" />
+                    <span>{gig.delivery_time_days} days delivery</span>
+                  </div>
+                  <Button onClick={() => handleOrder()} className="w-full">Continue (${Number(gig.base_price).toFixed(2)})</Button>
+                </CardContent>
+              </Card>
+            )}
 
             {/* About Seller */}
             <Card>
@@ -324,12 +339,7 @@ const GigDetails = () => {
             <Card>
               <CardHeader><CardTitle>Contact Seller</CardTitle></CardHeader>
               <CardContent className="space-y-3">
-                <Textarea
-                  placeholder="Hi, I'm interested in your service..."
-                  value={contactMessage}
-                  onChange={(e) => setContactMessage(e.target.value)}
-                  rows={3}
-                />
+                <Textarea placeholder="Hi, I'm interested in your service..." value={contactMessage} onChange={(e) => setContactMessage(e.target.value)} rows={3} />
                 <Button onClick={handleContact} disabled={sendingMessage} className="w-full" variant="outline">
                   <MessageSquare className="w-4 h-4 mr-2" />
                   {sendingMessage ? 'Sending...' : 'Send Message'}

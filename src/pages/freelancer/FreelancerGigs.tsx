@@ -131,7 +131,7 @@ const FreelancerGigs = () => {
                       <Eye className="w-4 h-4 mr-1" />
                       View
                     </Button>
-                    <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                    <Button variant="outline" size="sm" className="w-full sm:w-auto" onClick={() => navigate(`/edit-gig/${gig.id}`)}>
                       <Edit className="w-4 h-4 mr-1" />
                       Edit
                     </Button>
