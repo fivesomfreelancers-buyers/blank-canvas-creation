@@ -238,7 +238,7 @@ const HowItWorks = () => {
               </div>
               <div className={`p-6 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
                 <p className={`text-sm mb-4 italic ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  "Finding quality freelancers was always challenging until I discovered FIVESOM. Now I have a reliable team for all my projects."
+                  “Before FIVESOM, finding skilled and reliable freelancers was always a challenge. We spent countless hours searching for the right talent. With FIVESOM, everything changed — we can now connect with professional freelancers quickly and build strong teams for every project.”
                 </p>
                 <p className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>- Aden Yusuf, Startup Co&Founder
 
