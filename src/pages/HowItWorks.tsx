@@ -23,22 +23,22 @@ const HowItWorks = () => {
   }, []);
 
   const benefits = [
-    {
-      icon: Shield,
-      title: 'Secure & Protected',
-      description: 'Your payments and data are protected with bank-level security and our escrow system.'
-    },
-    {
-      icon: Clock,
-      title: 'Fast Delivery',
-      description: 'Get your projects completed on time with our reliable freelancers and milestone tracking.'
-    },
-    {
-      icon: Star,
-      title: 'Quality Guaranteed',
-      description: 'Work with top-rated professionals who are verified and have proven track records.'
-    }
-  ];
+  {
+    icon: Shield,
+    title: 'Secure & Protected',
+    description: 'Your payments and data are protected with bank-level security and our escrow system.'
+  },
+  {
+    icon: Clock,
+    title: 'Fast Delivery',
+    description: 'Get your projects completed on time with our reliable freelancers and milestone tracking.'
+  },
+  {
+    icon: Star,
+    title: 'Quality Guaranteed',
+    description: 'Work with top-rated professionals who are verified and have proven track records.'
+  }];
+
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
@@ -229,8 +229,8 @@ const HowItWorks = () => {
                 <p className={`text-sm mb-4 italic ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                   "FIVESOM helped me grow my design business from a side hustle to a full-time career. The platform's tools and support made all the difference."
                 </p>
-                <p className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  - Sarah, Graphic Designer
+                <p className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>- Rahma Xamuud, Graphic Designer
+
                 </p>
               </div>
               <div className={`p-6 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
@@ -360,18 +360,18 @@ const HowItWorks = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {[{
-              question: 'How does the escrow system work?',
-              answer: 'Your payment is held securely until you approve the delivered work. This protects both buyers and freelancers.'
-            }, {
-              question: 'What if I\'m not satisfied with the work?',
-              answer: 'You can request revisions or work with our support team to resolve any issues before releasing payment.'
-            }, {
-              question: 'How do I know if a freelancer is qualified?',
-              answer: 'All freelancers have verified profiles, portfolios, ratings, and reviews from previous clients.'
-            }, {
-              question: 'Are there any hidden fees?',
-              answer: 'No, we believe in transparent pricing. All fees are clearly displayed before you make any payment.'
-            }].map((faq, index) => <div key={index} className={`backdrop-blur-lg rounded-xl p-6 text-left ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'}`}>
+                question: 'How does the escrow system work?',
+                answer: 'Your payment is held securely until you approve the delivered work. This protects both buyers and freelancers.'
+              }, {
+                question: 'What if I\'m not satisfied with the work?',
+                answer: 'You can request revisions or work with our support team to resolve any issues before releasing payment.'
+              }, {
+                question: 'How do I know if a freelancer is qualified?',
+                answer: 'All freelancers have verified profiles, portfolios, ratings, and reviews from previous clients.'
+              }, {
+                question: 'Are there any hidden fees?',
+                answer: 'No, we believe in transparent pricing. All fees are clearly displayed before you make any payment.'
+              }].map((faq, index) => <div key={index} className={`backdrop-blur-lg rounded-xl p-6 text-left ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'}`}>
                   <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {faq.question}
                   </h4>
@@ -401,7 +401,7 @@ const HowItWorks = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 export default HowItWorks;
