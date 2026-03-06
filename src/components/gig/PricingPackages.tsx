@@ -45,16 +45,12 @@ const PricingPackages = ({ gigData, updateGigData, onNext, onPrevious }: Pricing
 
   const handleNext = () => {
     const activePackages = Object.values(gigData.packages).filter(pkg => pkg.isActive);
-    const isValid = activePackages.length > 0 && activePackages.every(pkg =>
-      pkg.price && pkg.deliveryTime && pkg.revisions && pkg.features.length > 0
-    );
+    const isValid = activePackages.length > 0 && activePackages.every(pkg => pkg.price);
     if (isValid) onNext();
   };
 
   const activePackages = Object.values(gigData.packages).filter(pkg => pkg.isActive);
-  const isValid = activePackages.length > 0 && activePackages.every(pkg =>
-    pkg.price && pkg.deliveryTime && pkg.revisions && pkg.features.length > 0
-  );
+  const isValid = activePackages.length > 0 && activePackages.every(pkg => pkg.price);
 
   return (
     <div className="space-y-8">
