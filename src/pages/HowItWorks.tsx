@@ -237,8 +237,8 @@ const HowItWorks = () => {
                 <p className={`text-sm mb-4 italic ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                   "Finding quality freelancers was always challenging until I discovered FIVESOM. Now I have a reliable team for all my projects."
                 </p>
-                <p className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  - Mark, Startup Founder
+                <p className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>- Aden Yusuf, Startup Co&Founder
+
                 </p>
               </div>
             </div>
