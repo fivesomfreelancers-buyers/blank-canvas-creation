@@ -171,6 +171,53 @@ export type Database = {
           },
         ]
       }
+      gig_packages: {
+        Row: {
+          created_at: string | null
+          delivery_time: string | null
+          features: string[] | null
+          gig_id: string
+          id: string
+          is_active: boolean | null
+          name: string
+          package_type: string
+          price: number
+          revisions: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          delivery_time?: string | null
+          features?: string[] | null
+          gig_id: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          package_type: string
+          price?: number
+          revisions?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          delivery_time?: string | null
+          features?: string[] | null
+          gig_id?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          package_type?: string
+          price?: number
+          revisions?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gig_packages_gig_id_fkey"
+            columns: ["gig_id"]
+            isOneToOne: false
+            referencedRelation: "gigs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gig_reviews: {
         Row: {
           buyer_id: string
