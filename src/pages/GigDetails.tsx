@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Star, MessageSquare, Shield, Clock, CheckCircle, ChevronLeft, ChevronRight, Package } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Star, MessageSquare, Shield, Clock, CheckCircle, ChevronLeft, ChevronRight, Tag } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Navbar from '@/components/Navbar';
@@ -24,6 +25,7 @@ const GigDetails = () => {
   const [packages, setPackages] = useState<any[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<string>('basic');
   const [faqs, setFaqs] = useState<any[]>([]);
+  const [freelancerLastSeen, setFreelancerLastSeen] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchGig = async () => {
@@ -37,7 +39,9 @@ const GigDetails = () => {
 
       if (error || !gigData) { setLoading(false); return; }
 
-      const { data: profile } = await supabase.from('profiles').select('full_name, profile_image_url').eq('id', gigData.freelancers?.user_id).single();
+      const { data: profile } = await supabase.from('profiles').select('full_name, profile_image_url, last_seen, languages').eq('id', gigData.freelancers?.user_id).single();
+
+      setFreelancerLastSeen(profile?.last_seen || null);
 
       const { data: reviews } = await supabase.from('gig_reviews').select('rating, comment, created_at, buyer_id').eq('gig_id', id);
 
@@ -48,14 +52,10 @@ const GigDetails = () => {
 
       const avgRating = reviews && reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
 
-      // Fetch packages
       const { data: pkgData } = await supabase.from('gig_packages').select('*').eq('gig_id', id).eq('is_active', true).order('price', { ascending: true });
       setPackages(pkgData || []);
-      if (pkgData && pkgData.length > 0) {
-        setSelectedPackage(pkgData[0].package_type);
-      }
+      if (pkgData && pkgData.length > 0) setSelectedPackage(pkgData[0].package_type);
 
-      // Fetch FAQs
       if (gigData.freelancers?.id) {
         const { data: faqData } = await supabase.from('freelancer_faqs').select('*').eq('freelancer_id', gigData.freelancers.id);
         setFaqs(faqData || []);
@@ -67,6 +67,7 @@ const GigDetails = () => {
         freelancerImageUrl: profile?.profile_image_url,
         freelancerUserId: gigData.freelancers?.user_id,
         freelancerId: gigData.freelancers?.id,
+        freelancerLanguages: profile?.languages || [],
         rating: avgRating,
         totalReviews: reviews?.length || 0,
         reviews: reviewsWithNames,
@@ -79,6 +80,8 @@ const GigDetails = () => {
 
     fetchGig();
   }, [id]);
+
+  const isOnline = freelancerLastSeen ? (Date.now() - new Date(freelancerLastSeen).getTime()) < 5 * 60 * 1000 : false;
 
   const handleContact = async () => {
     if (!user) { toast({ title: "Please log in", description: "You need to be logged in to contact a freelancer.", variant: "destructive" }); return; }
@@ -132,8 +135,8 @@ const GigDetails = () => {
                     <img src={images[selectedImageIdx]} alt={gig.title} className="w-full h-96 object-cover rounded-t-lg" />
                     {images.length > 1 && (
                       <>
-                        <button onClick={() => setSelectedImageIdx((prev) => (prev === 0 ? images.length - 1 : prev - 1))} className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity" aria-label="Previous image"><ChevronLeft className="w-5 h-5" /></button>
-                        <button onClick={() => setSelectedImageIdx((prev) => (prev === images.length - 1 ? 0 : prev + 1))} className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity" aria-label="Next image"><ChevronRight className="w-5 h-5" /></button>
+                        <button onClick={() => setSelectedImageIdx((prev) => (prev === 0 ? images.length - 1 : prev - 1))} className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><ChevronLeft className="w-5 h-5" /></button>
+                        <button onClick={() => setSelectedImageIdx((prev) => (prev === images.length - 1 ? 0 : prev + 1))} className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><ChevronRight className="w-5 h-5" /></button>
                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
                           {images.map((_: string, idx: number) => (
                             <button key={idx} onClick={() => setSelectedImageIdx(idx)} className={`w-2.5 h-2.5 rounded-full transition-colors ${idx === selectedImageIdx ? 'bg-primary' : 'bg-background/60'}`} />
@@ -161,11 +164,17 @@ const GigDetails = () => {
                 <h1 className="text-2xl font-bold mb-2">{gig.title}</h1>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={gig.freelancerImageUrl || ''} />
-                      <AvatarFallback className="bg-primary text-primary-foreground text-sm">{initials}</AvatarFallback>
-                    </Avatar>
+                    <div className="relative">
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={gig.freelancerImageUrl || ''} />
+                        <AvatarFallback className="bg-primary text-primary-foreground text-sm">{initials}</AvatarFallback>
+                      </Avatar>
+                      <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${isOnline ? 'bg-green-500' : 'bg-muted-foreground'}`} />
+                    </div>
                     <span className="font-medium">{gig.freelancerName}</span>
+                    <span className={`text-xs ${isOnline ? 'text-green-600' : 'text-muted-foreground'}`}>
+                      {isOnline ? 'Online' : 'Offline'}
+                    </span>
                   </div>
                   {gig.totalReviews > 0 && (
                     <div className="flex items-center">
@@ -175,16 +184,38 @@ const GigDetails = () => {
                     </div>
                   )}
                 </div>
+                {/* Tags */}
+                {gig.tags && gig.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {gig.tags.map((tag: string, idx: number) => (
+                      <Badge key={idx} variant="secondary" className="flex items-center gap-1">
+                        <Tag className="w-3 h-3" />
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="description">
                   <TabsList>
                     <TabsTrigger value="description">Description</TabsTrigger>
+                    <TabsTrigger value="requirements">Requirements</TabsTrigger>
                     <TabsTrigger value="reviews">Reviews ({gig.totalReviews})</TabsTrigger>
                     <TabsTrigger value="about">About Seller</TabsTrigger>
                   </TabsList>
                   <TabsContent value="description" className="mt-4">
                     <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">{gig.description}</p>
+                  </TabsContent>
+                  <TabsContent value="requirements" className="mt-4">
+                    {gig.buyer_requirements ? (
+                      <div>
+                        <h3 className="font-semibold mb-2">What the seller needs from you</h3>
+                        <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">{gig.buyer_requirements}</p>
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground text-center py-8">No specific requirements listed</p>
+                    )}
                   </TabsContent>
                   <TabsContent value="reviews" className="mt-4">
                     {gig.reviews.length > 0 ? (
@@ -210,13 +241,23 @@ const GigDetails = () => {
                   </TabsContent>
                   <TabsContent value="about" className="mt-4">
                     <div className="flex items-center space-x-4">
-                      <Avatar className="w-16 h-16">
-                        <AvatarImage src={gig.freelancerImageUrl || ''} />
-                        <AvatarFallback className="bg-primary text-primary-foreground text-xl">{initials}</AvatarFallback>
-                      </Avatar>
+                      <div className="relative">
+                        <Avatar className="w-16 h-16">
+                          <AvatarImage src={gig.freelancerImageUrl || ''} />
+                          <AvatarFallback className="bg-primary text-primary-foreground text-xl">{initials}</AvatarFallback>
+                        </Avatar>
+                        <span className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-background ${isOnline ? 'bg-green-500' : 'bg-muted-foreground'}`} />
+                      </div>
                       <div>
                         <h3 className="font-bold text-lg">{gig.freelancerName}</h3>
                         <p className="text-muted-foreground">{gig.completedOrders} orders completed</p>
+                        {gig.freelancerLanguages && gig.freelancerLanguages.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {gig.freelancerLanguages.map((lang: string) => (
+                              <Badge key={lang} variant="outline" className="text-xs">{lang}</Badge>
+                            ))}
+                          </div>
+                        )}
                         {gig.freelancerBio && <p className="text-muted-foreground mt-2">{gig.freelancerBio}</p>}
                       </div>
                     </div>
@@ -274,13 +315,17 @@ const GigDetails = () => {
                         <h3 className="font-semibold text-lg">{currentPkg.name}</h3>
                         <span className="text-2xl font-bold text-green-600">${Number(currentPkg.price).toFixed(2)}</span>
                       </div>
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Clock className="w-4 h-4 mr-2" />
-                        <span>{currentPkg.delivery_time} delivery</span>
-                      </div>
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <span>🔄 {currentPkg.revisions} revision{currentPkg.revisions !== '1' ? 's' : ''}</span>
-                      </div>
+                      {currentPkg.delivery_time && (
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <Clock className="w-4 h-4 mr-2" />
+                          <span>{currentPkg.delivery_time} delivery</span>
+                        </div>
+                      )}
+                      {currentPkg.revisions && (
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <span>🔄 {currentPkg.revisions} revision{currentPkg.revisions !== '1' ? 's' : ''}</span>
+                        </div>
+                      )}
                       {currentPkg.features && currentPkg.features.length > 0 && (
                         <div className="space-y-2 pt-2 border-t border-border">
                           {currentPkg.features.map((feat: string, idx: number) => (
@@ -317,13 +362,19 @@ const GigDetails = () => {
               <CardHeader><CardTitle>About the Seller</CardTitle></CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center space-x-3">
-                  <Avatar className="w-12 h-12">
-                    <AvatarImage src={gig.freelancerImageUrl || ''} />
-                    <AvatarFallback className="bg-primary text-primary-foreground">{initials}</AvatarFallback>
-                  </Avatar>
+                  <div className="relative">
+                    <Avatar className="w-12 h-12">
+                      <AvatarImage src={gig.freelancerImageUrl || ''} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">{initials}</AvatarFallback>
+                    </Avatar>
+                    <span className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-background ${isOnline ? 'bg-green-500' : 'bg-muted-foreground'}`} />
+                  </div>
                   <div>
                     <h4 className="font-medium">{gig.freelancerName}</h4>
                     <p className="text-sm text-muted-foreground">{gig.completedOrders} orders completed</p>
+                    <p className={`text-xs ${isOnline ? 'text-green-600' : 'text-muted-foreground'}`}>
+                      {isOnline ? '🟢 Online now' : '⚫ Offline'}
+                    </p>
                   </div>
                 </div>
                 {gig.isVerified && (

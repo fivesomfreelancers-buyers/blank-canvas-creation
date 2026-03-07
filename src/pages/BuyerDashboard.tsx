@@ -8,10 +8,10 @@ import {
   HelpCircle, 
   Settings, 
   User,
-  Star,
   Clock,
   CheckCircle,
-  DollarSign
+  DollarSign,
+  Wallet
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -116,6 +116,7 @@ const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSect
 const BuyerDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [stats, setStats] = useState({ activeOrders: 0, completedOrders: 0, totalSpent: 0, walletBalance: 0 });
   const { user } = useAuth();
 
   const fetchProfile = async () => {
@@ -126,10 +127,29 @@ const BuyerDashboard = () => {
       .eq('id', user.id)
       .maybeSingle();
     if (data) setProfile(data);
+
+    // Update last_seen
+    await supabase.from('profiles').update({ last_seen: new Date().toISOString() }).eq('id', user.id);
+  };
+
+  const fetchStats = async () => {
+    if (!user) return;
+    const { count: activeCount } = await supabase.from('orders').select('*', { count: 'exact', head: true }).eq('buyer_id', user.id).in('status', ['pending', 'in_progress']);
+    const { count: completedCount } = await supabase.from('orders').select('*', { count: 'exact', head: true }).eq('buyer_id', user.id).eq('status', 'completed');
+    const { data: completedOrders } = await supabase.from('orders').select('amount').eq('buyer_id', user.id).eq('status', 'completed');
+    const totalSpent = completedOrders?.reduce((sum, o) => sum + Number(o.amount), 0) || 0;
+    const { data: wallet } = await supabase.from('wallets').select('balance').eq('user_id', user.id).maybeSingle();
+    setStats({
+      activeOrders: activeCount || 0,
+      completedOrders: completedCount || 0,
+      totalSpent,
+      walletBalance: wallet?.balance || 0,
+    });
   };
 
   useEffect(() => {
     fetchProfile();
+    fetchStats();
   }, [user]);
 
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'B';
@@ -161,8 +181,8 @@ const BuyerDashboard = () => {
                   <ShoppingBag className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">0</div>
-                  <p className="text-xs text-muted-foreground">No active orders</p>
+                  <div className="text-2xl font-bold">{stats.activeOrders}</div>
+                  <p className="text-xs text-muted-foreground">{stats.activeOrders === 0 ? 'No active orders' : 'Orders in progress'}</p>
                 </CardContent>
               </Card>
               <Card>
@@ -171,8 +191,8 @@ const BuyerDashboard = () => {
                   <CheckCircle className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">0</div>
-                  <p className="text-xs text-muted-foreground">Start ordering services</p>
+                  <div className="text-2xl font-bold">{stats.completedOrders}</div>
+                  <p className="text-xs text-muted-foreground">{stats.completedOrders === 0 ? 'Start ordering services' : 'Successfully completed'}</p>
                 </CardContent>
               </Card>
               <Card>
@@ -181,18 +201,18 @@ const BuyerDashboard = () => {
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$0</div>
+                  <div className="text-2xl font-bold">${stats.totalSpent.toFixed(2)}</div>
                   <p className="text-xs text-muted-foreground">All time</p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Avg. Rating Given</CardTitle>
-                  <Star className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium">Available Balance</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">-</div>
-                  <p className="text-xs text-muted-foreground">Complete orders first</p>
+                  <div className="text-2xl font-bold">${Number(stats.walletBalance).toFixed(2)}</div>
+                  <p className="text-xs text-muted-foreground">Wallet balance</p>
                 </CardContent>
               </Card>
             </div>

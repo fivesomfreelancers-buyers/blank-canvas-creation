@@ -101,11 +101,11 @@ const CreateGig = () => {
           title: gig.title,
           category: '',
           subcategory: '',
-          tags: [],
+          tags: gig.tags || [],
           packages: pkgMap,
           description: gig.description || '',
           faqs,
-          buyerRequirements: '',
+          buyerRequirements: gig.buyer_requirements || '',
           images: [],
           documents: [],
         });
@@ -179,6 +179,8 @@ const CreateGig = () => {
           base_price: parseFloat(activePackage.price),
           delivery_time_days: parseInt(activePackage.deliveryTime) || 7,
           status: 'active',
+          tags: gigData.tags,
+          buyer_requirements: gigData.buyerRequirements,
         };
         if (imageUrls.length > 0) {
           updateData.images = imageUrls;
@@ -201,7 +203,9 @@ const CreateGig = () => {
           delivery_time_days: parseInt(activePackage.deliveryTime) || 7,
           images: imageUrls.length > 0 ? imageUrls : null,
           thumbnail_url: thumbnailUrl,
-          status: 'active'
+          status: 'active',
+          tags: gigData.tags,
+          buyer_requirements: gigData.buyerRequirements,
         }).select().single();
         if (error) throw error;
         gigRecord = data;
