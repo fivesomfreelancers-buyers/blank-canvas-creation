@@ -101,11 +101,11 @@ const CreateGig = () => {
           title: gig.title,
           category: '',
           subcategory: '',
-          tags: [],
+          tags: gig.tags || [],
           packages: pkgMap,
           description: gig.description || '',
           faqs,
-          buyerRequirements: '',
+          buyerRequirements: gig.buyer_requirements || '',
           images: [],
           documents: [],
         });
