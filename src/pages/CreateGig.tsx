@@ -179,6 +179,8 @@ const CreateGig = () => {
           base_price: parseFloat(activePackage.price),
           delivery_time_days: parseInt(activePackage.deliveryTime) || 7,
           status: 'active',
+          tags: gigData.tags,
+          buyer_requirements: gigData.buyerRequirements,
         };
         if (imageUrls.length > 0) {
           updateData.images = imageUrls;
