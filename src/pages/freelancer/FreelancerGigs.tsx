@@ -127,7 +127,7 @@ const FreelancerGigs = () => {
                     {gig.description}
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2 sm:space-x-2">
-                    <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                    <Button variant="outline" size="sm" className="w-full sm:w-auto" onClick={() => navigate(`/gig/${gig.id}`)}>
                       <Eye className="w-4 h-4 mr-1" />
                       View
                     </Button>

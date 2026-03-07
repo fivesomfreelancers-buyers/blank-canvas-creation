@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Upload, User, Mail, Lock, MapPin, Briefcase } from 'lucide-react';
+import { ArrowRight, Upload, User, Mail, Lock, MapPin, Briefcase, Globe, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
+
+const AVAILABLE_LANGUAGES = [
+  'English', 'Somali', 'Arabic', 'Italian', 'French', 'Spanish', 'German',
+  'Portuguese', 'Turkish', 'Swahili', 'Amharic', 'Hindi', 'Urdu', 'Chinese',
+  'Japanese', 'Korean', 'Russian', 'Dutch', 'Swedish', 'Norwegian'
+];
 
 const FreelancerRegister = () => {
   const [formData, setFormData] = useState({
@@ -19,21 +26,19 @@ const FreelancerRegister = () => {
     category: '',
     profileImage: null as File | null,
     shortBio: '',
-    languageLevel: '',
+    languages: [] as string[],
     location: ''
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [langSearch, setLangSearch] = useState('');
   const { toast } = useToast();
   const { signUp, user, userRole, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!authLoading && user && userRole) {
-      if (userRole === 'freelancer') {
-        navigate('/freelancer/dashboard');
-      } else if (userRole === 'buyer') {
-        navigate('/buyer/dashboard');
-      }
+      if (userRole === 'freelancer') navigate('/freelancer/dashboard');
+      else if (userRole === 'buyer') navigate('/buyer/dashboard');
     }
   }, [user, userRole, authLoading, navigate]);
 
@@ -41,96 +46,59 @@ const FreelancerRegister = () => {
     try {
       const fileExt = file.name.split('.').pop();
       const fileName = `${userId}/avatar.${fileExt}`;
-      
-      const { error: uploadError } = await supabase.storage
-        .from('profile-images')
-        .upload(fileName, file, { upsert: true });
-
-      if (uploadError) {
-        console.error('Profile image upload error:', uploadError);
-        return null;
-      }
-
-      const { data: publicUrl } = supabase.storage
-        .from('profile-images')
-        .getPublicUrl(fileName);
-
+      const { error: uploadError } = await supabase.storage.from('profile-images').upload(fileName, file, { upsert: true });
+      if (uploadError) return null;
+      const { data: publicUrl } = supabase.storage.from('profile-images').getPublicUrl(fileName);
       return publicUrl.publicUrl;
-    } catch (err) {
-      console.error('Error uploading profile image:', err);
-      return null;
-    }
+    } catch { return null; }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (formData.password !== formData.confirmPassword) {
       toast({ title: "Password Mismatch", description: "Please ensure both passwords match.", variant: "destructive" });
       return;
     }
-
     if (formData.password.length < 6) {
       toast({ title: "Password Too Short", description: "Password must be at least 6 characters long.", variant: "destructive" });
       return;
     }
-
     if (formData.shortBio.length < 50) {
       toast({ title: "Bio Too Short", description: "Please write at least 50 characters for your bio.", variant: "destructive" });
       return;
     }
 
     setIsLoading(true);
-    
-    const { error } = await signUp(
-      formData.email,
-      formData.password,
-      formData.fullName,
-      'freelancer',
-      formData.location
-    );
-    
+    const { error } = await signUp(formData.email, formData.password, formData.fullName, 'freelancer', formData.location);
     if (error) {
       let errorMessage = "Registration failed. Please try again.";
-      if (error.message.includes('User already registered')) {
-        errorMessage = "An account with this email already exists. Please login instead.";
-      }
+      if (error.message.includes('User already registered')) errorMessage = "An account with this email already exists. Please login instead.";
       toast({ title: "Registration Failed", description: errorMessage, variant: "destructive" });
       setIsLoading(false);
       return;
     }
 
-    // After signup, get user and upload profile image + update profile with bio/skills
     const { data: { user: newUser } } = await supabase.auth.getUser();
     if (newUser) {
       let profileImageUrl: string | null = null;
-      if (formData.profileImage) {
-        profileImageUrl = await uploadProfileImage(newUser.id, formData.profileImage);
-      }
+      if (formData.profileImage) profileImageUrl = await uploadProfileImage(newUser.id, formData.profileImage);
 
-      // Update profile with additional data
       await (supabase as any).from('profiles').update({
         bio: formData.shortBio,
         professional_title: formData.category,
+        languages: formData.languages,
         ...(profileImageUrl ? { profile_image_url: profileImageUrl } : {})
       }).eq('id', newUser.id);
 
-      // Update freelancer record with bio and skills
       await (supabase as any).from('freelancers').update({
         bio: formData.shortBio,
         skills: formData.category ? [formData.category] : []
       }).eq('user_id', newUser.id);
     }
-    
-    toast({
-      title: "Registration Successful!",
-      description: "Welcome to FIVESOM! Redirecting to your dashboard...",
-    });
+
+    toast({ title: "Registration Successful!", description: "Welcome to FIVESOM! Redirecting to your dashboard..." });
     setIsLoading(false);
-    
-    setTimeout(() => {
-      navigate('/freelancer/dashboard');
-    }, 1000);
+    setTimeout(() => navigate('/freelancer/dashboard'), 1000);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -139,10 +107,23 @@ const FreelancerRegister = () => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData(prev => ({ ...prev, profileImage: e.target.files![0] }));
+    if (e.target.files && e.target.files[0]) setFormData(prev => ({ ...prev, profileImage: e.target.files![0] }));
+  };
+
+  const addLanguage = (lang: string) => {
+    if (!formData.languages.includes(lang) && formData.languages.length < 10) {
+      setFormData(prev => ({ ...prev, languages: [...prev.languages, lang] }));
+      setLangSearch('');
     }
   };
+
+  const removeLanguage = (lang: string) => {
+    setFormData(prev => ({ ...prev, languages: prev.languages.filter(l => l !== lang) }));
+  };
+
+  const filteredLanguages = AVAILABLE_LANGUAGES.filter(
+    l => l.toLowerCase().includes(langSearch.toLowerCase()) && !formData.languages.includes(l)
+  );
 
   return (
     <>
@@ -156,7 +137,6 @@ const FreelancerRegister = () => {
 
           <div className="bg-card/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-border">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Personal Information */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="fullName" className="text-foreground font-medium">Full Name *</Label>
@@ -199,6 +179,38 @@ const FreelancerRegister = () => {
                 </div>
               </div>
 
+              {/* Languages */}
+              <div>
+                <Label className="text-foreground font-medium">Languages Spoken</Label>
+                <p className="text-sm text-muted-foreground mb-2">Select the languages you can communicate in</p>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {formData.languages.map(lang => (
+                    <Badge key={lang} variant="secondary" className="flex items-center gap-1 px-3 py-1">
+                      {lang}
+                      <X className="w-3 h-3 cursor-pointer hover:text-destructive" onClick={() => removeLanguage(lang)} />
+                    </Badge>
+                  ))}
+                </div>
+                <div className="relative">
+                  <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                  <Input
+                    value={langSearch}
+                    onChange={(e) => setLangSearch(e.target.value)}
+                    className="pl-10 h-12"
+                    placeholder="Search and select languages..."
+                  />
+                </div>
+                {langSearch && filteredLanguages.length > 0 && (
+                  <div className="mt-1 border rounded-md bg-popover max-h-40 overflow-y-auto">
+                    {filteredLanguages.map(lang => (
+                      <button key={lang} type="button" onClick={() => addLanguage(lang)} className="w-full text-left px-4 py-2 text-sm hover:bg-accent transition-colors">
+                        {lang}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <div>
                 <Label htmlFor="shortBio" className="text-foreground font-medium">Professional Bio *</Label>
                 <Textarea id="shortBio" name="shortBio" required value={formData.shortBio} onChange={handleInputChange} className="mt-1 min-h-[100px] resize-none" placeholder="Describe your skills, experience, and what makes you unique (minimum 50 characters)" />
@@ -217,9 +229,7 @@ const FreelancerRegister = () => {
                       </label>
                     </div>
                     <p className="text-xs text-muted-foreground">PNG, JPG up to 10MB</p>
-                    {formData.profileImage && (
-                      <p className="text-sm text-green-600">✓ {formData.profileImage.name}</p>
-                    )}
+                    {formData.profileImage && <p className="text-sm text-green-600">✓ {formData.profileImage.name}</p>}
                   </div>
                 </div>
               </div>
