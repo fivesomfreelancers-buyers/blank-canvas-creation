@@ -266,6 +266,7 @@ export type Database = {
       gigs: {
         Row: {
           base_price: number
+          buyer_requirements: string | null
           category_id: string | null
           created_at: string | null
           delivery_time_days: number | null
@@ -275,12 +276,14 @@ export type Database = {
           images: string[] | null
           status: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id: string | null
+          tags: string[] | null
           thumbnail_url: string | null
           title: string
           updated_at: string | null
         }
         Insert: {
           base_price?: number
+          buyer_requirements?: string | null
           category_id?: string | null
           created_at?: string | null
           delivery_time_days?: number | null
@@ -290,12 +293,14 @@ export type Database = {
           images?: string[] | null
           status?: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id?: string | null
+          tags?: string[] | null
           thumbnail_url?: string | null
           title: string
           updated_at?: string | null
         }
         Update: {
           base_price?: number
+          buyer_requirements?: string | null
           category_id?: string | null
           created_at?: string | null
           delivery_time_days?: number | null
@@ -305,6 +310,7 @@ export type Database = {
           images?: string[] | null
           status?: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id?: string | null
+          tags?: string[] | null
           thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
@@ -467,6 +473,8 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          languages: string[] | null
+          last_seen: string | null
           location: string | null
           member_since: string | null
           professional_title: string | null
@@ -482,6 +490,8 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          languages?: string[] | null
+          last_seen?: string | null
           location?: string | null
           member_since?: string | null
           professional_title?: string | null
@@ -497,6 +507,8 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          languages?: string[] | null
+          last_seen?: string | null
           location?: string | null
           member_since?: string | null
           professional_title?: string | null
