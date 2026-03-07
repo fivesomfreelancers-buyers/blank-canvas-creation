@@ -181,8 +181,8 @@ const BuyerDashboard = () => {
                   <ShoppingBag className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">0</div>
-                  <p className="text-xs text-muted-foreground">No active orders</p>
+                  <div className="text-2xl font-bold">{stats.activeOrders}</div>
+                  <p className="text-xs text-muted-foreground">{stats.activeOrders === 0 ? 'No active orders' : 'Orders in progress'}</p>
                 </CardContent>
               </Card>
               <Card>
@@ -191,8 +191,8 @@ const BuyerDashboard = () => {
                   <CheckCircle className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">0</div>
-                  <p className="text-xs text-muted-foreground">Start ordering services</p>
+                  <div className="text-2xl font-bold">{stats.completedOrders}</div>
+                  <p className="text-xs text-muted-foreground">{stats.completedOrders === 0 ? 'Start ordering services' : 'Successfully completed'}</p>
                 </CardContent>
               </Card>
               <Card>
@@ -201,18 +201,18 @@ const BuyerDashboard = () => {
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$0</div>
+                  <div className="text-2xl font-bold">${stats.totalSpent.toFixed(2)}</div>
                   <p className="text-xs text-muted-foreground">All time</p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Avg. Rating Given</CardTitle>
-                  <Star className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium">Available Balance</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">-</div>
-                  <p className="text-xs text-muted-foreground">Complete orders first</p>
+                  <div className="text-2xl font-bold">${Number(stats.walletBalance).toFixed(2)}</div>
+                  <p className="text-xs text-muted-foreground">Wallet balance</p>
                 </CardContent>
               </Card>
             </div>
