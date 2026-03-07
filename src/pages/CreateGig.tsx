@@ -203,7 +203,9 @@ const CreateGig = () => {
           delivery_time_days: parseInt(activePackage.deliveryTime) || 7,
           images: imageUrls.length > 0 ? imageUrls : null,
           thumbnail_url: thumbnailUrl,
-          status: 'active'
+          status: 'active',
+          tags: gigData.tags,
+          buyer_requirements: gigData.buyerRequirements,
         }).select().single();
         if (error) throw error;
         gigRecord = data;
