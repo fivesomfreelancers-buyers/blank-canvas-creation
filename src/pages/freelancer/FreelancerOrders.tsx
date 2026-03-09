@@ -110,10 +110,10 @@ const FreelancerOrders = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-4 text-sm text-gray-600">
+                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                       <div className="flex items-center">
                         <Clock className="w-4 h-4 mr-1" />
-                        <span className="text-slate-950">{order.status === 'completed' ? 'Completed' : order.status}</span>
+                        <span className="text-foreground">{order.status === 'completed' ? 'Completed' : order.status}</span>
                       </div>
                     </div>
                     <div className="flex space-x-2">
