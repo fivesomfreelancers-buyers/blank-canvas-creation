@@ -98,7 +98,7 @@ const FreelancerOrders = () => {
                     <div>
                       <CardTitle className="text-xl">{order.gigs?.title || 'Order'}</CardTitle>
                       <p className="mt-1 text-muted-foreground">Ordered by: {order.buyer_name || 'Buyer'}</p>
-                      <p className="text-sm text-gray-950">Order Date: {new Date(order.created_at).toLocaleDateString()}</p>
+                      <p className="text-sm text-muted-foreground">Order Date: {new Date(order.created_at).toLocaleDateString()}</p>
                     </div>
                     <div className="text-right">
                       <div className="text-2xl font-bold text-green-600 mb-2">${Number(order.amount).toFixed(2)}</div>
