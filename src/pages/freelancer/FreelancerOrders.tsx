@@ -84,8 +84,8 @@ const FreelancerOrders = () => {
           <Card>
             <CardContent className="p-12 text-center">
               <div className="space-y-4">
-                <h3 className="text-lg font-medium text-gray-900">No orders yet</h3>
-                <p className="text-gray-500">When buyers order your gigs, they will appear here</p>
+                <h3 className="text-lg font-medium text-foreground">No orders yet</h3>
+                <p className="text-muted-foreground">When buyers order your gigs, they will appear here</p>
               </div>
             </CardContent>
           </Card>
