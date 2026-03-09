@@ -97,7 +97,7 @@ const FreelancerOrders = () => {
                   <div className="flex justify-between items-start">
                     <div>
                       <CardTitle className="text-xl">{order.gigs?.title || 'Order'}</CardTitle>
-                      <p className="mt-1 text-slate-950">Ordered by: {order.profiles?.full_name || 'Buyer'}</p>
+                      <p className="mt-1 text-muted-foreground">Ordered by: {order.buyer_name || 'Buyer'}</p>
                       <p className="text-sm text-gray-950">Order Date: {new Date(order.created_at).toLocaleDateString()}</p>
                     </div>
                     <div className="text-right">
