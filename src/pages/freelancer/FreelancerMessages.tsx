@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Search, Paperclip } from 'lucide-react';
+import { Send, Search, Smile, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+
+const EMOJIS = ['👍', '😊', '✔️', '🔥', '🎉', '💬', '👌', '⭐', '📩', '🚀'];
 
 interface Conversation {
   partnerId: string;
