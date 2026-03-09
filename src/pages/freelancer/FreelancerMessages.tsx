@@ -168,6 +168,39 @@ const FreelancerMessages = () => {
     });
     if (!error) {
       setNewMessage('');
+      setShowEmojis(false);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !currentUserId || !selectedChat) return;
+
+    try {
+      setUploadingImage(true);
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${currentUserId}/${crypto.randomUUID()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('message-attachments')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('message-attachments')
+        .getPublicUrl(filePath);
+
+      await supabase.from('messages').insert({
+        sender_id: currentUserId,
+        receiver_id: selectedChat,
+        message: 'Sent an image',
+        attachment_url: publicUrl
+      });
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    } finally {
+      setUploadingImage(false);
     }
   };
 
