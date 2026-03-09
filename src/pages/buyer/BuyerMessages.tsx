@@ -150,7 +150,42 @@ const BuyerMessages = () => {
   const handleSend = async () => {
     if (!newMessage.trim() || !selectedChat || !currentUserId) return;
     const { error } = await supabase.from('messages').insert({ sender_id: currentUserId, receiver_id: selectedChat, message: newMessage.trim() });
-    if (!error) setNewMessage('');
+    if (!error) {
+      setNewMessage('');
+      setShowEmojis(false);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !currentUserId || !selectedChat) return;
+
+    try {
+      setUploadingImage(true);
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${currentUserId}/${crypto.randomUUID()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('message-attachments')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('message-attachments')
+        .getPublicUrl(filePath);
+
+      await supabase.from('messages').insert({
+        sender_id: currentUserId,
+        receiver_id: selectedChat,
+        message: 'Sent an image',
+        attachment_url: publicUrl
+      });
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const selectedConvo = conversations.find(c => c.partnerId === selectedChat);
