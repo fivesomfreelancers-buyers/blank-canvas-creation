@@ -71,11 +71,11 @@ const FreelancerOrders = () => {
     }
   };
   return (
-    <div className="min-h-screen p-6 bg-slate-50">
+    <div className="min-h-screen p-6 bg-background">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-950">Orders Received</h1>
-          <p className="mt-2 text-gray-950">Track and manage all incoming orders</p>
+          <h1 className="text-3xl font-bold text-foreground">Orders Received</h1>
+          <p className="mt-2 text-muted-foreground">Track and manage all incoming orders</p>
         </div>
 
         {loading ? (
