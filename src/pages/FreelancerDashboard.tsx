@@ -175,6 +175,29 @@ const FreelancerDashboard = () => {
           pendingEarnings,
           completedOrders: freelancer.completed_orders || 0
         });
+
+        const { data: latestOrders } = await supabase
+          .from('orders')
+          .select('*, gigs(title)')
+          .eq('freelancer_id', freelancer.id)
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        if (latestOrders && latestOrders.length > 0) {
+          const buyerIds = [...new Set(latestOrders.map(o => o.buyer_id))];
+          const { data: profiles } = await supabase
+            .from('profiles')
+            .select('id, full_name')
+            .in('id', buyerIds);
+          
+          const profileMap = new Map(profiles?.map(p => [p.id, p.full_name]) || []);
+          
+          const enrichedOrders = latestOrders.map(order => ({
+            ...order,
+            buyer_name: profileMap.get(order.buyer_id) || 'Buyer'
+          }));
+          setRecentOrders(enrichedOrders);
+        }
       }
     };
 
