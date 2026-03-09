@@ -28,12 +28,30 @@ const FreelancerOrders = () => {
 
       const { data: ordersData, error } = await supabase
         .from('orders')
-        .select('*, gigs(title), buyers(user_id), profiles!orders_buyer_id_fkey(full_name)')
+        .select('*, gigs(title)')
         .eq('freelancer_id', freelancer.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setOrders(ordersData || []);
+
+      // Fetch buyer profiles manually since there's no direct FK
+      if (ordersData && ordersData.length > 0) {
+        const buyerIds = [...new Set(ordersData.map(o => o.buyer_id))];
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, full_name')
+          .in('id', buyerIds);
+        
+        const profileMap = new Map(profiles?.map(p => [p.id, p.full_name]) || []);
+        
+        const enrichedOrders = ordersData.map(order => ({
+          ...order,
+          buyer_name: profileMap.get(order.buyer_id) || 'Buyer'
+        }));
+        setOrders(enrichedOrders as any);
+      } else {
+        setOrders([]);
+      }
     } catch (error) {
       console.error('Error fetching orders:', error);
     } finally {
