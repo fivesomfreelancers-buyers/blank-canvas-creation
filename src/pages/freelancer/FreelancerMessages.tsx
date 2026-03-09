@@ -310,6 +310,11 @@ const FreelancerMessages = () => {
                                 : 'bg-muted text-foreground rounded-bl-md'
                             }`}>
                               <p>{msg.message}</p>
+                              {msg.attachment_url && (
+                                <div className="mt-2">
+                                  <img src={msg.attachment_url} alt="Attachment" className="max-w-[200px] rounded-lg border shadow-sm" />
+                                </div>
+                              )}
                               <p className={`text-xs mt-1 ${msg.sender_id === currentUserId ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                                 {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </p>
@@ -319,7 +324,35 @@ const FreelancerMessages = () => {
                       )}
                       <div ref={messagesEndRef} />
                     </div>
-                    <div className="flex space-x-2 pt-2 border-t">
+                    
+                    {showEmojis && (
+                      <div className="absolute bottom-20 bg-background border rounded-lg p-2 shadow-lg flex gap-2 z-10">
+                        {EMOJIS.map(emoji => (
+                          <button
+                            key={emoji}
+                            onClick={() => setNewMessage(prev => prev + emoji)}
+                            className="hover:bg-accent p-1 rounded text-xl"
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex space-x-2 pt-2 border-t items-center relative">
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        className="hidden" 
+                        ref={fileInputRef}
+                        onChange={handleImageUpload}
+                      />
+                      <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} disabled={uploadingImage}>
+                        {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-5 h-5 text-muted-foreground" />}
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => setShowEmojis(!showEmojis)}>
+                        <Smile className="w-5 h-5 text-muted-foreground" />
+                      </Button>
                       <Input
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
