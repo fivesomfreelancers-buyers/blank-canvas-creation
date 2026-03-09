@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Search, Paperclip } from 'lucide-react';
+import { Send, Search, Smile, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+
+const EMOJIS = ['👍', '😊', '✔️', '🔥', '🎉', '💬', '👌', '⭐', '📩', '🚀'];
 
 interface Conversation {
   partnerId: string;
@@ -23,6 +25,7 @@ interface Message {
   message: string;
   created_at: string;
   is_read: boolean;
+  attachment_url?: string | null;
 }
 
 const FreelancerMessages = () => {
@@ -33,7 +36,10 @@ const FreelancerMessages = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [showEmojis, setShowEmojis] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchConversations();
@@ -162,6 +168,39 @@ const FreelancerMessages = () => {
     });
     if (!error) {
       setNewMessage('');
+      setShowEmojis(false);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !currentUserId || !selectedChat) return;
+
+    try {
+      setUploadingImage(true);
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${currentUserId}/${crypto.randomUUID()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('message-attachments')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('message-attachments')
+        .getPublicUrl(filePath);
+
+      await supabase.from('messages').insert({
+        sender_id: currentUserId,
+        receiver_id: selectedChat,
+        message: 'Sent an image',
+        attachment_url: publicUrl
+      });
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -271,6 +310,11 @@ const FreelancerMessages = () => {
                                 : 'bg-muted text-foreground rounded-bl-md'
                             }`}>
                               <p>{msg.message}</p>
+                              {msg.attachment_url && (
+                                <div className="mt-2">
+                                  <img src={msg.attachment_url} alt="Attachment" className="max-w-[200px] rounded-lg border shadow-sm" />
+                                </div>
+                              )}
                               <p className={`text-xs mt-1 ${msg.sender_id === currentUserId ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                                 {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </p>
@@ -280,7 +324,35 @@ const FreelancerMessages = () => {
                       )}
                       <div ref={messagesEndRef} />
                     </div>
-                    <div className="flex space-x-2 pt-2 border-t">
+                    
+                    {showEmojis && (
+                      <div className="absolute bottom-20 bg-background border rounded-lg p-2 shadow-lg flex gap-2 z-10">
+                        {EMOJIS.map(emoji => (
+                          <button
+                            key={emoji}
+                            onClick={() => setNewMessage(prev => prev + emoji)}
+                            className="hover:bg-accent p-1 rounded text-xl"
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex space-x-2 pt-2 border-t items-center relative">
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        className="hidden" 
+                        ref={fileInputRef}
+                        onChange={handleImageUpload}
+                      />
+                      <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} disabled={uploadingImage}>
+                        {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-5 h-5 text-muted-foreground" />}
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => setShowEmojis(!showEmojis)}>
+                        <Smile className="w-5 h-5 text-muted-foreground" />
+                      </Button>
                       <Input
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}

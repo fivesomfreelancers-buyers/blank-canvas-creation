@@ -28,12 +28,30 @@ const FreelancerOrders = () => {
 
       const { data: ordersData, error } = await supabase
         .from('orders')
-        .select('*, gigs(title), buyers(user_id), profiles!orders_buyer_id_fkey(full_name)')
+        .select('*, gigs(title)')
         .eq('freelancer_id', freelancer.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setOrders(ordersData || []);
+
+      // Fetch buyer profiles manually since there's no direct FK
+      if (ordersData && ordersData.length > 0) {
+        const buyerIds = [...new Set(ordersData.map(o => o.buyer_id))];
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, full_name')
+          .in('id', buyerIds);
+        
+        const profileMap = new Map(profiles?.map(p => [p.id, p.full_name]) || []);
+        
+        const enrichedOrders = ordersData.map(order => ({
+          ...order,
+          buyer_name: profileMap.get(order.buyer_id) || 'Buyer'
+        }));
+        setOrders(enrichedOrders as any);
+      } else {
+        setOrders([]);
+      }
     } catch (error) {
       console.error('Error fetching orders:', error);
     } finally {
@@ -53,11 +71,11 @@ const FreelancerOrders = () => {
     }
   };
   return (
-    <div className="min-h-screen p-6 bg-slate-50">
+    <div className="min-h-screen p-6 bg-background">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-950">Orders Received</h1>
-          <p className="mt-2 text-gray-950">Track and manage all incoming orders</p>
+          <h1 className="text-3xl font-bold text-foreground">Orders Received</h1>
+          <p className="mt-2 text-muted-foreground">Track and manage all incoming orders</p>
         </div>
 
         {loading ? (
@@ -66,8 +84,8 @@ const FreelancerOrders = () => {
           <Card>
             <CardContent className="p-12 text-center">
               <div className="space-y-4">
-                <h3 className="text-lg font-medium text-gray-900">No orders yet</h3>
-                <p className="text-gray-500">When buyers order your gigs, they will appear here</p>
+                <h3 className="text-lg font-medium text-foreground">No orders yet</h3>
+                <p className="text-muted-foreground">When buyers order your gigs, they will appear here</p>
               </div>
             </CardContent>
           </Card>
@@ -79,8 +97,8 @@ const FreelancerOrders = () => {
                   <div className="flex justify-between items-start">
                     <div>
                       <CardTitle className="text-xl">{order.gigs?.title || 'Order'}</CardTitle>
-                      <p className="mt-1 text-slate-950">Ordered by: {order.profiles?.full_name || 'Buyer'}</p>
-                      <p className="text-sm text-gray-950">Order Date: {new Date(order.created_at).toLocaleDateString()}</p>
+                      <p className="mt-1 text-muted-foreground">Ordered by: {order.buyer_name || 'Buyer'}</p>
+                      <p className="text-sm text-muted-foreground">Order Date: {new Date(order.created_at).toLocaleDateString()}</p>
                     </div>
                     <div className="text-right">
                       <div className="text-2xl font-bold text-green-600 mb-2">${Number(order.amount).toFixed(2)}</div>
@@ -92,10 +110,10 @@ const FreelancerOrders = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-4 text-sm text-gray-600">
+                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                       <div className="flex items-center">
                         <Clock className="w-4 h-4 mr-1" />
-                        <span className="text-slate-950">{order.status === 'completed' ? 'Completed' : order.status}</span>
+                        <span className="text-foreground">{order.status === 'completed' ? 'Completed' : order.status}</span>
                       </div>
                     </div>
                     <div className="flex space-x-2">
