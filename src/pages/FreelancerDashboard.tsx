@@ -280,32 +280,60 @@ const FreelancerDashboard = () => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader><CardTitle>Recent Notifications</CardTitle></CardHeader>
-              <CardContent>
-                <div className="text-center py-8 text-muted-foreground">No notifications yet</div>
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex justify-between items-center">
+                    <span>Recent Order Requests</span>
+                    <Button variant="ghost" size="sm" onClick={() => setActiveSection('orders')} className="text-sm font-normal">
+                      View All
+                    </Button>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {recentOrders.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground bg-muted/20 rounded-lg">No recent orders</div>
+                  ) : (
+                    <div className="space-y-4">
+                      {recentOrders.map(order => (
+                        <div key={order.id} className="flex justify-between items-center p-3 bg-muted/30 rounded-lg border">
+                          <div>
+                            <p className="font-medium text-sm">{order.gigs?.title || 'Order'}</p>
+                            <p className="text-xs text-muted-foreground">From: {order.buyer_name}</p>
+                          </div>
+                          <div className="text-right">
+                            <Badge variant={order.status === 'pending' ? 'secondary' : 'default'} className="mb-1 text-[10px]">
+                              {order.status}
+                            </Badge>
+                            <p className="text-sm font-bold text-primary">${Number(order.amount).toFixed(2)}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
 
-            <Card>
-              <CardHeader><CardTitle>Quick Actions</CardTitle></CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Button className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2" onClick={() => setActiveSection('gigs')}>
-                    <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
-                    <span className="text-xs sm:text-sm">Create New Gig</span>
-                  </Button>
-                  <Button variant="outline" className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2" onClick={() => setActiveSection('wallet')}>
-                    <Eye className="w-5 h-5 sm:w-6 sm:h-6" />
-                    <span className="text-xs sm:text-sm">View Wallet</span>
-                  </Button>
-                  <Button variant="outline" className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2" onClick={() => setActiveSection('messages')}>
-                    <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
-                    <span className="text-xs sm:text-sm">Check Messages</span>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+              <Card>
+                <CardHeader><CardTitle>Quick Actions</CardTitle></CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+                    <Button className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2" onClick={() => setActiveSection('gigs')}>
+                      <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
+                      <span className="text-xs sm:text-sm">Create New Gig</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2" onClick={() => setActiveSection('wallet')}>
+                      <Eye className="w-5 h-5 sm:w-6 sm:h-6" />
+                      <span className="text-xs sm:text-sm">View Wallet</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 lg:col-span-2" onClick={() => setActiveSection('messages')}>
+                      <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
+                      <span className="text-xs sm:text-sm">Check Messages</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         );
       case 'gigs': return <FreelancerGigs />;
