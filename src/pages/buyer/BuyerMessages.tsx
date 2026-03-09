@@ -38,7 +38,10 @@ const BuyerMessages = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [showEmojis, setShowEmojis] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { fetchConversations(); }, [location.state]);
 
