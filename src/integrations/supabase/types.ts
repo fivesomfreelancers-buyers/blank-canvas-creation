@@ -32,24 +32,6 @@ export type Database = {
         }
         Relationships: []
       }
-      categories: {
-        Row: {
-          created_at: string | null
-          id: string
-          name: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          name: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          name?: string
-        }
-        Relationships: []
-      }
       conversations: {
         Row: {
           buyer_id: string
@@ -317,13 +299,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "gigs_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "categories"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "gigs_freelancer_id_fkey"
             columns: ["freelancer_id"]
             isOneToOne: false
@@ -539,15 +514,7 @@ export type Database = {
           id?: string
           name?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "subcategories_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "categories"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       support_tickets: {
         Row: {
