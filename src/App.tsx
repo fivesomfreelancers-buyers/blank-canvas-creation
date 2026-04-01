@@ -55,8 +55,8 @@ const App = () => (
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/register/freelancer" element={<FreelancerRegister />} />
-              <Route path="/register/buyer" element={<BuyerRegister />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="/complete-profile/:role" element={<CompleteProfile />} />
               <Route path="/seller/payment" element={<SellerPayment />} />
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/create-gig" element={<CreateGig />} />

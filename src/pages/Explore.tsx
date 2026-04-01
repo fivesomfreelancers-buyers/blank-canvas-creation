@@ -30,10 +30,15 @@ const Explore = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: categoriesData } = await supabase.from('categories').select('*');
+        // Categories are hardcoded since there's no categories table
         setCategories([
           { id: 'all', name: 'All Categories' },
-          ...(categoriesData || []).map(cat => ({ id: cat.id, name: cat.name }))
+          { id: 'design', name: 'Design & Graphics' },
+          { id: 'development', name: 'Web Development' },
+          { id: 'writing', name: 'Writing & Translation' },
+          { id: 'marketing', name: 'Digital Marketing' },
+          { id: 'video', name: 'Video & Animation' },
+          { id: 'music', name: 'Music & Audio' },
         ]);
 
         const { data: gigsData } = await supabase
