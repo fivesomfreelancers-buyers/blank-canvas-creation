@@ -11,6 +11,7 @@ import HowItWorks from "./pages/HowItWorks";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AuthCallback from "./pages/AuthCallback";
+import RoleSelection from "./pages/RoleSelection";
 import CompleteProfile from "./pages/CompleteProfile";
 import CreateGig from "./pages/CreateGig";
 import FreelancerDashboard from "./pages/FreelancerDashboard";
@@ -56,6 +57,7 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="/select-role" element={<RoleSelection />} />
               <Route path="/complete-profile/:role" element={<CompleteProfile />} />
               <Route path="/seller/payment" element={<SellerPayment />} />
               <Route path="/payment" element={<PaymentPage />} />
