@@ -15,11 +15,14 @@ const Login = () => {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (!authLoading && user && userRole) {
+    if (!authLoading && user) {
       if (userRole === 'freelancer') {
         navigate('/freelancer/dashboard');
       } else if (userRole === 'buyer') {
         navigate('/buyer/dashboard');
+      } else {
+        // User logged in but no role yet
+        navigate('/select-role');
       }
     }
   }, [user, userRole, authLoading, navigate]);
