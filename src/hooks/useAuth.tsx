@@ -62,22 +62,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         .maybeSingle();
 
       if (!data) {
-        // Profile doesn't exist - create it from user_metadata
+        // Profile doesn't exist - create it (trigger should handle this, but as fallback)
         const meta = authUser.user_metadata || {};
         await supabase.from('profiles').insert({
           id: authUser.id,
-          full_name: meta.full_name || '',
+          full_name: meta.full_name || meta.name || '',
           email: authUser.email || '',
-          role: (meta.role as 'freelancer' | 'buyer') || 'buyer',
           location: meta.location || null,
         });
-
-        // Also ensure user_roles entry exists
-        const role = (meta.role as 'freelancer' | 'buyer') || 'buyer';
-        await supabase.from('user_roles').upsert(
-          { user_id: authUser.id, role } as any,
-          { onConflict: 'user_id,role' }
-        );
       }
     } catch (err) {
       console.error('ensureProfileExists error:', err);
