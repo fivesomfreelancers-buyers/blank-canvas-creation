@@ -11,6 +11,7 @@ import HowItWorks from "./pages/HowItWorks";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AuthCallback from "./pages/AuthCallback";
+import RoleSelection from "./pages/RoleSelection";
 import CompleteProfile from "./pages/CompleteProfile";
 import CreateGig from "./pages/CreateGig";
 import FreelancerDashboard from "./pages/FreelancerDashboard";
