@@ -1,465 +1,348 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { MessageSquare, Download, Star, RefreshCw, CheckCircle, Clock, User, X } from 'lucide-react';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { MessageSquare, Download, Star, RefreshCw, CheckCircle, Clock, User, X, Link2, ArrowLeft, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import Navbar from '@/components/Navbar';
 import FeedbackModal from '@/components/feedback/FeedbackModal';
 
 const BuyerOrderDetails = () => {
+  const { orderId } = useParams();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const [order, setOrder] = useState<any>(null);
+  const [freelancerProfile, setFreelancerProfile] = useState<any>(null);
+  const [deliveries, setDeliveries] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showRevisionModal, setShowRevisionModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [revisionFeedback, setRevisionFeedback] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [orderStatus, setOrderStatus] = useState('Delivered');
   const [hasFeedback, setHasFeedback] = useState(false);
-  const { toast } = useToast();
 
-  const orderDetails = {
-    id: "#ORD-2024-001",
-    title: "Professional Logo Design for Tech Startup",
-    description: "I need a modern, professional logo for my AI technology startup. The logo should be clean, scalable, and work well in both color and black & white versions.",
-    freelancer: {
-      name: "Alex Designer",
-      avatar: "AD",
-      rating: 4.9,
-      reviews: 127
-    },
-    price: "$150",
-    status: orderStatus,
-    progress: 100,
-    orderDate: "2024-01-15",
-    expectedDelivery: "2024-01-18",
-    deliveredDate: "2024-01-17",
-    deliveryMessage: "Hello! I've completed your logo design project. Please find attached the final logo files including AI, PNG, and PDF versions. I've also included a brand guidelines document with proper usage instructions. The logo is modern, professional, and works perfectly in both color and black & white as requested. Looking forward to your feedback!"
+  useEffect(() => {
+    if (orderId) fetchOrder();
+  }, [orderId]);
+
+  const fetchOrder = async () => {
+    try {
+      const { data: orderData, error } = await supabase
+        .from('orders')
+        .select('*, gigs(title, thumbnail_url)')
+        .eq('id', orderId)
+        .single();
+
+      if (error) throw error;
+      setOrder(orderData);
+
+      // Fetch freelancer profile via freelancers table
+      const { data: freelancer } = await supabase
+        .from('freelancers')
+        .select('user_id')
+        .eq('id', orderData.freelancer_id)
+        .single();
+
+      if (freelancer) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, profile_image_url, email')
+          .eq('id', freelancer.user_id)
+          .single();
+        setFreelancerProfile(profile);
+      }
+
+      // Fetch deliveries
+      const { data: deliveryData } = await supabase
+        .from('order_deliveries')
+        .select('*')
+        .eq('order_id', orderId!)
+        .order('delivered_at', { ascending: false });
+      setDeliveries(deliveryData || []);
+    } catch (err) {
+      console.error('Error fetching order:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const milestones = [
-    {
-      title: "Order Placed",
-      date: "Jan 15, 2024",
-      time: "2:30 PM",
-      completed: true
-    },
-    {
-      title: "Requirements Confirmed",
-      date: "Jan 15, 2024",
-      time: "3:45 PM",
-      completed: true
-    },
-    {
-      title: "Initial Concepts Shared",
-      date: "Jan 16, 2024",
-      time: "10:15 AM",
-      completed: true
-    },
-    {
-      title: "Work Delivered",
-      date: "Jan 17, 2024",
-      time: "2:30 PM",
-      completed: true
-    },
-    {
-      title: orderStatus === 'Completed' ? "Order Completed" : "Review & Acceptance",
-      date: orderStatus === 'Completed' ? "Jan 17, 2024" : "Pending your review",
-      time: orderStatus === 'Completed' ? "4:15 PM" : "",
-      completed: orderStatus === 'Completed',
-      current: orderStatus === 'Delivered'
-    }
-  ];
-
-  const deliverables = [
-    { name: "Logo-Final.ai", type: "Adobe Illustrator", size: "2.4 MB", status: "delivered" },
-    { name: "Logo-PNG-Variations.zip", type: "Archive", size: "1.8 MB", status: "delivered" },
-    { name: "Logo-Vector.pdf", type: "PDF Document", size: "1.5 MB", status: "delivered" },
-    { name: "Brand-Guidelines.pdf", type: "PDF Document", size: "1.1 MB", status: "delivered" }
-  ];
-
   const handleAcceptDelivery = async () => {
+    if (!orderId) return;
     setIsProcessing(true);
-    console.log('Accepting delivery for order:', orderDetails.id);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsProcessing(false);
-      setOrderStatus('Completed');
+    try {
+      await supabase.from('orders').update({ status: 'completed' as const }).eq('id', orderId);
+      setOrder((prev: any) => ({ ...prev, status: 'completed' }));
       setShowFeedbackModal(true);
-      toast({
-        title: "Delivery Accepted! 🎉",
-        description: "Payment has been released to the freelancer.",
-      });
-    }, 2000);
+      toast({ title: "Delivery Accepted! 🎉", description: "Payment has been released to the freelancer." });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to accept delivery.", variant: "destructive" });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleRequestRevision = async () => {
-    if (!revisionFeedback.trim()) {
-      toast({
-        title: "Error",
-        description: "Please provide feedback for the revision request",
-        variant: "destructive",
-      });
-      return;
-    }
-
+    if (!revisionFeedback.trim() || !orderId) return;
     setIsProcessing(true);
-    console.log('Requesting revision with feedback:', revisionFeedback);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsProcessing(false);
+    try {
+      // Update latest delivery status
+      if (deliveries.length > 0) {
+        await supabase
+          .from('order_deliveries')
+          .update({ status: 'revision_requested' as const } as any)
+          .eq('id', deliveries[0].id);
+      }
+      await supabase.from('orders').update({ status: 'in_progress' as const }).eq('id', orderId);
+      setOrder((prev: any) => ({ ...prev, status: 'in_progress' }));
       setShowRevisionModal(false);
       setRevisionFeedback('');
-      toast({
-        title: "Revision Requested",
-        description: "Your feedback has been sent to the freelancer. They will work on the revisions.",
-      });
-    }, 2000);
+      toast({ title: "Revision Requested", description: "Your feedback has been sent to the freelancer." });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to request revision.", variant: "destructive" });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
-  const handleFeedbackSubmitted = () => {
-    setHasFeedback(true);
-    console.log('Feedback submitted for order:', orderDetails.id);
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'in_progress': return 'bg-blue-100 text-blue-800';
+      case 'delivered': return 'bg-purple-100 text-purple-800';
+      case 'completed': return 'bg-green-100 text-green-800';
+      case 'cancelled': return 'bg-red-100 text-red-800';
+      default: return 'bg-muted text-muted-foreground';
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="max-w-4xl mx-auto px-4 py-8 pt-24 text-center text-muted-foreground">Loading order details...</div>
+      </div>
+    );
+  }
+
+  if (!order) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="max-w-4xl mx-auto px-4 py-8 pt-24 text-center">
+          <h2 className="text-2xl font-bold text-foreground">Order not found</h2>
+          <Button onClick={() => navigate('/buyer/orders')} className="mt-4">Back to Orders</Button>
+        </div>
+      </div>
+    );
+  }
+
+  const freelancerInitials = freelancerProfile?.full_name?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'F';
 
   return (
-    <div className="space-y-6">
-      <div className="mb-8">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Order Details</h1>
-            <p className="text-gray-600 mt-2">{orderDetails.id}</p>
-          </div>
-          <Badge className={`text-lg px-4 py-2 ${
-            orderStatus === 'Completed' 
-              ? 'bg-green-100 text-green-800' 
-              : orderStatus === 'Delivered'
-              ? 'bg-yellow-100 text-yellow-800'
-              : 'bg-blue-100 text-blue-800'
-          }`}>
-            {orderStatus}
-          </Badge>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <div className="max-w-4xl mx-auto px-4 py-8 pt-24">
+        <Button variant="ghost" onClick={() => navigate('/buyer/orders')} className="mb-6">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Orders
+        </Button>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Order Info */}
-          <Card>
-            <CardHeader>
-              <CardTitle>{orderDetails.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-700 mb-4">{orderDetails.description}</p>
-              <div className="flex items-center space-x-6 text-sm text-gray-600">
-                <span>Order Date: {orderDetails.orderDate}</span>
-                <span>Delivered: {orderDetails.deliveredDate}</span>
-                <span className="text-green-600 font-medium">Delivered on time!</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Delivery Review Alert - Only show if status is 'Delivered' */}
-          {orderStatus === 'Delivered' && (
-            <Card className="border-yellow-200 bg-yellow-50">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Order Header */}
+            <Card>
               <CardHeader>
-                <CardTitle className="text-yellow-800 flex items-center">
-                  <Clock className="w-5 h-5 mr-2" />
-                  Delivery Awaiting Your Review
-                </CardTitle>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <CardTitle className="text-xl">{order.gigs?.title || 'Order'}</CardTitle>
+                    {order.package_name && <p className="text-sm text-muted-foreground mt-1">{order.package_name} Package</p>}
+                  </div>
+                  <Badge className={getStatusColor(order.status)}>{order.status}</Badge>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="bg-white p-4 rounded-lg border mb-4">
-                  <h4 className="font-medium mb-2">Delivery Message from {orderDetails.freelancer.name}:</h4>
-                  <p className="text-gray-700 text-sm leading-relaxed">{orderDetails.deliveryMessage}</p>
-                </div>
-                <div className="flex space-x-3">
-                  <Button 
-                    onClick={handleAcceptDelivery}
-                    disabled={isProcessing}
-                    className="min-w-32"
-                  >
-                    {isProcessing ? (
-                      <>
-                        <Clock className="w-4 h-4 mr-2 animate-spin" />
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle className="w-4 h-4 mr-2" />
-                        Accept Delivery
-                      </>
-                    )}
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    onClick={() => setShowRevisionModal(true)}
-                    disabled={isProcessing}
-                  >
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    Request Revision
-                  </Button>
+                <div className="flex items-center justify-between text-sm text-muted-foreground">
+                  <span>Order Date: {new Date(order.created_at).toLocaleDateString()}</span>
+                  <span className="text-xl font-bold text-green-600">${Number(order.amount).toFixed(2)}</span>
                 </div>
               </CardContent>
             </Card>
-          )}
 
-          {/* Completed Order Message */}
-          {orderStatus === 'Completed' && (
-            <Card className="border-green-200 bg-green-50">
-              <CardHeader>
-                <CardTitle className="text-green-800 flex items-center">
-                  <CheckCircle className="w-5 h-5 mr-2" />
-                  Order Completed
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-green-700 mb-3">
-                  This order has been completed successfully. Payment has been released to the freelancer.
-                </p>
-                {!hasFeedback && (
-                  <Button 
-                    onClick={() => setShowFeedbackModal(true)}
-                    variant="outline"
-                    className="border-green-500 text-green-700 hover:bg-green-100"
-                  >
-                    <Star className="w-4 h-4 mr-2" />
-                    Leave Review
-                  </Button>
-                )}
-                {hasFeedback && (
-                  <div className="flex items-center text-green-700">
-                    <Star className="w-4 h-4 mr-2 fill-yellow-400 text-yellow-400" />
-                    <span>Thank you for your review!</span>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Progress */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Project Progress</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-4">
-                <div className="flex justify-between text-sm mb-2">
-                  <span>Overall Progress</span>
-                  <span>{orderDetails.progress}%</span>
-                </div>
-                <Progress value={orderDetails.progress} className="h-3" />
-              </div>
-              
-              <div className="space-y-4">
-                {milestones.map((milestone, index) => (
-                  <div key={index} className="flex items-center space-x-4">
-                    <div className={`w-4 h-4 rounded-full flex-shrink-0 ${
-                      milestone.completed 
-                        ? 'bg-green-500' 
-                        : milestone.current 
-                        ? 'bg-yellow-500' 
-                        : 'bg-gray-300'
-                    }`}></div>
-                    <div className="flex-1">
-                      <p className={`font-medium ${milestone.current ? 'text-yellow-600' : ''}`}>
-                        {milestone.title}
-                      </p>
-                      <p className="text-sm text-gray-500">{milestone.date} {milestone.time && `at ${milestone.time}`}</p>
+            {/* Delivery Review */}
+            {order.status === 'delivered' && deliveries.length > 0 && (
+              <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800">
+                <CardHeader>
+                  <CardTitle className="text-yellow-800 dark:text-yellow-200 flex items-center">
+                    <Clock className="w-5 h-5 mr-2" />
+                    Delivery Awaiting Your Review
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {deliveries[0].delivery_message && (
+                    <div className="p-4 bg-background rounded-lg border">
+                      <h4 className="font-medium mb-2">Delivery Message:</h4>
+                      <p className="text-sm text-muted-foreground whitespace-pre-wrap">{deliveries[0].delivery_message}</p>
                     </div>
-                    {milestone.completed && (
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                    )}
-                    {milestone.current && (
-                      <Clock className="w-5 h-5 text-yellow-500" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Deliverables */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Delivered Files</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {deliverables.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg bg-green-50 border-green-200">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                        <span className="text-xs font-medium text-green-600">
-                          {file.type.split(' ')[0]}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="font-medium">{file.name}</p>
-                        <p className="text-sm text-gray-500">{file.type} • {file.size}</p>
-                      </div>
-                    </div>
-                    <Button size="sm">
-                      <Download className="w-4 h-4 mr-1" />
-                      Download
+                  )}
+                  <div className="flex gap-3">
+                    <Button onClick={handleAcceptDelivery} disabled={isProcessing}>
+                      {isProcessing ? <><Clock className="w-4 h-4 mr-2 animate-spin" />Processing...</> : <><CheckCircle className="w-4 h-4 mr-2" />Accept Delivery</>}
+                    </Button>
+                    <Button variant="outline" onClick={() => setShowRevisionModal(true)} disabled={isProcessing}>
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      Request Revision
                     </Button>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                </CardContent>
+              </Card>
+            )}
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Freelancer Info */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Freelancer</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-12 h-12 bg-cyan-500 rounded-full flex items-center justify-center text-white font-bold">
-                  {orderDetails.freelancer.avatar}
-                </div>
-                <div>
-                  <p className="font-medium">{orderDetails.freelancer.name}</p>
-                  <div className="flex items-center">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-                    <span className="text-sm">{orderDetails.freelancer.rating} ({orderDetails.freelancer.reviews} reviews)</span>
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Button className="w-full">
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  Message
-                </Button>
-                <Button variant="outline" className="w-full">
-                  <User className="w-4 h-4 mr-2" />
-                  View Profile
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Order Summary */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Order Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span>Service Price</span>
-                  <span>{orderDetails.price}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Service Fee</span>
-                  <span>$7.50</span>
-                </div>
-                <div className="border-t pt-3">
-                  <div className="flex justify-between font-medium">
-                    <span>Total</span>
-                    <span>$157.50</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <Button className="w-full">
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  Contact Freelancer
-                </Button>
-                {orderStatus === 'Completed' && (
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => setShowFeedbackModal(true)}
-                  >
-                    <Star className="w-4 h-4 mr-2" />
-                    {hasFeedback ? 'View Review' : 'Leave Review'}
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* Revision Request Modal */}
-      {showRevisionModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Request Revision</h3>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setShowRevisionModal(false)}
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="feedback">Revision Feedback *</Label>
-                <Textarea
-                  id="feedback"
-                  value={revisionFeedback}
-                  onChange={(e) => setRevisionFeedback(e.target.value)}
-                  placeholder="Please describe what changes you'd like the freelancer to make..."
-                  rows={4}
-                  className="mt-2"
-                />
-              </div>
-              <div className="flex space-x-3">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowRevisionModal(false)}
-                  className="flex-1"
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  onClick={handleRequestRevision}
-                  disabled={isProcessing}
-                  className="flex-1"
-                >
-                  {isProcessing ? (
-                    <>
-                      <Clock className="w-4 h-4 mr-2 animate-spin" />
-                      Sending...
-                    </>
-                  ) : (
-                    'Send Request'
+            {/* Completed */}
+            {order.status === 'completed' && (
+              <Card className="border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-800">
+                <CardHeader>
+                  <CardTitle className="text-green-800 dark:text-green-200 flex items-center">
+                    <CheckCircle className="w-5 h-5 mr-2" />
+                    Order Completed
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-green-700 dark:text-green-300 mb-3">Payment has been released to the freelancer.</p>
+                  {!hasFeedback && (
+                    <Button onClick={() => setShowFeedbackModal(true)} variant="outline">
+                      <Star className="w-4 h-4 mr-2" />Leave Review
+                    </Button>
                   )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Delivered Files & Links */}
+            {deliveries.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">📥 Delivered Files</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {deliveries.map((delivery) => (
+                    <div key={delivery.id} className="space-y-3 p-4 bg-muted rounded-lg">
+                      {delivery.delivery_message && (
+                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">{delivery.delivery_message}</p>
+                      )}
+                      <div className="flex flex-wrap gap-3">
+                        {delivery.delivery_file_url && (
+                          <Button size="sm" onClick={() => window.open(delivery.delivery_file_url, '_blank')}>
+                            <Download className="w-4 h-4 mr-2" />
+                            Download File
+                          </Button>
+                        )}
+                        {delivery.delivery_link && (
+                          <Button size="sm" variant="outline" onClick={() => window.open(delivery.delivery_link, '_blank')}>
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Open Link
+                          </Button>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Delivered: {new Date(delivery.delivered_at).toLocaleString()}
+                      </p>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Freelancer Info */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Freelancer</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-3 mb-4">
+                  <Avatar className="w-12 h-12">
+                    <AvatarImage src={freelancerProfile?.profile_image_url || ''} />
+                    <AvatarFallback className="bg-primary text-primary-foreground">{freelancerInitials}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium">{freelancerProfile?.full_name || 'Freelancer'}</p>
+                  </div>
+                </div>
+                <Button variant="outline" className="w-full" onClick={() => navigate('/buyer/messages')}>
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  Message Freelancer
                 </Button>
+              </CardContent>
+            </Card>
+
+            {/* Payment Info */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Payment Info</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Amount</span>
+                  <span className="font-medium">${Number(order.amount).toFixed(2)}</span>
+                </div>
+                {order.payment_method && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Method</span>
+                    <span className="capitalize">{order.payment_method}</span>
+                  </div>
+                )}
+                {order.payment_status && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Status</span>
+                    <Badge variant="outline" className="capitalize">{order.payment_status}</Badge>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Revision Modal */}
+        {showRevisionModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-background rounded-lg p-6 w-full max-w-md mx-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Request Revision</h3>
+                <Button variant="ghost" size="sm" onClick={() => setShowRevisionModal(false)}><X className="w-4 h-4" /></Button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <Label>Revision Feedback *</Label>
+                  <Textarea value={revisionFeedback} onChange={(e) => setRevisionFeedback(e.target.value)} placeholder="Describe what changes you'd like..." rows={4} className="mt-2" />
+                </div>
+                <div className="flex gap-3">
+                  <Button variant="outline" onClick={() => setShowRevisionModal(false)} className="flex-1">Cancel</Button>
+                  <Button onClick={handleRequestRevision} disabled={isProcessing} className="flex-1">
+                    {isProcessing ? 'Sending...' : 'Send Request'}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Feedback Modal */}
-      <FeedbackModal
-        isOpen={showFeedbackModal}
-        onClose={() => setShowFeedbackModal(false)}
-        orderId={orderDetails.id}
-        freelancerName={orderDetails.freelancer.name}
-        onFeedbackSubmitted={handleFeedbackSubmitted}
-      />
+        <FeedbackModal
+          isOpen={showFeedbackModal}
+          onClose={() => setShowFeedbackModal(false)}
+          orderId={orderId || ''}
+          freelancerName={freelancerProfile?.full_name || 'Freelancer'}
+          onFeedbackSubmitted={() => setHasFeedback(true)}
+        />
+      </div>
     </div>
   );
 };
