@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, MessageSquare, Package } from 'lucide-react';
+import { Clock, MessageSquare, Package, Eye } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 const FreelancerOrders = () => {
