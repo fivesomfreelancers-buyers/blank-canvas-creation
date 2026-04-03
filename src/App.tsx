@@ -93,6 +93,7 @@ const App = () => (
               <Route path="/buyer/help" element={<BuyerHelp />} />
               <Route path="/buyer/settings" element={<BuyerSettings />} />
               <Route path="/buyer/order-details" element={<BuyerOrderDetails />} />
+              <Route path="/buyer/order/:orderId/requirements" element={<SubmitRequirements />} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
