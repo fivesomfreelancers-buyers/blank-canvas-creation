@@ -7,6 +7,7 @@ import { Clock, MessageSquare, Package, Eye } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 const FreelancerOrders = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
