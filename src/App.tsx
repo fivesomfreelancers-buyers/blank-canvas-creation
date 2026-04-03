@@ -20,6 +20,7 @@ import FreelancerGigs from "./pages/freelancer/FreelancerGigs";
 import FreelancerOrders from "./pages/freelancer/FreelancerOrders";
 import FreelancerMessages from "./pages/freelancer/FreelancerMessages";
 import FreelancerDeliverWork from "./pages/freelancer/FreelancerDeliverWork";
+import FreelancerOrderDetails from "./pages/freelancer/FreelancerOrderDetails";
 import FreelancerWallet from "./pages/freelancer/FreelancerWallet";
 import FreelancerWithdraw from "./pages/freelancer/FreelancerWithdraw";
 import FreelancerHelp from "./pages/freelancer/FreelancerHelp";
