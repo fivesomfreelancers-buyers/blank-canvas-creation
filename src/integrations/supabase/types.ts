@@ -390,6 +390,79 @@ export type Database = {
           },
         ]
       }
+      order_requirement_files: {
+        Row: {
+          created_at: string | null
+          file_name: string
+          file_size: number | null
+          file_type: string | null
+          file_url: string
+          id: string
+          order_requirement_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          file_name: string
+          file_size?: number | null
+          file_type?: string | null
+          file_url: string
+          id?: string
+          order_requirement_id: string
+        }
+        Update: {
+          created_at?: string | null
+          file_name?: string
+          file_size?: number | null
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          order_requirement_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_requirement_files_order_requirement_id_fkey"
+            columns: ["order_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "order_requirements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_requirements: {
+        Row: {
+          created_at: string | null
+          external_links: string[] | null
+          id: string
+          instructions: string | null
+          order_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          external_links?: string[] | null
+          id?: string
+          instructions?: string | null
+          order_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          external_links?: string[] | null
+          id?: string
+          instructions?: string | null
+          order_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_requirements_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           amount: number
@@ -398,6 +471,10 @@ export type Database = {
           freelancer_id: string
           gig_id: string | null
           id: string
+          package_name: string | null
+          payment_method: string | null
+          payment_proof_url: string | null
+          payment_status: string | null
           requirements: string | null
           status: Database["public"]["Enums"]["order_status"] | null
           updated_at: string | null
@@ -409,6 +486,10 @@ export type Database = {
           freelancer_id: string
           gig_id?: string | null
           id?: string
+          package_name?: string | null
+          payment_method?: string | null
+          payment_proof_url?: string | null
+          payment_status?: string | null
           requirements?: string | null
           status?: Database["public"]["Enums"]["order_status"] | null
           updated_at?: string | null
@@ -420,6 +501,10 @@ export type Database = {
           freelancer_id?: string
           gig_id?: string | null
           id?: string
+          package_name?: string | null
+          payment_method?: string | null
+          payment_proof_url?: string | null
+          payment_status?: string | null
           requirements?: string | null
           status?: Database["public"]["Enums"]["order_status"] | null
           updated_at?: string | null
