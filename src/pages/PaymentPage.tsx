@@ -11,6 +11,8 @@ import { Clock, CheckCircle, Shield, CreditCard, Wallet, Upload, Smartphone, Ale
 import Navbar from '@/components/Navbar';
 import { useTheme } from '@/components/ThemeProvider';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 import zaadLogo from '@/assets/zaad-logo.png';
 import evcLogo from '@/assets/evc-logo.png';
