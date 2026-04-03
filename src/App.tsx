@@ -76,7 +76,6 @@ const App = () => (
               <Route path="/freelancer/order/:orderId" element={<FreelancerOrderDetails />} />
               <Route path="/freelancer/messages" element={<FreelancerMessages />} />
               <Route path="/freelancer/deliver" element={<FreelancerDeliverWork />} />
-              <Route path="/freelancer/deliver" element={<FreelancerDeliverWork />} />
               <Route path="/freelancer/wallet" element={<FreelancerWallet />} />
               <Route path="/freelancer/wallet/withdraw" element={<FreelancerWithdraw />} />
               <Route path="/freelancer/help" element={<FreelancerHelp />} />
@@ -92,7 +91,7 @@ const App = () => (
               <Route path="/buyer/payments" element={<BuyerPayments />} />
               <Route path="/buyer/help" element={<BuyerHelp />} />
               <Route path="/buyer/settings" element={<BuyerSettings />} />
-              <Route path="/buyer/order-details" element={<BuyerOrderDetails />} />
+              <Route path="/buyer/order/:orderId" element={<BuyerOrderDetails />} />
               <Route path="/buyer/order/:orderId/requirements" element={<SubmitRequirements />} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

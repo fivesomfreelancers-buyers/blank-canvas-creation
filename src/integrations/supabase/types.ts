@@ -359,6 +359,7 @@ export type Database = {
         Row: {
           delivered_at: string | null
           delivery_file_url: string | null
+          delivery_link: string | null
           delivery_message: string | null
           id: string
           order_id: string
@@ -367,6 +368,7 @@ export type Database = {
         Insert: {
           delivered_at?: string | null
           delivery_file_url?: string | null
+          delivery_link?: string | null
           delivery_message?: string | null
           id?: string
           order_id: string
@@ -375,6 +377,7 @@ export type Database = {
         Update: {
           delivered_at?: string | null
           delivery_file_url?: string | null
+          delivery_link?: string | null
           delivery_message?: string | null
           id?: string
           order_id?: string
