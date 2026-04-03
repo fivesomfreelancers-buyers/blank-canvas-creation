@@ -1,0 +1,1 @@
+ALTER TABLE public.order_deliveries ADD COLUMN delivery_link text;
