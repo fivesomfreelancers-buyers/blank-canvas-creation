@@ -11,6 +11,8 @@ import { Clock, CheckCircle, Shield, CreditCard, Wallet, Upload, Smartphone, Ale
 import Navbar from '@/components/Navbar';
 import { useTheme } from '@/components/ThemeProvider';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 import zaadLogo from '@/assets/zaad-logo.png';
 import evcLogo from '@/assets/evc-logo.png';
@@ -19,7 +21,7 @@ import ebirrLogo from '@/assets/ebirr-logo.png';
 
 interface PaymentPageState {
   gig: {
-    id: number;
+    id: string;
     title: string;
     freelancer: {
       name: string;
@@ -95,6 +97,7 @@ const PaymentPage = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { toast } = useToast();
+  const { user } = useAuth();
   const isDarkMode = theme === 'dark';
 
   const [paymentType, setPaymentType] = useState<'card' | 'mobile'>('card');
@@ -155,6 +158,12 @@ const PaymentPage = () => {
   const isMobileFormValid = selectedMobileMethod && paymentProof;
 
   const handlePayment = async () => {
+    if (!user) {
+      toast({ title: "Please log in", description: "You need to be logged in to place an order.", variant: "destructive" });
+      navigate('/login');
+      return;
+    }
+
     if (paymentType === 'card' && !isCardFormValid) {
       toast({ title: "Invalid Card Details", description: "Please fill in all card details correctly.", variant: "destructive" });
       return;
@@ -166,32 +175,58 @@ const PaymentPage = () => {
 
     setIsProcessing(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      const orderData = {
-        id: Date.now(),
-        gigId: gig.id,
-        gigTitle: gig.title,
-        freelancerName: gig.freelancer.name,
-        packageName: selectedPackage.name,
-        price: selectedPackage.price,
-        totalAmount,
-        paymentMethod: paymentType === 'card' ? 'card' : selectedMobileMethod,
-        status: paymentType === 'card' ? 'Active' : 'Pending Verification',
-        orderDate: new Date().toISOString().split('T')[0],
-        deadline: `${selectedPackage.delivery}`,
-        description: `${selectedPackage.name} package for ${gig.title}`,
-      };
-      const existingOrders = JSON.parse(localStorage.getItem('buyerOrders') || '[]');
-      existingOrders.unshift(orderData);
-      localStorage.setItem('buyerOrders', JSON.stringify(existingOrders));
+      // Upload payment proof if mobile
+      let paymentProofUrl: string | null = null;
+      if (paymentType === 'mobile' && paymentProof) {
+        const proofPath = `payment-proofs/${user.id}/${Date.now()}-${paymentProof.name}`;
+        const { error: uploadErr } = await supabase.storage
+          .from('order-requirements')
+          .upload(proofPath, paymentProof);
+        if (!uploadErr) {
+          const { data: { publicUrl } } = supabase.storage
+            .from('order-requirements')
+            .getPublicUrl(proofPath);
+          paymentProofUrl = publicUrl;
+        }
+      }
+
+      // Get freelancer_id from gig
+      const { data: gigData } = await supabase
+        .from('gigs')
+        .select('freelancer_id')
+        .eq('id', gig.id)
+        .single();
+
+      if (!gigData) throw new Error('Gig not found');
+
+      // Create order in Supabase
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          buyer_id: user.id,
+          freelancer_id: gigData.freelancer_id,
+          gig_id: gig.id,
+          amount: totalAmount,
+          status: 'pending' as const,
+          payment_method: paymentType === 'card' ? 'card' : selectedMobileMethod,
+          payment_status: paymentType === 'card' ? 'paid' : 'pending_verification',
+          package_name: selectedPackage.name,
+          payment_proof_url: paymentProofUrl,
+        } as any)
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
       toast({
-        title: paymentType === 'card' ? "Payment Successful!" : "Payment Submitted for Verification",
-        description: paymentType === 'card'
-          ? "Your order has been placed. The freelancer has been notified."
-          : "Your payment proof has been submitted. We'll verify it within 24 hours.",
+        title: paymentType === 'card' ? "Payment Successful! 🎉" : "Payment Submitted for Verification",
+        description: "Now submit your project requirements so the freelancer can start working.",
       });
-      navigate('/buyer/orders');
-    } catch {
+
+      // Redirect to requirements submission page
+      navigate(`/buyer/order/${orderData.id}/requirements`);
+    } catch (error) {
+      console.error('Payment error:', error);
       toast({ title: "Payment Failed", description: "There was an error processing your payment. Please try again.", variant: "destructive" });
     } finally {
       setIsProcessing(false);

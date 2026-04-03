@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, MessageSquare, Package } from 'lucide-react';
+import { Clock, MessageSquare, Package, Eye } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 const FreelancerOrders = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -91,8 +93,8 @@ const FreelancerOrders = () => {
           </Card>
         ) : (
           <div className="grid gap-6">
-            {orders.map(order => (
-              <Card key={order.id} className="hover:shadow-lg transition-shadow">
+            {orders.map((order: any) => (
+              <Card key={order.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate(`/freelancer/order/${order.id}`)}>
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
@@ -117,12 +119,16 @@ const FreelancerOrders = () => {
                       </div>
                     </div>
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); navigate(`/freelancer/order/${order.id}`); }}>
+                        <Eye className="w-4 h-4 mr-1" />
+                        View Details
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); }}>
                         <MessageSquare className="w-4 h-4 mr-1" />
                         Message
                       </Button>
                       {order.status === 'in_progress' && (
-                        <Button size="sm">
+                        <Button size="sm" onClick={(e) => { e.stopPropagation(); navigate('/freelancer/deliver', { state: { orderId: order.id } }); }}>
                           <Package className="w-4 h-4 mr-1" />
                           Deliver Work
                         </Button>

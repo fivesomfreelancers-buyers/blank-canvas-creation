@@ -20,6 +20,7 @@ import FreelancerGigs from "./pages/freelancer/FreelancerGigs";
 import FreelancerOrders from "./pages/freelancer/FreelancerOrders";
 import FreelancerMessages from "./pages/freelancer/FreelancerMessages";
 import FreelancerDeliverWork from "./pages/freelancer/FreelancerDeliverWork";
+import FreelancerOrderDetails from "./pages/freelancer/FreelancerOrderDetails";
 import FreelancerWallet from "./pages/freelancer/FreelancerWallet";
 import FreelancerWithdraw from "./pages/freelancer/FreelancerWithdraw";
 import FreelancerHelp from "./pages/freelancer/FreelancerHelp";
@@ -34,6 +35,7 @@ import BuyerPayments from "./pages/buyer/BuyerPayments";
 import BuyerHelp from "./pages/buyer/BuyerHelp";
 import BuyerSettings from "./pages/buyer/BuyerSettings";
 import BuyerOrderDetails from "./pages/buyer/BuyerOrderDetails";
+import SubmitRequirements from "./pages/buyer/SubmitRequirements";
 import SellerPayment from "./pages/SellerPayment";
 import PaymentPage from "./pages/PaymentPage";
 import NotFound from "./pages/NotFound";
@@ -71,7 +73,9 @@ const App = () => (
               <Route path="/freelancer/dashboard" element={<FreelancerDashboard />} />
               <Route path="/freelancer/gigs" element={<FreelancerGigs />} />
               <Route path="/freelancer/orders" element={<FreelancerOrders />} />
+              <Route path="/freelancer/order/:orderId" element={<FreelancerOrderDetails />} />
               <Route path="/freelancer/messages" element={<FreelancerMessages />} />
+              <Route path="/freelancer/deliver" element={<FreelancerDeliverWork />} />
               <Route path="/freelancer/deliver" element={<FreelancerDeliverWork />} />
               <Route path="/freelancer/wallet" element={<FreelancerWallet />} />
               <Route path="/freelancer/wallet/withdraw" element={<FreelancerWithdraw />} />
@@ -89,6 +93,7 @@ const App = () => (
               <Route path="/buyer/help" element={<BuyerHelp />} />
               <Route path="/buyer/settings" element={<BuyerSettings />} />
               <Route path="/buyer/order-details" element={<BuyerOrderDetails />} />
+              <Route path="/buyer/order/:orderId/requirements" element={<SubmitRequirements />} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
