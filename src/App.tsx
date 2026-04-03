@@ -35,6 +35,7 @@ import BuyerPayments from "./pages/buyer/BuyerPayments";
 import BuyerHelp from "./pages/buyer/BuyerHelp";
 import BuyerSettings from "./pages/buyer/BuyerSettings";
 import BuyerOrderDetails from "./pages/buyer/BuyerOrderDetails";
+import SubmitRequirements from "./pages/buyer/SubmitRequirements";
 import SellerPayment from "./pages/SellerPayment";
 import PaymentPage from "./pages/PaymentPage";
 import NotFound from "./pages/NotFound";
