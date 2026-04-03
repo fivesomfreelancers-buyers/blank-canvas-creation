@@ -21,7 +21,7 @@ import ebirrLogo from '@/assets/ebirr-logo.png';
 
 interface PaymentPageState {
   gig: {
-    id: number;
+    id: string;
     title: string;
     freelancer: {
       name: string;
