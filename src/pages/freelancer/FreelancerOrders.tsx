@@ -118,12 +118,16 @@ const FreelancerOrders = () => {
                       </div>
                     </div>
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); navigate(`/freelancer/order/${order.id}`); }}>
+                        <Eye className="w-4 h-4 mr-1" />
+                        View Details
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); }}>
                         <MessageSquare className="w-4 h-4 mr-1" />
                         Message
                       </Button>
                       {order.status === 'in_progress' && (
-                        <Button size="sm">
+                        <Button size="sm" onClick={(e) => { e.stopPropagation(); navigate('/freelancer/deliver', { state: { orderId: order.id } }); }}>
                           <Package className="w-4 h-4 mr-1" />
                           Deliver Work
                         </Button>
