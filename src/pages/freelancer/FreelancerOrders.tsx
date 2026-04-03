@@ -93,6 +93,7 @@ const FreelancerOrders = () => {
           </Card>
         ) : (
           <div className="grid gap-6">
+            {orders.map((order: any) => (
               <Card key={order.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate(`/freelancer/order/${order.id}`)}>
                 <CardHeader>
                   <div className="flex justify-between items-start">
