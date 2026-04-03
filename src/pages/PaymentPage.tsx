@@ -97,6 +97,7 @@ const PaymentPage = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { toast } = useToast();
+  const { user } = useAuth();
   const isDarkMode = theme === 'dark';
 
   const [paymentType, setPaymentType] = useState<'card' | 'mobile'>('card');
