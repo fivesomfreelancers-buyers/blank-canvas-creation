@@ -207,12 +207,12 @@ const PaymentPage = () => {
           freelancer_id: gigData.freelancer_id,
           gig_id: gig.id,
           amount: totalAmount,
-          status: 'pending',
+          status: 'pending' as const,
           payment_method: paymentType === 'card' ? 'card' : selectedMobileMethod,
           payment_status: paymentType === 'card' ? 'paid' : 'pending_verification',
           package_name: selectedPackage.name,
           payment_proof_url: paymentProofUrl,
-        })
+        } as any)
         .select()
         .single();
 
