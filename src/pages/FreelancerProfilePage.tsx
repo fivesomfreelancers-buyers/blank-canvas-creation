@@ -89,6 +89,28 @@ const FreelancerProfilePage = () => {
     fetchProfile();
   }, [freelancerId]);
 
+  const getOrCreateConversation = async (partnerId: string): Promise<string | null> => {
+    if (!user) return null;
+    const { data: existing } = await supabase
+      .from('conversations')
+      .select('id')
+      .or(`and(buyer_id.eq.${user.id},freelancer_id.eq.${partnerId}),and(buyer_id.eq.${partnerId},freelancer_id.eq.${user.id})`)
+      .maybeSingle();
+    if (existing) return existing.id;
+
+    const { data: buyerCheck } = await supabase.from('buyers').select('id').eq('user_id', user.id).maybeSingle();
+    const buyerId = buyerCheck ? user.id : partnerId;
+    const freelancerId = buyerCheck ? partnerId : user.id;
+
+    const { data: newConvo, error } = await supabase
+      .from('conversations')
+      .insert({ buyer_id: buyerId, freelancer_id: freelancerId })
+      .select('id')
+      .single();
+    if (error) return null;
+    return newConvo.id;
+  };
+
   const handleContact = async () => {
     if (!user) {
       toast({ title: "Please log in", description: "You need to be logged in to contact.", variant: "destructive" });
@@ -97,9 +119,12 @@ const FreelancerProfilePage = () => {
     if (!contactMessage.trim() || !profileData?.userId) return;
     setSendingMessage(true);
     try {
+      const conversationId = await getOrCreateConversation(profileData.userId);
+      if (!conversationId) throw new Error('Could not create conversation');
       await supabase.from('messages').insert({
         sender_id: user.id,
         receiver_id: profileData.userId,
+        conversation_id: conversationId,
         message: contactMessage.trim(),
       });
       toast({ title: "Message Sent!", description: `Your message has been sent to ${profileData.name}.` });
