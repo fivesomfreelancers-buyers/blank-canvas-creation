@@ -14,6 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
+      accepted_deliveries: {
+        Row: {
+          accepted_at: string | null
+          amount: number
+          buyer_id: string
+          created_at: string | null
+          delivery_id: string
+          freelancer_id: string
+          id: string
+          order_id: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          amount?: number
+          buyer_id: string
+          created_at?: string | null
+          delivery_id: string
+          freelancer_id: string
+          id?: string
+          order_id: string
+        }
+        Update: {
+          accepted_at?: string | null
+          amount?: number
+          buyer_id?: string
+          created_at?: string | null
+          delivery_id?: string
+          freelancer_id?: string
+          id?: string
+          order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accepted_deliveries_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "order_deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accepted_deliveries_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      buyer_support_tickets: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          id: string
+          message: string
+          status: Database["public"]["Enums"]["ticket_status"] | null
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          message: string
+          status?: Database["public"]["Enums"]["ticket_status"] | null
+          subject: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          message?: string
+          status?: Database["public"]["Enums"]["ticket_status"] | null
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       buyers: {
         Row: {
           created_at: string | null
@@ -84,6 +162,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      freelancer_support_tickets: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          id: string
+          message: string
+          status: Database["public"]["Enums"]["ticket_status"] | null
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          message: string
+          status?: Database["public"]["Enums"]["ticket_status"] | null
+          subject: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          message?: string
+          status?: Database["public"]["Enums"]["ticket_status"] | null
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       freelancers: {
         Row: {
