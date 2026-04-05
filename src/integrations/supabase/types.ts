@@ -131,6 +131,56 @@ export type Database = {
         }
         Relationships: []
       }
+      disputes: {
+        Row: {
+          buyer_id: string
+          created_at: string | null
+          details: string | null
+          freelancer_id: string
+          id: string
+          order_id: string
+          reason: string
+          resolution: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+        }
+        Insert: {
+          buyer_id: string
+          created_at?: string | null
+          details?: string | null
+          freelancer_id: string
+          id?: string
+          order_id: string
+          reason: string
+          resolution?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Update: {
+          buyer_id?: string
+          created_at?: string | null
+          details?: string | null
+          freelancer_id?: string
+          id?: string
+          order_id?: string
+          reason?: string
+          resolution?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "disputes_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       freelancer_faqs: {
         Row: {
           answer: string
@@ -199,7 +249,9 @@ export type Database = {
           completed_orders: number | null
           created_at: string | null
           id: string
+          is_featured: boolean | null
           is_verified: boolean | null
+          ranking_score: number | null
           rating: number | null
           skills: string[] | null
           total_earnings: number | null
@@ -210,7 +262,9 @@ export type Database = {
           completed_orders?: number | null
           created_at?: string | null
           id?: string
+          is_featured?: boolean | null
           is_verified?: boolean | null
+          ranking_score?: number | null
           rating?: number | null
           skills?: string[] | null
           total_earnings?: number | null
@@ -221,7 +275,9 @@ export type Database = {
           completed_orders?: number | null
           created_at?: string | null
           id?: string
+          is_featured?: boolean | null
           is_verified?: boolean | null
+          ranking_score?: number | null
           rating?: number | null
           skills?: string[] | null
           total_earnings?: number | null
