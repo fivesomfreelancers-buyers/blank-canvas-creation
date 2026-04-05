@@ -39,6 +39,7 @@ import SubmitRequirements from "./pages/buyer/SubmitRequirements";
 import SellerPayment from "./pages/SellerPayment";
 import PaymentPage from "./pages/PaymentPage";
 import NotFound from "./pages/NotFound";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import { ThemeProvider } from "./components/ThemeProvider";
 
 const queryClient = new QueryClient();
@@ -93,6 +94,9 @@ const App = () => (
               <Route path="/buyer/settings" element={<BuyerSettings />} />
               <Route path="/buyer/order/:orderId" element={<BuyerOrderDetails />} />
               <Route path="/buyer/order/:orderId/requirements" element={<SubmitRequirements />} />
+              
+              {/* Admin Routes */}
+              <Route path="/admin/*" element={<AdminDashboard />} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
