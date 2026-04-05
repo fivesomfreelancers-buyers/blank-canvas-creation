@@ -39,6 +39,7 @@ import SubmitRequirements from "./pages/buyer/SubmitRequirements";
 import SellerPayment from "./pages/SellerPayment";
 import PaymentPage from "./pages/PaymentPage";
 import NotFound from "./pages/NotFound";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import { ThemeProvider } from "./components/ThemeProvider";
 
 const queryClient = new QueryClient();
