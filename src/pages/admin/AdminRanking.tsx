@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Trophy, Star, Medal } from 'lucide-react';
+import { Trophy, Star, Medal, Crown, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface RankedFreelancer {
@@ -16,7 +16,9 @@ interface RankedFreelancer {
   ranking_score: number;
   is_featured: boolean;
   is_verified: boolean;
+  total_earnings: number;
   name: string;
+  email: string;
 }
 
 const AdminRanking = () => {
@@ -26,7 +28,7 @@ const AdminRanking = () => {
   const fetchRanking = async () => {
     const { data, error } = await supabase
       .from('freelancers')
-      .select('id, user_id, rating, completed_orders, ranking_score, is_featured, is_verified')
+      .select('id, user_id, rating, completed_orders, ranking_score, is_featured, is_verified, total_earnings')
       .order('ranking_score', { ascending: false })
       .limit(50);
 
@@ -34,8 +36,8 @@ const AdminRanking = () => {
 
     const withNames = await Promise.all(
       (data || []).map(async (f) => {
-        const { data: p } = await supabase.from('profiles').select('full_name').eq('id', f.user_id).maybeSingle();
-        return { ...f, name: p?.full_name || 'Unknown' };
+        const { data: p } = await supabase.from('profiles').select('full_name, email').eq('id', f.user_id).maybeSingle();
+        return { ...f, name: p?.full_name || 'Unknown', email: p?.email || '' };
       })
     );
 
@@ -59,68 +61,114 @@ const AdminRanking = () => {
     fetchRanking();
   };
 
-  const getRankIcon = (index: number) => {
-    if (index === 0) return <Trophy className="h-5 w-5 text-yellow-500" />;
-    if (index === 1) return <Medal className="h-5 w-5 text-gray-400" />;
-    if (index === 2) return <Medal className="h-5 w-5 text-amber-700" />;
-    return <span className="text-muted-foreground font-medium">#{index + 1}</span>;
+  const forceToTop = async (id: string) => {
+    const topScore = freelancers.length > 0 ? Number(freelancers[0].ranking_score || 0) + 100 : 1000;
+    const { error } = await supabase.from('freelancers').update({ ranking_score: topScore }).eq('id', id);
+    if (error) { toast.error('Failed'); return; }
+    toast.success('User promoted to #1!');
+    fetchRanking();
   };
 
-  if (loading) return <div className="text-muted-foreground">Loading...</div>;
+  const getRankDisplay = (index: number) => {
+    if (index === 0) return <div className="flex items-center gap-1"><Crown className="h-5 w-5 text-yellow-500" /><span className="font-bold text-yellow-500">#1</span></div>;
+    if (index === 1) return <div className="flex items-center gap-1"><Medal className="h-5 w-5 text-gray-400" /><span className="font-bold text-muted-foreground">#2</span></div>;
+    if (index === 2) return <div className="flex items-center gap-1"><Medal className="h-5 w-5 text-amber-700" /><span className="font-bold text-amber-700">#3</span></div>;
+    return <span className="font-medium text-muted-foreground">#{index + 1}</span>;
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      {/* Top 3 Cards */}
+      {/* Top 3 Podium */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {freelancers.slice(0, 3).map((f, i) => (
-          <Card key={f.id} className={i === 0 ? 'border-yellow-400 border-2' : ''}>
-            <CardHeader className="flex flex-row items-center gap-3 pb-2">
-              {getRankIcon(i)}
-              <div>
-                <CardTitle className="text-base">{f.name}</CardTitle>
-                <p className="text-xs text-muted-foreground">Score: {Number(f.ranking_score || 0).toFixed(0)}</p>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2 text-sm text-muted-foreground">
-                <span>⭐ {Number(f.rating || 0).toFixed(1)}</span>
-                <span>📦 {f.completed_orders || 0} orders</span>
-              </div>
-              {f.is_featured && <Badge className="mt-2 bg-yellow-500/10 text-yellow-600 border-yellow-200">🏆 Weekly Winner</Badge>}
-            </CardContent>
-          </Card>
-        ))}
+        {freelancers.slice(0, 3).map((f, i) => {
+          const colors = [
+            'border-yellow-400 bg-yellow-500/5',
+            'border-gray-300 bg-gray-500/5',
+            'border-amber-600 bg-amber-500/5',
+          ];
+          const icons = [
+            <Crown className="h-8 w-8 text-yellow-500" />,
+            <Medal className="h-8 w-8 text-gray-400" />,
+            <Medal className="h-8 w-8 text-amber-700" />,
+          ];
+          return (
+            <Card key={f.id} className={`border-2 ${colors[i]}`}>
+              <CardContent className="pt-6 text-center space-y-3">
+                <div className="mx-auto w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                  {icons[i]}
+                </div>
+                <div>
+                  <h3 className="font-bold text-foreground text-lg">{f.name}</h3>
+                  <p className="text-xs text-muted-foreground">{f.email}</p>
+                </div>
+                <div className="flex justify-center gap-4 text-sm text-muted-foreground">
+                  <span>⭐ {Number(f.rating || 0).toFixed(1)}</span>
+                  <span>📦 {f.completed_orders || 0}</span>
+                  <span>💰 ${Number(f.total_earnings || 0).toFixed(0)}</span>
+                </div>
+                <div className="flex justify-center gap-2">
+                  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
+                    Score: {Number(f.ranking_score || 0).toFixed(0)}
+                  </Badge>
+                  {f.is_featured && <Badge variant="outline" className="bg-yellow-500/10 text-yellow-600 border-yellow-200">🏆 Winner</Badge>}
+                </div>
+                <div className="flex justify-center gap-2 pt-2">
+                  <Button size="sm" variant={f.is_featured ? "outline" : "default"} className="h-7 text-xs" onClick={() => toggleFeatured(f.id, !!f.is_featured)}>
+                    {f.is_featured ? 'Remove Winner' : '🏆 Weekly Winner'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       {/* Full Leaderboard */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Leaderboard</CardTitle>
+      <Card className="border-border">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-primary" /> Full Leaderboard
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Rank</TableHead>
-                <TableHead>Name</TableHead>
+                <TableHead>User</TableHead>
                 <TableHead>Rating</TableHead>
                 <TableHead>Orders</TableHead>
+                <TableHead>Earnings</TableHead>
                 <TableHead>Score</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {freelancers.map((f, i) => (
-                <TableRow key={f.id}>
-                  <TableCell>{getRankIcon(i)}</TableCell>
-                  <TableCell className="font-medium text-foreground">{f.name}</TableCell>
-                  <TableCell>⭐ {Number(f.rating || 0).toFixed(1)}</TableCell>
-                  <TableCell>{f.completed_orders || 0}</TableCell>
+                <TableRow key={f.id} className="hover:bg-muted/50">
+                  <TableCell>{getRankDisplay(i)}</TableCell>
+                  <TableCell>
+                    <div>
+                      <p className="font-medium text-foreground text-sm">{f.name}</p>
+                      <p className="text-xs text-muted-foreground">{f.email}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-foreground">⭐ {Number(f.rating || 0).toFixed(1)}</TableCell>
+                  <TableCell className="text-foreground">{f.completed_orders || 0}</TableCell>
+                  <TableCell className="text-foreground font-medium">${Number(f.total_earnings || 0).toFixed(0)}</TableCell>
                   <TableCell>
                     <Input
                       type="number"
                       defaultValue={Number(f.ranking_score || 0)}
-                      className="w-20 h-8"
+                      className="w-24 h-8 text-sm"
                       onBlur={(e) => {
                         const val = Number(e.target.value);
                         if (val !== Number(f.ranking_score)) updateScore(f.id, val);
@@ -128,10 +176,14 @@ const AdminRanking = () => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Button size="sm" variant={f.is_featured ? "outline" : "default"} onClick={() => toggleFeatured(f.id, !!f.is_featured)}>
-                      <Star className="h-3 w-3 mr-1" />
-                      {f.is_featured ? 'Remove Winner' : 'Weekly Winner'}
-                    </Button>
+                    <div className="flex gap-1 flex-wrap">
+                      <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => forceToTop(f.id)}>
+                        🚀 Top
+                      </Button>
+                      <Button size="sm" variant={f.is_featured ? "outline" : "secondary"} className="h-7 text-xs" onClick={() => toggleFeatured(f.id, !!f.is_featured)}>
+                        {f.is_featured ? '✕ Remove' : '🏆 Winner'}
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
