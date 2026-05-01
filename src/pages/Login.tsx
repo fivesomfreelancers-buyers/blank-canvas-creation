@@ -21,6 +21,8 @@ const Login = () => {
 
   // Redirect if already logged in
   useEffect(() => {
+    if (emailLoading || googleLoading) return;
+
     if (!authLoading && user) {
       if (userRole === 'freelancer') {
         navigate('/freelancer/dashboard');
@@ -31,7 +33,7 @@ const Login = () => {
         navigate('/select-role');
       }
     }
-  }, [user, userRole, authLoading, navigate]);
+  }, [user, userRole, authLoading, navigate, emailLoading, googleLoading]);
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
