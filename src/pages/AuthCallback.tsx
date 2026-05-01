@@ -29,7 +29,7 @@ const AuthCallback = () => {
         const user = session.user;
 
         // Check if user already has a role
-        const { data: existingRole } = await supabase
+        const { data: existingRole } = await (supabase as any)
           .from('user_roles')
           .select('role')
           .eq('user_id', user.id)
