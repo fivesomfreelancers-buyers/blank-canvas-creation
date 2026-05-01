@@ -139,6 +139,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (data?.user) {
+        await (supabase as any).from('user_roles').upsert(
+          { user_id: data.user.id, role },
+          { onConflict: 'user_id,role' }
+        );
+        await (supabase as any).from('profiles').update({ role }).eq('id', data.user.id);
+
         if (role === 'freelancer') {
           await supabase.from('freelancers').upsert({ user_id: data.user.id } as any, { onConflict: 'user_id' });
         } else {
