@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Lock, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import Navbar from '@/components/Navbar';
@@ -8,7 +11,10 @@ import logo from '@/assets/logo.png';
 import { supabase } from '@/integrations/supabase/client';
 
 const Login = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const { toast } = useToast();
   const { user, userRole, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -28,11 +34,12 @@ const Login = () => {
   }, [user, userRole, authLoading, navigate]);
 
   const handleGoogleLogin = async () => {
-    setIsLoading(true);
+    setGoogleLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: { prompt: 'select_account' },
       },
     });
 
@@ -42,8 +49,48 @@ const Login = () => {
         description: error.message || "Could not sign in with Google. Please try again.",
         variant: "destructive",
       });
-      setIsLoading(false);
+      setGoogleLoading(false);
     }
+  };
+
+  const routeAfterLogin = async (userId: string) => {
+    const { data: roleRow } = await (supabase as any)
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (roleRow?.role === 'freelancer') navigate('/freelancer/dashboard');
+    else if (roleRow?.role === 'buyer') navigate('/buyer/dashboard');
+    else navigate('/select-role');
+  };
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || password.length < 6) {
+      toast({ title: 'Login Failed', description: 'Enter a valid email and password.', variant: 'destructive' });
+      return;
+    }
+
+    setEmailLoading(true);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+
+    if (error || !data.user) {
+      toast({
+        title: 'Login Failed',
+        description: error?.message || 'Could not authenticate. Please try again.',
+        variant: 'destructive',
+      });
+      setEmailLoading(false);
+      return;
+    }
+
+    toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
+    await routeAfterLogin(data.user.id);
+    setEmailLoading(false);
   };
 
   return (
