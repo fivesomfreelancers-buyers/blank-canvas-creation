@@ -11,9 +11,9 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        const hasAuthCode = new URLSearchParams(window.location.search).has('code');
-        if (hasAuthCode) {
-          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(window.location.href);
+        const authCode = new URLSearchParams(window.location.search).get('code');
+        if (authCode) {
+          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(authCode);
           if (exchangeError) throw exchangeError;
         }
 
