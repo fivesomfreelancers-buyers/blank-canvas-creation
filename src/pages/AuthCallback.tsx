@@ -11,11 +11,17 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleCallback = async () => {
       try {
+        const hasAuthCode = new URLSearchParams(window.location.search).has('code');
+        if (hasAuthCode) {
+          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(window.location.href);
+          if (exchangeError) throw exchangeError;
+        }
+
         const { data: { session }, error } = await supabase.auth.getSession();
 
         if (error || !session?.user) {
           setStatus('Authentication failed. Redirecting...');
-          toast({ title: 'Login Failed', description: 'Could not authenticate. Please try again.', variant: 'destructive' });
+          toast({ title: 'Login Failed', description: error?.message || 'Could not authenticate. Please try again.', variant: 'destructive' });
           setTimeout(() => navigate('/login'), 2000);
           return;
         }
