@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!data) {
         // Profile doesn't exist - create it (trigger should handle this, but as fallback)
         const meta = authUser.user_metadata || {};
-        await supabase.from('profiles').insert({
+        await (supabase as any).from('profiles').insert({
           id: authUser.id,
           full_name: meta.full_name || meta.name || '',
           email: authUser.email || '',
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchUserRole = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
