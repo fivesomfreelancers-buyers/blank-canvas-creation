@@ -4,6 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 
 type UserRole = 'freelancer' | 'buyer' | null;
 
+const toUserRole = (role: unknown): UserRole => {
+  return role === 'freelancer' || role === 'buyer' ? role : null;
+};
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -84,8 +88,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         .eq('user_id', userId)
         .maybeSingle();
 
-      if (!error && data?.role) {
-        setUserRole(data.role as UserRole);
+      const roleFromTable = toUserRole(data?.role);
+      if (!error && roleFromTable) {
+        setUserRole(roleFromTable);
+        return;
+      }
+
+      const { data: userRes } = await supabase.auth.getUser();
+      const roleFromMetadata = toUserRole(userRes.user?.user_metadata?.role);
+      if (userRes.user?.id === userId && roleFromMetadata) {
+        await (supabase as any).from('user_roles').upsert(
+          { user_id: userId, role: roleFromMetadata },
+          { onConflict: 'user_id,role' }
+        );
+        if (roleFromMetadata === 'freelancer') {
+          await (supabase as any).from('freelancers').upsert({ user_id: userId }, { onConflict: 'user_id' });
+        } else {
+          await (supabase as any).from('buyers').upsert({ user_id: userId }, { onConflict: 'user_id' });
+        }
+        setUserRole(roleFromMetadata);
         return;
       }
 

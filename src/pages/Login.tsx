@@ -19,6 +19,10 @@ const Login = () => {
   const { user, userRole, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
 
+  const normalizeRole = (role: unknown) => {
+    return role === 'freelancer' || role === 'buyer' ? role : null;
+  };
+
   // Redirect if already logged in
   useEffect(() => {
     if (emailLoading || googleLoading) return;
@@ -62,8 +66,22 @@ const Login = () => {
       .eq('user_id', userId)
       .maybeSingle();
 
-    if (roleRow?.role === 'freelancer') navigate('/freelancer/dashboard');
-    else if (roleRow?.role === 'buyer') navigate('/buyer/dashboard');
+    let resolvedRole = normalizeRole(roleRow?.role);
+
+    if (!resolvedRole) {
+      const { data: userRes } = await supabase.auth.getUser();
+      const metadataRole = normalizeRole(userRes.user?.user_metadata?.role);
+      if (metadataRole) {
+        await (supabase as any).from('user_roles').upsert(
+          { user_id: userId, role: metadataRole },
+          { onConflict: 'user_id,role' }
+        );
+        resolvedRole = metadataRole;
+      }
+    }
+
+    if (resolvedRole === 'freelancer') navigate('/freelancer/dashboard');
+    else if (resolvedRole === 'buyer') navigate('/buyer/dashboard');
     else navigate('/select-role');
   };
 
