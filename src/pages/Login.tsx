@@ -118,16 +118,65 @@ const Login = () => {
             <div className="space-y-6">
               <div className="text-center">
                 <h2 className="text-xl font-semibold text-foreground mb-2">Sign In</h2>
-                <p className="text-sm text-muted-foreground">Use your Google account to continue</p>
+                <p className="text-sm text-muted-foreground">Use Google or email and password to continue</p>
+              </div>
+
+              <form onSubmit={handleEmailLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-foreground font-medium">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="h-12 pl-10"
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-foreground font-medium">Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="h-12 pl-10"
+                      placeholder="Enter your password"
+                      autoComplete="current-password"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <Button type="submit" className="w-full h-12 font-semibold" disabled={emailLoading || googleLoading}>
+                  {emailLoading ? (
+                    <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  ) : (
+                    'Sign in with Email'
+                  )}
+                </Button>
+              </form>
+
+              <div className="relative flex items-center justify-center">
+                <div className="absolute inset-x-0 top-1/2 border-t border-border" />
+                <span className="relative bg-card px-3 text-xs uppercase text-muted-foreground">or</span>
               </div>
 
               <Button
                 onClick={handleGoogleLogin}
-                disabled={isLoading}
+                disabled={googleLoading || emailLoading}
                 variant="outline"
                 className="w-full h-12 font-semibold transition-all flex items-center justify-center space-x-3 border-border hover:bg-accent"
               >
-                {isLoading ? (
+                {googleLoading ? (
                   <div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
                 ) : (
                   <>
