@@ -89,25 +89,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      // Fallback to profiles table
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', userId)
-        .maybeSingle();
-      
-      if (profileData?.role) {
-        setUserRole(profileData.role as UserRole);
-        return;
-      }
-
-      // Last fallback: user_metadata
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.user_metadata?.role) {
-        setUserRole(user.user_metadata.role as UserRole);
-      }
+      setUserRole(null);
     } catch (error) {
       console.error('Error fetching user role:', error);
+      setUserRole(null);
     }
   };
 
