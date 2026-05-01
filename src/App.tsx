@@ -10,6 +10,8 @@ import GigDetails from "./pages/GigDetails";
 import HowItWorks from "./pages/HowItWorks";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import BuyerRegister from "./pages/BuyerRegister";
+import FreelancerRegister from "./pages/FreelancerRegister";
 import AuthCallback from "./pages/AuthCallback";
 import RoleSelection from "./pages/RoleSelection";
 import CompleteProfile from "./pages/CompleteProfile";
@@ -59,6 +61,8 @@ const App = () => (
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/register/buyer" element={<BuyerRegister />} />
+              <Route path="/register/freelancer" element={<FreelancerRegister />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/select-role" element={<RoleSelection />} />
               <Route path="/complete-profile/:role" element={<CompleteProfile />} />
