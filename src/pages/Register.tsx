@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Briefcase, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -25,6 +26,7 @@ const Register = () => {
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: { prompt: 'select_account' },
       },
     });
 
@@ -51,7 +53,25 @@ const Register = () => {
             <div className="space-y-6">
               <div className="text-center">
                 <h2 className="text-xl font-semibold text-foreground mb-2">Create Your Account</h2>
-                <p className="text-sm text-muted-foreground">Sign up with Google to get started</p>
+                <p className="text-sm text-muted-foreground">Choose Google or create an email/password account</p>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Link to="/register/buyer" className="group rounded-xl border border-border p-4 text-left transition-colors hover:bg-accent">
+                  <Users className="mb-3 h-5 w-5 text-primary" />
+                  <div className="font-semibold text-foreground">Join as Buyer</div>
+                  <div className="mt-1 text-xs text-muted-foreground">Use email and password</div>
+                </Link>
+                <Link to="/register/freelancer" className="group rounded-xl border border-border p-4 text-left transition-colors hover:bg-accent">
+                  <Briefcase className="mb-3 h-5 w-5 text-primary" />
+                  <div className="font-semibold text-foreground">Join as Freelancer</div>
+                  <div className="mt-1 text-xs text-muted-foreground">Use email and password</div>
+                </Link>
+              </div>
+
+              <div className="relative flex items-center justify-center">
+                <div className="absolute inset-x-0 top-1/2 border-t border-border" />
+                <span className="relative bg-card px-3 text-xs uppercase text-muted-foreground">or</span>
               </div>
 
               <Button
