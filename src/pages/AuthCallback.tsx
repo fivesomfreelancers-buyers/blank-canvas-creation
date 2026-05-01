@@ -11,11 +11,17 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleCallback = async () => {
       try {
+        const authCode = new URLSearchParams(window.location.search).get('code');
+        if (authCode) {
+          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(authCode);
+          if (exchangeError) throw exchangeError;
+        }
+
         const { data: { session }, error } = await supabase.auth.getSession();
 
         if (error || !session?.user) {
           setStatus('Authentication failed. Redirecting...');
-          toast({ title: 'Login Failed', description: 'Could not authenticate. Please try again.', variant: 'destructive' });
+          toast({ title: 'Login Failed', description: error?.message || 'Could not authenticate. Please try again.', variant: 'destructive' });
           setTimeout(() => navigate('/login'), 2000);
           return;
         }
@@ -23,7 +29,7 @@ const AuthCallback = () => {
         const user = session.user;
 
         // Check if user already has a role
-        const { data: existingRole } = await supabase
+        const { data: existingRole } = await (supabase as any)
           .from('user_roles')
           .select('role')
           .eq('user_id', user.id)

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Lock, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import Navbar from '@/components/Navbar';
@@ -8,13 +11,18 @@ import logo from '@/assets/logo.png';
 import { supabase } from '@/integrations/supabase/client';
 
 const Login = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const { toast } = useToast();
   const { user, userRole, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   // Redirect if already logged in
   useEffect(() => {
+    if (emailLoading || googleLoading) return;
+
     if (!authLoading && user) {
       if (userRole === 'freelancer') {
         navigate('/freelancer/dashboard');
@@ -25,14 +33,15 @@ const Login = () => {
         navigate('/select-role');
       }
     }
-  }, [user, userRole, authLoading, navigate]);
+  }, [user, userRole, authLoading, navigate, emailLoading, googleLoading]);
 
   const handleGoogleLogin = async () => {
-    setIsLoading(true);
+    setGoogleLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: { prompt: 'select_account' },
       },
     });
 
@@ -42,8 +51,48 @@ const Login = () => {
         description: error.message || "Could not sign in with Google. Please try again.",
         variant: "destructive",
       });
-      setIsLoading(false);
+      setGoogleLoading(false);
     }
+  };
+
+  const routeAfterLogin = async (userId: string) => {
+    const { data: roleRow } = await (supabase as any)
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (roleRow?.role === 'freelancer') navigate('/freelancer/dashboard');
+    else if (roleRow?.role === 'buyer') navigate('/buyer/dashboard');
+    else navigate('/select-role');
+  };
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || password.length < 6) {
+      toast({ title: 'Login Failed', description: 'Enter a valid email and password.', variant: 'destructive' });
+      return;
+    }
+
+    setEmailLoading(true);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+
+    if (error || !data.user) {
+      toast({
+        title: 'Login Failed',
+        description: error?.message || 'Could not authenticate. Please try again.',
+        variant: 'destructive',
+      });
+      setEmailLoading(false);
+      return;
+    }
+
+    toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
+    await routeAfterLogin(data.user.id);
+    setEmailLoading(false);
   };
 
   return (
@@ -71,16 +120,65 @@ const Login = () => {
             <div className="space-y-6">
               <div className="text-center">
                 <h2 className="text-xl font-semibold text-foreground mb-2">Sign In</h2>
-                <p className="text-sm text-muted-foreground">Use your Google account to continue</p>
+                <p className="text-sm text-muted-foreground">Use Google or email and password to continue</p>
+              </div>
+
+              <form onSubmit={handleEmailLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-foreground font-medium">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="h-12 pl-10"
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-foreground font-medium">Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="h-12 pl-10"
+                      placeholder="Enter your password"
+                      autoComplete="current-password"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <Button type="submit" className="w-full h-12 font-semibold" disabled={emailLoading || googleLoading}>
+                  {emailLoading ? (
+                    <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  ) : (
+                    'Sign in with Email'
+                  )}
+                </Button>
+              </form>
+
+              <div className="relative flex items-center justify-center">
+                <div className="absolute inset-x-0 top-1/2 border-t border-border" />
+                <span className="relative bg-card px-3 text-xs uppercase text-muted-foreground">or</span>
               </div>
 
               <Button
                 onClick={handleGoogleLogin}
-                disabled={isLoading}
+                disabled={googleLoading || emailLoading}
                 variant="outline"
                 className="w-full h-12 font-semibold transition-all flex items-center justify-center space-x-3 border-border hover:bg-accent"
               >
-                {isLoading ? (
+                {googleLoading ? (
                   <div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
                 ) : (
                   <>

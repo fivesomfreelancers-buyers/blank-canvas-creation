@@ -39,13 +39,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     );
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        ensureProfileExists(session.user);
-        fetchUserRole(session.user.id);
+        await ensureProfileExists(session.user);
+        await fetchUserRole(session.user.id);
       }
       setIsLoading(false);
     });
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!data) {
         // Profile doesn't exist - create it (trigger should handle this, but as fallback)
         const meta = authUser.user_metadata || {};
-        await supabase.from('profiles').insert({
+        await (supabase as any).from('profiles').insert({
           id: authUser.id,
           full_name: meta.full_name || meta.name || '',
           email: authUser.email || '',
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchUserRole = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
@@ -89,25 +89,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      // Fallback to profiles table
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', userId)
-        .maybeSingle();
-      
-      if (profileData?.role) {
-        setUserRole(profileData.role as UserRole);
-        return;
-      }
-
-      // Last fallback: user_metadata
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.user_metadata?.role) {
-        setUserRole(user.user_metadata.role as UserRole);
-      }
+      setUserRole(null);
     } catch (error) {
       console.error('Error fetching user role:', error);
+      setUserRole(null);
     }
   };
 
@@ -139,6 +124,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (data?.user) {
+        await (supabase as any).from('user_roles').upsert(
+          { user_id: data.user.id, role },
+          { onConflict: 'user_id,role' }
+        );
+        await (supabase as any).from('profiles').update({ role }).eq('id', data.user.id);
+
         if (role === 'freelancer') {
           await supabase.from('freelancers').upsert({ user_id: data.user.id } as any, { onConflict: 'user_id' });
         } else {

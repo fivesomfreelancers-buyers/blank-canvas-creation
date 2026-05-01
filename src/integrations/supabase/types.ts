@@ -723,7 +723,7 @@ export type Database = {
           member_since?: string | null
           professional_title?: string | null
           profile_image_url?: string | null
-          role?: Database["public"]["Enums"]["app_role"]
+          role: Database["public"]["Enums"]["app_role"]
           skills?: string[] | null
           updated_at?: string | null
           username?: string | null
@@ -800,19 +800,19 @@ export type Database = {
       }
       user_roles: {
         Row: {
-          admin: string
           id: string
           role: Database["public"]["Enums"]["app_role"]
+          user: string
         }
         Insert: {
-          admin: string
           id?: string
           role: Database["public"]["Enums"]["app_role"]
+          user: string
         }
         Update: {
-          admin?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user?: string
         }
         Relationships: []
       }
@@ -934,7 +934,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "freelancer" | "buyer" | "admin"
+      app_role: "freelancer" | "buyer" | "admin" | "super_admin"
       delivery_status: "submitted" | "approved" | "revision_requested"
       gig_status: "active" | "paused" | "draft"
       media_type: "image" | "video" | "document"
@@ -1074,7 +1074,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["freelancer", "buyer", "admin"],
+      app_role: ["freelancer", "buyer", "admin", "super_admin"],
       delivery_status: ["submitted", "approved", "revision_requested"],
       gig_status: ["active", "paused", "draft"],
       media_type: ["image", "video", "document"],
