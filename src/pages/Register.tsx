@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Briefcase, Users } from 'lucide-react';
+import { Lock, Mail, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -9,19 +11,27 @@ import Navbar from '@/components/Navbar';
 import logo from '@/assets/logo.png';
 
 const Register = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const { user, userRole, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // If already logged in, send to role selection or dashboard
   useEffect(() => {
-    if (!authLoading && user && userRole) {
-      navigate(userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard');
+    if (emailLoading || googleLoading) return;
+    if (!authLoading && user) {
+      if (userRole === 'freelancer') navigate('/freelancer/dashboard');
+      else if (userRole === 'buyer') navigate('/buyer/dashboard');
+      else navigate('/select-role');
     }
-  }, [user, userRole, authLoading, navigate]);
+  }, [user, userRole, authLoading, navigate, emailLoading, googleLoading]);
 
   const handleGoogleSignUp = async () => {
-    setIsLoading(true);
+    setGoogleLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -31,9 +41,50 @@ const Register = () => {
     });
 
     if (error) {
-      toast({ title: "Sign Up Failed", description: error.message, variant: "destructive" });
-      setIsLoading(false);
+      toast({ title: 'Sign Up Failed', description: error.message, variant: 'destructive' });
+      setGoogleLoading(false);
     }
+  };
+
+  const handleEmailSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!fullName.trim() || !email.trim() || password.length < 6) {
+      toast({
+        title: 'Sign Up Failed',
+        description: 'Enter your name, a valid email, and a password (min 6 characters).',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setEmailLoading(true);
+    const redirectUrl = `${window.location.origin}/select-role`;
+    const { data, error } = await supabase.auth.signUp({
+      email: email.trim(),
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+        data: { full_name: fullName.trim() },
+      },
+    });
+
+    if (error) {
+      toast({ title: 'Sign Up Failed', description: error.message, variant: 'destructive' });
+      setEmailLoading(false);
+      return;
+    }
+
+    if (data.session) {
+      toast({ title: 'Account created!', description: 'Now choose how you want to use FIVESOM.' });
+      navigate('/select-role');
+    } else {
+      toast({
+        title: 'Check your email',
+        description: 'Confirm your email to continue, then sign in.',
+      });
+      navigate('/login');
+    }
+    setEmailLoading(false);
   };
 
   return (
@@ -53,21 +104,70 @@ const Register = () => {
             <div className="space-y-6">
               <div className="text-center">
                 <h2 className="text-xl font-semibold text-foreground mb-2">Create Your Account</h2>
-                <p className="text-sm text-muted-foreground">Choose Google or create an email/password account</p>
+                <p className="text-sm text-muted-foreground">Sign up with email or Google to continue</p>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <Link to="/register/buyer" className="group rounded-xl border border-border p-4 text-left transition-colors hover:bg-accent">
-                  <Users className="mb-3 h-5 w-5 text-primary" />
-                  <div className="font-semibold text-foreground">Join as Buyer</div>
-                  <div className="mt-1 text-xs text-muted-foreground">Use email and password</div>
-                </Link>
-                <Link to="/register/freelancer" className="group rounded-xl border border-border p-4 text-left transition-colors hover:bg-accent">
-                  <Briefcase className="mb-3 h-5 w-5 text-primary" />
-                  <div className="font-semibold text-foreground">Join as Freelancer</div>
-                  <div className="mt-1 text-xs text-muted-foreground">Use email and password</div>
-                </Link>
-              </div>
+              <form onSubmit={handleEmailSignUp} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName" className="text-foreground font-medium">Full Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="fullName"
+                      type="text"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="h-12 pl-10"
+                      placeholder="Your full name"
+                      autoComplete="name"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-foreground font-medium">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="h-12 pl-10"
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-foreground font-medium">Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="h-12 pl-10"
+                      placeholder="At least 6 characters"
+                      autoComplete="new-password"
+                      required
+                      minLength={6}
+                    />
+                  </div>
+                </div>
+
+                <Button type="submit" className="w-full h-12 font-semibold" disabled={emailLoading || googleLoading}>
+                  {emailLoading ? (
+                    <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  ) : (
+                    'Sign up with Email'
+                  )}
+                </Button>
+              </form>
 
               <div className="relative flex items-center justify-center">
                 <div className="absolute inset-x-0 top-1/2 border-t border-border" />
@@ -76,11 +176,11 @@ const Register = () => {
 
               <Button
                 onClick={handleGoogleSignUp}
-                disabled={isLoading}
+                disabled={googleLoading || emailLoading}
                 variant="outline"
                 className="w-full h-12 font-semibold transition-all flex items-center justify-center space-x-3 border-border hover:bg-accent"
               >
-                {isLoading ? (
+                {googleLoading ? (
                   <div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
                 ) : (
                   <>
