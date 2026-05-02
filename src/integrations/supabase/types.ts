@@ -723,7 +723,7 @@ export type Database = {
           member_since?: string | null
           professional_title?: string | null
           profile_image_url?: string | null
-          role: Database["public"]["Enums"]["app_role"]
+          role?: Database["public"]["Enums"]["app_role"]
           skills?: string[] | null
           updated_at?: string | null
           username?: string | null
@@ -802,17 +802,17 @@ export type Database = {
         Row: {
           id: string
           role: Database["public"]["Enums"]["app_role"]
-          user: string
+          user_id: string
         }
         Insert: {
           id?: string
           role: Database["public"]["Enums"]["app_role"]
-          user: string
+          user_id: string
         }
         Update: {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
-          user?: string
+          user_id?: string
         }
         Relationships: []
       }
