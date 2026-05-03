@@ -922,7 +922,51 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          bio: string | null
+          created_at: string | null
+          full_name: string | null
+          id: string | null
+          languages: string[] | null
+          location: string | null
+          member_since: string | null
+          professional_title: string | null
+          profile_image_url: string | null
+          role: Database["public"]["Enums"]["app_role"] | null
+          skills: string[] | null
+          username: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string | null
+          languages?: string[] | null
+          location?: string | null
+          member_since?: string | null
+          professional_title?: string | null
+          profile_image_url?: string | null
+          role?: Database["public"]["Enums"]["app_role"] | null
+          skills?: string[] | null
+          username?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string | null
+          languages?: string[] | null
+          location?: string | null
+          member_since?: string | null
+          professional_title?: string | null
+          profile_image_url?: string | null
+          role?: Database["public"]["Enums"]["app_role"] | null
+          skills?: string[] | null
+          username?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
