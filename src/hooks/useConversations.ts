@@ -84,7 +84,7 @@ export function useConversations() {
 
       const items: ConversationItem[] = convosData.map(convo => {
         const partnerId = convo.buyer_id === user.id ? convo.freelancer_id : convo.buyer_id;
-        const profile = profileMap.get(partnerId);
+        const profile = profileMap.get(partnerId) as any;
         const msgInfo = msgByConvo.get(convo.id);
         return {
           conversationId: convo.id,
