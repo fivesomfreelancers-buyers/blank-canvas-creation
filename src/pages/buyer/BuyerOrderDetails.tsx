@@ -50,9 +50,9 @@ const BuyerOrderDetails = () => {
         .single();
 
       if (freelancer) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('full_name, profile_image_url, email')
+        const { data: profile } = await (supabase as any)
+          .from('public_profiles')
+          .select('full_name, profile_image_url')
           .eq('id', freelancer.user_id)
           .single();
         setFreelancerProfile(profile);
