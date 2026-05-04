@@ -211,6 +211,13 @@ export type Database = {
             referencedRelation: "freelancers"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "freelancer_faqs_freelancer_id_fkey"
+            columns: ["freelancer_id"]
+            isOneToOne: false
+            referencedRelation: "public_freelancers"
+            referencedColumns: ["id"]
+          },
         ]
       }
       freelancer_support_tickets: {
@@ -470,6 +477,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "gigs_freelancer_id_fkey"
+            columns: ["freelancer_id"]
+            isOneToOne: false
+            referencedRelation: "public_freelancers"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "gigs_subcategory_id_fkey"
             columns: ["subcategory_id"]
             isOneToOne: false
@@ -682,6 +696,13 @@ export type Database = {
             columns: ["freelancer_id"]
             isOneToOne: false
             referencedRelation: "freelancers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_freelancer_id_fkey"
+            columns: ["freelancer_id"]
+            isOneToOne: false
+            referencedRelation: "public_freelancers"
             referencedColumns: ["id"]
           },
           {
@@ -918,10 +939,53 @@ export type Database = {
             referencedRelation: "freelancers"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "withdrawals_freelancer_id_fkey"
+            columns: ["freelancer_id"]
+            isOneToOne: false
+            referencedRelation: "public_freelancers"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
     Views: {
+      public_freelancers: {
+        Row: {
+          bio: string | null
+          completed_orders: number | null
+          created_at: string | null
+          id: string | null
+          is_featured: boolean | null
+          is_verified: boolean | null
+          rating: number | null
+          skills: string[] | null
+          user_id: string | null
+        }
+        Insert: {
+          bio?: string | null
+          completed_orders?: number | null
+          created_at?: string | null
+          id?: string | null
+          is_featured?: boolean | null
+          is_verified?: boolean | null
+          rating?: number | null
+          skills?: string[] | null
+          user_id?: string | null
+        }
+        Update: {
+          bio?: string | null
+          completed_orders?: number | null
+          created_at?: string | null
+          id?: string | null
+          is_featured?: boolean | null
+          is_verified?: boolean | null
+          rating?: number | null
+          skills?: string[] | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       public_profiles: {
         Row: {
           bio: string | null
