@@ -185,12 +185,12 @@ const FreelancerDashboard = () => {
 
         if (latestOrders && latestOrders.length > 0) {
           const buyerIds = [...new Set(latestOrders.map(o => o.buyer_id))];
-          const { data: profiles } = await supabase
-            .from('profiles')
+          const { data: profiles } = await (supabase as any)
+            .from('public_profiles')
             .select('id, full_name')
             .in('id', buyerIds);
           
-          const profileMap = new Map(profiles?.map(p => [p.id, p.full_name]) || []);
+          const profileMap = new Map((profiles as any[] | null)?.map((p: any) => [p.id, p.full_name]) || []);
           
           const enrichedOrders = latestOrders.map(order => ({
             ...order,
