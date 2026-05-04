@@ -47,11 +47,11 @@ const Explore = () => {
           .eq('status', 'active');
 
         const formattedGigs = await Promise.all((gigsData || []).map(async (gig) => {
-          const { data: profile } = await supabase
-            .from('public_profiles' as any)
+          const { data: profile } = await (supabase as any)
+            .from('public_profiles')
             .select('full_name, profile_image_url')
             .eq('id', gig.freelancers?.user_id)
-            .maybeSingle();
+            .maybeSingle() as { data: any };
 
           const { data: reviews } = await supabase
             .from('gig_reviews')
