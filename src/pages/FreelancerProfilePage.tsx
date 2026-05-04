@@ -39,8 +39,8 @@ const FreelancerProfilePage = () => {
         return;
       }
 
-      const { data: profile } = await supabase
-        .from('profiles')
+      const { data: profile } = await (supabase as any)
+        .from('public_profiles')
         .select('*')
         .eq('id', freelancer.user_id)
         .single();
@@ -62,7 +62,7 @@ const FreelancerProfilePage = () => {
           .in('gig_id', gigIds);
 
         allReviews = await Promise.all((reviewsData || []).map(async (r) => {
-          const { data: bp } = await supabase.from('profiles').select('full_name').eq('id', r.buyer_id).single();
+          const { data: bp } = await (supabase as any).from('public_profiles').select('full_name').eq('id', r.buyer_id).single();
           return { ...r, buyerName: bp?.full_name || 'Anonymous' };
         }));
       }

@@ -48,7 +48,7 @@ const Explore = () => {
 
         const formattedGigs = await Promise.all((gigsData || []).map(async (gig) => {
           const { data: profile } = await supabase
-            .from('profiles')
+            .from('public_profiles' as any)
             .select('full_name, profile_image_url')
             .eq('id', gig.freelancers?.user_id)
             .maybeSingle();
