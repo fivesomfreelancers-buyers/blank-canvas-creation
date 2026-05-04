@@ -64,7 +64,7 @@ export function useConversations() {
 
       // Fetch profiles and latest messages in parallel
       const [profilesRes, messagesRes] = await Promise.all([
-        supabase.from('profiles').select('id, full_name, profile_image_url').in('id', partnerIds),
+        (supabase as any).from('public_profiles').select('id, full_name, profile_image_url').in('id', partnerIds),
         supabase.from('messages').select('*').in('conversation_id', convoIds).order('created_at', { ascending: false }),
       ]);
 
