@@ -68,7 +68,7 @@ export function useConversations() {
         supabase.from('messages').select('*').in('conversation_id', convoIds).order('created_at', { ascending: false }),
       ]);
 
-      const profileMap = new Map((profilesRes.data || []).map(p => [p.id, p]));
+      const profileMap = new Map((profilesRes.data || []).map((p: any) => [p.id, p]));
 
       // Group messages by conversation_id
       const msgByConvo = new Map<string, { last: any; unread: number }>();

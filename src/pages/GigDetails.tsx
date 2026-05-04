@@ -41,7 +41,7 @@ const GigDetails = () => {
 
       const { data: profile } = await (supabase as any).from('public_profiles').select('full_name, profile_image_url, languages').eq('id', gigData.freelancers?.user_id).single();
 
-      setFreelancerLastSeen(profile?.last_seen || null);
+      setFreelancerLastSeen(null);
 
       const { data: reviews } = await supabase.from('gig_reviews').select('rating, comment, created_at, buyer_id').eq('gig_id', id);
 
