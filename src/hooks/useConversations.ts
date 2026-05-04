@@ -64,11 +64,11 @@ export function useConversations() {
 
       // Fetch profiles and latest messages in parallel
       const [profilesRes, messagesRes] = await Promise.all([
-        supabase.from('profiles').select('id, full_name, profile_image_url').in('id', partnerIds),
+        (supabase as any).from('public_profiles').select('id, full_name, profile_image_url').in('id', partnerIds),
         supabase.from('messages').select('*').in('conversation_id', convoIds).order('created_at', { ascending: false }),
       ]);
 
-      const profileMap = new Map((profilesRes.data || []).map(p => [p.id, p]));
+      const profileMap = new Map((profilesRes.data || []).map((p: any) => [p.id, p]));
 
       // Group messages by conversation_id
       const msgByConvo = new Map<string, { last: any; unread: number }>();
@@ -84,7 +84,7 @@ export function useConversations() {
 
       const items: ConversationItem[] = convosData.map(convo => {
         const partnerId = convo.buyer_id === user.id ? convo.freelancer_id : convo.buyer_id;
-        const profile = profileMap.get(partnerId);
+        const profile = profileMap.get(partnerId) as any;
         const msgInfo = msgByConvo.get(convo.id);
         return {
           conversationId: convo.id,

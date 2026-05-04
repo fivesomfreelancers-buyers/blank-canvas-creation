@@ -39,14 +39,14 @@ const GigDetails = () => {
 
       if (error || !gigData) { setLoading(false); return; }
 
-      const { data: profile } = await supabase.from('profiles').select('full_name, profile_image_url, last_seen, languages').eq('id', gigData.freelancers?.user_id).single();
+      const { data: profile } = await (supabase as any).from('public_profiles').select('full_name, profile_image_url, languages').eq('id', gigData.freelancers?.user_id).single();
 
-      setFreelancerLastSeen(profile?.last_seen || null);
+      setFreelancerLastSeen(null);
 
       const { data: reviews } = await supabase.from('gig_reviews').select('rating, comment, created_at, buyer_id').eq('gig_id', id);
 
       const reviewsWithNames = await Promise.all((reviews || []).map(async (review) => {
-        const { data: buyerProfile } = await supabase.from('profiles').select('full_name').eq('id', review.buyer_id).single();
+        const { data: buyerProfile } = await (supabase as any).from('public_profiles').select('full_name').eq('id', review.buyer_id).single();
         return { ...review, buyerName: buyerProfile?.full_name || 'Anonymous Buyer' };
       }));
 
