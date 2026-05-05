@@ -257,28 +257,32 @@ const FreelancerDashboard = () => {
               </Card>
             </div>
 
-            <Card className="border-blue-200 bg-blue-50">
-              <CardHeader>
-                <CardTitle className="text-blue-800 flex items-center">
-                  <Clock className="w-5 h-5 mr-2" />
-                  Getting Started
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-white rounded-lg border gap-3">
+            {!isVerified && (
+              <Card className="border-red-200 bg-red-50">
+                <CardHeader>
+                  <CardTitle className="text-red-700 flex items-center">
+                    <UserCheck className="w-5 h-5 mr-2" />
+                    Verify Your Account
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-white rounded-lg border border-red-100 gap-3">
                     <div className="flex-1">
-                      <p className="font-medium text-sm sm:text-base">Create Your First Gig</p>
-                      <p className="text-xs sm:text-sm text-gray-600">Start by creating a service to offer clients</p>
+                      <p className="font-medium text-sm sm:text-base text-red-700">Complete your verification</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Verify your identity to unlock full access and build buyer trust</p>
                     </div>
-                    <Button size="sm" onClick={() => setActiveSection('gigs')} className="text-xs px-2 py-1 self-start sm:self-center">
-                      <Briefcase className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                      Create Gig
+                    <Button
+                      size="sm"
+                      onClick={() => setActiveSection('verify')}
+                      className="text-xs px-3 py-1 self-start sm:self-center bg-red-600 hover:bg-red-700 text-white"
+                    >
+                      <UserCheck className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                      Verify Now
                     </Button>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
