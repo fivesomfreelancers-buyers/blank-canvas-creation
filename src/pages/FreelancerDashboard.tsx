@@ -33,7 +33,7 @@ interface UserProfile {
 const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userProfile }: { 
   activeSection: string; setActiveSection: (section: string) => void; isVerified: boolean; userProfile: UserProfile | null 
 }) => {
-  const allSidebarItems = [
+  const sidebarItems = [
     { title: "Dashboard", icon: Home, key: "dashboard" },
     { title: "My Gigs", icon: Briefcase, key: "gigs" },
     { title: "Orders Received", icon: ShoppingBag, key: "orders" },
@@ -43,12 +43,7 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
     { title: "Help Center", icon: HelpCircle, key: "help" },
     { title: "Settings", icon: Settings, key: "settings" },
     { title: "My Profile", icon: User, key: "profile" },
-    { title: "Verify Your Account", icon: UserCheck, key: "verify", special: true }
   ];
-
-  const sidebarItems = allSidebarItems.filter(item => 
-    item.key !== 'verify' || !isVerified
-  );
 
   return (
     <Sidebar>
@@ -75,8 +70,6 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
                       className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-colors ${
                         activeSection === item.key 
                           ? 'bg-primary text-primary-foreground' 
-                          : item.special
-                          ? 'text-red-600 hover:text-red-700 hover:bg-red-50'
                           : 'text-foreground hover:bg-accent'
                       }`}
                     >
