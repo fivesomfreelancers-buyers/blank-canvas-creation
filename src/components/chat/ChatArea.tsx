@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Smile, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { Send, Smile, Paperclip, Loader2 } from 'lucide-react';
+import AttachmentPreview from './AttachmentPreview';
 import type { ConversationItem, ChatMessage } from '@/hooks/useConversations';
 
 const EMOJIS = ['👍', '😊', '✔️', '🔥', '🎉', '💬', '👌', '⭐', '📩', '🚀'];
