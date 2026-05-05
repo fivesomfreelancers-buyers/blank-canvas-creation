@@ -78,9 +78,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                     }`}>
                       <p>{msg.message}</p>
                       {msg.attachment_url && (
-                        <div className="mt-2">
-                          <img src={msg.attachment_url} alt="Attachment" className="max-w-[200px] rounded-lg border shadow-sm" />
-                        </div>
+                        <AttachmentPreview url={msg.attachment_url} isOwn={msg.sender_id === currentUserId} />
                       )}
                       <p className={`text-xs mt-1 ${msg.sender_id === currentUserId ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                         {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
