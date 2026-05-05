@@ -223,27 +223,34 @@ export function useConversations() {
 
     try {
       setUploadingImage(true);
-      const fileExt = file.name.split('.').pop();
+      const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase();
       const filePath = `${currentUserId}/${crypto.randomUUID()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('message-attachments')
-        .upload(filePath, file);
+        .upload(filePath, file, { contentType: file.type || undefined });
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
         .from('message-attachments')
         .getPublicUrl(filePath);
 
+      const mime = file.type || '';
+      let label = `Sent a file: ${file.name}`;
+      if (mime.startsWith('image/')) label = 'Sent an image';
+      else if (mime.startsWith('video/')) label = 'Sent a video';
+      else label = `Sent a document: ${file.name}`;
+
       await supabase.from('messages').insert({
         sender_id: currentUserId,
         receiver_id: selectedPartnerId,
         conversation_id: selectedConversationId,
-        message: 'Sent an image',
+        message: label,
         attachment_url: publicUrl,
       });
+      if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Error uploading file:', error);
     } finally {
       setUploadingImage(false);
     }

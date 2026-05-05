@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Smile, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { Send, Smile, Paperclip, Loader2 } from 'lucide-react';
+import AttachmentPreview from './AttachmentPreview';
 import type { ConversationItem, ChatMessage } from '@/hooks/useConversations';
 
 const EMOJIS = ['👍', '😊', '✔️', '🔥', '🎉', '💬', '👌', '⭐', '📩', '🚀'];
@@ -77,9 +78,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                     }`}>
                       <p>{msg.message}</p>
                       {msg.attachment_url && (
-                        <div className="mt-2">
-                          <img src={msg.attachment_url} alt="Attachment" className="max-w-[200px] rounded-lg border shadow-sm" />
-                        </div>
+                        <AttachmentPreview url={msg.attachment_url} isOwn={msg.sender_id === currentUserId} />
                       )}
                       <p className={`text-xs mt-1 ${msg.sender_id === currentUserId ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                         {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -106,9 +105,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({
             )}
 
             <div className="flex space-x-2 pt-2 border-t items-center relative">
-              <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
-              <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} disabled={uploadingImage}>
-                {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-5 h-5 text-muted-foreground" />}
+              <input
+                type="file"
+                accept="image/*,video/*,.pdf,.doc,.docx,.txt,.xls,.xlsx,.ppt,.pptx,.zip,.csv"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+              />
+              <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} disabled={uploadingImage} title="Attach file">
+                {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Paperclip className="w-5 h-5 text-muted-foreground" />}
               </Button>
               <Button variant="ghost" size="icon" onClick={() => setShowEmojis(!showEmojis)}>
                 <Smile className="w-5 h-5 text-muted-foreground" />
