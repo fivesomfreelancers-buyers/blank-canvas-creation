@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import FeedbackModal from '@/components/feedback/FeedbackModal';
+import AttachmentPreview from '@/components/chat/AttachmentPreview';
 
 const BuyerOrderDetails = () => {
   const { orderId } = useParams();
