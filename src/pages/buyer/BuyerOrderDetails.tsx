@@ -237,20 +237,17 @@ const BuyerOrderDetails = () => {
                       {delivery.delivery_message && (
                         <p className="text-sm text-muted-foreground whitespace-pre-wrap">{delivery.delivery_message}</p>
                       )}
-                      <div className="flex flex-wrap gap-3">
-                        {delivery.delivery_file_url && (
-                          <Button size="sm" onClick={() => window.open(delivery.delivery_file_url, '_blank')}>
-                            <Download className="w-4 h-4 mr-2" />
-                            Download File
-                          </Button>
-                        )}
-                        {delivery.delivery_link && (
+                      {delivery.delivery_file_url && (
+                        <AttachmentPreview url={delivery.delivery_file_url} />
+                      )}
+                      {delivery.delivery_link && (
+                        <div>
                           <Button size="sm" variant="outline" onClick={() => window.open(delivery.delivery_link, '_blank')}>
                             <ExternalLink className="w-4 h-4 mr-2" />
                             Open Link
                           </Button>
-                        )}
-                      </div>
+                        </div>
+                      )}
                       <p className="text-xs text-muted-foreground">
                         Delivered: {new Date(delivery.delivered_at).toLocaleString()}
                       </p>
