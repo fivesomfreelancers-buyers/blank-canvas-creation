@@ -7,6 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Clock, MessageSquare, Package, Download, FileText, Image, Video, Link2, ArrowLeft, User } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
+import AttachmentPreview from '@/components/chat/AttachmentPreview';
 
 const FreelancerOrderDetails = () => {
   const { orderId } = useParams();
@@ -197,27 +198,9 @@ const FreelancerOrderDetails = () => {
                     {reqFiles.length > 0 && (
                       <div>
                         <h4 className="font-medium mb-2">Uploaded Files ({reqFiles.length})</h4>
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                           {reqFiles.map((file) => (
-                            <div key={file.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                              <div className="flex items-center gap-3">
-                                {getFileIcon(file.file_name)}
-                                <div>
-                                  <p className="font-medium text-sm">{file.file_name}</p>
-                                  {file.file_size && (
-                                    <p className="text-xs text-muted-foreground">{formatFileSize(file.file_size)}</p>
-                                  )}
-                                </div>
-                              </div>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => window.open(file.file_url, '_blank')}
-                              >
-                                <Download className="w-4 h-4 mr-1" />
-                                Download
-                              </Button>
-                            </div>
+                            <AttachmentPreview key={file.id} url={file.file_url} />
                           ))}
                         </div>
                       </div>
