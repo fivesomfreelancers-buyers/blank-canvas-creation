@@ -7,6 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Clock, MessageSquare, Package, Download, FileText, Image, Video, Link2, ArrowLeft, User } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
+import AttachmentPreview from '@/components/chat/AttachmentPreview';
 
 const FreelancerOrderDetails = () => {
   const { orderId } = useParams();
