@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { MessageSquare, Download, Star, RefreshCw, CheckCircle, Clock, User, X, Link2, ArrowLeft, ExternalLink } from 'lucide-react';
+import { MessageSquare, Download, Star, RefreshCw, CheckCircle, Clock, User, X, Link2, ArrowLeft, ExternalLink, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
@@ -24,7 +24,10 @@ const BuyerOrderDetails = () => {
   const [loading, setLoading] = useState(true);
   const [showRevisionModal, setShowRevisionModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [showDisputeModal, setShowDisputeModal] = useState(false);
   const [revisionFeedback, setRevisionFeedback] = useState('');
+  const [disputeReason, setDisputeReason] = useState('');
+  const [disputeDetails, setDisputeDetails] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasFeedback, setHasFeedback] = useState(false);
 
@@ -111,6 +114,34 @@ const BuyerOrderDetails = () => {
     }
   };
 
+  const handleOpenDispute = async () => {
+    if (!disputeReason.trim() || !orderId || !order) return;
+    setIsProcessing(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+      const { error: dErr } = await supabase.from('disputes').insert({
+        order_id: orderId,
+        buyer_id: user.id,
+        freelancer_id: order.freelancer_id,
+        reason: disputeReason,
+        details: disputeDetails || null,
+        status: 'open',
+      } as any);
+      if (dErr) throw dErr;
+      await supabase.from('orders').update({ status: 'disputed' as any }).eq('id', orderId);
+      setOrder((prev: any) => ({ ...prev, status: 'disputed' }));
+      setShowDisputeModal(false);
+      setDisputeReason('');
+      setDisputeDetails('');
+      toast({ title: "Dispute Opened", description: "Your dispute has been sent to the admin team for review." });
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message || "Failed to open dispute.", variant: "destructive" });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800';
@@ -192,13 +223,17 @@ const BuyerOrderDetails = () => {
                       <p className="text-sm text-muted-foreground whitespace-pre-wrap">{deliveries[0].delivery_message}</p>
                     </div>
                   )}
-                  <div className="flex gap-3">
+                  <div className="flex flex-wrap gap-3">
                     <Button onClick={handleAcceptDelivery} disabled={isProcessing}>
                       {isProcessing ? <><Clock className="w-4 h-4 mr-2 animate-spin" />Processing...</> : <><CheckCircle className="w-4 h-4 mr-2" />Accept Delivery</>}
                     </Button>
                     <Button variant="outline" onClick={() => setShowRevisionModal(true)} disabled={isProcessing}>
                       <RefreshCw className="w-4 h-4 mr-2" />
                       Request Revision
+                    </Button>
+                    <Button variant="outline" className="text-red-600 border-red-300 hover:bg-red-50 dark:hover:bg-red-900/20" onClick={() => setShowDisputeModal(true)} disabled={isProcessing}>
+                      <AlertTriangle className="w-4 h-4 mr-2" />
+                      Open Dispute
                     </Button>
                   </div>
                 </CardContent>
@@ -326,6 +361,35 @@ const BuyerOrderDetails = () => {
                   <Button variant="outline" onClick={() => setShowRevisionModal(false)} className="flex-1">Cancel</Button>
                   <Button onClick={handleRequestRevision} disabled={isProcessing} className="flex-1">
                     {isProcessing ? 'Sending...' : 'Send Request'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Dispute Modal */}
+        {showDisputeModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-background rounded-lg p-6 w-full max-w-md mx-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold flex items-center"><AlertTriangle className="w-5 h-5 mr-2 text-red-600" />Open Dispute</h3>
+                <Button variant="ghost" size="sm" onClick={() => setShowDisputeModal(false)}><X className="w-4 h-4" /></Button>
+              </div>
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">A dispute will be sent to the admin team for review. Please describe the issue clearly.</p>
+                <div>
+                  <Label>Reason *</Label>
+                  <Textarea value={disputeReason} onChange={(e) => setDisputeReason(e.target.value)} placeholder="Briefly describe the reason for the dispute..." rows={2} className="mt-2" />
+                </div>
+                <div>
+                  <Label>Additional Details</Label>
+                  <Textarea value={disputeDetails} onChange={(e) => setDisputeDetails(e.target.value)} placeholder="Provide any additional context (optional)..." rows={3} className="mt-2" />
+                </div>
+                <div className="flex gap-3">
+                  <Button variant="outline" onClick={() => setShowDisputeModal(false)} className="flex-1">Cancel</Button>
+                  <Button onClick={handleOpenDispute} disabled={isProcessing || !disputeReason.trim()} className="flex-1 bg-red-600 hover:bg-red-700 text-white">
+                    {isProcessing ? 'Submitting...' : 'Submit Dispute'}
                   </Button>
                 </div>
               </div>
