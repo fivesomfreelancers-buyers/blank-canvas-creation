@@ -4,8 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 import { 
   Home, Briefcase, ShoppingBag, MessageSquare, Package, Wallet, Settings, User,
-  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2
+  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2, RefreshCw
 } from 'lucide-react';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -111,6 +113,8 @@ const FreelancerDashboard = () => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState({ totalGigs: 0, activeOrders: 0, pendingEarnings: 0, completedOrders: 0 });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
+  const [revisionRequests, setRevisionRequests] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadDashboardData = async () => {
