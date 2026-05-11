@@ -56,7 +56,8 @@ const AdminUsers = () => {
   useEffect(() => { fetchFreelancers(); }, []);
 
   const toggleVerified = async (id: string, current: boolean) => {
-    const { error } = await supabase.from('freelancers').update({ is_verified: !current }).eq('id', id);
+    const payload: any = { is_verified: !current, verified_at: !current ? new Date().toISOString() : null };
+    const { error } = await supabase.from('freelancers').update(payload).eq('id', id);
     if (error) { toast.error('Failed to update'); return; }
     toast.success(!current ? 'User verified ✓' : 'Verification removed');
     fetchFreelancers();
