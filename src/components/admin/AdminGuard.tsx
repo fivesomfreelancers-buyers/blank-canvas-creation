@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Lock, Mail, KeyRound, Loader2 } from 'lucide-react';
+import { Shield, Lock, Mail, KeyRound, Loader2, LogOut, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -12,8 +12,22 @@ interface AdminGuardProps {
   children: React.ReactNode;
 }
 
+const checkAdminRole = async (userId: string): Promise<boolean> => {
+  // Check both admin and super_admin via direct query (covers either role)
+  const { data, error } = await (supabase as any)
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', userId)
+    .in('role', ['admin', 'super_admin']);
+  if (error) {
+    console.error('checkAdminRole error:', error);
+    return false;
+  }
+  return Array.isArray(data) && data.length > 0;
+};
+
 const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
-  const { user, session, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [checking, setChecking] = useState(true);
@@ -21,54 +35,59 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
   const [password, setPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
-  useEffect(() => {
-    const checkAdmin = async () => {
-      if (authLoading) return;
-      if (!user) {
-        setIsAdmin(false);
-        setChecking(false);
-        return;
-      }
-      const { data, error } = await supabase.rpc('has_role', {
-        _user_id: user.id,
-        _role: 'admin',
-      });
-      setIsAdmin(!!data && !error);
+  const runCheck = useCallback(async () => {
+    setChecking(true);
+    const { data: { user: current } } = await supabase.auth.getUser();
+    if (!current) {
+      setIsAdmin(false);
       setChecking(false);
-    };
-    checkAdmin();
-  }, [user, authLoading]);
+      return;
+    }
+    const ok = await checkAdminRole(current.id);
+    setIsAdmin(ok);
+    setChecking(false);
+  }, []);
+
+  useEffect(() => {
+    if (authLoading) return;
+    runCheck();
+  }, [user?.id, authLoading, runCheck]);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      runCheck();
+    });
+    return () => subscription.unsubscribe();
+  }, [runCheck]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        toast.error(error.message);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error || !data.user) {
+        toast.error(error?.message || 'Login failed');
         setLoginLoading(false);
         return;
       }
-      // Re-check admin after login
-      const { data: { user: loggedUser } } = await supabase.auth.getUser();
-      if (loggedUser) {
-        const { data } = await supabase.rpc('has_role', {
-          _user_id: loggedUser.id,
-          _role: 'admin',
-        });
-        if (!data) {
-          toast.error('Access denied. You are not an admin.');
-          await supabase.auth.signOut();
-          setIsAdmin(false);
-        } else {
-          setIsAdmin(true);
-          toast.success('Welcome, Admin!');
-        }
+      const ok = await checkAdminRole(data.user.id);
+      if (!ok) {
+        toast.error('Access denied. This account is not an admin.');
+        await supabase.auth.signOut();
+        setIsAdmin(false);
+      } else {
+        toast.success('Welcome, Admin!');
+        setIsAdmin(true);
       }
-    } catch {
-      toast.error('Login failed');
+    } catch (err: any) {
+      toast.error(err?.message || 'Login failed');
     }
     setLoginLoading(false);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    setIsAdmin(false);
   };
 
   if (authLoading || checking) {
@@ -82,7 +101,39 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
     );
   }
 
-  if (!isAdmin) {
+  // Logged in but not admin — show clear screen with sign-out, do not silently overwrite session
+  if (user && !isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <Card className="w-full max-w-md border-border shadow-2xl">
+          <CardHeader className="text-center space-y-3">
+            <div className="mx-auto w-16 h-16 rounded-2xl bg-destructive/10 flex items-center justify-center">
+              <Lock className="h-8 w-8 text-destructive" />
+            </div>
+            <CardTitle className="text-2xl font-bold text-foreground">Not an Admin Account</CardTitle>
+            <CardDescription className="text-muted-foreground">
+              You're signed in as <span className="font-medium text-foreground">{user.email}</span>, which doesn't have admin access.
+              Sign out and sign back in with your admin email.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Button onClick={handleSignOut} className="w-full" variant="destructive">
+              <LogOut className="h-4 w-4 mr-2" /> Sign Out
+            </Button>
+            <Button onClick={() => navigate('/')} className="w-full" variant="outline">
+              <Home className="h-4 w-4 mr-2" /> Back to Site
+            </Button>
+            <Button onClick={runCheck} className="w-full" variant="ghost">
+              Re-check Access
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Not logged in — show admin login form
+  if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <Card className="w-full max-w-md border-border shadow-2xl">
