@@ -9,6 +9,7 @@ import { Star, MessageSquare, Shield, Clock, CheckCircle, ChevronLeft, ChevronRi
 import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Navbar from '@/components/Navbar';
+import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -25,7 +26,7 @@ const GigDetails = () => {
   const [packages, setPackages] = useState<any[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<string>('basic');
   const [faqs, setFaqs] = useState<any[]>([]);
-  const [freelancerLastSeen, setFreelancerLastSeen] = useState<string | null>(null);
+  
 
   useEffect(() => {
     const fetchGig = async () => {
@@ -41,7 +42,7 @@ const GigDetails = () => {
 
       const { data: profile } = await (supabase as any).from('public_profiles').select('full_name, profile_image_url, languages').eq('id', gigData.freelancers?.user_id).single();
 
-      setFreelancerLastSeen(null);
+      
 
       const { data: reviews } = await supabase.from('gig_reviews').select('rating, comment, created_at, buyer_id').eq('gig_id', id);
 
@@ -79,9 +80,14 @@ const GigDetails = () => {
     };
 
     fetchGig();
-  }, [id]);
 
-  const isOnline = freelancerLastSeen ? (Date.now() - new Date(freelancerLastSeen).getTime()) < 5 * 60 * 1000 : false;
+    // Realtime: refresh when a new review is added for this gig
+    const channel = supabase
+      .channel(`gig-${id}-reviews`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'gig_reviews', filter: `gig_id=eq.${id}` }, () => fetchGig())
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [id]);
 
   const getOrCreateConversation = async (partnerId: string): Promise<string | null> => {
     if (!user) return null;
@@ -193,12 +199,10 @@ const GigDetails = () => {
                         <AvatarImage src={gig.freelancerImageUrl || ''} />
                         <AvatarFallback className="bg-primary text-primary-foreground text-sm">{initials}</AvatarFallback>
                       </Avatar>
-                      <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${isOnline ? 'bg-green-500' : 'bg-muted-foreground'}`} />
+                      <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
                     </div>
                     <span className="font-medium">{gig.freelancerName}</span>
-                    <span className={`text-xs ${isOnline ? 'text-green-600' : 'text-muted-foreground'}`}>
-                      {isOnline ? 'Online' : 'Offline'}
-                    </span>
+                    <OnlineIndicator userId={gig.freelancerUserId} />
                   </div>
                   {gig.totalReviews > 0 && (
                     <div className="flex items-center">
@@ -270,7 +274,7 @@ const GigDetails = () => {
                           <AvatarImage src={gig.freelancerImageUrl || ''} />
                           <AvatarFallback className="bg-primary text-primary-foreground text-xl">{initials}</AvatarFallback>
                         </Avatar>
-                        <span className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-background ${isOnline ? 'bg-green-500' : 'bg-muted-foreground'}`} />
+                        <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
                       </div>
                       <div>
                         <h3 className="font-bold text-lg">{gig.freelancerName}</h3>
@@ -391,14 +395,12 @@ const GigDetails = () => {
                       <AvatarImage src={gig.freelancerImageUrl || ''} />
                       <AvatarFallback className="bg-primary text-primary-foreground">{initials}</AvatarFallback>
                     </Avatar>
-                    <span className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-background ${isOnline ? 'bg-green-500' : 'bg-muted-foreground'}`} />
+                    <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
                   </div>
                   <div>
                     <h4 className="font-medium">{gig.freelancerName}</h4>
                     <p className="text-sm text-muted-foreground">{gig.completedOrders} orders completed</p>
-                    <p className={`text-xs ${isOnline ? 'text-green-600' : 'text-muted-foreground'}`}>
-                      {isOnline ? '🟢 Online now' : '⚫ Offline'}
-                    </p>
+                    <OnlineIndicator userId={gig.freelancerUserId} />
                   </div>
                 </div>
                 {gig.isVerified && (
