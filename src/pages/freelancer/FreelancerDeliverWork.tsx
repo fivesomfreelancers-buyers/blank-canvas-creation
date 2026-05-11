@@ -142,7 +142,7 @@ const FreelancerDeliverWork = () => {
       // so the freelancer dashboard no longer shows the revision request.
       await (supabase as any)
         .from('order_deliveries')
-        .update({ status: 'resubmitted' })
+        .update({ status: 'submitted' })
         .eq('order_id', selectedOrder)
         .eq('status', 'revision_requested');
 
