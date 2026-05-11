@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Search, HelpCircle, MessageSquare, Mail } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import BackToDashboard from '@/components/BackToDashboard';
 
 const FreelancerHelp = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,6 +39,7 @@ const FreelancerHelp = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
+        <BackToDashboard />
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Help Center</h1>
           <p className="text-gray-600 mt-2">Find answers to common questions and get support</p>

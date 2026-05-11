@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { UserCheck, Shield, Upload, FileCheck, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
+import BackToDashboard from '@/components/BackToDashboard';
 
 const FreelancerVerify = () => {
   const { toast } = useToast();
@@ -217,6 +218,7 @@ const FreelancerVerify = () => {
   return (
     <div className="min-h-screen p-4 sm:p-6 bg-background">
       <div className="max-w-4xl mx-auto">
+        <BackToDashboard />
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">

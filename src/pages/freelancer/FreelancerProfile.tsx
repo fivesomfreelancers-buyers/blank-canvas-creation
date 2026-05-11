@@ -9,6 +9,7 @@ import EditProfileModal from '@/components/profile/EditProfileModal';
 import ProfilePreviewModal from '@/components/profile/ProfilePreviewModal';
 import FreelancerFAQManager from '@/components/faq/FreelancerFAQManager';
 import { supabase } from '@/integrations/supabase/client';
+import BackToDashboard from '@/components/BackToDashboard';
 
 const FreelancerProfile = () => {
   const [profile, setProfile] = useState<any>(null);
@@ -68,6 +69,7 @@ const FreelancerProfile = () => {
 
   return (
     <div className="min-h-screen bg-muted/30 p-3 sm:p-6">
+      <BackToDashboard />
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
           <div>
