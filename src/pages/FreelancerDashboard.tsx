@@ -141,7 +141,7 @@ const FreelancerDashboard = () => {
 
       const { data: freelancer } = await supabase
         .from('freelancers')
-        .select('is_verified, total_earnings, completed_orders, id')
+        .select('is_verified, verified_at, total_earnings, completed_orders, id')
         .eq('user_id', user.id)
         .single();
       
@@ -156,7 +156,10 @@ const FreelancerDashboard = () => {
           .limit(1)
           .maybeSingle();
         if (freelancer.is_verified) {
-          setVerificationStatus('approved');
+          // Show celebratory "Account Verified" banner only for the first 24h after approval.
+          const verifiedAt = (freelancer as any).verified_at ? new Date((freelancer as any).verified_at).getTime() : 0;
+          const within24h = verifiedAt > 0 && (Date.now() - verifiedAt) < 24 * 60 * 60 * 1000;
+          setVerificationStatus(within24h ? 'approved' : 'none');
         } else if (vDoc?.status) {
           setVerificationStatus(vDoc.status as any);
         } else {
