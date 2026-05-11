@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import { Textarea } from '@/components/ui/textarea';
 import { Star, MapPin, Calendar, MessageSquare, Clock, CheckCircle, Globe } from 'lucide-react';
 import Navbar from '@/components/Navbar';
