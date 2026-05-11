@@ -223,13 +223,17 @@ const BuyerOrderDetails = () => {
                       <p className="text-sm text-muted-foreground whitespace-pre-wrap">{deliveries[0].delivery_message}</p>
                     </div>
                   )}
-                  <div className="flex gap-3">
+                  <div className="flex flex-wrap gap-3">
                     <Button onClick={handleAcceptDelivery} disabled={isProcessing}>
                       {isProcessing ? <><Clock className="w-4 h-4 mr-2 animate-spin" />Processing...</> : <><CheckCircle className="w-4 h-4 mr-2" />Accept Delivery</>}
                     </Button>
                     <Button variant="outline" onClick={() => setShowRevisionModal(true)} disabled={isProcessing}>
                       <RefreshCw className="w-4 h-4 mr-2" />
                       Request Revision
+                    </Button>
+                    <Button variant="outline" className="text-red-600 border-red-300 hover:bg-red-50 dark:hover:bg-red-900/20" onClick={() => setShowDisputeModal(true)} disabled={isProcessing}>
+                      <AlertTriangle className="w-4 h-4 mr-2" />
+                      Open Dispute
                     </Button>
                   </div>
                 </CardContent>
