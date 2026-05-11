@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import { Textarea } from '@/components/ui/textarea';
 import { Star, MapPin, Calendar, MessageSquare, Clock, CheckCircle, Globe } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -166,18 +167,24 @@ const FreelancerProfilePage = () => {
         <Card className="mb-8">
           <CardContent className="p-6">
             <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-6">
-              <Avatar className="w-24 h-24">
-                <AvatarImage src={profileData.imageUrl || ''} alt={profileData.name} />
-                <AvatarFallback className="text-2xl bg-primary text-primary-foreground">{initials}</AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar className="w-24 h-24">
+                  <AvatarImage src={profileData.imageUrl || ''} alt={profileData.name} className="object-cover" />
+                  <AvatarFallback className="text-2xl bg-primary text-primary-foreground">{initials}</AvatarFallback>
+                </Avatar>
+                <span className="absolute bottom-1 right-1">
+                  <OnlineIndicator userId={profileData.userId} dotOnly />
+                </span>
+              </div>
               <div className="flex-1">
-                <div className="flex items-center space-x-3 mb-2">
+                <div className="flex items-center space-x-3 mb-2 flex-wrap gap-y-2">
                   <h1 className="text-3xl font-bold text-foreground">{profileData.name}</h1>
                   {profileData.is_verified && (
                     <Badge variant="secondary" className="text-green-600">
                       <CheckCircle className="w-3 h-3 mr-1" /> Verified
                     </Badge>
                   )}
+                  <OnlineIndicator userId={profileData.userId} />
                 </div>
                 <p className="text-muted-foreground mb-4">{profileData.bio || 'No bio provided'}</p>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">

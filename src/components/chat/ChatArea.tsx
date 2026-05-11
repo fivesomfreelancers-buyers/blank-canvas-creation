@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Smile, Paperclip, Loader2 } from 'lucide-react';
 import AttachmentPreview from './AttachmentPreview';
+import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import type { ConversationItem, ChatMessage } from '@/hooks/useConversations';
 
 const EMOJIS = ['👍', '😊', '✔️', '🔥', '🎉', '💬', '👌', '⭐', '📩', '🚀'];
@@ -47,13 +48,21 @@ const ChatArea: React.FC<ChatAreaProps> = ({
         <CardTitle>
           {selectedConvo ? (
             <div className="flex items-center space-x-3">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src={selectedConvo.partnerImage || undefined} />
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                  {getInitials(selectedConvo.partnerName)}
-                </AvatarFallback>
-              </Avatar>
-              <span>{selectedConvo.partnerName}</span>
+              <div className="relative">
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={selectedConvo.partnerImage || undefined} className="object-cover" />
+                  <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                    {getInitials(selectedConvo.partnerName)}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="absolute -bottom-0 -right-0">
+                  <OnlineIndicator userId={selectedConvo.partnerId} dotOnly />
+                </span>
+              </div>
+              <div className="flex flex-col leading-tight">
+                <span className="text-sm sm:text-base">{selectedConvo.partnerName}</span>
+                <OnlineIndicator userId={selectedConvo.partnerId} />
+              </div>
             </div>
           ) : 'Select a conversation'}
         </CardTitle>

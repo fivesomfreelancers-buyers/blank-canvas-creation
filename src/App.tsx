@@ -43,6 +43,7 @@ import PaymentPage from "./pages/PaymentPage";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import { ThemeProvider } from "./components/ThemeProvider";
+import PresenceTracker from "./components/presence/PresenceTracker";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <PresenceTracker />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/explore" element={<Explore />} />
