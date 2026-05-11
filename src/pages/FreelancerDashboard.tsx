@@ -4,8 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 import { 
   Home, Briefcase, ShoppingBag, MessageSquare, Package, Wallet, Settings, User,
-  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2
+  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2, RefreshCw
 } from 'lucide-react';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -111,6 +113,8 @@ const FreelancerDashboard = () => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState({ totalGigs: 0, activeOrders: 0, pendingEarnings: 0, completedOrders: 0 });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
+  const [revisionRequests, setRevisionRequests] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -206,6 +210,53 @@ const FreelancerDashboard = () => {
             buyer_name: profileMap.get(order.buyer_id) || 'Buyer'
           }));
           setRecentOrders(enrichedOrders);
+        }
+
+        // Fetch revision-requested deliveries for this freelancer's orders
+        const { data: freelancerOrders } = await supabase
+          .from('orders')
+          .select('id, buyer_id, gigs(title)')
+          .eq('freelancer_id', freelancer.id);
+
+        const orderIds = (freelancerOrders || []).map((o: any) => o.id);
+        if (orderIds.length > 0) {
+          const { data: revs } = await (supabase as any)
+            .from('order_deliveries')
+            .select('id, order_id, revision_feedback, revision_requested_at, status')
+            .eq('status', 'revision_requested')
+            .in('order_id', orderIds)
+            .order('revision_requested_at', { ascending: false });
+
+          if (revs && revs.length > 0) {
+            // dedupe to latest per order
+            const seen = new Set<string>();
+            const latestPerOrder = (revs as any[]).filter((r) => {
+              if (seen.has(r.order_id)) return false;
+              seen.add(r.order_id);
+              return true;
+            });
+
+            const orderMap = new Map((freelancerOrders || []).map((o: any) => [o.id, o]));
+            const buyerIds = [...new Set(latestPerOrder.map((r: any) => orderMap.get(r.order_id)?.buyer_id).filter(Boolean))];
+            const { data: buyerProfiles } = await (supabase as any)
+              .from('public_profiles')
+              .select('id, full_name, profile_image_url')
+              .in('id', buyerIds);
+            const bMap = new Map(((buyerProfiles as any[]) || []).map((p: any) => [p.id, p]));
+
+            setRevisionRequests(latestPerOrder.map((r: any) => {
+              const ord: any = orderMap.get(r.order_id);
+              const buyer: any = bMap.get(ord?.buyer_id);
+              return {
+                ...r,
+                gig_title: ord?.gigs?.title || 'Order',
+                buyer_name: buyer?.full_name || 'Buyer',
+                buyer_avatar: buyer?.profile_image_url || '',
+              };
+            }));
+          } else {
+            setRevisionRequests([]);
+          }
         }
       }
     };
@@ -335,6 +386,71 @@ const FreelancerDashboard = () => {
                       {verificationStatus === 'rejected' ? 'Re-submit' : 'Verify Now'}
                     </Button>
                   </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {revisionRequests.length > 0 && (
+              <Card className="border-yellow-400/50 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-700">
+                <CardHeader>
+                  <CardTitle className="text-yellow-700 dark:text-yellow-200 flex items-center">
+                    <RefreshCw className="w-5 h-5 mr-2" />
+                    Revision Requests ({revisionRequests.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {revisionRequests.map((r) => (
+                    <div
+                      key={r.id}
+                      className="p-4 rounded-lg border border-yellow-300 bg-background dark:border-yellow-800"
+                    >
+                      <div className="flex items-start gap-3">
+                        <Avatar className="w-10 h-10 flex-shrink-0">
+                          <AvatarImage src={r.buyer_avatar} />
+                          <AvatarFallback className="bg-primary text-primary-foreground">
+                            {(r.buyer_name || 'B').split(' ').map((n: string) => n[0]).join('').toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                              <p className="font-medium text-sm">{r.buyer_name}</p>
+                              <p className="text-xs text-muted-foreground truncate">{r.gig_title}</p>
+                            </div>
+                            {r.revision_requested_at && (
+                              <p className="text-xs text-muted-foreground">
+                                {new Date(r.revision_requested_at).toLocaleString()}
+                              </p>
+                            )}
+                          </div>
+                          {r.revision_feedback ? (
+                            <div className="mt-2 p-3 rounded-md bg-yellow-100/60 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800">
+                              <p className="text-sm whitespace-pre-wrap text-foreground">{r.revision_feedback}</p>
+                            </div>
+                          ) : (
+                            <p className="mt-2 text-xs italic text-muted-foreground">No feedback provided.</p>
+                          )}
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            <Button
+                              size="sm"
+                              className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                              onClick={() => navigate(`/freelancer/order/${r.order_id}`)}
+                            >
+                              View Order
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => navigate('/freelancer/deliver', { state: { orderId: r.order_id } })}
+                            >
+                              <Package className="w-4 h-4 mr-2" />
+                              Submit Revision
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </CardContent>
               </Card>
             )}

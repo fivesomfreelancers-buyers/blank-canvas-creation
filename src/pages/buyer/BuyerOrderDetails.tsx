@@ -271,20 +271,36 @@ const BuyerOrderDetails = () => {
                   <CardTitle className="text-lg">📥 Delivered Files</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
+                  {order.status !== 'completed' && (
+                    <div className="p-3 rounded-lg border border-yellow-300 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800 text-sm text-yellow-800 dark:text-yellow-200">
+                      🔒 You can preview the delivery, but downloads will unlock once you accept the delivery and release the payment.
+                    </div>
+                  )}
                   {deliveries.map((delivery) => (
                     <div key={delivery.id} className="space-y-3 p-4 bg-muted rounded-lg">
                       {delivery.delivery_message && (
                         <p className="text-sm text-muted-foreground whitespace-pre-wrap">{delivery.delivery_message}</p>
                       )}
                       {delivery.delivery_file_url && (
-                        <AttachmentPreview url={delivery.delivery_file_url} />
+                        <AttachmentPreview
+                          url={delivery.delivery_file_url}
+                          allowDownload={order.status === 'completed'}
+                          lockedHint="Accept delivery to download"
+                        />
                       )}
                       {delivery.delivery_link && (
                         <div>
-                          <Button size="sm" variant="outline" onClick={() => window.open(delivery.delivery_link, '_blank')}>
-                            <ExternalLink className="w-4 h-4 mr-2" />
-                            Open Link
-                          </Button>
+                          {order.status === 'completed' ? (
+                            <Button size="sm" variant="outline" onClick={() => window.open(delivery.delivery_link, '_blank')}>
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                              Open Link
+                            </Button>
+                          ) : (
+                            <div className="inline-flex items-center gap-2 text-xs text-muted-foreground border rounded-md px-3 py-2">
+                              <Link2 className="w-3.5 h-3.5" />
+                              Link unlocks after you accept the delivery
+                            </div>
+                          )}
                         </div>
                       )}
                       <p className="text-xs text-muted-foreground">
