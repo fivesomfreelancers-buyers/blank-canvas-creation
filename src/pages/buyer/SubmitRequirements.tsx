@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Upload, FileText, Image, Video, X, Plus, Link2, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import Navbar from '@/components/Navbar';
+import { ArrowLeft } from 'lucide-react';
 
 const SubmitRequirements = () => {
   const { orderId } = useParams();
@@ -130,8 +130,11 @@ const SubmitRequirements = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="max-w-3xl mx-auto px-4 py-8 pt-24">
+      <div className="max-w-3xl mx-auto px-4 py-8">
+        <Button variant="ghost" onClick={() => navigate('/buyer/dashboard')} className="mb-6">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Dashboard
+        </Button>
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Submit Your Requirements</h1>
           <p className="text-muted-foreground mt-2">

@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Clock, MessageSquare, Package, Download, FileText, Image, Video, Link2, ArrowLeft, User, RefreshCw } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import Navbar from '@/components/Navbar';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 
 const FreelancerOrderDetails = () => {
@@ -105,8 +104,7 @@ const FreelancerOrderDetails = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="max-w-4xl mx-auto px-4 py-8 pt-24 text-center text-muted-foreground">Loading order details...</div>
+        <div className="max-w-4xl mx-auto px-4 py-8 text-center text-muted-foreground">Loading order details...</div>
       </div>
     );
   }
@@ -114,10 +112,9 @@ const FreelancerOrderDetails = () => {
   if (!order) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="max-w-4xl mx-auto px-4 py-8 pt-24 text-center">
+        <div className="max-w-4xl mx-auto px-4 py-8 text-center">
           <h2 className="text-2xl font-bold text-foreground">Order not found</h2>
-          <Button onClick={() => navigate('/freelancer/orders')} className="mt-4">Back to Orders</Button>
+          <Button onClick={() => navigate('/freelancer/dashboard')} className="mt-4">Back to Dashboard</Button>
         </div>
       </div>
     );
@@ -127,11 +124,10 @@ const FreelancerOrderDetails = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-8 pt-24">
-        <Button variant="ghost" onClick={() => navigate('/freelancer/orders')} className="mb-6">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <Button variant="ghost" onClick={() => navigate('/freelancer/dashboard')} className="mb-6">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Orders
+          Back to Dashboard
         </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
