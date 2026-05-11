@@ -11,7 +11,8 @@ import {
   Clock,
   CheckCircle,
   DollarSign,
-  Wallet
+  Wallet,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -253,6 +254,17 @@ const BuyerDashboard = () => {
         <SidebarInset>
           <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
             <SidebarTrigger className="-ml-1" />
+            {activeSection !== 'dashboard' && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setActiveSection('dashboard')}
+                className="ml-1"
+              >
+                <ArrowLeft className="w-4 h-4 mr-1" />
+                Back to Dashboard
+              </Button>
+            )}
             <div className="ml-auto flex items-center space-x-4">
               <Avatar className="h-8 w-8">
                 <AvatarImage src={profile?.profile_image_url || undefined} />
