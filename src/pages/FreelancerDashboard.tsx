@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 import { 
   Home, Briefcase, ShoppingBag, MessageSquare, Package, Wallet, Settings, User,
-  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle
+  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -107,6 +107,7 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
 const FreelancerDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [isVerified, setIsVerified] = useState(false);
+  const [verificationStatus, setVerificationStatus] = useState<'none' | 'pending' | 'approved' | 'rejected'>('none');
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState({ totalGigs: 0, activeOrders: 0, pendingEarnings: 0, completedOrders: 0 });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
@@ -142,6 +143,21 @@ const FreelancerDashboard = () => {
       
       if (freelancer) {
         setIsVerified(freelancer.is_verified || false);
+
+        const { data: vDoc } = await supabase
+          .from('verification_documents')
+          .select('status')
+          .eq('user_id', user.id)
+          .order('submitted_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (freelancer.is_verified) {
+          setVerificationStatus('approved');
+        } else if (vDoc?.status) {
+          setVerificationStatus(vDoc.status as any);
+        } else {
+          setVerificationStatus('none');
+        }
 
         const { count: gigsCount } = await supabase
           .from('gigs')
@@ -250,19 +266,65 @@ const FreelancerDashboard = () => {
               </Card>
             </div>
 
-            {!isVerified && (
+            {verificationStatus === 'approved' ? (
+              <Card className="border-green-500/30 bg-green-500/10">
+                <CardHeader>
+                  <CardTitle className="text-green-600 flex items-center">
+                    <ShieldCheck className="w-5 h-5 mr-2" />
+                    Account Verified
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-background rounded-lg border border-green-500/20 gap-3">
+                    <div className="flex-1">
+                      <p className="font-medium text-sm sm:text-base text-green-600">You're verified ✓</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">Your identity has been approved. You now have a verified badge on your profile.</p>
+                    </div>
+                    <Badge variant="outline" className="text-green-600 border-green-500/30 bg-green-500/10 self-start sm:self-center">
+                      <CheckCircle className="w-3 h-3 mr-1" /> Verified
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : verificationStatus === 'pending' ? (
+              <Card className="border-yellow-500/30 bg-yellow-500/10">
+                <CardHeader>
+                  <CardTitle className="text-yellow-600 flex items-center">
+                    <Clock className="w-5 h-5 mr-2" />
+                    Verification Under Review
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-background rounded-lg border border-yellow-500/20 gap-3">
+                    <div className="flex-1">
+                      <p className="font-medium text-sm sm:text-base text-yellow-600">Your submission is being reviewed</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">We're reviewing your documents. You'll be notified within 24–48 hours.</p>
+                    </div>
+                    <Badge variant="outline" className="text-yellow-600 border-yellow-500/30 bg-yellow-500/10 self-start sm:self-center">
+                      <Loader2 className="w-3 h-3 mr-1 animate-spin" /> Pending
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
               <Card className="border-red-200 bg-red-50">
                 <CardHeader>
                   <CardTitle className="text-red-700 flex items-center">
                     <UserCheck className="w-5 h-5 mr-2" />
-                    Verify Your Account
+                    {verificationStatus === 'rejected' ? 'Verification Rejected' : 'Verify Your Account'}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-white rounded-lg border border-red-100 gap-3">
                     <div className="flex-1">
-                      <p className="font-medium text-sm sm:text-base text-red-700">Complete your verification</p>
-                      <p className="text-xs sm:text-sm text-gray-600">Verify your identity to unlock full access and build buyer trust</p>
+                      <p className="font-medium text-sm sm:text-base text-red-700">
+                        {verificationStatus === 'rejected' ? 'Your verification was not approved' : 'Complete your verification'}
+                      </p>
+                      <p className="text-xs sm:text-sm text-gray-600">
+                        {verificationStatus === 'rejected'
+                          ? 'Please re-submit your documents to try again.'
+                          : 'Verify your identity to unlock full access and build buyer trust'}
+                      </p>
                     </div>
                     <Button
                       size="sm"
@@ -270,7 +332,7 @@ const FreelancerDashboard = () => {
                       className="text-xs px-3 py-1 self-start sm:self-center bg-red-600 hover:bg-red-700 text-white"
                     >
                       <UserCheck className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                      Verify Now
+                      {verificationStatus === 'rejected' ? 'Re-submit' : 'Verify Now'}
                     </Button>
                   </div>
                 </CardContent>
