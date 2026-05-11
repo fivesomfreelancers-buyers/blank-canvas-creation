@@ -1,0 +1,2 @@
+ALTER TABLE public.freelancers ADD COLUMN IF NOT EXISTS verified_at TIMESTAMPTZ;
+UPDATE public.freelancers SET verified_at = COALESCE(created_at, now()) - interval '2 days' WHERE is_verified = true AND verified_at IS NULL;

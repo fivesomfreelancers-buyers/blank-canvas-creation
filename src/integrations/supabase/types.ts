@@ -263,6 +263,7 @@ export type Database = {
           skills: string[] | null
           total_earnings: number | null
           user_id: string
+          verified_at: string | null
         }
         Insert: {
           bio?: string | null
@@ -276,6 +277,7 @@ export type Database = {
           skills?: string[] | null
           total_earnings?: number | null
           user_id: string
+          verified_at?: string | null
         }
         Update: {
           bio?: string | null
@@ -289,6 +291,7 @@ export type Database = {
           skills?: string[] | null
           total_earnings?: number | null
           user_id?: string
+          verified_at?: string | null
         }
         Relationships: []
       }
