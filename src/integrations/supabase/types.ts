@@ -541,6 +541,8 @@ export type Database = {
           delivery_message: string | null
           id: string
           order_id: string
+          revision_feedback: string | null
+          revision_requested_at: string | null
           status: Database["public"]["Enums"]["delivery_status"] | null
         }
         Insert: {
@@ -550,6 +552,8 @@ export type Database = {
           delivery_message?: string | null
           id?: string
           order_id: string
+          revision_feedback?: string | null
+          revision_requested_at?: string | null
           status?: Database["public"]["Enums"]["delivery_status"] | null
         }
         Update: {
@@ -559,6 +563,8 @@ export type Database = {
           delivery_message?: string | null
           id?: string
           order_id?: string
+          revision_feedback?: string | null
+          revision_requested_at?: string | null
           status?: Database["public"]["Enums"]["delivery_status"] | null
         }
         Relationships: [

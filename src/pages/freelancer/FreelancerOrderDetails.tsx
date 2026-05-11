@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Clock, MessageSquare, Package, Download, FileText, Image, Video, Link2, ArrowLeft, User } from 'lucide-react';
+import { Clock, MessageSquare, Package, Download, FileText, Image, Video, Link2, ArrowLeft, User, RefreshCw } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
@@ -16,6 +16,7 @@ const FreelancerOrderDetails = () => {
   const [requirements, setRequirements] = useState<any>(null);
   const [reqFiles, setReqFiles] = useState<any[]>([]);
   const [buyerProfile, setBuyerProfile] = useState<any>(null);
+  const [revisionDelivery, setRevisionDelivery] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -57,6 +58,17 @@ const FreelancerOrderDetails = () => {
           .eq('order_requirement_id', reqData.id);
         setReqFiles(files || []);
       }
+
+      // Fetch latest revision-requested delivery
+      const { data: revData } = await (supabase as any)
+        .from('order_deliveries')
+        .select('*')
+        .eq('order_id', orderId!)
+        .eq('status', 'revision_requested')
+        .order('revision_requested_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      setRevisionDelivery(revData || null);
     } catch (err) {
       console.error('Error fetching order:', err);
     } finally {
@@ -145,6 +157,51 @@ const FreelancerOrderDetails = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Revision Requested */}
+            {revisionDelivery && (
+              <Card className="border-yellow-300 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-700">
+                <CardHeader>
+                  <CardTitle className="text-yellow-800 dark:text-yellow-200 flex items-center">
+                    <RefreshCw className="w-5 h-5 mr-2" />
+                    Revision Requested
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="w-10 h-10">
+                      <AvatarImage src={buyerProfile?.profile_image_url || ''} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">{initials}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-medium text-foreground">{buyerProfile?.full_name || 'Buyer'}</p>
+                      {revisionDelivery.revision_requested_at && (
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(revisionDelivery.revision_requested_at).toLocaleString()}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  {revisionDelivery.revision_feedback ? (
+                    <div className="p-4 bg-background rounded-lg border border-yellow-200 dark:border-yellow-800">
+                      <h4 className="font-medium mb-2 text-sm">Buyer's Feedback:</h4>
+                      <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                        {revisionDelivery.revision_feedback}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground italic">No feedback provided.</p>
+                  )}
+                  <Button
+                    onClick={() => navigate('/freelancer/deliver', { state: { orderId: order.id } })}
+                    className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                  >
+                    <Package className="w-4 h-4 mr-2" />
+                    Submit Revised Delivery
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Buyer Requirements */}
             <Card>
