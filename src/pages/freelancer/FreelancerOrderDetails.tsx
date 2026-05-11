@@ -58,6 +58,17 @@ const FreelancerOrderDetails = () => {
           .eq('order_requirement_id', reqData.id);
         setReqFiles(files || []);
       }
+
+      // Fetch latest revision-requested delivery
+      const { data: revData } = await (supabase as any)
+        .from('order_deliveries')
+        .select('*')
+        .eq('order_id', orderId!)
+        .eq('status', 'revision_requested')
+        .order('revision_requested_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      setRevisionDelivery(revData || null);
     } catch (err) {
       console.error('Error fetching order:', err);
     } finally {
