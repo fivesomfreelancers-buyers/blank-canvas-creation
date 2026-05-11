@@ -97,7 +97,9 @@ const App = () => (
               <Route path="/buyer/help" element={<BuyerHelp />} />
               <Route path="/buyer/settings" element={<BuyerSettings />} />
               <Route path="/buyer/order/:orderId" element={<BuyerOrderDetails />} />
+              <Route path="/buyer/orders/:orderId" element={<BuyerOrderDetails />} />
               <Route path="/buyer/order/:orderId/requirements" element={<SubmitRequirements />} />
+              <Route path="/buyer/orders/:orderId/requirements" element={<SubmitRequirements />} />
               
               {/* Admin Routes */}
               <Route path="/admin/*" element={<AdminDashboard />} />
