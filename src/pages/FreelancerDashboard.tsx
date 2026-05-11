@@ -144,6 +144,21 @@ const FreelancerDashboard = () => {
       if (freelancer) {
         setIsVerified(freelancer.is_verified || false);
 
+        const { data: vDoc } = await supabase
+          .from('verification_documents')
+          .select('status')
+          .eq('user_id', user.id)
+          .order('submitted_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (freelancer.is_verified) {
+          setVerificationStatus('approved');
+        } else if (vDoc?.status) {
+          setVerificationStatus(vDoc.status as any);
+        } else {
+          setVerificationStatus('none');
+        }
+
         const { count: gigsCount } = await supabase
           .from('gigs')
           .select('*', { count: 'exact', head: true })
