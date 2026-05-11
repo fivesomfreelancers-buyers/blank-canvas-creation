@@ -230,14 +230,35 @@ const FreelancerVerify = () => {
           </p>
         </div>
 
-        {verificationStatus === 'pending' && (
-          <Card className="mb-6 border-yellow-500/30 bg-yellow-500/5">
-            <CardContent className="flex items-center gap-3 py-4">
-              <Clock className="w-5 h-5 text-yellow-600" />
-              <div>
-                <p className="font-medium text-yellow-600">Verification In Progress</p>
-                <p className="text-sm text-muted-foreground">Your documents are being reviewed. This usually takes 24-48 hours.</p>
-              </div>
+        {(verificationStatus === 'pending' || verificationStatus === 'approved') && (
+          <Card className={`mb-6 ${verificationStatus === 'approved' ? 'border-green-500/30 bg-green-500/5' : 'border-yellow-500/30 bg-yellow-500/5'}`}>
+            <CardContent className="flex flex-col items-center gap-4 py-12 text-center">
+              {verificationStatus === 'approved' ? (
+                <>
+                  <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center">
+                    <CheckCircle className="w-10 h-10 text-green-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-green-600 mb-2">You're Verified! ✓</h2>
+                    <p className="text-sm text-muted-foreground max-w-md">
+                      Your account has been verified. You now have a verified badge on your profile.
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="w-16 h-16 rounded-full bg-yellow-500/10 flex items-center justify-center">
+                    <Clock className="w-10 h-10 text-yellow-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-yellow-600 mb-2">Your verification is under review</h2>
+                    <p className="text-sm text-muted-foreground max-w-md">
+                      Thanks for submitting! Our admin team is reviewing your documents.
+                      You'll be notified once your verification is approved (usually within 24–48 hours).
+                    </p>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
         )}
