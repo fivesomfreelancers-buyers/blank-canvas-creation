@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Clock, MessageSquare, Package, Download, FileText, Image, Video, Link2, ArrowLeft, User } from 'lucide-react';
+import { Clock, MessageSquare, Package, Download, FileText, Image, Video, Link2, ArrowLeft, User, RefreshCw } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
