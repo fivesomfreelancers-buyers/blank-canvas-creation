@@ -24,7 +24,10 @@ const BuyerOrderDetails = () => {
   const [loading, setLoading] = useState(true);
   const [showRevisionModal, setShowRevisionModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [showDisputeModal, setShowDisputeModal] = useState(false);
   const [revisionFeedback, setRevisionFeedback] = useState('');
+  const [disputeReason, setDisputeReason] = useState('');
+  const [disputeDetails, setDisputeDetails] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasFeedback, setHasFeedback] = useState(false);
 
