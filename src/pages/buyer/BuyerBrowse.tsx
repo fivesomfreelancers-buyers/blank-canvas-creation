@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Search, Filter, Star, Heart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import BackToDashboard from '@/components/BackToDashboard';
 
 const BuyerBrowse = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -48,6 +49,7 @@ const BuyerBrowse = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
+        <BackToDashboard />
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Browse Gigs</h1>
           <p className="text-gray-600 mt-2">Find the perfect freelancer for your project</p>

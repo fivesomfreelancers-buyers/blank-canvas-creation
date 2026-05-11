@@ -6,6 +6,7 @@ import { Eye, Edit, Trash2, Plus, Briefcase } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import BackToDashboard from '@/components/BackToDashboard';
 
 const MAX_GIGS = 2;
 
@@ -85,6 +86,7 @@ const FreelancerGigs = () => {
   return (
     <div className="min-h-screen bg-background px-4 sm:px-6 py-6 sm:py-8">
         <div className="max-w-7xl mx-auto">
+          <BackToDashboard />
           <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
