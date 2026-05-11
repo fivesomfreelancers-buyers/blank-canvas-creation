@@ -390,6 +390,71 @@ const FreelancerDashboard = () => {
               </Card>
             )}
 
+            {revisionRequests.length > 0 && (
+              <Card className="border-yellow-400/50 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-700">
+                <CardHeader>
+                  <CardTitle className="text-yellow-700 dark:text-yellow-200 flex items-center">
+                    <RefreshCw className="w-5 h-5 mr-2" />
+                    Revision Requests ({revisionRequests.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {revisionRequests.map((r) => (
+                    <div
+                      key={r.id}
+                      className="p-4 rounded-lg border border-yellow-300 bg-background dark:border-yellow-800"
+                    >
+                      <div className="flex items-start gap-3">
+                        <Avatar className="w-10 h-10 flex-shrink-0">
+                          <AvatarImage src={r.buyer_avatar} />
+                          <AvatarFallback className="bg-primary text-primary-foreground">
+                            {(r.buyer_name || 'B').split(' ').map((n: string) => n[0]).join('').toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                              <p className="font-medium text-sm">{r.buyer_name}</p>
+                              <p className="text-xs text-muted-foreground truncate">{r.gig_title}</p>
+                            </div>
+                            {r.revision_requested_at && (
+                              <p className="text-xs text-muted-foreground">
+                                {new Date(r.revision_requested_at).toLocaleString()}
+                              </p>
+                            )}
+                          </div>
+                          {r.revision_feedback ? (
+                            <div className="mt-2 p-3 rounded-md bg-yellow-100/60 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800">
+                              <p className="text-sm whitespace-pre-wrap text-foreground">{r.revision_feedback}</p>
+                            </div>
+                          ) : (
+                            <p className="mt-2 text-xs italic text-muted-foreground">No feedback provided.</p>
+                          )}
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            <Button
+                              size="sm"
+                              className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                              onClick={() => navigate(`/freelancer/order/${r.order_id}`)}
+                            >
+                              View Order
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => navigate('/freelancer/deliver', { state: { orderId: r.order_id } })}
+                            >
+                              <Package className="w-4 h-4 mr-2" />
+                              Submit Revision
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
