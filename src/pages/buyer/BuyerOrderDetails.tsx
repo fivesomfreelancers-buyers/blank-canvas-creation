@@ -95,11 +95,15 @@ const BuyerOrderDetails = () => {
     if (!revisionFeedback.trim() || !orderId) return;
     setIsProcessing(true);
     try {
-      // Update latest delivery status
+      // Update latest delivery status with feedback
       if (deliveries.length > 0) {
         await supabase
           .from('order_deliveries')
-          .update({ status: 'revision_requested' as const } as any)
+          .update({
+            status: 'revision_requested' as const,
+            revision_feedback: revisionFeedback,
+            revision_requested_at: new Date().toISOString(),
+          } as any)
           .eq('id', deliveries[0].id);
       }
       await supabase.from('orders').update({ status: 'in_progress' as const }).eq('id', orderId);
