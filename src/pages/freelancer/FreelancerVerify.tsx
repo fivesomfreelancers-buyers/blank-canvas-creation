@@ -275,7 +275,7 @@ const FreelancerVerify = () => {
           </Card>
         )}
 
-        {(verificationStatus === 'none' || verificationStatus === 'rejected') && (
+        {(verificationStatus as string) !== 'pending' && (verificationStatus as string) !== 'approved' && (
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information */}
           <Card>
