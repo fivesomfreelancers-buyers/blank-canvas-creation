@@ -993,6 +993,7 @@ export type Database = {
           full_name: string | null
           id: string | null
           languages: string[] | null
+          last_seen: string | null
           location: string | null
           member_since: string | null
           professional_title: string | null
@@ -1007,6 +1008,7 @@ export type Database = {
           full_name?: string | null
           id?: string | null
           languages?: string[] | null
+          last_seen?: string | null
           location?: string | null
           member_since?: string | null
           professional_title?: string | null
@@ -1021,6 +1023,7 @@ export type Database = {
           full_name?: string | null
           id?: string | null
           languages?: string[] | null
+          last_seen?: string | null
           location?: string | null
           member_since?: string | null
           professional_title?: string | null
