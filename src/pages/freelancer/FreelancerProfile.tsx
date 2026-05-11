@@ -180,10 +180,10 @@ const FreelancerProfile = () => {
           )}
 
           {/* Feedback Display */}
-          <FeedbackDisplay 
-            feedback={feedback} 
+          <FeedbackDisplay
+            freelancerUserId={userId}
+            freelancerId={freelancerData?.id}
             averageRating={averageRating}
-            totalReviews={totalReviews}
           />
         </div>
       </div>
