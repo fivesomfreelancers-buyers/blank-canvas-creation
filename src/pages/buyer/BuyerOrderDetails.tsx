@@ -114,6 +114,34 @@ const BuyerOrderDetails = () => {
     }
   };
 
+  const handleOpenDispute = async () => {
+    if (!disputeReason.trim() || !orderId || !order) return;
+    setIsProcessing(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+      const { error: dErr } = await supabase.from('disputes').insert({
+        order_id: orderId,
+        buyer_id: user.id,
+        freelancer_id: order.freelancer_id,
+        reason: disputeReason,
+        details: disputeDetails || null,
+        status: 'open',
+      } as any);
+      if (dErr) throw dErr;
+      await supabase.from('orders').update({ status: 'disputed' as any }).eq('id', orderId);
+      setOrder((prev: any) => ({ ...prev, status: 'disputed' }));
+      setShowDisputeModal(false);
+      setDisputeReason('');
+      setDisputeDetails('');
+      toast({ title: "Dispute Opened", description: "Your dispute has been sent to the admin team for review." });
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message || "Failed to open dispute.", variant: "destructive" });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800';
