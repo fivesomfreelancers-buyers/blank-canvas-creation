@@ -28,17 +28,29 @@ const AuthCallback = () => {
 
         const user = session.user;
 
-        // Check if user already has a role
-        const { data: existingRole } = await (supabase as any)
+        // Check if user already has any role(s)
+        const { data: roleRows } = await (supabase as any)
           .from('user_roles')
           .select('role')
-          .eq('user_id', user.id)
-          .maybeSingle();
+          .eq('user_id', user.id);
 
-        if (existingRole?.role) {
-          // Existing user with role — go to dashboard
+        const roles: string[] = (roleRows || []).map((r: any) => r.role);
+
+        if (roles.includes('admin') || roles.includes('super_admin')) {
+          toast({ title: 'Welcome, Admin!', description: 'Redirecting to admin dashboard.' });
+          navigate('/admin');
+          return;
+        }
+
+        if (roles.includes('freelancer')) {
           toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
-          navigate(existingRole.role === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard');
+          navigate('/freelancer/dashboard');
+          return;
+        }
+
+        if (roles.includes('buyer')) {
+          toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
+          navigate('/buyer/dashboard');
           return;
         }
 
