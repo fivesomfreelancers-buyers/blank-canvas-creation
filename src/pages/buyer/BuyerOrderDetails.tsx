@@ -368,6 +368,35 @@ const BuyerOrderDetails = () => {
           </div>
         )}
 
+        {/* Dispute Modal */}
+        {showDisputeModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-background rounded-lg p-6 w-full max-w-md mx-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold flex items-center"><AlertTriangle className="w-5 h-5 mr-2 text-red-600" />Open Dispute</h3>
+                <Button variant="ghost" size="sm" onClick={() => setShowDisputeModal(false)}><X className="w-4 h-4" /></Button>
+              </div>
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">A dispute will be sent to the admin team for review. Please describe the issue clearly.</p>
+                <div>
+                  <Label>Reason *</Label>
+                  <Textarea value={disputeReason} onChange={(e) => setDisputeReason(e.target.value)} placeholder="Briefly describe the reason for the dispute..." rows={2} className="mt-2" />
+                </div>
+                <div>
+                  <Label>Additional Details</Label>
+                  <Textarea value={disputeDetails} onChange={(e) => setDisputeDetails(e.target.value)} placeholder="Provide any additional context (optional)..." rows={3} className="mt-2" />
+                </div>
+                <div className="flex gap-3">
+                  <Button variant="outline" onClick={() => setShowDisputeModal(false)} className="flex-1">Cancel</Button>
+                  <Button onClick={handleOpenDispute} disabled={isProcessing || !disputeReason.trim()} className="flex-1 bg-red-600 hover:bg-red-700 text-white">
+                    {isProcessing ? 'Submitting...' : 'Submit Dispute'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <FeedbackModal
           isOpen={showFeedbackModal}
           onClose={() => setShowFeedbackModal(false)}
