@@ -577,6 +577,7 @@ const FreelancerVerify = () => {
             </Button>
           </div>
         </form>
+        )}
       </div>
     </div>
   );
