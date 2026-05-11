@@ -16,6 +16,7 @@ const FreelancerOrderDetails = () => {
   const [requirements, setRequirements] = useState<any>(null);
   const [reqFiles, setReqFiles] = useState<any[]>([]);
   const [buyerProfile, setBuyerProfile] = useState<any>(null);
+  const [revisionDelivery, setRevisionDelivery] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
