@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 import { 
   Home, Briefcase, ShoppingBag, MessageSquare, Package, Wallet, Settings, User,
-  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle
+  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
