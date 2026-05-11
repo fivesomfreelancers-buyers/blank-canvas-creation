@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Smile, Paperclip, Loader2 } from 'lucide-react';
 import AttachmentPreview from './AttachmentPreview';
+import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import type { ConversationItem, ChatMessage } from '@/hooks/useConversations';
 
 const EMOJIS = ['👍', '😊', '✔️', '🔥', '🎉', '💬', '👌', '⭐', '📩', '🚀'];
