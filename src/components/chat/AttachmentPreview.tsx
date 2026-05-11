@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Download, Play } from 'lucide-react';
+import { FileText, Download, Play, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const IMAGE_EXT = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg', 'heic'];
@@ -30,37 +30,71 @@ function getFileName(url: string): string {
 interface Props {
   url: string;
   isOwn?: boolean;
+  allowDownload?: boolean;
+  lockedHint?: string;
 }
 
-const AttachmentPreview: React.FC<Props> = ({ url, isOwn }) => {
+const AttachmentPreview: React.FC<Props> = ({ url, isOwn, allowDownload = true, lockedHint }) => {
   const kind = getKind(url);
   const name = getFileName(url);
   const ext = (name.split('.').pop() || '').toUpperCase();
 
+  const DownloadButton = () => (
+    allowDownload ? (
+      <Button
+        asChild
+        variant={isOwn ? 'secondary' : 'outline'}
+        size="sm"
+        className="flex-shrink-0"
+      >
+        <a href={url} target="_blank" rel="noopener noreferrer" download={name} aria-label="Download">
+          <Download className="w-4 h-4 mr-2" />
+          Download
+        </a>
+      </Button>
+    ) : (
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <Lock className="w-3.5 h-3.5" />
+        <span>{lockedHint || 'Locked'}</span>
+      </div>
+    )
+  );
+
   if (kind === 'image') {
     return (
-      <a href={url} target="_blank" rel="noopener noreferrer" className="block mt-2">
+      <div className="mt-2 inline-block">
         <img
           src={url}
           alt={name}
-          className="max-w-[240px] max-h-[240px] rounded-lg border shadow-sm object-cover"
+          onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
+          className="max-w-[260px] max-h-[260px] rounded-lg border shadow-sm object-cover block"
         />
-      </a>
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground truncate max-w-[170px]">{name}</p>
+          <DownloadButton />
+        </div>
+      </div>
     );
   }
 
   if (kind === 'video') {
     return (
-      <div className="mt-2">
+      <div className="mt-2 inline-block">
         <video
           src={url}
           controls
+          controlsList={allowDownload ? undefined : 'nodownload'}
+          onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
           preload="metadata"
-          className="max-w-[260px] max-h-[260px] rounded-lg border bg-black"
+          className="max-w-[280px] max-h-[280px] rounded-lg border bg-black block"
         >
           <source src={url} />
           Your browser does not support video.
         </video>
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground truncate max-w-[170px]">{name}</p>
+          <DownloadButton />
+        </div>
       </div>
     );
   }
@@ -82,16 +116,7 @@ const AttachmentPreview: React.FC<Props> = ({ url, isOwn }) => {
           {ext || 'FILE'}
         </p>
       </div>
-      <Button
-        asChild
-        variant={isOwn ? 'secondary' : 'outline'}
-        size="icon"
-        className="flex-shrink-0"
-      >
-        <a href={url} target="_blank" rel="noopener noreferrer" download={name} aria-label="Download">
-          <Download className="w-4 h-4" />
-        </a>
-      </Button>
+      <DownloadButton />
     </div>
   );
 };
