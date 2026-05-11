@@ -9,7 +9,6 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { MessageSquare, Download, Star, RefreshCw, CheckCircle, Clock, User, X, Link2, ArrowLeft, ExternalLink, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import Navbar from '@/components/Navbar';
 import FeedbackModal from '@/components/feedback/FeedbackModal';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 
@@ -160,8 +159,7 @@ const BuyerOrderDetails = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="max-w-4xl mx-auto px-4 py-8 pt-24 text-center text-muted-foreground">Loading order details...</div>
+        <div className="max-w-4xl mx-auto px-4 py-8 text-center text-muted-foreground">Loading order details...</div>
       </div>
     );
   }
@@ -169,10 +167,9 @@ const BuyerOrderDetails = () => {
   if (!order) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="max-w-4xl mx-auto px-4 py-8 pt-24 text-center">
+        <div className="max-w-4xl mx-auto px-4 py-8 text-center">
           <h2 className="text-2xl font-bold text-foreground">Order not found</h2>
-          <Button onClick={() => navigate('/buyer/orders')} className="mt-4">Back to Orders</Button>
+          <Button onClick={() => navigate('/buyer/dashboard')} className="mt-4">Back to Dashboard</Button>
         </div>
       </div>
     );
@@ -182,11 +179,10 @@ const BuyerOrderDetails = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-8 pt-24">
-        <Button variant="ghost" onClick={() => navigate('/buyer/orders')} className="mb-6">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <Button variant="ghost" onClick={() => navigate('/buyer/dashboard')} className="mb-6">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Orders
+          Back to Dashboard
         </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
