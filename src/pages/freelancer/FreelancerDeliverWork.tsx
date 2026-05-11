@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Upload, FileText, Image, Video, X, CheckCircle, Clock, Link2, Plus, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import Navbar from '@/components/Navbar';
+
 
 const FreelancerDeliverWork = () => {
   const location = useLocation();
@@ -152,8 +152,7 @@ const FreelancerDeliverWork = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="max-w-3xl mx-auto px-4 py-8 pt-24">
+      <div className="max-w-3xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Deliver Work</h1>
           <p className="text-muted-foreground mt-2">Submit your completed work to buyers</p>
