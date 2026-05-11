@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -6,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Star, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface FeedbackModalProps {
   isOpen: boolean;
@@ -24,81 +24,78 @@ const FeedbackModal = ({ isOpen, onClose, orderId, freelancerName, onFeedbackSub
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (rating === 0) {
-      toast({
-        title: "Rating Required",
-        description: "Please select a star rating before submitting.",
-        variant: "destructive",
-      });
+      toast({ title: 'Rating Required', description: 'Please select a star rating before submitting.', variant: 'destructive' });
       return;
     }
 
     setIsSubmitting(true);
-    console.log('Submitting feedback:', { orderId, rating, comment });
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not signed in');
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast({
-        title: "Feedback Submitted! ⭐",
-        description: "Thank you for your review. It helps build our community.",
-      });
+      // Get gig_id from the order
+      const { data: order, error: orderErr } = await supabase
+        .from('orders')
+        .select('gig_id')
+        .eq('id', orderId)
+        .single();
+      if (orderErr) throw orderErr;
+      if (!order?.gig_id) throw new Error('This order has no associated gig.');
+
+      const { error: reviewErr } = await supabase.from('gig_reviews').insert({
+        gig_id: order.gig_id,
+        order_id: orderId,
+        buyer_id: user.id,
+        rating,
+        comment: comment.trim() || null,
+      } as any);
+      if (reviewErr) throw reviewErr;
+
+      toast({ title: 'Review Submitted! ⭐', description: 'Thanks — your review is now public on the freelancer profile.' });
       onFeedbackSubmitted();
       onClose();
-    }, 2000);
-  };
-
-  const handleRatingClick = (selectedRating: number) => {
-    setRating(selectedRating);
+    } catch (err: any) {
+      toast({ title: 'Could not submit review', description: err.message || 'Please try again.', variant: 'destructive' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div className="bg-background rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
         <Card className="border-0 shadow-none">
           <CardHeader className="pb-4">
             <div className="flex justify-between items-center">
               <CardTitle className="text-xl">Rate Your Experience</CardTitle>
-              <Button variant="ghost" size="sm" onClick={onClose}>
-                <X className="w-4 h-4" />
-              </Button>
+              <Button variant="ghost" size="sm" onClick={onClose}><X className="w-4 h-4" /></Button>
             </div>
-            <p className="text-gray-600 text-sm">
-              How was your experience working with {freelancerName}?
-            </p>
+            <p className="text-muted-foreground text-sm">How was your experience working with {freelancerName}?</p>
           </CardHeader>
-          
+
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Star Rating */}
               <div className="text-center">
-                <Label className="block text-sm font-medium mb-3">
-                  Rating *
-                </Label>
+                <Label className="block text-sm font-medium mb-3">Rating *</Label>
                 <div className="flex justify-center space-x-1 mb-2">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
                       type="button"
-                      onClick={() => handleRatingClick(star)}
+                      onClick={() => setRating(star)}
                       onMouseEnter={() => setHoverRating(star)}
                       onMouseLeave={() => setHoverRating(0)}
                       className="transition-transform hover:scale-110"
                     >
-                      <Star
-                        className={`w-8 h-8 ${
-                          star <= (hoverRating || rating)
-                            ? 'fill-yellow-400 text-yellow-400'
-                            : 'text-gray-300'
-                        }`}
-                      />
+                      <Star className={`w-8 h-8 ${star <= (hoverRating || rating) ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} />
                     </button>
                   ))}
                 </div>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   {rating === 0 && 'Click to rate'}
                   {rating === 1 && 'Poor'}
                   {rating === 2 && 'Fair'}
@@ -108,11 +105,8 @@ const FeedbackModal = ({ isOpen, onClose, orderId, freelancerName, onFeedbackSub
                 </p>
               </div>
 
-              {/* Comment */}
               <div>
-                <Label htmlFor="comment" className="block text-sm font-medium mb-2">
-                  Comment (Optional)
-                </Label>
+                <Label htmlFor="comment" className="block text-sm font-medium mb-2">Comment (Optional)</Label>
                 <Textarea
                   id="comment"
                   value={comment}
@@ -121,27 +115,12 @@ const FeedbackModal = ({ isOpen, onClose, orderId, freelancerName, onFeedbackSub
                   rows={4}
                   maxLength={500}
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  {comment.length}/500 characters
-                </p>
+                <p className="text-xs text-muted-foreground mt-1">{comment.length}/500 characters</p>
               </div>
 
-              {/* Submit Buttons */}
               <div className="flex space-x-3 pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={onClose}
-                  className="flex-1"
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  className="flex-1"
-                  disabled={isSubmitting || rating === 0}
-                >
+                <Button type="button" variant="outline" onClick={onClose} className="flex-1" disabled={isSubmitting}>Cancel</Button>
+                <Button type="submit" className="flex-1" disabled={isSubmitting || rating === 0}>
                   {isSubmitting ? 'Submitting...' : 'Submit Review'}
                 </Button>
               </div>
