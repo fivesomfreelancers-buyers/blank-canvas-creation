@@ -138,6 +138,14 @@ const FreelancerDeliverWork = () => {
 
       if (deliveryError) throw deliveryError;
 
+      // Clear any prior revision_requested deliveries for this order
+      // so the freelancer dashboard no longer shows the revision request.
+      await (supabase as any)
+        .from('order_deliveries')
+        .update({ status: 'resubmitted' })
+        .eq('order_id', selectedOrder)
+        .eq('status', 'revision_requested');
+
       // Update order status to delivered
       await supabase.from('orders').update({ status: 'delivered' as const }).eq('id', selectedOrder);
 
