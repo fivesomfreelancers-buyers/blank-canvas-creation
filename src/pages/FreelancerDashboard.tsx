@@ -211,6 +211,53 @@ const FreelancerDashboard = () => {
           }));
           setRecentOrders(enrichedOrders);
         }
+
+        // Fetch revision-requested deliveries for this freelancer's orders
+        const { data: freelancerOrders } = await supabase
+          .from('orders')
+          .select('id, buyer_id, gigs(title)')
+          .eq('freelancer_id', freelancer.id);
+
+        const orderIds = (freelancerOrders || []).map((o: any) => o.id);
+        if (orderIds.length > 0) {
+          const { data: revs } = await (supabase as any)
+            .from('order_deliveries')
+            .select('id, order_id, revision_feedback, revision_requested_at, status')
+            .eq('status', 'revision_requested')
+            .in('order_id', orderIds)
+            .order('revision_requested_at', { ascending: false });
+
+          if (revs && revs.length > 0) {
+            // dedupe to latest per order
+            const seen = new Set<string>();
+            const latestPerOrder = (revs as any[]).filter((r) => {
+              if (seen.has(r.order_id)) return false;
+              seen.add(r.order_id);
+              return true;
+            });
+
+            const orderMap = new Map((freelancerOrders || []).map((o: any) => [o.id, o]));
+            const buyerIds = [...new Set(latestPerOrder.map((r: any) => orderMap.get(r.order_id)?.buyer_id).filter(Boolean))];
+            const { data: buyerProfiles } = await (supabase as any)
+              .from('public_profiles')
+              .select('id, full_name, profile_image_url')
+              .in('id', buyerIds);
+            const bMap = new Map(((buyerProfiles as any[]) || []).map((p: any) => [p.id, p]));
+
+            setRevisionRequests(latestPerOrder.map((r: any) => {
+              const ord: any = orderMap.get(r.order_id);
+              const buyer: any = bMap.get(ord?.buyer_id);
+              return {
+                ...r,
+                gig_title: ord?.gigs?.title || 'Order',
+                buyer_name: buyer?.full_name || 'Buyer',
+                buyer_avatar: buyer?.profile_image_url || '',
+              };
+            }));
+          } else {
+            setRevisionRequests([]);
+          }
+        }
       }
     };
 
