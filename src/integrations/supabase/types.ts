@@ -1040,6 +1040,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      touch_last_seen: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "freelancer" | "buyer" | "admin" | "super_admin"
