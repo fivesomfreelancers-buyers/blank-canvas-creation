@@ -1,6 +1,7 @@
 import React from 'react';
 import { FileText, Download, Play, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useSignedAttachmentUrl } from '@/hooks/useSignedAttachmentUrl';
 
 const IMAGE_EXT = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg', 'heic'];
 const VIDEO_EXT = ['mp4', 'mov', 'webm', 'ogg', 'mkv', 'avi', 'm4v'];
