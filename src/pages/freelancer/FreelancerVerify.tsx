@@ -1,585 +1,638 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { UserCheck, Shield, Upload, FileCheck, AlertCircle, CheckCircle, Clock } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import {
+  ShieldCheck, CheckCircle, Clock, Lock, Camera, ChevronLeft, ChevronRight,
+  Briefcase, GraduationCap, Wrench, Image as ImageIcon, Video, X, Plus, Search,
+} from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import BackToDashboard from '@/components/BackToDashboard';
+import {
+  CATEGORIES, SOFTWARE_CATALOG, EXPERIENCE_OPTIONS, EDUCATION_OPTIONS, softwareLogo, SoftwareDef,
+} from '@/lib/verificationCatalog';
 
-const FreelancerVerify = () => {
+type Status = 'none' | 'pending' | 'approved' | 'rejected';
+
+const STEPS = [
+  { id: 1, name: 'Basic Info', icon: Camera },
+  { id: 2, name: 'Skills', icon: Briefcase },
+  { id: 3, name: 'Portfolio', icon: ImageIcon },
+  { id: 4, name: 'Experience', icon: Briefcase },
+  { id: 5, name: 'Education', icon: GraduationCap },
+  { id: 6, name: 'Software', icon: Wrench },
+];
+
+const FreelancerVerify: React.FC = () => {
   const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phoneNumber: '',
-    skill: '',
-    education: '',
-    experience: '',
-    documentType: '',
-    personalNote: ''
-  });
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [status, setStatus] = useState<Status>('none');
+  const [completedOrders, setCompletedOrders] = useState(0);
+  const [step, setStep] = useState(1);
+  const [userId, setUserId] = useState<string>('');
+  const [freelancerId, setFreelancerId] = useState<string>('');
 
-  const [documentFront, setDocumentFront] = useState<File | null>(null);
-  const [documentBack, setDocumentBack] = useState<File | null>(null);
-  const [selfieWithDocument, setSelfieWithDocument] = useState<File | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [verificationStatus, setVerificationStatus] = useState<'none' | 'pending' | 'approved' | 'rejected'>('none');
+  // Step 1
+  const [fullName, setFullName] = useState('');
+  const [profileImageUrl, setProfileImageUrl] = useState<string>('');
+  const [location, setLocation] = useState('');
+  const [professionalTitle, setProfessionalTitle] = useState('');
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [languageInput, setLanguageInput] = useState('');
+  const [bio, setBio] = useState('');
+  const photoInputRef = useRef<HTMLInputElement>(null);
 
-  // Check existing verification status on mount
+  // Step 2
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedSubs, setSelectedSubs] = useState<string[]>([]);
+
+  // Step 3
+  const [portfolioImages, setPortfolioImages] = useState<File[]>([]);
+  const [portfolioVideo, setPortfolioVideo] = useState<File | null>(null);
+
+  // Step 4 & 5
+  const [yearsExperience, setYearsExperience] = useState('');
+  const [educationLevel, setEducationLevel] = useState('');
+
+  // Step 6
+  const [selectedTools, setSelectedTools] = useState<SoftwareDef[]>([]);
+  const [toolSearch, setToolSearch] = useState('');
+
   useEffect(() => {
-    const checkStatus = async () => {
+    (async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) { setLoading(false); return; }
+      setUserId(user.id);
 
-      const { data } = await supabase
-        .from('verification_documents')
-        .select('status')
-        .eq('user_id', user.id)
-        .order('submitted_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+      const [{ data: profile }, { data: freelancer }, { data: vDoc }] = await Promise.all([
+        supabase.from('profiles').select('*').eq('id', user.id).maybeSingle(),
+        supabase.from('freelancers').select('*').eq('user_id', user.id).maybeSingle(),
+        supabase.from('verification_documents').select('status').eq('user_id', user.id)
+          .order('submitted_at', { ascending: false }).limit(1).maybeSingle(),
+      ]);
 
-      if (data) {
-        setVerificationStatus(data.status as 'pending' | 'approved' | 'rejected');
+      if (profile) {
+        setFullName(profile.full_name || '');
+        setProfileImageUrl(profile.profile_image_url || '');
+        setLocation(profile.location || '');
+        setProfessionalTitle((profile as any).professional_title || '');
+        setLanguages((profile as any).languages || []);
+        setBio((profile as any).bio || '');
       }
-    };
-    checkStatus();
+      if (freelancer) {
+        setFreelancerId(freelancer.id);
+        setBio(freelancer.bio || bio);
+        setYearsExperience((freelancer as any).years_experience || '');
+        setEducationLevel((freelancer as any).education_level || '');
+        const tools = (freelancer as any).software_tools as SoftwareDef[] | null;
+        if (Array.isArray(tools)) setSelectedTools(tools);
+        if (freelancer.is_verified) {
+          setStatus('approved');
+        } else if (vDoc?.status) {
+          setStatus(vDoc.status as Status);
+        }
+      }
+
+      // Gating: count completed orders
+      if (freelancer?.id) {
+        const { count } = await supabase
+          .from('orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('freelancer_id', freelancer.id)
+          .eq('status', 'completed');
+        setCompletedOrders(count || 0);
+      }
+
+      setLoading(false);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const uploadProfilePhoto = async (file: File) => {
+    const path = `${userId}/avatar-${Date.now()}-${file.name}`;
+    const { error } = await supabase.storage.from('profile-images').upload(path, file, { upsert: true });
+    if (error) { toast({ title: 'Upload failed', description: error.message, variant: 'destructive' }); return; }
+    const { data } = supabase.storage.from('profile-images').getPublicUrl(path);
+    setProfileImageUrl(data.publicUrl);
+    await supabase.from('profiles').update({ profile_image_url: data.publicUrl }).eq('id', userId);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<File | null>>) => {
+  const addLanguage = () => {
+    const v = languageInput.trim();
+    if (!v || languages.includes(v)) return;
+    setLanguages([...languages, v]);
+    setLanguageInput('');
+  };
+
+  const toggleSub = (s: string) => {
+    setSelectedSubs(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
+  };
+
+  const onPortfolioImages = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []).filter(f => f.type.startsWith('image/'));
+    const next = [...portfolioImages, ...files].slice(0, 3);
+    setPortfolioImages(next);
+  };
+
+  const onPortfolioVideo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        toast({
-          title: "Invalid File",
-          description: "Please upload an image file (JPG, PNG, etc.)",
-          variant: "destructive",
-        });
-        return;
-      }
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        toast({
-          title: "File Too Large",
-          description: "Please upload an image smaller than 5MB",
-          variant: "destructive",
-        });
-        return;
-      }
-      setter(file);
+    if (!file) return;
+    if (!file.type.startsWith('video/')) {
+      toast({ title: 'Invalid file', description: 'Please upload a video file.', variant: 'destructive' });
+      return;
     }
+    // duration check
+    const url = URL.createObjectURL(file);
+    const v = document.createElement('video');
+    v.preload = 'metadata';
+    v.src = url;
+    v.onloadedmetadata = () => {
+      URL.revokeObjectURL(url);
+      if (v.duration > 65) {
+        toast({ title: 'Video too long', description: 'Portfolio video must be 1 minute or less.', variant: 'destructive' });
+        return;
+      }
+      setPortfolioVideo(file);
+    };
   };
 
-  const validateForm = () => {
-    const requiredFields = ['fullName', 'email', 'phoneNumber', 'skill', 'documentType'];
-    
-    for (const field of requiredFields) {
-      if (!formData[field as keyof typeof formData]) {
-        toast({
-          title: "Validation Error",
-          description: `Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`,
-          variant: "destructive",
-        });
+  const toggleTool = (t: SoftwareDef) => {
+    setSelectedTools(prev =>
+      prev.find(x => x.slug === t.slug) ? prev.filter(x => x.slug !== t.slug) : [...prev, t]
+    );
+  };
+
+  const filteredTools = SOFTWARE_CATALOG.filter(t =>
+    t.name.toLowerCase().includes(toolSearch.toLowerCase())
+  );
+
+  const validateStep = (s: number): boolean => {
+    if (s === 1) {
+      if (!fullName.trim() || !location.trim() || !professionalTitle.trim()) {
+        toast({ title: 'Missing info', description: 'Fill name, professional title and location.', variant: 'destructive' });
         return false;
       }
     }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast({
-        title: "Validation Error",
-        description: "Please enter a valid email address.",
-        variant: "destructive",
-      });
-      return false;
+    if (s === 2 && selectedSubs.length === 0) {
+      toast({ title: 'Pick at least one skill', variant: 'destructive' }); return false;
     }
-
-    // Check if front document is uploaded
-    if (!documentFront) {
-      toast({
-        title: "Validation Error",
-        description: "Please upload the front image of your ID document.",
-        variant: "destructive",
-      });
-      return false;
+    if (s === 3) {
+      if (portfolioImages.length < 3) {
+        toast({ title: 'Need 3 portfolio images', variant: 'destructive' }); return false;
+      }
+      if (!portfolioVideo) {
+        toast({ title: 'Need 1 portfolio video (max 1 min)', variant: 'destructive' }); return false;
+      }
     }
-
+    if (s === 4 && !yearsExperience) {
+      toast({ title: 'Select your experience', variant: 'destructive' }); return false;
+    }
+    if (s === 5 && !educationLevel) {
+      toast({ title: 'Select your education level', variant: 'destructive' }); return false;
+    }
+    if (s === 6 && selectedTools.length === 0) {
+      toast({ title: 'Add at least one software/tool', variant: 'destructive' }); return false;
+    }
     return true;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
+  const next = () => { if (validateStep(step)) setStep(s => Math.min(6, s + 1)); };
+  const prev = () => setStep(s => Math.max(1, s - 1));
 
-    setIsSubmitting(true);
-    
+  const submit = async () => {
+    if (!validateStep(6)) return;
+    setSubmitting(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({ title: "Error", description: "Please log in first.", variant: "destructive" });
-        setIsSubmitting(false);
-        return;
+      // 1. Update profile
+      await supabase.from('profiles').update({
+        full_name: fullName,
+        location,
+        languages,
+        bio,
+        professional_title: professionalTitle,
+        profile_image_url: profileImageUrl,
+      } as any).eq('id', userId);
+
+      // 2. Update freelancer
+      const skills = selectedSubs;
+      await supabase.from('freelancers').update({
+        bio,
+        skills,
+        years_experience: yearsExperience,
+        education_level: educationLevel,
+        software_tools: selectedTools as any,
+        professional_title: professionalTitle,
+      } as any).eq('user_id', userId);
+
+      // 3. Upload portfolio
+      const portfolioRows: { freelancer_id: string; media_url: string; media_type: 'image'|'video'; position: number }[] = [];
+      // clear existing portfolio for this freelancer to avoid duplicates on resubmit
+      await (supabase as any).from('freelancer_portfolio').delete().eq('freelancer_id', freelancerId);
+
+      for (let i = 0; i < portfolioImages.length; i++) {
+        const f = portfolioImages[i];
+        const path = `${userId}/portfolio-${Date.now()}-${i}-${f.name}`;
+        const { error } = await supabase.storage.from('verification-portfolio').upload(path, f);
+        if (!error) {
+          const { data } = supabase.storage.from('verification-portfolio').getPublicUrl(path);
+          portfolioRows.push({ freelancer_id: freelancerId, media_url: data.publicUrl, media_type: 'image', position: i });
+        }
+      }
+      if (portfolioVideo) {
+        const path = `${userId}/portfolio-video-${Date.now()}-${portfolioVideo.name}`;
+        const { error } = await supabase.storage.from('verification-portfolio').upload(path, portfolioVideo);
+        if (!error) {
+          const { data } = supabase.storage.from('verification-portfolio').getPublicUrl(path);
+          portfolioRows.push({ freelancer_id: freelancerId, media_url: data.publicUrl, media_type: 'video', position: 99 });
+        }
+      }
+      if (portfolioRows.length > 0) {
+        await (supabase as any).from('freelancer_portfolio').insert(portfolioRows);
       }
 
-      // Upload document front to storage
-      const frontPath = `${user.id}/front-${Date.now()}`;
-      const { error: uploadError } = await supabase.storage
-        .from('verification-docs')
-        .upload(frontPath, documentFront!);
+      // 4. Create verification request
+      await supabase.from('verification_documents').insert({
+        user_id: userId,
+        document_type: 'id',
+        document_url: profileImageUrl || 'profile-verification',
+        status: 'pending',
+        professional_info: {
+          professional_title: professionalTitle,
+          category: selectedCategory,
+          skills,
+          years_experience: yearsExperience,
+          education_level: educationLevel,
+          software_tools: selectedTools,
+        },
+        personal_info: { full_name: fullName, location, languages },
+      } as any);
 
-      if (uploadError) {
-        // If storage bucket doesn't exist, save document URL as placeholder
-        console.warn('Storage upload failed, saving reference:', uploadError);
-      }
-
-      const docUrl = uploadError ? `pending-upload-${Date.now()}` : frontPath;
-
-      // Map document type to enum value
-      const docTypeMap: Record<string, string> = {
-        'passport': 'id',
-        'national-id': 'id',
-      };
-
-      // Save verification document to database
-      const { error: dbError } = await supabase
-        .from('verification_documents')
-        .insert({
-          user_id: user.id,
-          document_type: (docTypeMap[formData.documentType] || 'id') as 'id' | 'bank_statement' | 'proof_of_address' | 'business_license',
-          document_url: docUrl,
-          status: 'pending'
-        });
-
-      if (dbError) throw dbError;
-
-      toast({
-        title: "✅ Verification Submitted!",
-        description: "Your verification request has been submitted successfully. We'll review it within 24-48 hours.",
-      });
-
-      setVerificationStatus('pending');
-    } catch (error) {
-      console.error('Verification error:', error);
-      toast({
-        title: "Submission Error",
-        description: "There was an error submitting your verification. Please try again.",
-        variant: "destructive",
-      });
+      setStatus('pending');
+      toast({ title: '✅ Submitted', description: 'Your verification is under review (24h).' });
+    } catch (e: any) {
+      toast({ title: 'Error', description: e.message || 'Submission failed', variant: 'destructive' });
     } finally {
-      setIsSubmitting(false);
+      setSubmitting(false);
     }
   };
 
-  const getStatusBadge = () => {
-    switch (verificationStatus) {
-      case 'pending':
-        return (
-          <Badge variant="outline" className="bg-yellow-500/10 text-yellow-600 border-yellow-500/30">
-            <Clock className="w-3 h-3 mr-1" />
-            Pending Review
-          </Badge>
-        );
-      case 'approved':
-        return (
-          <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/30">
-            <CheckCircle className="w-3 h-3 mr-1" />
-            Verified
-          </Badge>
-        );
-      case 'rejected':
-        return (
-          <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-500/30">
-            <AlertCircle className="w-3 h-3 mr-1" />
-            Rejected
-          </Badge>
-        );
-      default:
-        return null;
-    }
-  };
+  if (loading) {
+    return <div className="min-h-screen p-6 flex items-center justify-center text-muted-foreground">Loading...</div>;
+  }
+
+  // ====== Locked / status screens ======
+  if (status === 'approved') {
+    return (
+      <div className="min-h-screen p-4 sm:p-6 bg-background">
+        <div className="max-w-3xl mx-auto">
+          <BackToDashboard />
+          <Card className="border-green-500/30 bg-green-500/5">
+            <CardContent className="py-12 text-center flex flex-col items-center gap-4">
+              <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center">
+                <CheckCircle className="w-12 h-12 text-green-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-green-600">You're Verified ✓</h2>
+              <p className="text-muted-foreground max-w-md">Your profile shows a verified badge to all buyers.</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === 'pending') {
+    return (
+      <div className="min-h-screen p-4 sm:p-6 bg-background">
+        <div className="max-w-3xl mx-auto">
+          <BackToDashboard />
+          <Card className="border-yellow-500/30 bg-yellow-500/5">
+            <CardContent className="py-12 text-center flex flex-col items-center gap-4">
+              <div className="w-20 h-20 rounded-full bg-yellow-500/10 flex items-center justify-center">
+                <Clock className="w-12 h-12 text-yellow-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-yellow-600">Under Review</h2>
+              <p className="text-muted-foreground max-w-md">
+                Our admin team is reviewing your application. You'll get a result within 24 hours.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  if (completedOrders < 1) {
+    return (
+      <div className="min-h-screen p-4 sm:p-6 bg-background">
+        <div className="max-w-3xl mx-auto">
+          <BackToDashboard />
+          <Card className="border-muted">
+            <CardContent className="py-12 text-center flex flex-col items-center gap-4">
+              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
+                <Lock className="w-10 h-10 text-muted-foreground" />
+              </div>
+              <h2 className="text-2xl font-bold">Verification Locked</h2>
+              <p className="text-muted-foreground max-w-md">
+                Complete at least <strong>1 order</strong> on Fivesom to unlock the verification application.
+                This keeps the platform trusted and protects buyers.
+              </p>
+              <Badge variant="outline" className="mt-2">Completed Orders: {completedOrders} / 1</Badge>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ====== Wizard ======
+  const progress = (step / 6) * 100;
 
   return (
     <div className="min-h-screen p-4 sm:p-6 bg-background">
       <div className="max-w-4xl mx-auto">
         <BackToDashboard />
-        <div className="mb-6 sm:mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              <UserCheck className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Verify Your Account</h1>
-            </div>
-            {getStatusBadge()}
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-2">
+            <ShieldCheck className="w-7 h-7 text-primary" />
+            <h1 className="text-2xl sm:text-3xl font-bold">Become a Verified Freelancer</h1>
           </div>
-          <p className="text-muted-foreground text-sm sm:text-base">
-            Complete your profile verification to build trust with potential clients and unlock premium features.
-          </p>
+          <p className="text-muted-foreground text-sm">Complete all 6 sections to submit your verification.</p>
         </div>
 
-        {(verificationStatus === 'pending' || verificationStatus === 'approved') && (
-          <Card className={`mb-6 ${verificationStatus === 'approved' ? 'border-green-500/30 bg-green-500/5' : 'border-yellow-500/30 bg-yellow-500/5'}`}>
-            <CardContent className="flex flex-col items-center gap-4 py-12 text-center">
-              {verificationStatus === 'approved' ? (
-                <>
-                  <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center">
-                    <CheckCircle className="w-10 h-10 text-green-600" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-green-600 mb-2">You're Verified! ✓</h2>
-                    <p className="text-sm text-muted-foreground max-w-md">
-                      Your account has been verified. You now have a verified badge on your profile.
-                    </p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="w-16 h-16 rounded-full bg-yellow-500/10 flex items-center justify-center">
-                    <Clock className="w-10 h-10 text-yellow-600" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-yellow-600 mb-2">Your verification is under review</h2>
-                    <p className="text-sm text-muted-foreground max-w-md">
-                      Thanks for submitting! Our admin team is reviewing your documents.
-                      You'll be notified once your verification is approved (usually within 24–48 hours).
-                    </p>
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
-        )}
-
-        {verificationStatus === 'rejected' && (
-          <Card className="mb-6 border-red-500/30 bg-red-500/5">
-            <CardContent className="flex items-center gap-3 py-4">
-              <AlertCircle className="w-5 h-5 text-red-600" />
-              <div>
-                <p className="font-medium text-red-600">Verification Rejected</p>
-                <p className="text-sm text-muted-foreground">Please resubmit with clearer documents. Make sure all information is visible.</p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {(verificationStatus as string) !== 'pending' && (verificationStatus as string) !== 'approved' && (
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Personal Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <UserCheck className="w-5 h-5" />
-                <span>Personal Information</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName" className="text-sm sm:text-base">Full Name *</Label>
-                  <Input
-                    id="fullName"
-                    value={formData.fullName}
-                    onChange={(e) => handleInputChange('fullName', e.target.value)}
-                    placeholder="Enter your full name"
-                    className="h-10 sm:h-12"
-                    required
-                    disabled={verificationStatus === 'pending'}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm sm:text-base">Email Address *</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    placeholder="your.email@example.com"
-                    className="h-10 sm:h-12"
-                    required
-                    disabled={verificationStatus === 'pending'}
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="phoneNumber" className="text-sm sm:text-base">Phone Number *</Label>
-                <Input
-                  id="phoneNumber"
-                  type="tel"
-                  value={formData.phoneNumber}
-                  onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                  placeholder="+252 61 1234567"
-                  className="h-10 sm:h-12"
-                  required
-                  disabled={verificationStatus === 'pending'}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Professional Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Shield className="w-5 h-5" />
-                <span>Professional Information</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="skill">Skill / Expertise *</Label>
-                <Select 
-                  value={formData.skill} 
-                  onValueChange={(value) => handleInputChange('skill', value)}
-                  disabled={verificationStatus === 'pending'}
+        {/* Progress + step pills */}
+        <div className="mb-8">
+          <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+            <div className="h-full bg-primary transition-all" style={{ width: `${progress}%` }} />
+          </div>
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mt-4">
+            {STEPS.map(s => {
+              const Active = s.id === step;
+              const Done = s.id < step;
+              return (
+                <div
+                  key={s.id}
+                  className={`text-center p-2 rounded-lg border text-xs transition-colors ${
+                    Active ? 'border-primary bg-primary/10 text-primary' :
+                    Done ? 'border-green-500/30 bg-green-500/10 text-green-600' :
+                    'border-muted text-muted-foreground'
+                  }`}
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your primary skill" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="logo-design">Logo Design</SelectItem>
-                    <SelectItem value="web-development">Web Development</SelectItem>
-                    <SelectItem value="video-editing">Video Editing</SelectItem>
-                    <SelectItem value="content-writing">Content Writing</SelectItem>
-                    <SelectItem value="graphic-design">Graphic Design</SelectItem>
-                    <SelectItem value="mobile-app">Mobile App Development</SelectItem>
-                    <SelectItem value="digital-marketing">Digital Marketing</SelectItem>
-                    <SelectItem value="ui-ux-design">UI/UX Design</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+                  <s.icon className="w-4 h-4 mx-auto mb-1" />
+                  <div className="font-medium">{s.id}. {s.name}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="education">Education Level</Label>
-                  <Select 
-                    value={formData.education} 
-                    onValueChange={(value) => handleInputChange('education', value)}
-                    disabled={verificationStatus === 'pending'}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select education level" />
-                    </SelectTrigger>
+        {/* Step content */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{STEPS[step - 1].name}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {step === 1 && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <Avatar className="w-20 h-20">
+                    <AvatarImage src={profileImageUrl} className="object-cover" />
+                    <AvatarFallback>{fullName?.[0] || 'U'}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <input
+                      ref={photoInputRef} type="file" accept="image/*" hidden
+                      onChange={(e) => e.target.files?.[0] && uploadProfilePhoto(e.target.files[0])}
+                    />
+                    <Button variant="outline" size="sm" onClick={() => photoInputRef.current?.click()}>
+                      <Camera className="w-4 h-4 mr-2" /> Upload Photo
+                    </Button>
+                    <p className="text-xs text-muted-foreground mt-1">JPG, PNG. Max 5MB.</p>
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Full Name *</Label>
+                    <Input value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                  </div>
+                  <div>
+                    <Label>Professional Title *</Label>
+                    <Input value={professionalTitle} onChange={(e) => setProfessionalTitle(e.target.value)}
+                      placeholder="e.g. UI/UX Designer" />
+                  </div>
+                  <div>
+                    <Label>Location *</Label>
+                    <Input value={location} onChange={(e) => setLocation(e.target.value)}
+                      placeholder="Mogadishu, Somalia" />
+                  </div>
+                  <div>
+                    <Label>Languages</Label>
+                    <div className="flex gap-2">
+                      <Input value={languageInput} onChange={(e) => setLanguageInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addLanguage())}
+                        placeholder="Somali, English..." />
+                      <Button type="button" variant="outline" size="icon" onClick={addLanguage}>
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {languages.map(l => (
+                        <Badge key={l} variant="secondary" className="gap-1">
+                          {l}
+                          <button onClick={() => setLanguages(languages.filter(x => x !== l))}>
+                            <X className="w-3 h-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <Label>About / Bio</Label>
+                  <Textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={4}
+                    placeholder="Introduce yourself to buyers..." />
+                </div>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="space-y-4">
+                <div>
+                  <Label>Category *</Label>
+                  <Select value={selectedCategory} onValueChange={(v) => { setSelectedCategory(v); setSelectedSubs([]); }}>
+                    <SelectTrigger><SelectValue placeholder="Select a category" /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="high-school">High School</SelectItem>
-                      <SelectItem value="diploma">Diploma</SelectItem>
-                      <SelectItem value="bachelor">Bachelor's Degree</SelectItem>
-                      <SelectItem value="master">Master's Degree</SelectItem>
-                      <SelectItem value="phd">PhD</SelectItem>
-                      <SelectItem value="certification">Professional Certification</SelectItem>
-                      <SelectItem value="self-taught">Self-Taught</SelectItem>
+                      {CATEGORIES.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="experience">Years of Experience</Label>
-                  <Select 
-                    value={formData.experience} 
-                    onValueChange={(value) => handleInputChange('experience', value)}
-                    disabled={verificationStatus === 'pending'}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select experience level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0-1">0-1 years</SelectItem>
-                      <SelectItem value="1-3">1-3 years</SelectItem>
-                      <SelectItem value="3-5">3-5 years</SelectItem>
-                      <SelectItem value="5-10">5-10 years</SelectItem>
-                      <SelectItem value="10+">10+ years</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* ID Verification */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <FileCheck className="w-5 h-5" />
-                <span>Verify Your Identity *</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="bg-muted/50 p-4 rounded-lg border border-border">
-                <p className="text-sm text-muted-foreground">
-                  <strong>Why we need this:</strong> Upload a clear photo of your official ID to verify your identity. 
-                  This helps us prevent fake accounts and keep the platform safe for everyone.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="documentType">Document Type *</Label>
-                <Select 
-                  value={formData.documentType} 
-                  onValueChange={(value) => handleInputChange('documentType', value)}
-                  disabled={verificationStatus === 'pending'}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select document type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="passport">Passport</SelectItem>
-                    <SelectItem value="national-id">National ID Card</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Front Image */}
-                <div className="space-y-2">
-                  <Label htmlFor="documentFront" className="text-sm font-medium">
-                    Front of Document *
-                  </Label>
-                  <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
-                    <input
-                      type="file"
-                      id="documentFront"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => handleFileChange(e, setDocumentFront)}
-                      disabled={verificationStatus === 'pending'}
-                    />
-                    <label htmlFor="documentFront" className="cursor-pointer">
-                      {documentFront ? (
-                        <div className="space-y-2">
-                          <CheckCircle className="w-8 h-8 mx-auto text-green-500" />
-                          <p className="text-sm font-medium text-green-600">{documentFront.name}</p>
-                          <p className="text-xs text-muted-foreground">Click to change</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-2">
-                          <Upload className="w-8 h-8 mx-auto text-muted-foreground" />
-                          <p className="text-sm text-muted-foreground">Click to upload front image</p>
-                          <p className="text-xs text-muted-foreground">JPG, PNG (max 5MB)</p>
-                        </div>
-                      )}
-                    </label>
+                {selectedCategory && (
+                  <div>
+                    <Label className="mb-2 block">Skills (pick all that apply)</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {CATEGORIES.find(c => c.id === selectedCategory)?.subcategories.map(sub => {
+                        const active = selectedSubs.includes(sub);
+                        return (
+                          <button key={sub} type="button" onClick={() => toggleSub(sub)}
+                            className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                              active ? 'bg-primary text-primary-foreground border-primary' : 'border-border hover:bg-accent'
+                            }`}>
+                            {sub}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-
-                {/* Back Image */}
-                <div className="space-y-2">
-                  <Label htmlFor="documentBack" className="text-sm font-medium">
-                    Back of Document (if applicable)
-                  </Label>
-                  <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
-                    <input
-                      type="file"
-                      id="documentBack"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => handleFileChange(e, setDocumentBack)}
-                      disabled={verificationStatus === 'pending'}
-                    />
-                    <label htmlFor="documentBack" className="cursor-pointer">
-                      {documentBack ? (
-                        <div className="space-y-2">
-                          <CheckCircle className="w-8 h-8 mx-auto text-green-500" />
-                          <p className="text-sm font-medium text-green-600">{documentBack.name}</p>
-                          <p className="text-xs text-muted-foreground">Click to change</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-2">
-                          <Upload className="w-8 h-8 mx-auto text-muted-foreground" />
-                          <p className="text-sm text-muted-foreground">Click to upload back image</p>
-                          <p className="text-xs text-muted-foreground">JPG, PNG (max 5MB)</p>
-                        </div>
-                      )}
-                    </label>
-                  </div>
-                </div>
+                )}
+                {selectedSubs.length > 0 && (
+                  <p className="text-xs text-muted-foreground">{selectedSubs.length} skill(s) selected</p>
+                )}
               </div>
+            )}
 
-              {/* Selfie with Document */}
-              <div className="space-y-2">
-                <Label htmlFor="selfieWithDocument" className="text-sm font-medium">
-                  Selfie Holding Your Document (Optional)
-                </Label>
-                <p className="text-xs text-muted-foreground mb-2">
-                  A selfie holding your ID helps speed up the verification process.
-                </p>
-                <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/50 transition-colors max-w-md">
-                  <input
-                    type="file"
-                    id="selfieWithDocument"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => handleFileChange(e, setSelfieWithDocument)}
-                    disabled={verificationStatus === 'pending'}
-                  />
-                  <label htmlFor="selfieWithDocument" className="cursor-pointer">
-                    {selfieWithDocument ? (
-                      <div className="space-y-2">
-                        <CheckCircle className="w-8 h-8 mx-auto text-green-500" />
-                        <p className="text-sm font-medium text-green-600">{selfieWithDocument.name}</p>
-                        <p className="text-xs text-muted-foreground">Click to change</p>
+            {step === 3 && (
+              <div className="space-y-6">
+                <div>
+                  <Label className="mb-2 block">Portfolio Images (3 required)</Label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[0, 1, 2].map(i => (
+                      <div key={i} className="aspect-square rounded-lg border-2 border-dashed border-border flex items-center justify-center overflow-hidden bg-muted/30">
+                        {portfolioImages[i] ? (
+                          <div className="relative w-full h-full group">
+                            <img src={URL.createObjectURL(portfolioImages[i])} alt="" className="w-full h-full object-cover" />
+                            <button onClick={() => setPortfolioImages(portfolioImages.filter((_, idx) => idx !== i))}
+                              className="absolute top-1 right-1 bg-destructive text-destructive-foreground p-1 rounded-full opacity-0 group-hover:opacity-100">
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ) : (
+                          <ImageIcon className="w-8 h-8 text-muted-foreground" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {portfolioImages.length < 3 && (
+                    <label className="mt-3 inline-flex items-center gap-2 text-sm cursor-pointer text-primary hover:underline">
+                      <Plus className="w-4 h-4" /> Add image(s)
+                      <input type="file" accept="image/*" multiple hidden onChange={onPortfolioImages} />
+                    </label>
+                  )}
+                </div>
+
+                <div>
+                  <Label className="mb-2 block">Portfolio Video (1 required, max 1 min)</Label>
+                  <div className="aspect-video rounded-lg border-2 border-dashed border-border flex items-center justify-center bg-muted/30 overflow-hidden">
+                    {portfolioVideo ? (
+                      <div className="relative w-full h-full">
+                        <video src={URL.createObjectURL(portfolioVideo)} controls className="w-full h-full" />
+                        <button onClick={() => setPortfolioVideo(null)}
+                          className="absolute top-2 right-2 bg-destructive text-destructive-foreground p-1.5 rounded-full">
+                          <X className="w-4 h-4" />
+                        </button>
                       </div>
                     ) : (
-                      <div className="space-y-2">
-                        <Upload className="w-8 h-8 mx-auto text-muted-foreground" />
-                        <p className="text-sm text-muted-foreground">Click to upload selfie</p>
-                        <p className="text-xs text-muted-foreground">JPG, PNG (max 5MB)</p>
-                      </div>
+                      <label className="flex flex-col items-center gap-2 cursor-pointer text-muted-foreground hover:text-primary">
+                        <Video className="w-10 h-10" />
+                        <span className="text-sm">Click to upload video</span>
+                        <input type="file" accept="video/*" hidden onChange={onPortfolioVideo} />
+                      </label>
                     )}
-                  </label>
+                  </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            )}
 
-          {/* Personal Note */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Personal Note / Comment</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <Label htmlFor="personalNote">Tell us more about you or your motivation</Label>
-                <Textarea
-                  id="personalNote"
-                  value={formData.personalNote}
-                  onChange={(e) => handleInputChange('personalNote', e.target.value)}
-                  placeholder="Share your passion, goals, or what makes you unique as a freelancer..."
-                  rows={4}
-                  disabled={verificationStatus === 'pending'}
-                />
+            {step === 4 && (
+              <div>
+                <Label>Years of Experience *</Label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
+                  {EXPERIENCE_OPTIONS.map(opt => (
+                    <button key={opt} type="button" onClick={() => setYearsExperience(opt)}
+                      className={`p-4 rounded-lg border text-sm transition-colors ${
+                        yearsExperience === opt ? 'border-primary bg-primary/10 text-primary font-semibold' : 'border-border hover:bg-accent'
+                      }`}>
+                      {opt}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            )}
 
-          {/* Submit Button */}
-          <div className="flex flex-col sm:flex-row justify-end gap-4">
-            <Button 
-              type="submit" 
-              size="lg" 
-              disabled={isSubmitting || verificationStatus === 'pending' || verificationStatus === 'approved'}
-              className="w-full sm:w-auto px-6 sm:px-8"
-            >
-              {isSubmitting ? 'Submitting...' : verificationStatus === 'pending' ? 'Under Review' : 'Submit Verification'}
-            </Button>
-          </div>
-        </form>
-        )}
+            {step === 5 && (
+              <div>
+                <Label>Education Level *</Label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
+                  {EDUCATION_OPTIONS.map(opt => (
+                    <button key={opt} type="button" onClick={() => setEducationLevel(opt)}
+                      className={`p-4 rounded-lg border text-sm transition-colors ${
+                        educationLevel === opt ? 'border-primary bg-primary/10 text-primary font-semibold' : 'border-border hover:bg-accent'
+                      }`}>
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {step === 6 && (
+              <div className="space-y-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input value={toolSearch} onChange={(e) => setToolSearch(e.target.value)}
+                    placeholder="Search software/tools..." className="pl-10" />
+                </div>
+                {selectedTools.length > 0 && (
+                  <div>
+                    <Label className="text-xs mb-2 block">Selected ({selectedTools.length})</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedTools.map(t => (
+                        <Badge key={t.slug} variant="secondary" className="gap-1.5 py-1 pr-1">
+                          <img src={softwareLogo(t.slug)} alt="" className="w-4 h-4" />
+                          {t.name}
+                          <button onClick={() => toggleTool(t)}><X className="w-3 h-3" /></button>
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-96 overflow-y-auto">
+                  {filteredTools.map(t => {
+                    const active = !!selectedTools.find(x => x.slug === t.slug);
+                    return (
+                      <button key={t.slug} type="button" onClick={() => toggleTool(t)}
+                        className={`flex items-center gap-2 p-2.5 rounded-lg border text-sm transition-colors ${
+                          active ? 'border-primary bg-primary/10' : 'border-border hover:bg-accent'
+                        }`}>
+                        <img src={softwareLogo(t.slug)} alt="" className="w-5 h-5 flex-shrink-0" />
+                        <span className="truncate">{t.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Nav */}
+            <div className="flex justify-between pt-4 border-t">
+              <Button variant="outline" onClick={prev} disabled={step === 1}>
+                <ChevronLeft className="w-4 h-4 mr-1" /> Back
+              </Button>
+              {step < 6 ? (
+                <Button onClick={next}>Next <ChevronRight className="w-4 h-4 ml-1" /></Button>
+              ) : (
+                <Button onClick={submit} disabled={submitting}>
+                  {submitting ? 'Submitting...' : 'Submit for Verification'}
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

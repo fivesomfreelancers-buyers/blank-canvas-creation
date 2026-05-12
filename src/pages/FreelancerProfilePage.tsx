@@ -7,9 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import { Textarea } from '@/components/ui/textarea';
-import { Star, MapPin, Calendar, MessageSquare, Clock, CheckCircle, Globe } from 'lucide-react';
+import { Star, MapPin, Calendar, MessageSquare, CheckCircle, Globe, GraduationCap, Briefcase, Wrench } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import FreelancerFAQDisplay from '@/components/faq/FreelancerFAQDisplay';
+import VerifiedBadge from '@/components/VerifiedBadge';
+import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -20,6 +22,7 @@ const FreelancerProfilePage = () => {
   const [profileData, setProfileData] = useState<any>(null);
   const [gigs, setGigs] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
+  const [portfolio, setPortfolio] = useState<{ media_url: string; media_type: 'image' | 'video' }[]>([]);
   const [loading, setLoading] = useState(true);
   const [contactMessage, setContactMessage] = useState('');
   const [sendingMessage, setSendingMessage] = useState(false);
@@ -72,11 +75,21 @@ const FreelancerProfilePage = () => {
         ? allReviews.reduce((s, r) => s + r.rating, 0) / allReviews.length
         : freelancer.rating || 0;
 
+      // Fetch portfolio
+      const { data: portfolioData } = await (supabase as any)
+        .from('freelancer_portfolio')
+        .select('media_url, media_type, position')
+        .eq('freelancer_id', freelancerId)
+        .order('position', { ascending: true });
+      setPortfolio((portfolioData as any) || []);
+
       setProfileData({
         ...freelancer,
         name: profile?.full_name || 'Anonymous',
         imageUrl: profile?.profile_image_url,
         location: profile?.location || 'Not specified',
+        professional_title: (freelancer as any).professional_title || (profile as any)?.professional_title || '',
+        languages: (profile as any)?.languages || [],
         memberSince: new Date(profile?.created_at || '').toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
         avgRating,
         totalReviews: allReviews.length,
@@ -177,19 +190,21 @@ const FreelancerProfilePage = () => {
                 </span>
               </div>
               <div className="flex-1">
-                <div className="flex items-center space-x-3 mb-2 flex-wrap gap-y-2">
+                <div className="flex items-center space-x-3 mb-1 flex-wrap gap-y-2">
                   <h1 className="text-3xl font-bold text-foreground">{profileData.name}</h1>
-                  {profileData.is_verified && (
-                    <Badge variant="secondary" className="text-green-600">
-                      <CheckCircle className="w-3 h-3 mr-1" /> Verified
-                    </Badge>
-                  )}
+                  {profileData.is_verified && <VerifiedBadge showLabel />}
                   <OnlineIndicator userId={profileData.userId} />
                 </div>
+                {profileData.professional_title && (
+                  <p className="text-base text-primary font-medium mb-2">{profileData.professional_title}</p>
+                )}
                 <p className="text-muted-foreground mb-4">{profileData.bio || 'No bio provided'}</p>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
                   <div className="flex items-center"><MapPin className="w-4 h-4 mr-1" />{profileData.location}</div>
                   <div className="flex items-center"><Calendar className="w-4 h-4 mr-1" />Member since {profileData.memberSince}</div>
+                  {profileData.languages?.length > 0 && (
+                    <div className="flex items-center"><Globe className="w-4 h-4 mr-1" />{profileData.languages.join(', ')}</div>
+                  )}
                 </div>
                 <div className="flex items-center gap-6 mb-4">
                   <div className="flex items-center">
@@ -233,8 +248,9 @@ const FreelancerProfilePage = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="services" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="services">Services ({gigs.length})</TabsTrigger>
+            <TabsTrigger value="portfolio">Portfolio ({portfolio.length})</TabsTrigger>
             <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
             <TabsTrigger value="about">About</TabsTrigger>
           </TabsList>
@@ -287,6 +303,24 @@ const FreelancerProfilePage = () => {
             )}
           </TabsContent>
 
+          <TabsContent value="portfolio">
+            {portfolio.length === 0 ? (
+              <Card><CardContent className="p-8 text-center text-muted-foreground">No portfolio uploaded yet</CardContent></Card>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {portfolio.map((p, i) => (
+                  <Card key={i} className="overflow-hidden">
+                    {p.media_type === 'image' ? (
+                      <img src={p.media_url} alt="Portfolio" className="w-full h-56 object-cover" />
+                    ) : (
+                      <video src={p.media_url} controls className="w-full h-56 object-cover bg-black" />
+                    )}
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
           <TabsContent value="about" className="space-y-6">
             <Card>
               <CardHeader><CardTitle>About Me</CardTitle></CardHeader>
@@ -294,6 +328,38 @@ const FreelancerProfilePage = () => {
                 <p className="text-foreground leading-relaxed">{profileData.bio || 'No information provided.'}</p>
               </CardContent>
             </Card>
+
+            <div className="grid gap-6 sm:grid-cols-2">
+              {profileData.years_experience && (
+                <Card>
+                  <CardHeader><CardTitle className="flex items-center text-base"><Briefcase className="w-4 h-4 mr-2" /> Experience</CardTitle></CardHeader>
+                  <CardContent><p className="text-foreground">{profileData.years_experience}</p></CardContent>
+                </Card>
+              )}
+              {profileData.education_level && (
+                <Card>
+                  <CardHeader><CardTitle className="flex items-center text-base"><GraduationCap className="w-4 h-4 mr-2" /> Education</CardTitle></CardHeader>
+                  <CardContent><p className="text-foreground">{profileData.education_level}</p></CardContent>
+                </Card>
+              )}
+            </div>
+
+            {profileData.software_tools && profileData.software_tools.length > 0 && (
+              <Card>
+                <CardHeader><CardTitle className="flex items-center text-base"><Wrench className="w-4 h-4 mr-2" /> Software & Tools</CardTitle></CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {(profileData.software_tools as SoftwareDef[]).map(t => (
+                      <div key={t.slug} className="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-background">
+                        <img src={softwareLogo(t.slug)} alt={t.name} className="w-4 h-4" />
+                        <span className="text-sm">{t.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {freelancerId && <FreelancerFAQDisplay freelancerId={freelancerId} />}
           </TabsContent>
         </Tabs>
