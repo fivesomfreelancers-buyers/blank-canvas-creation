@@ -303,6 +303,24 @@ const FreelancerProfilePage = () => {
             )}
           </TabsContent>
 
+          <TabsContent value="portfolio">
+            {portfolio.length === 0 ? (
+              <Card><CardContent className="p-8 text-center text-muted-foreground">No portfolio uploaded yet</CardContent></Card>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {portfolio.map((p, i) => (
+                  <Card key={i} className="overflow-hidden">
+                    {p.media_type === 'image' ? (
+                      <img src={p.media_url} alt="Portfolio" className="w-full h-56 object-cover" />
+                    ) : (
+                      <video src={p.media_url} controls className="w-full h-56 object-cover bg-black" />
+                    )}
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
           <TabsContent value="about" className="space-y-6">
             <Card>
               <CardHeader><CardTitle>About Me</CardTitle></CardHeader>
@@ -310,6 +328,38 @@ const FreelancerProfilePage = () => {
                 <p className="text-foreground leading-relaxed">{profileData.bio || 'No information provided.'}</p>
               </CardContent>
             </Card>
+
+            <div className="grid gap-6 sm:grid-cols-2">
+              {profileData.years_experience && (
+                <Card>
+                  <CardHeader><CardTitle className="flex items-center text-base"><Briefcase className="w-4 h-4 mr-2" /> Experience</CardTitle></CardHeader>
+                  <CardContent><p className="text-foreground">{profileData.years_experience}</p></CardContent>
+                </Card>
+              )}
+              {profileData.education_level && (
+                <Card>
+                  <CardHeader><CardTitle className="flex items-center text-base"><GraduationCap className="w-4 h-4 mr-2" /> Education</CardTitle></CardHeader>
+                  <CardContent><p className="text-foreground">{profileData.education_level}</p></CardContent>
+                </Card>
+              )}
+            </div>
+
+            {profileData.software_tools && profileData.software_tools.length > 0 && (
+              <Card>
+                <CardHeader><CardTitle className="flex items-center text-base"><Wrench className="w-4 h-4 mr-2" /> Software & Tools</CardTitle></CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {(profileData.software_tools as SoftwareDef[]).map(t => (
+                      <div key={t.slug} className="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-background">
+                        <img src={softwareLogo(t.slug)} alt={t.name} className="w-4 h-4" />
+                        <span className="text-sm">{t.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {freelancerId && <FreelancerFAQDisplay freelancerId={freelancerId} />}
           </TabsContent>
         </Tabs>
