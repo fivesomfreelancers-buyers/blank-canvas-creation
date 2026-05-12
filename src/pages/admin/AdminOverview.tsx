@@ -106,21 +106,29 @@ const AdminOverview = () => {
     );
   }
 
+  const glassCard = "border-0 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5";
+  const glassStyle: React.CSSProperties = {
+    background: 'linear-gradient(180deg, rgba(20,28,42,0.72), rgba(13,17,26,0.72))',
+    boxShadow: 'inset 0 0 0 1px rgba(0,163,255,0.18), 0 10px 30px -12px rgba(0,0,0,0.6)',
+  };
+  const glowOnHover: React.CSSProperties = { ...glassStyle };
+
   return (
     <div className="space-y-6">
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((card) => (
-          <Card key={card.title} className="hover:shadow-md transition-shadow border-border">
+          <Card key={card.title} className={glassCard + " group hover:shadow-[0_0_30px_-5px_rgba(0,163,255,0.45)]"} style={glowOnHover}>
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{card.title}</CardTitle>
-              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <card.icon className="h-4 w-4 text-primary" />
+              <CardTitle className="text-[10px] font-semibold text-[#7aa7c4] uppercase tracking-[0.12em]">{card.title}</CardTitle>
+              <div className="h-9 w-9 rounded-lg flex items-center justify-center"
+                   style={{ background: 'linear-gradient(135deg, rgba(0,123,255,0.25), rgba(0,204,255,0.15))', boxShadow: 'inset 0 0 0 1px rgba(0,163,255,0.4)' }}>
+                <card.icon className="h-4 w-4 text-[#00CCFF]" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">{card.value}</div>
-              <p className="text-xs text-muted-foreground mt-1">{card.desc}</p>
+              <div className="text-2xl font-bold text-white tracking-tight">{card.value}</div>
+              <p className="text-[11px] text-[#7aa7c4] mt-1">{card.desc}</p>
             </CardContent>
           </Card>
         ))}
@@ -128,56 +136,61 @@ const AdminOverview = () => {
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Revenue Chart */}
-        <Card className="lg:col-span-2 border-border">
+        <Card className={glassCard + " lg:col-span-2"} style={glassStyle}>
           <CardHeader>
-            <CardTitle className="text-base font-semibold text-foreground">Revenue Overview</CardTitle>
+            <CardTitle className="text-base font-semibold text-white flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-[#00CCFF]" style={{ boxShadow: '0 0 10px #00CCFF' }} />
+              Revenue Overview
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={monthlyData}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#00CCFF" stopOpacity={0.5} />
+                    <stop offset="95%" stopColor="#00A3FF" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                <XAxis dataKey="name" stroke="#7aa7c4" fontSize={12} />
+                <YAxis stroke="#7aa7c4" fontSize={12} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                    color: 'hsl(var(--foreground))',
+                    backgroundColor: 'rgba(11,14,20,0.95)',
+                    border: '1px solid rgba(0,163,255,0.4)',
+                    borderRadius: '10px',
+                    color: '#fff',
+                    boxShadow: '0 0 20px rgba(0,163,255,0.25)',
                   }}
                 />
-                <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={2} />
+                <Area type="monotone" dataKey="revenue" stroke="#00CCFF" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        {/* Order Status Pie */}
-        <Card className="border-border">
+        <Card className={glassCard} style={glassStyle}>
           <CardHeader>
-            <CardTitle className="text-base font-semibold text-foreground">Order Status</CardTitle>
+            <CardTitle className="text-base font-semibold text-white flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-[#00A3FF]" style={{ boxShadow: '0 0 10px #00A3FF' }} />
+              Order Status
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie data={orderStatusData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} dataKey="value" label={({ name, value }) => `${name}: ${value}`}>
+                <Pie data={orderStatusData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} dataKey="value" label={({ name, value }) => `${name}: ${value}`} stroke="rgba(11,14,20,0.6)">
                   {orderStatusData.map((_, i) => (
-                    <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                    <Cell key={i} fill={['#00CCFF', '#ef4444', '#10b981', '#f59e0b', '#7aa7c4'][i % 5]} />
                   ))}
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                    color: 'hsl(var(--foreground))',
+                    backgroundColor: 'rgba(11,14,20,0.95)',
+                    border: '1px solid rgba(0,163,255,0.4)',
+                    borderRadius: '10px',
+                    color: '#fff',
                   }}
                 />
               </PieChart>
@@ -186,26 +199,34 @@ const AdminOverview = () => {
         </Card>
       </div>
 
-      {/* Orders Bar Chart */}
-      <Card className="border-border">
+      <Card className={glassCard} style={glassStyle}>
         <CardHeader>
-          <CardTitle className="text-base font-semibold text-foreground">Monthly Orders</CardTitle>
+          <CardTitle className="text-base font-semibold text-white flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-[#00CCFF]" style={{ boxShadow: '0 0 10px #00CCFF' }} />
+            Monthly Orders
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-              <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
+              <defs>
+                <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#00CCFF" />
+                  <stop offset="100%" stopColor="#007BFF" />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+              <XAxis dataKey="name" stroke="#7aa7c4" fontSize={12} />
+              <YAxis stroke="#7aa7c4" fontSize={12} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'hsl(var(--card))',
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px',
-                  color: 'hsl(var(--foreground))',
+                  backgroundColor: 'rgba(11,14,20,0.95)',
+                  border: '1px solid rgba(0,163,255,0.4)',
+                  borderRadius: '10px',
+                  color: '#fff',
                 }}
               />
-              <Bar dataKey="orders" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="orders" fill="url(#barGrad)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
