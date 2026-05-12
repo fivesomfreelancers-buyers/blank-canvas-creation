@@ -8,7 +8,7 @@ import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import BackToDashboard from '@/components/BackToDashboard';
 
-const MAX_GIGS = 2;
+const MAX_GIGS = 1;
 
 const FreelancerGigs = () => {
   const navigate = useNavigate();

@@ -459,14 +459,6 @@ const FreelancerDashboard = () => {
                             >
                               View Order
                             </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => navigate('/freelancer/deliver', { state: { orderId: r.order_id } })}
-                            >
-                              <Package className="w-4 h-4 mr-2" />
-                              Submit Revision
-                            </Button>
                           </div>
                         </div>
                       </div>
