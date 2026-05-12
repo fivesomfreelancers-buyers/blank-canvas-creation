@@ -49,7 +49,7 @@ const AttachmentPreview: React.FC<Props> = ({ url, isOwn, allowDownload = true, 
         size="sm"
         className="flex-shrink-0"
       >
-        <a href={url} target="_blank" rel="noopener noreferrer" download={name} aria-label="Download">
+        <a href={signedUrl} target="_blank" rel="noopener noreferrer" download={name} aria-label="Download">
           <Download className="w-4 h-4 mr-2" />
           Download
         </a>
