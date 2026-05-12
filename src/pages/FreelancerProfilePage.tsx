@@ -82,7 +82,6 @@ const FreelancerProfilePage = () => {
         .eq('freelancer_id', freelancerId)
         .order('position', { ascending: true });
       setPortfolio((portfolioData as any) || []);
-        : freelancer.rating || 0;
 
       setProfileData({
         ...freelancer,
