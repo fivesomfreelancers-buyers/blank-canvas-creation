@@ -248,8 +248,9 @@ const FreelancerProfilePage = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="services" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="services">Services ({gigs.length})</TabsTrigger>
+            <TabsTrigger value="portfolio">Portfolio ({portfolio.length})</TabsTrigger>
             <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
             <TabsTrigger value="about">About</TabsTrigger>
           </TabsList>
