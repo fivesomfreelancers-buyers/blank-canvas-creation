@@ -36,6 +36,7 @@ interface Props {
 }
 
 const AttachmentPreview: React.FC<Props> = ({ url, isOwn, allowDownload = true, lockedHint }) => {
+  const signedUrl = useSignedAttachmentUrl(url);
   const kind = getKind(url);
   const name = getFileName(url);
   const ext = (name.split('.').pop() || '').toUpperCase();
