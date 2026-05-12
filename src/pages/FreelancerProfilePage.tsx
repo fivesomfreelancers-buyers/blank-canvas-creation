@@ -188,19 +188,21 @@ const FreelancerProfilePage = () => {
                 </span>
               </div>
               <div className="flex-1">
-                <div className="flex items-center space-x-3 mb-2 flex-wrap gap-y-2">
+                <div className="flex items-center space-x-3 mb-1 flex-wrap gap-y-2">
                   <h1 className="text-3xl font-bold text-foreground">{profileData.name}</h1>
-                  {profileData.is_verified && (
-                    <Badge variant="secondary" className="text-green-600">
-                      <CheckCircle className="w-3 h-3 mr-1" /> Verified
-                    </Badge>
-                  )}
+                  {profileData.is_verified && <VerifiedBadge showLabel />}
                   <OnlineIndicator userId={profileData.userId} />
                 </div>
+                {profileData.professional_title && (
+                  <p className="text-base text-primary font-medium mb-2">{profileData.professional_title}</p>
+                )}
                 <p className="text-muted-foreground mb-4">{profileData.bio || 'No bio provided'}</p>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
                   <div className="flex items-center"><MapPin className="w-4 h-4 mr-1" />{profileData.location}</div>
                   <div className="flex items-center"><Calendar className="w-4 h-4 mr-1" />Member since {profileData.memberSince}</div>
+                  {profileData.languages?.length > 0 && (
+                    <div className="flex items-center"><Globe className="w-4 h-4 mr-1" />{profileData.languages.join(', ')}</div>
+                  )}
                 </div>
                 <div className="flex items-center gap-6 mb-4">
                   <div className="flex items-center">
