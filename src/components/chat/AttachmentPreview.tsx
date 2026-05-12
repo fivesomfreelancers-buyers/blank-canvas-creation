@@ -66,7 +66,7 @@ const AttachmentPreview: React.FC<Props> = ({ url, isOwn, allowDownload = true, 
     return (
       <div className="mt-2 inline-block">
         <img
-          src={url}
+          src={signedUrl}
           alt={name}
           onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
           className="max-w-[260px] max-h-[260px] rounded-lg border shadow-sm object-cover block"
@@ -83,14 +83,14 @@ const AttachmentPreview: React.FC<Props> = ({ url, isOwn, allowDownload = true, 
     return (
       <div className="mt-2 inline-block">
         <video
-          src={url}
+          src={signedUrl}
           controls
           controlsList={allowDownload ? undefined : 'nodownload'}
           onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
           preload="metadata"
           className="max-w-[280px] max-h-[280px] rounded-lg border bg-black block"
         >
-          <source src={url} />
+          <source src={signedUrl} />
           Your browser does not support video.
         </video>
         <div className="mt-2 flex items-center justify-between gap-3">
