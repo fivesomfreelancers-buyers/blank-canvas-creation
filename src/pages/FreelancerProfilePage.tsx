@@ -193,6 +193,11 @@ const FreelancerProfilePage = () => {
                 <div className="flex items-center space-x-3 mb-1 flex-wrap gap-y-2">
                   <h1 className="text-3xl font-bold text-foreground">{profileData.name}</h1>
                   {profileData.is_verified && <VerifiedBadge showLabel />}
+                  {profileData.is_featured && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-500/15 text-yellow-600 border border-yellow-500/30">
+                      <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" /> Top Rated
+                    </span>
+                  )}
                   <OnlineIndicator userId={profileData.userId} />
                 </div>
                 {profileData.professional_title && (
