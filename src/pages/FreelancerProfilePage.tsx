@@ -88,6 +88,8 @@ const FreelancerProfilePage = () => {
         name: profile?.full_name || 'Anonymous',
         imageUrl: profile?.profile_image_url,
         location: profile?.location || 'Not specified',
+        professional_title: (freelancer as any).professional_title || (profile as any)?.professional_title || '',
+        languages: (profile as any)?.languages || [],
         memberSince: new Date(profile?.created_at || '').toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
         avgRating,
         totalReviews: allReviews.length,
