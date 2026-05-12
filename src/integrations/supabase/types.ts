@@ -220,6 +220,33 @@ export type Database = {
           },
         ]
       }
+      freelancer_portfolio: {
+        Row: {
+          created_at: string
+          freelancer_id: string
+          id: string
+          media_type: string
+          media_url: string
+          position: number
+        }
+        Insert: {
+          created_at?: string
+          freelancer_id: string
+          id?: string
+          media_type: string
+          media_url: string
+          position?: number
+        }
+        Update: {
+          created_at?: string
+          freelancer_id?: string
+          id?: string
+          media_type?: string
+          media_url?: string
+          position?: number
+        }
+        Relationships: []
+      }
       freelancer_support_tickets: {
         Row: {
           category: string | null
@@ -255,43 +282,55 @@ export type Database = {
           bio: string | null
           completed_orders: number | null
           created_at: string | null
+          education_level: string | null
           id: string
           is_featured: boolean | null
           is_verified: boolean | null
+          professional_title: string | null
           ranking_score: number | null
           rating: number | null
           skills: string[] | null
+          software_tools: Json | null
           total_earnings: number | null
           user_id: string
           verified_at: string | null
+          years_experience: string | null
         }
         Insert: {
           bio?: string | null
           completed_orders?: number | null
           created_at?: string | null
+          education_level?: string | null
           id?: string
           is_featured?: boolean | null
           is_verified?: boolean | null
+          professional_title?: string | null
           ranking_score?: number | null
           rating?: number | null
           skills?: string[] | null
+          software_tools?: Json | null
           total_earnings?: number | null
           user_id: string
           verified_at?: string | null
+          years_experience?: string | null
         }
         Update: {
           bio?: string | null
           completed_orders?: number | null
           created_at?: string | null
+          education_level?: string | null
           id?: string
           is_featured?: boolean | null
           is_verified?: boolean | null
+          professional_title?: string | null
           ranking_score?: number | null
           rating?: number | null
           skills?: string[] | null
+          software_tools?: Json | null
           total_earnings?: number | null
           user_id?: string
           verified_at?: string | null
+          years_experience?: string | null
         }
         Relationships: []
       }
