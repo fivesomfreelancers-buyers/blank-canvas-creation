@@ -75,6 +75,15 @@ const FreelancerProfilePage = () => {
         ? allReviews.reduce((s, r) => s + r.rating, 0) / allReviews.length
         : freelancer.rating || 0;
 
+      // Fetch portfolio
+      const { data: portfolioData } = await (supabase as any)
+        .from('freelancer_portfolio')
+        .select('media_url, media_type, position')
+        .eq('freelancer_id', freelancerId)
+        .order('position', { ascending: true });
+      setPortfolio((portfolioData as any) || []);
+        : freelancer.rating || 0;
+
       setProfileData({
         ...freelancer,
         name: profile?.full_name || 'Anonymous',
