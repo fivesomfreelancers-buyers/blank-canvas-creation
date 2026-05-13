@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Star, MapPin, Calendar, CheckCircle } from 'lucide-react';
+import VerifiedBadge from '@/components/VerifiedBadge';
 
 interface ProfilePreviewModalProps {
   open: boolean;
