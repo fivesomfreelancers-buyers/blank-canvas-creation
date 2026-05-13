@@ -161,6 +161,26 @@ const CreateGig = () => {
         imageUrls.push(publicUrl.publicUrl);
       }
 
+      // Upload video (if any) to gig-media bucket
+      let videoUrl: string | null = null;
+      if (gigData.video) {
+        const ext = gigData.video.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
+        const { error: vErr } = await supabase.storage.from('gig-media').upload(fileName, gigData.video, { contentType: gigData.video.type || 'video/mp4' });
+        if (vErr) { console.error('Video upload error:', vErr); }
+        else { videoUrl = supabase.storage.from('gig-media').getPublicUrl(fileName).data.publicUrl; }
+      }
+
+      // Upload documents
+      const docUrls: { url: string; name: string }[] = [];
+      for (const doc of gigData.documents) {
+        const ext = doc.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
+        const { error: dErr } = await supabase.storage.from('gig-media').upload(fileName, doc, { contentType: doc.type || 'application/octet-stream' });
+        if (dErr) { console.error('Doc upload error:', dErr); continue; }
+        docUrls.push({ url: supabase.storage.from('gig-media').getPublicUrl(fileName).data.publicUrl, name: doc.name });
+      }
+
       const activePackage = Object.values(gigData.packages).find(pkg => pkg.isActive);
       if (!activePackage || !activePackage.price) {
         toast({ title: "Package Required", description: "Please set a price for at least one package.", variant: "destructive" });
