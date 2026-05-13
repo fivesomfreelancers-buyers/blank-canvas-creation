@@ -110,7 +110,8 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
 const FreelancerDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [isVerified, setIsVerified] = useState(false);
-  const [verificationStatus, setVerificationStatus] = useState<'none' | 'pending' | 'approved' | 'rejected'>('none');
+  const [verificationStatus, setVerificationStatus] = useState<'none' | 'pending' | 'approved' | 'rejected' | 'removed'>('none');
+  const [removalInfo, setRemovalInfo] = useState<{ at: string | null; reason: string | null } | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState({ totalGigs: 0, activeOrders: 0, pendingEarnings: 0, completedOrders: 0 });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
@@ -140,9 +141,9 @@ const FreelancerDashboard = () => {
         });
       }
 
-      const { data: freelancer } = await supabase
+      const { data: freelancer } = await (supabase as any)
         .from('freelancers')
-        .select('is_verified, verified_at, total_earnings, completed_orders, id')
+        .select('is_verified, verified_at, total_earnings, completed_orders, id, verification_removed_at, verification_removal_reason')
         .eq('user_id', user.id)
         .single();
       
@@ -157,15 +158,19 @@ const FreelancerDashboard = () => {
           .limit(1)
           .maybeSingle();
         if (freelancer.is_verified) {
-          // Show celebratory "Account Verified" banner only for the first 24h after approval.
-          const verifiedAt = (freelancer as any).verified_at ? new Date((freelancer as any).verified_at).getTime() : 0;
+          const verifiedAt = freelancer.verified_at ? new Date(freelancer.verified_at).getTime() : 0;
           const within24h = verifiedAt > 0 && (Date.now() - verifiedAt) < 24 * 60 * 60 * 1000;
           setVerificationStatus(within24h ? 'approved' : 'none');
+          setRemovalInfo(null);
+        } else if (freelancer.verification_removed_at) {
+          setVerificationStatus('removed');
+          setRemovalInfo({ at: freelancer.verification_removed_at, reason: freelancer.verification_removal_reason });
         } else if (vDoc?.status && vDoc.status !== 'approved') {
-          // If is_verified is false, never trust a stale 'approved' document
           setVerificationStatus(vDoc.status as any);
+          setRemovalInfo(null);
         } else {
           setVerificationStatus('none');
+          setRemovalInfo(null);
         }
 
         const { count: gigsCount } = await supabase
@@ -267,6 +272,19 @@ const FreelancerDashboard = () => {
     };
 
     loadDashboardData();
+
+    // Realtime: instantly reflect admin verification changes
+    let cleanup: (() => void) | undefined;
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const channel = supabase
+        .channel(`freelancer-self-${user.id}`)
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'freelancers', filter: `user_id=eq.${user.id}` }, () => loadDashboardData())
+        .subscribe();
+      cleanup = () => { supabase.removeChannel(channel); };
+    })();
+    return () => { cleanup?.(); };
   }, [activeSection]);
 
   const renderContent = () => {
@@ -322,7 +340,31 @@ const FreelancerDashboard = () => {
               </Card>
             </div>
 
-            {verificationStatus === 'approved' ? (
+            {verificationStatus === 'removed' ? (
+              <Card className="border-destructive/40 bg-destructive/5">
+                <CardHeader>
+                  <CardTitle className="text-destructive flex items-center">
+                    <ShieldCheck className="w-5 h-5 mr-2" />
+                    Verification Removed
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="p-3 bg-background rounded-lg border border-destructive/20 space-y-2">
+                    <p className="font-medium text-sm sm:text-base text-destructive">Your verification has been removed by admin.</p>
+                    {removalInfo?.reason && (
+                      <p className="text-xs sm:text-sm text-muted-foreground"><span className="font-semibold text-foreground">Reason:</span> {removalInfo.reason}</p>
+                    )}
+                    {removalInfo?.at && (
+                      <p className="text-xs text-muted-foreground">Removed on {new Date(removalInfo.at).toLocaleString()}</p>
+                    )}
+                    <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                      <Button size="sm" variant="outline" onClick={() => setActiveSection('verify')}>Re-submit Verification</Button>
+                      <Button size="sm" variant="ghost" onClick={() => setActiveSection('help')}>Contact Support</Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : verificationStatus === 'approved' ? (
               <Card className="border-green-500/30 bg-green-500/10">
                 <CardHeader>
                   <CardTitle className="text-green-600 flex items-center">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import VerifiedBadge from '@/components/VerifiedBadge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -38,7 +39,7 @@ const Explore = () => {
       try {
         const { data: gigsData } = await supabase
           .from('gigs')
-          .select(`*, freelancers ( user_id, rating )`)
+          .select(`*, freelancers ( user_id, rating, is_verified )`)
           .eq('status', 'active');
 
         const formattedGigs = await Promise.all((gigsData || []).map(async (gig: any) => {
@@ -63,6 +64,7 @@ const Explore = () => {
             freelancer: profile?.full_name || 'Anonymous',
             freelancerId: gig.freelancer_id,
             freelancerAvatar: profile?.profile_image_url || '',
+            isVerified: !!gig.freelancers?.is_verified,
             rating: avgRating,
             reviews: reviews?.length || 0,
             price: Number(gig.base_price),
@@ -276,7 +278,7 @@ const Explore = () => {
                           {gig.freelancer.split(' ').map((n: string) => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-xs text-muted-foreground">by {gig.freelancer}</span>
+                      <span className="text-xs text-muted-foreground inline-flex items-center gap-1">by {gig.freelancer}{gig.isVerified && <VerifiedBadge size="sm" />}</span>
                     </div>
                     
                     <div className="flex items-center justify-between">

@@ -30,9 +30,11 @@ const AdminUsers = () => {
   const [editUser, setEditUser] = useState<FreelancerUser | null>(null);
   const [editScore, setEditScore] = useState(0);
   const [editBio, setEditBio] = useState('');
+  const [removeUser, setRemoveUser] = useState<FreelancerUser | null>(null);
+  const [removeReason, setRemoveReason] = useState('');
 
   const fetchFreelancers = async () => {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('freelancers')
       .select('id, user_id, rating, completed_orders, is_verified, is_featured, ranking_score, bio, total_earnings');
 
@@ -55,33 +57,60 @@ const AdminUsers = () => {
 
   useEffect(() => { fetchFreelancers(); }, []);
 
-  const toggleVerified = async (id: string, current: boolean) => {
-    const payload: any = { is_verified: !current, verified_at: !current ? new Date().toISOString() : null };
-    const { error } = await supabase.from('freelancers').update(payload).eq('id', id);
-    if (error) { toast.error('Failed to update'); return; }
+  const verifyUser = async (f: FreelancerUser) => {
+    const payload: any = {
+      is_verified: true,
+      verified_at: new Date().toISOString(),
+      verification_removed_at: null,
+      verification_removal_reason: null,
+      verification_removed_by: null,
+    };
+    const { error } = await (supabase as any).from('freelancers').update(payload).eq('id', f.id);
+    if (error) { toast.error(error.message || 'Failed to update'); return; }
 
-    // Keep verification_documents in sync so the freelancer's UI updates correctly
-    const f = freelancers.find(x => x.id === id);
-    if (f?.user_id) {
-      const { data: latest } = await supabase
-        .from('verification_documents')
-        .select('id')
-        .eq('user_id', f.user_id)
-        .order('submitted_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (latest?.id) {
-        await supabase
-          .from('verification_documents')
-          .update({
-            status: !current ? 'approved' : 'rejected',
-            note: !current ? 'Approved by admin' : 'Verification revoked by admin',
-          })
-          .eq('id', latest.id);
-      }
+    const { data: latest } = await supabase
+      .from('verification_documents')
+      .select('id')
+      .eq('user_id', f.user_id)
+      .order('submitted_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (latest?.id) {
+      await supabase.from('verification_documents').update({ status: 'approved', note: 'Approved by admin' }).eq('id', latest.id);
     }
 
-    toast.success(!current ? 'User verified ✓' : 'Verification removed');
+    toast.success('User verified ✓');
+    fetchFreelancers();
+  };
+
+  const confirmRemoveVerification = async () => {
+    if (!removeUser) return;
+    const { data: { user: admin } } = await supabase.auth.getUser();
+    const reason = removeReason.trim() || 'Verification revoked by admin.';
+    const payload: any = {
+      is_verified: false,
+      verified_at: null,
+      verification_removed_at: new Date().toISOString(),
+      verification_removal_reason: reason,
+      verification_removed_by: admin?.id || null,
+    };
+    const { error } = await (supabase as any).from('freelancers').update(payload).eq('id', removeUser.id);
+    if (error) { toast.error(error.message || 'Failed to remove'); return; }
+
+    const { data: latest } = await supabase
+      .from('verification_documents')
+      .select('id')
+      .eq('user_id', removeUser.user_id)
+      .order('submitted_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (latest?.id) {
+      await supabase.from('verification_documents').update({ status: 'rejected', note: reason }).eq('id', latest.id);
+    }
+
+    toast.success('Verification removed');
+    setRemoveUser(null);
+    setRemoveReason('');
     fetchFreelancers();
   };
 
@@ -219,9 +248,15 @@ const AdminUsers = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1 flex-wrap">
-                      <Button size="sm" variant={f.is_verified ? "destructive" : "default"} className="h-7 text-xs" onClick={() => toggleVerified(f.id, !!f.is_verified)}>
-                        {f.is_verified ? '✕ Unverify' : '✓ Verify'}
-                      </Button>
+                      {f.is_verified ? (
+                        <Button size="sm" variant="destructive" className="h-7 text-xs" onClick={() => { setRemoveUser(f); setRemoveReason(''); }}>
+                          ✕ Remove Verification
+                        </Button>
+                      ) : (
+                        <Button size="sm" variant="default" className="h-7 text-xs" onClick={() => verifyUser(f)}>
+                          ✓ Verify
+                        </Button>
+                      )}
                       <Button size="sm" variant={f.is_featured ? "outline" : "secondary"} className="h-7 text-xs" onClick={() => toggleFeatured(f.id, !!f.is_featured)}>
                         {f.is_featured ? '✕ Unfeature' : '⭐ Feature'}
                       </Button>
@@ -262,6 +297,31 @@ const AdminUsers = () => {
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditUser(null)}>Cancel</Button>
             <Button onClick={saveEdit}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Remove Verification Dialog */}
+      <Dialog open={!!removeUser} onOpenChange={(o) => { if (!o) { setRemoveUser(null); setRemoveReason(''); } }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Remove Verification</DialogTitle>
+            <DialogDescription>
+              Removing verification from <strong>{removeUser?.profile?.full_name}</strong> will instantly hide the blue badge across the marketplace and notify the freelancer.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Reason (shown to the freelancer)</label>
+            <Textarea
+              value={removeReason}
+              onChange={(e) => setRemoveReason(e.target.value)}
+              rows={3}
+              placeholder="e.g. Reported for using stolen portfolio work."
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setRemoveUser(null); setRemoveReason(''); }}>Cancel</Button>
+            <Button variant="destructive" onClick={confirmRemoveVerification}>Remove Verification</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Search } from 'lucide-react';
+import VerifiedBadge from '@/components/VerifiedBadge';
 import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import type { ConversationItem } from '@/hooks/useConversations';
 
@@ -65,7 +66,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-center">
-                    <p className="font-medium text-foreground text-sm truncate">{conv.partnerName}</p>
+                    <p className="font-medium text-foreground text-sm truncate inline-flex items-center gap-1">{conv.partnerName}{conv.partnerVerified && <VerifiedBadge size="sm" />}</p>
                     {conv.unreadCount > 0 && (
                       <Badge variant="destructive" className="text-xs ml-2">{conv.unreadCount}</Badge>
                     )}

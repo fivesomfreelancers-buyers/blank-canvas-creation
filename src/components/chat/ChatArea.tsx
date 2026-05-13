@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Smile, Paperclip, Loader2 } from 'lucide-react';
+import VerifiedBadge from '@/components/VerifiedBadge';
 import AttachmentPreview from './AttachmentPreview';
 import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import type { ConversationItem, ChatMessage } from '@/hooks/useConversations';
@@ -60,7 +61,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                 </span>
               </div>
               <div className="flex flex-col leading-tight">
-                <span className="text-sm sm:text-base">{selectedConvo.partnerName}</span>
+                <span className="text-sm sm:text-base inline-flex items-center gap-1">{selectedConvo.partnerName}{selectedConvo.partnerVerified && <VerifiedBadge size="sm" />}</span>
                 <OnlineIndicator userId={selectedConvo.partnerId} />
               </div>
             </div>
