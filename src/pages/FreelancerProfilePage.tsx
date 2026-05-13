@@ -11,6 +11,8 @@ import { Star, MapPin, Calendar, MessageSquare, CheckCircle, Globe, GraduationCa
 import Navbar from '@/components/Navbar';
 import FreelancerFAQDisplay from '@/components/faq/FreelancerFAQDisplay';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import ReportDialog from '@/components/ReportDialog';
+import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
