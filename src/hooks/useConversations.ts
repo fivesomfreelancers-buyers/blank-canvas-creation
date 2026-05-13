@@ -64,12 +64,14 @@ export function useConversations() {
       const convoIds = convosData.map(c => c.id);
 
       // Fetch profiles and latest messages in parallel
-      const [profilesRes, messagesRes] = await Promise.all([
+      const [profilesRes, messagesRes, freelancersRes] = await Promise.all([
         (supabase as any).from('public_profiles').select('id, full_name, profile_image_url').in('id', partnerIds),
         supabase.from('messages').select('*').in('conversation_id', convoIds).order('created_at', { ascending: false }),
+        (supabase as any).from('freelancers').select('user_id, is_verified').in('user_id', partnerIds),
       ]);
 
       const profileMap = new Map((profilesRes.data || []).map((p: any) => [p.id, p]));
+      const verifiedMap = new Map((freelancersRes.data || []).map((f: any) => [f.user_id, !!f.is_verified]));
 
       // Group messages by conversation_id
       const msgByConvo = new Map<string, { last: any; unread: number }>();
@@ -92,6 +94,7 @@ export function useConversations() {
           partnerId,
           partnerName: profile?.full_name || 'Unknown User',
           partnerImage: profile?.profile_image_url || null,
+          partnerVerified: verifiedMap.get(partnerId) === true,
           lastMessage: msgInfo?.last?.message || 'No messages yet',
           lastMessageTime: msgInfo?.last?.created_at || convo.created_at || '',
           unreadCount: msgInfo?.unread || 0,
