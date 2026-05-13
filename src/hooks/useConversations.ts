@@ -6,6 +6,7 @@ export interface ConversationItem {
   partnerId: string;
   partnerName: string;
   partnerImage: string | null;
+  partnerVerified: boolean;
   lastMessage: string;
   lastMessageTime: string;
   unreadCount: number;
