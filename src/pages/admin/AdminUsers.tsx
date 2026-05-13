@@ -304,4 +304,33 @@ const AdminUsers = () => {
   );
 };
 
+
+      {/* Remove Verification Dialog */}
+      <Dialog open={!!removeUser} onOpenChange={(o) => { if (!o) { setRemoveUser(null); setRemoveReason(''); } }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Remove Verification</DialogTitle>
+            <DialogDescription>
+              Removing verification from <strong>{removeUser?.profile?.full_name}</strong> will instantly hide the blue badge across the marketplace and notify the freelancer.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Reason (shown to the freelancer)</label>
+            <Textarea
+              value={removeReason}
+              onChange={(e) => setRemoveReason(e.target.value)}
+              rows={3}
+              placeholder="e.g. Reported for using stolen portfolio work."
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setRemoveUser(null); setRemoveReason(''); }}>Cancel</Button>
+            <Button variant="destructive" onClick={confirmRemoveVerification}>Remove Verification</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
 export default AdminUsers;
