@@ -97,7 +97,7 @@ const TrustSafety = () => {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
-      isDarkMode ? 'bg-gray-900' : 'bg-gray-50'
+      isDarkMode ? 'bg-gray-900' : 'bg-muted/30'
     }`}>
       <Navbar />
       
@@ -113,11 +113,11 @@ const TrustSafety = () => {
               Back to Support
             </Link>
             <h1 className={`text-3xl font-bold mb-4 ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
+              isDarkMode ? 'text-white' : 'text-foreground'
             }`}>
               Trust & Safety
             </h1>
-            <p className={`text-xl ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-xl ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               Your security is our top priority. Learn how we protect users, payments, and data on FIVESOM.
             </p>
           </div>
@@ -125,7 +125,7 @@ const TrustSafety = () => {
           {/* Safety Features */}
           <div className="mb-12">
             <h2 className={`text-2xl font-bold mb-8 ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
+              isDarkMode ? 'text-white' : 'text-foreground'
             }`}>
               How We Keep You Safe
             </h2>
@@ -133,7 +133,7 @@ const TrustSafety = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {safetyFeatures.map((feature, index) => (
                 <Card key={index} className={
-                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-card border-border'
                 }>
                   <CardHeader>
                     <div className="flex items-center space-x-3">
@@ -141,10 +141,10 @@ const TrustSafety = () => {
                         <feature.icon className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <CardTitle className={isDarkMode ? 'text-white' : 'text-gray-900'}>
+                        <CardTitle className={isDarkMode ? 'text-white' : 'text-foreground'}>
                           {feature.title}
                         </CardTitle>
-                        <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        <p className={`text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                           {feature.description}
                         </p>
                       </div>
@@ -156,7 +156,7 @@ const TrustSafety = () => {
                         <li key={detailIndex} className="flex items-start space-x-2">
                           <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                           <span className={`text-sm ${
-                            isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                            isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'
                           }`}>
                             {detail}
                           </span>
@@ -172,7 +172,7 @@ const TrustSafety = () => {
           {/* Reporting Process */}
           <div className="mb-12">
             <h2 className={`text-2xl font-bold mb-8 ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
+              isDarkMode ? 'text-white' : 'text-foreground'
             }`}>
               How to Report Issues
             </h2>
@@ -180,19 +180,19 @@ const TrustSafety = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {reportingSteps.map((step, index) => (
                 <Card key={index} className={`text-center ${
-                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-card border-border'
                 }`}>
                   <CardContent className="p-6">
                     <div className={`w-12 h-12 rounded-full bg-cyan-500 text-white flex items-center justify-center mx-auto mb-4 text-lg font-bold`}>
                       {step.step}
                     </div>
                     <h3 className={`font-semibold mb-2 ${
-                      isDarkMode ? 'text-white' : 'text-gray-900'
+                      isDarkMode ? 'text-white' : 'text-foreground'
                     }`}>
                       {step.title}
                     </h3>
                     <p className={`text-sm ${
-                      isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                      isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'
                     }`}>
                       {step.description}
                     </p>
@@ -205,11 +205,11 @@ const TrustSafety = () => {
           {/* Safety Guidelines */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
             <Card className={
-              isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+              isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-card border-border'
             }>
               <CardHeader>
                 <CardTitle className={`flex items-center ${
-                  isDarkMode ? 'text-white' : 'text-gray-900'
+                  isDarkMode ? 'text-white' : 'text-foreground'
                 }`}>
                   <CheckCircle className="w-5 h-5 mr-2 text-green-500" />
                   Best Practices for Buyers
@@ -227,7 +227,7 @@ const TrustSafety = () => {
                   ].map((tip, index) => (
                     <li key={index} className="flex items-start space-x-2">
                       <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+                      <span className={isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}>
                         {tip}
                       </span>
                     </li>
@@ -237,11 +237,11 @@ const TrustSafety = () => {
             </Card>
 
             <Card className={
-              isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+              isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-card border-border'
             }>
               <CardHeader>
                 <CardTitle className={`flex items-center ${
-                  isDarkMode ? 'text-white' : 'text-gray-900'
+                  isDarkMode ? 'text-white' : 'text-foreground'
                 }`}>
                   <CheckCircle className="w-5 h-5 mr-2 text-green-500" />
                   Best Practices for Freelancers
@@ -259,7 +259,7 @@ const TrustSafety = () => {
                   ].map((tip, index) => (
                     <li key={index} className="flex items-start space-x-2">
                       <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+                      <span className={isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}>
                         {tip}
                       </span>
                     </li>

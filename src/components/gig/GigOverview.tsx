@@ -42,38 +42,38 @@ const GigOverview = ({ gigData, updateGigData, onNext }: GigOverviewProps) => {
   return (
     <div className="space-y-8">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Step 1: Gig Overview</h2>
-        <p className="text-gray-600">Tell us about the service you want to offer</p>
+        <h2 className="text-2xl font-bold text-foreground mb-2">Step 1: Gig Overview</h2>
+        <p className="text-muted-foreground">Tell us about the service you want to offer</p>
       </div>
 
       {/* Gig Title */}
       <div>
-        <Label htmlFor="title" className="text-gray-700 font-medium text-lg">Gig Title *</Label>
-        <p className="text-sm text-gray-500 mb-2">Create a catchy title that clearly describes your service</p>
+        <Label htmlFor="title" className="text-foreground font-medium text-lg">Gig Title *</Label>
+        <p className="text-sm text-muted-foreground mb-2">Create a catchy title that clearly describes your service</p>
         <div className="relative">
-          <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
           <Input
             id="title"
             value={gigData.title}
             onChange={(e) => updateGigData({ title: e.target.value })}
-            className="pl-10 h-12 bg-gray-50/50 border-gray-200"
+            className="pl-10 h-12 bg-muted/50 border-border"
             placeholder="I will design a professional modern logo"
             maxLength={80}
           />
         </div>
-        <div className="text-right text-xs text-gray-500 mt-1">
+        <div className="text-right text-xs text-muted-foreground mt-1">
           {gigData.title.length}/80 characters
         </div>
       </div>
 
       {/* Category */}
       <div>
-        <Label htmlFor="category" className="text-gray-700 font-medium text-lg">Category *</Label>
+        <Label htmlFor="category" className="text-foreground font-medium text-lg">Category *</Label>
         <select
           id="category"
           value={gigData.category}
           onChange={(e) => updateGigData({ category: e.target.value, subcategory: '' })}
-          className="mt-2 w-full h-12 px-3 bg-gray-50/50 border border-gray-200 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+          className="mt-2 w-full h-12 px-3 bg-muted/50 border border-border rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
         >
           <option value="">Select your service category</option>
           {CATEGORIES.map(cat => (
@@ -85,12 +85,12 @@ const GigOverview = ({ gigData, updateGigData, onNext }: GigOverviewProps) => {
       {/* Subcategory */}
       {gigData.category && (
         <div>
-          <Label htmlFor="subcategory" className="text-gray-700 font-medium text-lg">Subcategory *</Label>
+          <Label htmlFor="subcategory" className="text-foreground font-medium text-lg">Subcategory *</Label>
           <select
             id="subcategory"
             value={gigData.subcategory}
             onChange={(e) => updateGigData({ subcategory: e.target.value })}
-            className="mt-2 w-full h-12 px-3 bg-gray-50/50 border border-gray-200 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+            className="mt-2 w-full h-12 px-3 bg-muted/50 border border-border rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
           >
             <option value="">Select subcategory</option>
             {activeCategory?.subcategories.map(subcat => (
@@ -102,8 +102,8 @@ const GigOverview = ({ gigData, updateGigData, onNext }: GigOverviewProps) => {
 
       {/* Tags */}
       <div>
-        <Label className="text-gray-700 font-medium text-lg">Tags * (3-5 required)</Label>
-        <p className="text-sm text-gray-500 mb-2">Add relevant keywords to help buyers find your gig</p>
+        <Label className="text-foreground font-medium text-lg">Tags * (3-5 required)</Label>
+        <p className="text-sm text-muted-foreground mb-2">Add relevant keywords to help buyers find your gig</p>
         
         <div className="flex flex-wrap gap-2 mb-3">
           {gigData.tags.map((tag, index) => (
@@ -120,12 +120,12 @@ const GigOverview = ({ gigData, updateGigData, onNext }: GigOverviewProps) => {
         {gigData.tags.length < 5 && (
           <div className="flex space-x-2">
             <div className="relative flex-1">
-              <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
               <Input
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && addTag()}
-                className="pl-10 h-12 bg-gray-50/50 border-gray-200"
+                className="pl-10 h-12 bg-muted/50 border-border"
                 placeholder="Type a tag and press Enter"
                 maxLength={20}
               />
@@ -136,13 +136,13 @@ const GigOverview = ({ gigData, updateGigData, onNext }: GigOverviewProps) => {
           </div>
         )}
         
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-muted-foreground mt-1">
           {gigData.tags.length}/5 tags added {gigData.tags.length < 3 && `(${3 - gigData.tags.length} more required)`}
         </p>
       </div>
 
       {/* Next Button */}
-      <div className="flex justify-end pt-6 border-t border-gray-200">
+      <div className="flex justify-end pt-6 border-t border-border">
         <Button
           onClick={handleNext}
           disabled={!isValid}

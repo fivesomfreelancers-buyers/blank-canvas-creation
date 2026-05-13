@@ -25,7 +25,7 @@ const StepIndicator = ({ currentStep, steps }: StepIndicatorProps) => {
                   ? 'bg-green-500 text-white'
                   : step.number === currentStep
                   ? 'bg-cyan-500 text-white'
-                  : 'bg-gray-200 text-gray-600'
+                  : 'bg-muted text-muted-foreground'
               }`}
             >
               {step.number < currentStep ? (
@@ -36,7 +36,7 @@ const StepIndicator = ({ currentStep, steps }: StepIndicatorProps) => {
             </div>
             <span
               className={`mt-2 text-xs font-medium text-center max-w-20 ${
-                step.number <= currentStep ? 'text-gray-900' : 'text-gray-500'
+                step.number <= currentStep ? 'text-foreground' : 'text-muted-foreground'
               }`}
             >
               {step.title}
@@ -47,7 +47,7 @@ const StepIndicator = ({ currentStep, steps }: StepIndicatorProps) => {
           {index < steps.length - 1 && (
             <div
               className={`w-16 h-0.5 mx-4 transition-colors ${
-                step.number < currentStep ? 'bg-green-500' : 'bg-gray-200'
+                step.number < currentStep ? 'bg-green-500' : 'bg-muted'
               }`}
             />
           )}

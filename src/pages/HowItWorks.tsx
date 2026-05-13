@@ -74,17 +74,17 @@ const HowItWorks = () => {
           </div>
 
           {/* Help Center Section */}
-          <section id="help-center" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'} shadow-xl`}>
+          <section id="help-center" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-card/50 border border-white/20'} shadow-xl`}>
             <div className="flex items-center mb-6">
               <HelpCircle className={`w-8 h-8 mr-3 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}`} />
-              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
                 Help Center
               </h2>
             </div>
-            <p className={`text-lg mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-lg mb-4 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               Get answers to frequently asked questions, access guides, and find solutions to common issues.
             </p>
-            <ul className={`space-y-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <ul className={`space-y-2 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               <li>• Getting started guides for new users</li>
               <li>• Step-by-step tutorials for placing orders</li>
               <li>• Troubleshooting common technical issues</li>
@@ -94,47 +94,47 @@ const HowItWorks = () => {
           </section>
 
           {/* Contact Us Section */}
-          <section id="contact-us" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'} shadow-xl`}>
+          <section id="contact-us" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-card/50 border border-white/20'} shadow-xl`}>
             <div className="flex items-center mb-6">
               <Mail className={`w-8 h-8 mr-3 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}`} />
-              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
                 Contact Us
               </h2>
             </div>
-            <p className={`text-lg mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-lg mb-4 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               Reach out to our support team through multiple channels for personalized assistance.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
-                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Live Chat</h3>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Available 24/7 for instant help</p>
+              <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-muted'}`}>
+                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Live Chat</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>Available 24/7 for instant help</p>
               </div>
-              <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
-                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Email Support</h3>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Response within 24 hours</p>
+              <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-muted'}`}>
+                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Email Support</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>Response within 24 hours</p>
               </div>
-              <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
-                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Phone Support</h3>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Mon-Fri 9AM-6PM EST</p>
+              <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-muted'}`}>
+                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Phone Support</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>Mon-Fri 9AM-6PM EST</p>
               </div>
             </div>
           </section>
 
           {/* Trust & Safety Section */}
-          <section id="trust-safety" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'} shadow-xl`}>
+          <section id="trust-safety" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-card/50 border border-white/20'} shadow-xl`}>
             <div className="flex items-center mb-6">
               <Shield className={`w-8 h-8 mr-3 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}`} />
-              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
                 Trust & Safety
               </h2>
             </div>
-            <p className={`text-lg mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-lg mb-4 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               Your security is our priority. Learn about our comprehensive protection measures.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Payment Security</h3>
-                <ul className={`space-y-1 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Payment Security</h3>
+                <ul className={`space-y-1 text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   <li>• Secure escrow payment system</li>
                   <li>• Bank-level encryption</li>
                   <li>• Fraud prevention measures</li>
@@ -142,8 +142,8 @@ const HowItWorks = () => {
                 </ul>
               </div>
               <div>
-                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>User Protection</h3>
-                <ul className={`space-y-1 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>User Protection</h3>
+                <ul className={`space-y-1 text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   <li>• Identity verification</li>
                   <li>• 24/7 monitoring</li>
                   <li>• Dispute resolution</li>
@@ -154,26 +154,26 @@ const HowItWorks = () => {
           </section>
 
           {/* Terms of Service Section */}
-          <section id="terms-of-service" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'} shadow-xl`}>
+          <section id="terms-of-service" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-card/50 border border-white/20'} shadow-xl`}>
             <div className="flex items-center mb-6">
               <FileText className={`w-8 h-8 mr-3 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}`} />
-              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
                 Terms of Service
               </h2>
             </div>
-            <p className={`text-lg mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-lg mb-4 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               Important legal information about using FIVESOM platform services.
             </p>
             <div className="space-y-4">
               <div>
-                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Platform Usage</h3>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Platform Usage</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   By using FIVESOM, you agree to comply with our community guidelines and platform rules.
                 </p>
               </div>
               <div>
-                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Service Agreements</h3>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Service Agreements</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   Understanding the legal relationship between buyers, freelancers, and the platform.
                 </p>
               </div>
@@ -181,20 +181,20 @@ const HowItWorks = () => {
           </section>
 
           {/* Privacy Policy Section */}
-          <section id="privacy-policy" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'} shadow-xl`}>
+          <section id="privacy-policy" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-card/50 border border-white/20'} shadow-xl`}>
             <div className="flex items-center mb-6">
               <Lock className={`w-8 h-8 mr-3 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}`} />
-              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
                 Privacy Policy
               </h2>
             </div>
-            <p className={`text-lg mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-lg mb-4 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               Learn how we collect, use, and protect your personal information.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Data Collection</h3>
-                <ul className={`space-y-1 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Data Collection</h3>
+                <ul className={`space-y-1 text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   <li>• Account information</li>
                   <li>• Project details</li>
                   <li>• Communication records</li>
@@ -202,8 +202,8 @@ const HowItWorks = () => {
                 </ul>
               </div>
               <div>
-                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Data Protection</h3>
-                <ul className={`space-y-1 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Data Protection</h3>
+                <ul className={`space-y-1 text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   <li>• Secure storage</li>
                   <li>• Limited access</li>
                   <li>• No unauthorized sharing</li>
@@ -214,33 +214,33 @@ const HowItWorks = () => {
           </section>
 
           {/* Success Stories Section */}
-          <section id="success-stories" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'} shadow-xl`}>
+          <section id="success-stories" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-card/50 border border-white/20'} shadow-xl`}>
             <div className="flex items-center mb-6">
               <Star className={`w-8 h-8 mr-3 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}`} />
-              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
                 Success Stories
               </h2>
             </div>
-            <p className={`text-lg mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-lg mb-6 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               Real testimonials from our community of successful freelancers and satisfied clients.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className={`p-6 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
-                <p className={`text-sm mb-4 italic ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <div className={`p-6 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-muted'}`}>
+                <p className={`text-sm mb-4 italic ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   ""FIVESOM helped me grow my design business from a side hustle to a full-time career. The platform's tools and support made all the difference."
 
 
 
                 </p>
-                <p className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>- Rahma Xamuud, Graphic Designer
+                <p className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-foreground'}`}>- Rahma Xamuud, Graphic Designer
 
                 </p>
               </div>
-              <div className={`p-6 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
-                <p className={`text-sm mb-4 italic ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <div className={`p-6 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-muted'}`}>
+                <p className={`text-sm mb-4 italic ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   “Before FIVESOM, finding skilled and reliable freelancers was always a challenge. We spent countless hours searching for the right talent. With FIVESOM, everything changed — we can now connect with professional freelancers quickly and build strong teams for every project.”
                 </p>
-                <p className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>- Aden Yusuf, Startup Co&Founder
+                <p className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-foreground'}`}>- Aden Yusuf, Startup Co&Founder
 
                 </p>
               </div>
@@ -248,17 +248,17 @@ const HowItWorks = () => {
           </section>
 
           {/* Community Forum Section */}
-          <section id="community-forum" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'} shadow-xl`}>
+          <section id="community-forum" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-card/50 border border-white/20'} shadow-xl`}>
             <div className="flex items-center mb-6">
               <Users className={`w-8 h-8 mr-3 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}`} />
-              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
                 Community Forum
               </h2>
             </div>
-            <p className={`text-lg mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-lg mb-4 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               Connect with other freelancers and clients, share experiences, and get advice from the community.
             </p>
-            <ul className={`space-y-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <ul className={`space-y-2 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               <li>• Ask questions and get answers from experienced users</li>
               <li>• Share your success stories and learn from others</li>
               <li>• Network with professionals in your industry</li>
@@ -267,20 +267,20 @@ const HowItWorks = () => {
           </section>
 
           {/* Freelancer Tips Section */}
-          <section id="freelancer-tips" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'} shadow-xl`}>
+          <section id="freelancer-tips" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-card/50 border border-white/20'} shadow-xl`}>
             <div className="flex items-center mb-6">
               <BookOpen className={`w-8 h-8 mr-3 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}`} />
-              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
                 Freelancer Tips
               </h2>
             </div>
-            <p className={`text-lg mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-lg mb-6 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               Expert advice and strategies to help freelancers succeed on the platform.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Profile Optimization</h3>
-                <ul className={`space-y-1 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Profile Optimization</h3>
+                <ul className={`space-y-1 text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   <li>• Create compelling gig descriptions</li>
                   <li>• Showcase your best work</li>
                   <li>• Set competitive pricing</li>
@@ -288,8 +288,8 @@ const HowItWorks = () => {
                 </ul>
               </div>
               <div>
-                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Client Relations</h3>
-                <ul className={`space-y-1 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Client Relations</h3>
+                <ul className={`space-y-1 text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   <li>• Communicate clearly and promptly</li>
                   <li>• Deliver work on time</li>
                   <li>• Ask for feedback and reviews</li>
@@ -300,26 +300,26 @@ const HowItWorks = () => {
           </section>
 
           {/* Blog Section */}
-          <section id="blog" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'} shadow-xl`}>
+          <section id="blog" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-card/50 border border-white/20'} shadow-xl`}>
             <div className="flex items-center mb-6">
               <FileText className={`w-8 h-8 mr-3 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}`} />
-              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
                 Blog
               </h2>
             </div>
-            <p className={`text-lg mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-lg mb-4 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               Stay informed with the latest news, updates, and insights from the FIVESOM team.
             </p>
             <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
-                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Platform Updates</h3>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-muted'}`}>
+                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Platform Updates</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   Learn about new features, improvements, and changes to the platform.
                 </p>
               </div>
-              <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100'}`}>
-                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Industry Insights</h3>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-muted'}`}>
+                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Industry Insights</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   Expert analysis and trends in the freelancing and gig economy space.
                 </p>
               </div>
@@ -327,27 +327,27 @@ const HowItWorks = () => {
           </section>
 
           {/* Events Section */}
-          <section id="events" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'} shadow-xl`}>
+          <section id="events" className={`mb-16 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-card/50 border border-white/20'} shadow-xl`}>
             <div className="flex items-center mb-6">
               <Calendar className={`w-8 h-8 mr-3 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}`} />
-              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
                 Events
               </h2>
             </div>
-            <p className={`text-lg mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-lg mb-6 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               Join our webinars, workshops, and community events to learn and network.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-100 border-gray-200'}`}>
-                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Monthly Webinars</h3>
-                <p className={`text-sm mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-muted border-border'}`}>
+                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Monthly Webinars</h3>
+                <p className={`text-sm mb-3 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   Expert-led sessions on freelancing tips and platform updates.
                 </p>
                 <p className={`text-xs ${isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}`}>Next: First Friday of every month</p>
               </div>
-              <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-100 border-gray-200'}`}>
-                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Skill Workshops</h3>
-                <p className={`text-sm mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-muted border-border'}`}>
+                <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Skill Workshops</h3>
+                <p className={`text-sm mb-3 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                   Interactive sessions to improve your freelancing skills.
                 </p>
                 <p className={`text-xs ${isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}`}>Various dates throughout the month</p>
@@ -357,7 +357,7 @@ const HowItWorks = () => {
 
           {/* FAQ Section */}
           <div className="text-center mb-16">
-            <h2 className={`text-2xl md:text-3xl font-bold mb-8 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h2 className={`text-2xl md:text-3xl font-bold mb-8 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
               Frequently Asked Questions
             </h2>
             
@@ -371,11 +371,11 @@ const HowItWorks = () => {
               }, {
                 question: 'Are there any hidden fees?',
                 answer: 'No, we believe in transparent pricing. All fees are clearly displayed before you make any payment.'
-              }].map((faq, index) => <div key={index} className={`backdrop-blur-lg rounded-xl p-6 text-left ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-white/50 border border-white/20'}`}>
-                  <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              }].map((faq, index) => <div key={index} className={`backdrop-blur-lg rounded-xl p-6 text-left ${isDarkMode ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-card/50 border border-white/20'}`}>
+                  <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
                     {faq.question}
                   </h4>
-                  <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                  <p className={`text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                     {faq.answer}
                   </p>
                 </div>)}
@@ -384,17 +384,17 @@ const HowItWorks = () => {
 
           {/* CTA */}
           <div className="text-center">
-            <h2 className={`text-2xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h2 className={`text-2xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>
               Ready to Get Started?
             </h2>
-            <p className={`text-lg mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className={`text-lg mb-8 ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               Join thousands of satisfied clients who have grown their businesses with FIVESOM
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="px-8 py-4 bg-cyan-500 text-white rounded-xl font-semibold hover:bg-cyan-600 transition-colors">
                 Find a Service
               </button>
-              <button className={`px-8 py-4 backdrop-blur-lg rounded-xl font-semibold transition-colors ${isDarkMode ? 'bg-gray-800/50 text-white border border-gray-700/50 hover:bg-gray-700/50' : 'bg-white/50 text-gray-900 border border-white/20 hover:bg-white/70'}`}>
+              <button className={`px-8 py-4 backdrop-blur-lg rounded-xl font-semibold transition-colors ${isDarkMode ? 'bg-gray-800/50 text-white border border-gray-700/50 hover:bg-gray-700/50' : 'bg-card/50 text-foreground border border-white/20 hover:bg-card/70'}`}>
                 Become a Freelancer
               </button>
             </div>

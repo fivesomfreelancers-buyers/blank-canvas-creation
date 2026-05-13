@@ -99,7 +99,7 @@ const FreelancerGigs = () => {
         </Button>
       </div>
 
-      <div className="text-right text-xs sm:text-sm text-gray-500 mb-2">
+      <div className="text-right text-xs sm:text-sm text-muted-foreground mb-2">
         {gigs.length} / {MAX_GIGS} gigs used
       </div>
 
@@ -158,12 +158,12 @@ const FreelancerGigs = () => {
         <Card>
           <CardContent className="p-6 sm:p-12 text-center">
             <div className="space-y-4">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
-                <Briefcase className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-muted rounded-full flex items-center justify-center mx-auto">
+                <Briefcase className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground" />
               </div>
               <div>
-                <h3 className="text-base sm:text-lg font-medium text-gray-900">No gigs yet</h3>
-                <p className="text-sm sm:text-base text-gray-500 mt-1">Create your first gig to start offering your services</p>
+                <h3 className="text-base sm:text-lg font-medium text-foreground">No gigs yet</h3>
+                <p className="text-sm sm:text-base text-muted-foreground mt-1">Create your first gig to start offering your services</p>
               </div>
               <Button onClick={handleCreateNewGig} className="mt-4 w-full sm:w-auto">
                 <Plus className="w-4 h-4 mr-2" />

@@ -45,24 +45,24 @@ const GigDescription = ({ gigData, updateGigData, onNext, onPrevious }: GigDescr
   return (
     <div className="space-y-8">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Step 3: Description & Requirements</h2>
-        <p className="text-gray-600">Provide detailed information about your service</p>
+        <h2 className="text-2xl font-bold text-foreground mb-2">Step 3: Description & Requirements</h2>
+        <p className="text-muted-foreground">Provide detailed information about your service</p>
       </div>
 
       {/* Gig Description */}
       <div>
-        <Label htmlFor="description" className="text-gray-700 font-medium text-lg">Gig Description *</Label>
-        <p className="text-sm text-gray-500 mb-2">
+        <Label htmlFor="description" className="text-foreground font-medium text-lg">Gig Description *</Label>
+        <p className="text-sm text-muted-foreground mb-2">
           Provide a detailed explanation of your service, process, and what buyers will receive (minimum 120 characters)
         </p>
         <Textarea
           id="description"
           value={gigData.description}
           onChange={(e) => updateGigData({ description: e.target.value })}
-          className="bg-gray-50/50 border-gray-200 min-h-[120px]"
+          className="bg-muted/50 border-border min-h-[120px]"
           placeholder="I will create a unique, minimalist logo perfect for your brand, delivered in vector (AI) and high-resolution PNG formats. My design process includes concept development and 3 revisions to ensure your satisfaction..."
         />
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
+        <div className="flex justify-between text-xs text-muted-foreground mt-1">
           <span className={gigData.description.length < 120 ? 'text-red-500' : 'text-green-600'}>
             {gigData.description.length >= 120 ? '✓' : '✗'} Minimum 120 characters
           </span>
@@ -72,15 +72,15 @@ const GigDescription = ({ gigData, updateGigData, onNext, onPrevious }: GigDescr
 
       {/* Buyer Requirements */}
       <div>
-        <Label htmlFor="buyerRequirements" className="text-gray-700 font-medium text-lg">Buyer Requirements *</Label>
-        <p className="text-sm text-gray-500 mb-2">
+        <Label htmlFor="buyerRequirements" className="text-foreground font-medium text-lg">Buyer Requirements *</Label>
+        <p className="text-sm text-muted-foreground mb-2">
           What information do you need from the buyer to get started?
         </p>
         <Textarea
           id="buyerRequirements"
           value={gigData.buyerRequirements}
           onChange={(e) => updateGigData({ buyerRequirements: e.target.value })}
-          className="bg-gray-50/50 border-gray-200 min-h-[80px]"
+          className="bg-muted/50 border-border min-h-[80px]"
           placeholder="Please provide your company name, preferred colors, industry, and any existing brand materials. If you have a specific style in mind, please share reference images."
         />
       </div>
@@ -89,8 +89,8 @@ const GigDescription = ({ gigData, updateGigData, onNext, onPrevious }: GigDescr
       <div>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <Label className="text-gray-700 font-medium text-lg">Frequently Asked Questions (Optional)</Label>
-            <p className="text-sm text-gray-500">Help buyers understand your service better</p>
+            <Label className="text-foreground font-medium text-lg">Frequently Asked Questions (Optional)</Label>
+            <p className="text-sm text-muted-foreground">Help buyers understand your service better</p>
           </div>
           <Button
             type="button"
@@ -105,15 +105,15 @@ const GigDescription = ({ gigData, updateGigData, onNext, onPrevious }: GigDescr
         </div>
 
         {gigData.faqs.length === 0 && (
-          <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
+          <div className="text-center py-8 text-muted-foreground border-2 border-dashed border-border rounded-lg">
             <p>No FAQs added yet. Click "Add FAQ" to get started.</p>
           </div>
         )}
 
         {gigData.faqs.map((faq, index) => (
-          <div key={index} className="mb-4 p-4 bg-gray-50 rounded-lg">
+          <div key={index} className="mb-4 p-4 bg-muted/30 rounded-lg">
             <div className="flex items-center justify-between mb-2">
-              <span className="font-medium text-gray-700">FAQ #{index + 1}</span>
+              <span className="font-medium text-foreground">FAQ #{index + 1}</span>
               <Button
                 type="button"
                 onClick={() => removeFAQ(index)}
@@ -128,13 +128,13 @@ const GigDescription = ({ gigData, updateGigData, onNext, onPrevious }: GigDescr
                 placeholder="Question (e.g., Do you offer source files?)"
                 value={faq.question}
                 onChange={(e) => updateFAQ(index, 'question', e.target.value)}
-                className="bg-white border-gray-200"
+                className="bg-card border-border"
               />
               <Textarea
                 placeholder="Answer (e.g., Yes, I deliver .AI and .PNG files with the premium package.)"
                 value={faq.answer}
                 onChange={(e) => updateFAQ(index, 'answer', e.target.value)}
-                className="bg-white border-gray-200 min-h-[60px]"
+                className="bg-card border-border min-h-[60px]"
               />
             </div>
           </div>
@@ -142,7 +142,7 @@ const GigDescription = ({ gigData, updateGigData, onNext, onPrevious }: GigDescr
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between pt-6 border-t border-gray-200">
+      <div className="flex justify-between pt-6 border-t border-border">
         <Button onClick={onPrevious} variant="outline" className="flex items-center space-x-2">
           <ArrowLeft className="w-4 h-4" />
           <span>Previous</span>

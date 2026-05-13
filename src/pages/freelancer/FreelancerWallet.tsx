@@ -63,12 +63,12 @@ const FreelancerWallet = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-muted/30 p-6">
       <div className="max-w-6xl mx-auto">
         <BackToDashboard />
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Wallet</h1>
-          <p className="text-gray-600 mt-2">Manage your earnings and withdrawals</p>
+          <h1 className="text-3xl font-bold text-foreground">Wallet</h1>
+          <p className="text-muted-foreground mt-2">Manage your earnings and withdrawals</p>
         </div>
 
         {/* Balance Cards */}
@@ -115,8 +115,8 @@ const FreelancerWallet = () => {
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600">Available for withdrawal: <span className="font-bold text-green-600">${earnings.available.toFixed(2)}</span></p>
-                <p className="text-sm text-gray-500 mt-1">Minimum withdrawal: $20.00</p>
+                <p className="text-muted-foreground">Available for withdrawal: <span className="font-bold text-green-600">${earnings.available.toFixed(2)}</span></p>
+                <p className="text-sm text-muted-foreground mt-1">Minimum withdrawal: $20.00</p>
               </div>
               <Button 
                 className="flex items-center space-x-2"
@@ -149,7 +149,7 @@ const FreelancerWallet = () => {
                       </div>
                       <div>
                         <p className="font-medium">Withdrawal to {transaction.bank_name}</p>
-                        <p className="text-sm text-gray-500">{new Date(transaction.requested_at).toLocaleDateString()}</p>
+                        <p className="text-sm text-muted-foreground">{new Date(transaction.requested_at).toLocaleDateString()}</p>
                       </div>
                     </div>
                     <div className="text-right">

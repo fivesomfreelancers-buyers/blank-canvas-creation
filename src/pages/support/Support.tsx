@@ -122,7 +122,7 @@ const Support = () => {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
-      isDarkMode ? 'bg-gray-900' : 'bg-gray-50'
+      isDarkMode ? 'bg-gray-900' : 'bg-muted/30'
     }`}>
       <Navbar />
       
@@ -131,12 +131,12 @@ const Support = () => {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className={`text-4xl md:text-5xl font-bold mb-6 ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
+              isDarkMode ? 'text-white' : 'text-foreground'
             }`}>
               Support & Resources
             </h1>
             <p className={`text-xl max-w-3xl mx-auto mb-8 ${
-              isDarkMode ? 'text-gray-300' : 'text-gray-600'
+              isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'
             }`}>
               Everything you need to succeed on FIVESOM. Get help, learn best practices, 
               and connect with our community.
@@ -145,7 +145,7 @@ const Support = () => {
             {/* Quick Search */}
             <div className="max-w-md mx-auto">
               <div className="relative">
-                <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                 <Input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -162,11 +162,11 @@ const Support = () => {
               <div key={categoryIndex}>
                 <div className="mb-6">
                   <h2 className={`text-2xl font-bold mb-2 ${
-                    isDarkMode ? 'text-white' : 'text-gray-900'
+                    isDarkMode ? 'text-white' : 'text-foreground'
                   }`}>
                     {category.title}
                   </h2>
-                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+                  <p className={isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}>
                     {category.description}
                   </p>
                 </div>
@@ -177,20 +177,20 @@ const Support = () => {
                       <Card className={`group hover:shadow-lg transition-all duration-300 cursor-pointer ${
                         isDarkMode 
                           ? 'bg-gray-800/50 hover:bg-gray-800/70 border-gray-700' 
-                          : 'bg-white hover:bg-gray-50 border-gray-200'
+                          : 'bg-card hover:bg-muted/30 border-border'
                       }`}>
                         <CardHeader>
                           <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${item.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                             <item.icon className="w-6 h-6 text-white" />
                           </div>
                           <CardTitle className={`group-hover:text-cyan-500 transition-colors ${
-                            isDarkMode ? 'text-white' : 'text-gray-900'
+                            isDarkMode ? 'text-white' : 'text-foreground'
                           }`}>
                             {item.title}
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
-                          <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+                          <p className={isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}>
                             {item.description}
                           </p>
                         </CardContent>
@@ -206,10 +206,10 @@ const Support = () => {
           <div className={`mt-16 p-8 rounded-2xl ${
             isDarkMode 
               ? 'bg-gray-800/50 border border-gray-700' 
-              : 'bg-white border border-gray-200'
+              : 'bg-card border border-border'
           }`}>
             <h3 className={`text-xl font-bold mb-4 text-center ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
+              isDarkMode ? 'text-white' : 'text-foreground'
             }`}>
               Need Immediate Help?
             </h3>
@@ -221,7 +221,7 @@ const Support = () => {
               </Link>
               <Link to="/support/help-center">
                 <Button variant="outline" className={
-                  isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-300 text-gray-700'
+                  isDarkMode ? 'border-gray-600 text-muted-foreground' : 'border-border text-foreground'
                 }>
                   Browse Help Center
                 </Button>

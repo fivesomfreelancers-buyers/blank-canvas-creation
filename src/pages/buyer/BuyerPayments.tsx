@@ -61,17 +61,17 @@ const BuyerPayments = () => {
       case 'Released': return 'bg-green-100 text-green-800';
       case 'Pending': return 'bg-blue-100 text-blue-800';
       case 'Completed': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      default: return 'bg-muted text-foreground';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-3 sm:p-6">
+    <div className="min-h-screen bg-muted/30 p-3 sm:p-6">
       <div className="max-w-6xl mx-auto">
         <BackToDashboard />
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Payments & Escrow</h1>
-          <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">Secure payment management with escrow protection</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Payments & Escrow</h1>
+          <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Secure payment management with escrow protection</p>
         </div>
 
         {/* Escrow Info */}
@@ -107,8 +107,8 @@ const BuyerPayments = () => {
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
                     <div className="flex-1">
                       <h3 className="font-medium text-sm sm:text-base">{payment.project}</h3>
-                      <p className="text-xs sm:text-sm text-gray-600">Freelancer: {payment.freelancer}</p>
-                      <p className="text-xs sm:text-sm text-gray-500">Order Date: {payment.orderDate}</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">Freelancer: {payment.freelancer}</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">Order Date: {payment.orderDate}</p>
                     </div>
                     <div className="text-left sm:text-right flex sm:flex-col items-start sm:items-end gap-2">
                       <div className="text-lg sm:text-xl font-bold text-green-600">{payment.amount}</div>
@@ -118,7 +118,7 @@ const BuyerPayments = () => {
                     </div>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-                    <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                    <div className="flex items-center text-xs sm:text-sm text-muted-foreground">
                       <Clock className="w-4 h-4 mr-1" />
                       <span>{payment.releaseDate}</span>
                     </div>
@@ -150,7 +150,7 @@ const BuyerPayments = () => {
                   <div className="w-8 h-5 sm:w-10 sm:h-6 bg-blue-600 rounded mr-3"></div>
                   <div>
                     <p className="font-medium text-sm sm:text-base">•••• •••• •••• 1234</p>
-                    <p className="text-xs sm:text-sm text-gray-600">Expires 12/25</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Expires 12/25</p>
                   </div>
                 </div>
                 <Badge variant="secondary" className="w-fit">Primary</Badge>
@@ -160,7 +160,7 @@ const BuyerPayments = () => {
                   <div className="w-8 h-5 sm:w-10 sm:h-6 bg-yellow-500 rounded mr-3"></div>
                   <div>
                     <p className="font-medium text-sm sm:text-base">PayPal Account</p>
-                    <p className="text-xs sm:text-sm text-gray-600">user@example.com</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">user@example.com</p>
                   </div>
                 </div>
                 <Button variant="outline" size="sm" className="w-full sm:w-auto">Remove</Button>
@@ -191,11 +191,11 @@ const BuyerPayments = () => {
                     </div>
                     <div>
                       <p className="font-medium text-sm sm:text-base">{payment.description}</p>
-                      <p className="text-xs sm:text-sm text-gray-600">{payment.method} • {payment.date}</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">{payment.method} • {payment.date}</p>
                     </div>
                   </div>
                   <div className="text-left sm:text-right">
-                    <p className="font-bold text-gray-900 text-sm sm:text-base">{payment.amount}</p>
+                    <p className="font-bold text-foreground text-sm sm:text-base">{payment.amount}</p>
                     <div className="flex items-center space-x-2 mt-1">
                       <Badge className={getStatusColor(payment.status)}>
                         {payment.status}

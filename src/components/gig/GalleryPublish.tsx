@@ -67,14 +67,14 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
   return (
     <div className="space-y-8">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Step 4: Gallery & Publish</h2>
-        <p className="text-gray-600">Upload visuals and publish your gig</p>
+        <h2 className="text-2xl font-bold text-foreground mb-2">Step 4: Gallery & Publish</h2>
+        <p className="text-muted-foreground">Upload visuals and publish your gig</p>
       </div>
 
       {/* Gig Images */}
       <div>
-        <Label className="text-gray-700 font-medium text-lg">Gig Images (Optional, up to 3)</Label>
-        <p className="text-sm text-gray-500 mb-2">Upload high-quality images that showcase your work</p>
+        <Label className="text-foreground font-medium text-lg">Gig Images (Optional, up to 3)</Label>
+        <p className="text-sm text-muted-foreground mb-2">Upload high-quality images that showcase your work</p>
         
         {/* Current Images */}
         {gigData.images.length > 0 && (
@@ -101,8 +101,8 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
 
         {/* Upload Images */}
         {gigData.images.length < 3 && (
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-cyan-400 transition-colors">
-            <Image className="mx-auto h-12 w-12 text-gray-400 mb-2" />
+          <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-cyan-400 transition-colors">
+            <Image className="mx-auto h-12 w-12 text-muted-foreground mb-2" />
             <label htmlFor="images" className="cursor-pointer">
               <span className="font-medium text-cyan-600 hover:text-cyan-500">
                 Upload gig images
@@ -116,8 +116,8 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
                 className="sr-only"
               />
             </label>
-            <p className="text-xs text-gray-500 mt-1">JPG, PNG up to 5MB each</p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground mt-1">JPG, PNG up to 5MB each</p>
+            <p className="text-xs text-muted-foreground">
               {gigData.images.length}/3 images uploaded
             </p>
           </div>
@@ -126,13 +126,13 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
 
       {/* Gig Video (Optional) */}
       <div>
-        <Label className="text-gray-700 font-medium text-lg">Gig Video (Optional)</Label>
-        <p className="text-sm text-gray-500 mb-2">Add a short video to explain your service</p>
+        <Label className="text-foreground font-medium text-lg">Gig Video (Optional)</Label>
+        <p className="text-sm text-muted-foreground mb-2">Add a short video to explain your service</p>
         
         {gigData.video ? (
           <div className="relative inline-block">
-            <div className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg border">
-              <Video className="w-5 h-5 text-gray-600" />
+            <div className="flex items-center space-x-2 p-3 bg-muted/30 rounded-lg border">
+              <Video className="w-5 h-5 text-muted-foreground" />
               <span className="text-sm">{gigData.video.name}</span>
               <Button
                 size="sm"
@@ -144,8 +144,8 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
             </div>
           </div>
         ) : (
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-cyan-400 transition-colors">
-            <Video className="mx-auto h-12 w-12 text-gray-400 mb-2" />
+          <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-cyan-400 transition-colors">
+            <Video className="mx-auto h-12 w-12 text-muted-foreground mb-2" />
             <label htmlFor="video" className="cursor-pointer">
               <span className="font-medium text-cyan-600 hover:text-cyan-500">
                 Upload gig video
@@ -158,22 +158,22 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
                 className="sr-only"
               />
             </label>
-            <p className="text-xs text-gray-500 mt-1">MP4 up to 100MB</p>
+            <p className="text-xs text-muted-foreground mt-1">MP4 up to 100MB</p>
           </div>
         )}
       </div>
 
       {/* Documents (Optional) */}
       <div>
-        <Label className="text-gray-700 font-medium text-lg">Additional Documents (Optional)</Label>
-        <p className="text-sm text-gray-500 mb-2">Upload portfolios, samples, or other relevant files</p>
+        <Label className="text-foreground font-medium text-lg">Additional Documents (Optional)</Label>
+        <p className="text-sm text-muted-foreground mb-2">Upload portfolios, samples, or other relevant files</p>
         
         {gigData.documents.length > 0 && (
           <div className="space-y-2 mb-4">
             {gigData.documents.map((doc, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
+              <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border">
                 <div className="flex items-center space-x-2">
-                  <FileText className="w-5 h-5 text-gray-600" />
+                  <FileText className="w-5 h-5 text-muted-foreground" />
                   <span className="text-sm">{doc.name}</span>
                 </div>
                 <Button
@@ -188,8 +188,8 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
           </div>
         )}
 
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-cyan-400 transition-colors">
-          <FileText className="mx-auto h-12 w-12 text-gray-400 mb-2" />
+        <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-cyan-400 transition-colors">
+          <FileText className="mx-auto h-12 w-12 text-muted-foreground mb-2" />
           <label htmlFor="documents" className="cursor-pointer">
             <span className="font-medium text-cyan-600 hover:text-cyan-500">
               Upload documents
@@ -203,13 +203,13 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
               className="sr-only"
             />
           </label>
-          <p className="text-xs text-gray-500 mt-1">PDF, DOC, TXT up to 10MB each</p>
+          <p className="text-xs text-muted-foreground mt-1">PDF, DOC, TXT up to 10MB each</p>
         </div>
       </div>
 
       {/* Publish Summary */}
       <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg p-6 border border-cyan-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+        <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center">
           <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
           Ready to Publish
         </h3>
@@ -228,7 +228,7 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between pt-6 border-t border-gray-200">
+      <div className="flex justify-between pt-6 border-t border-border">
         <Button onClick={onPrevious} variant="outline" className="flex items-center space-x-2">
           <ArrowLeft className="w-4 h-4" />
           <span>Previous</span>
