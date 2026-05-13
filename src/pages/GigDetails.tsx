@@ -416,7 +416,15 @@ const GigDetails = () => {
                 </Button>
               </CardContent>
             </Card>
-          </div>
+
+            {/* Report */}
+            <div className="flex justify-center">
+              <ReportDialog
+                reportedUserId={gig.freelancerUserId}
+                relatedGigId={gig.id}
+                buttonLabel="Report this gig"
+              />
+            </div>
         </div>
       </div>
     </div>
