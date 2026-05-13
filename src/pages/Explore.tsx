@@ -163,13 +163,26 @@ const Explore = () => {
 
               <select
                 value={selectedCategory}
-                onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
+                onChange={(e) => { setSelectedCategory(e.target.value); setSelectedSubcategory('all'); setCurrentPage(1); }}
                 className="px-4 py-3 rounded-xl border-0 outline-none bg-muted/50 text-foreground"
               >
                 {categories.map(category => (
-                  <option key={category.id} value={category.id}>{category.name}</option>
+                  <option key={category.slug} value={category.slug}>{category.name}</option>
                 ))}
               </select>
+
+              {activeCategory && (
+                <select
+                  value={selectedSubcategory}
+                  onChange={(e) => { setSelectedSubcategory(e.target.value); setCurrentPage(1); }}
+                  className="px-4 py-3 rounded-xl border-0 outline-none bg-muted/50 text-foreground"
+                >
+                  <option value="all">All {activeCategory.name}</option>
+                  {activeCategory.subcategories.map(sub => (
+                    <option key={sub.slug} value={sub.slug}>{sub.name}</option>
+                  ))}
+                </select>
+              )}
 
               <Dialog open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
                 <DialogTrigger asChild>
