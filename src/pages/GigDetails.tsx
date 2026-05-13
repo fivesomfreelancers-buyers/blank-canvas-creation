@@ -168,51 +168,8 @@ const GigDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Video */}
-            {videoUrl && (
-              <Card>
-                <CardContent className="p-0">
-                  <video
-                    src={videoUrl}
-                    controls
-                    playsInline
-                    preload="metadata"
-                    poster={images[0] || undefined}
-                    className="w-full h-96 bg-black rounded-t-lg object-contain"
-                  />
-                </CardContent>
-              </Card>
-            )}
-            {/* Image Gallery */}
-            {images.length > 0 && (
-              <Card>
-                <CardContent className="p-0">
-                  <div className="relative group">
-                    <img src={images[selectedImageIdx]} alt={gig.title} className="w-full h-96 object-cover rounded-t-lg" />
-                    {images.length > 1 && (
-                      <>
-                        <button onClick={() => setSelectedImageIdx((prev) => (prev === 0 ? images.length - 1 : prev - 1))} className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><ChevronLeft className="w-5 h-5" /></button>
-                        <button onClick={() => setSelectedImageIdx((prev) => (prev === images.length - 1 ? 0 : prev + 1))} className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><ChevronRight className="w-5 h-5" /></button>
-                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-                          {images.map((_: string, idx: number) => (
-                            <button key={idx} onClick={() => setSelectedImageIdx(idx)} className={`w-2.5 h-2.5 rounded-full transition-colors ${idx === selectedImageIdx ? 'bg-primary' : 'bg-background/60'}`} />
-                          ))}
-                        </div>
-                      </>
-                    )}
-                  </div>
-                  {images.length > 1 && (
-                    <div className="flex gap-2 p-3">
-                      {images.map((img: string, idx: number) => (
-                        <button key={idx} onClick={() => setSelectedImageIdx(idx)} className={`w-16 h-16 rounded-md overflow-hidden border-2 transition-colors ${idx === selectedImageIdx ? 'border-primary' : 'border-transparent'}`}>
-                          <img src={img} alt="" className="w-full h-full object-cover" />
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+            {/* Unified Media Gallery (video + images) */}
+            <UnifiedGallery videoUrl={videoUrl} images={images} title={gig.title} />
 
             {/* Title & Info */}
             <Card>
