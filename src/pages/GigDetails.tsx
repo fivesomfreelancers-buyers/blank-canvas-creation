@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Navbar from '@/components/Navbar';
 import OnlineIndicator from '@/components/presence/OnlineIndicator';
+import VerifiedBadge from '@/components/VerifiedBadge';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -184,7 +185,7 @@ const GigDetails = () => {
                       </Avatar>
                       <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
                     </div>
-                    <span className="font-medium">{gig.freelancerName}</span>
+                    <span className="font-medium inline-flex items-center gap-1">{gig.freelancerName}{gig.isVerified && <VerifiedBadge size="sm" />}</span>
                     <OnlineIndicator userId={gig.freelancerUserId} />
                   </div>
                   {gig.totalReviews > 0 && (
@@ -260,7 +261,7 @@ const GigDetails = () => {
                         <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
                       </div>
                       <div>
-                        <h3 className="font-bold text-lg">{gig.freelancerName}</h3>
+                        <h3 className="font-bold text-lg inline-flex items-center gap-1.5">{gig.freelancerName}{gig.isVerified && <VerifiedBadge size="md" />}</h3>
                         <p className="text-muted-foreground">{gig.completedOrders} orders completed</p>
                         {gig.freelancerLanguages && gig.freelancerLanguages.length > 0 && (
                           <div className="flex flex-wrap gap-1 mt-1">
@@ -404,7 +405,7 @@ const GigDetails = () => {
                     <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
                   </div>
                   <div>
-                    <h4 className="font-medium">{gig.freelancerName}</h4>
+                    <h4 className="font-medium inline-flex items-center gap-1.5">{gig.freelancerName}{gig.isVerified && <VerifiedBadge size="sm" />}</h4>
                     <p className="text-sm text-muted-foreground">{gig.completedOrders} orders completed</p>
                     <OnlineIndicator userId={gig.freelancerUserId} />
                   </div>

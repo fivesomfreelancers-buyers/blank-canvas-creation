@@ -25,6 +25,7 @@ import FreelancerHelp from './freelancer/FreelancerHelp';
 import FreelancerSettings from './freelancer/FreelancerSettings';
 import FreelancerProfile from './freelancer/FreelancerProfile';
 import FreelancerVerify from './freelancer/FreelancerVerify';
+import VerifiedBadge from '@/components/VerifiedBadge';
 
 interface UserProfile {
   full_name: string;
@@ -96,7 +97,7 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
               </div>
             )}
             <div className="min-w-0">
-              <p className="text-sm font-medium truncate">{userProfile?.full_name || 'Freelancer'}</p>
+              <p className="text-sm font-medium truncate inline-flex items-center gap-1">{userProfile?.full_name || 'Freelancer'}{isVerified && <VerifiedBadge size="sm" />}</p>
               <p className="text-xs text-muted-foreground truncate">{userProfile?.email || 'Online'}</p>
             </div>
           </div>
@@ -274,7 +275,7 @@ const FreelancerDashboard = () => {
         return (
           <div className="space-y-6">
             <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-4 sm:p-6 rounded-lg">
-              <h1 className="text-xl sm:text-2xl font-bold mb-2">Welcome back, {userProfile?.full_name?.split(' ')[0] || 'Freelancer'}! 👋</h1>
+              <h1 className="text-xl sm:text-2xl font-bold mb-2 inline-flex items-center gap-2">Welcome back, {userProfile?.full_name?.split(' ')[0] || 'Freelancer'}{isVerified && <VerifiedBadge size="lg" />}! 👋</h1>
               <p className="text-cyan-100 text-sm sm:text-base">Ready to take on new challenges today?</p>
             </div>
 
