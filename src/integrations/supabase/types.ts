@@ -463,6 +463,7 @@ export type Database = {
           base_price: number
           buyer_requirements: string | null
           category_id: string | null
+          category_slug: string | null
           created_at: string | null
           delivery_time_days: number | null
           description: string
@@ -471,6 +472,7 @@ export type Database = {
           images: string[] | null
           status: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id: string | null
+          subcategory_slug: string | null
           tags: string[] | null
           thumbnail_url: string | null
           title: string
@@ -480,6 +482,7 @@ export type Database = {
           base_price?: number
           buyer_requirements?: string | null
           category_id?: string | null
+          category_slug?: string | null
           created_at?: string | null
           delivery_time_days?: number | null
           description?: string
@@ -488,6 +491,7 @@ export type Database = {
           images?: string[] | null
           status?: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id?: string | null
+          subcategory_slug?: string | null
           tags?: string[] | null
           thumbnail_url?: string | null
           title: string
@@ -497,6 +501,7 @@ export type Database = {
           base_price?: number
           buyer_requirements?: string | null
           category_id?: string | null
+          category_slug?: string | null
           created_at?: string | null
           delivery_time_days?: number | null
           description?: string
@@ -505,6 +510,7 @@ export type Database = {
           images?: string[] | null
           status?: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id?: string | null
+          subcategory_slug?: string | null
           tags?: string[] | null
           thumbnail_url?: string | null
           title?: string
