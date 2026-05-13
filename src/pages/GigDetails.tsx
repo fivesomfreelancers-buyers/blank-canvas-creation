@@ -425,6 +425,7 @@ const GigDetails = () => {
                 buttonLabel="Report this gig"
               />
             </div>
+          </div>
         </div>
       </div>
     </div>
