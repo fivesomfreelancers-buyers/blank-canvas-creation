@@ -11,42 +11,37 @@ import Navbar from '../components/Navbar';
 import { useTheme } from '../components/ThemeProvider';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { CATEGORIES, getCategoryBySlug } from '@/lib/categories';
+import { useSearchParams } from 'react-router-dom';
 
 const Explore = () => {
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || 'all');
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>(searchParams.get('subcategory') || 'all');
   const [currentPage, setCurrentPage] = useState(1);
   const gigsPerPage = 12;
   const [allGigs, setAllGigs] = useState<any[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 500]);
   const [selectedRating, setSelectedRating] = useState(0);
   const [isTopRated, setIsTopRated] = useState(false);
 
+  const categories = [{ slug: 'all', name: 'All Categories' }, ...CATEGORIES.map(c => ({ slug: c.slug, name: c.name }))];
+  const activeCategory = getCategoryBySlug(selectedCategory);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Categories are hardcoded since there's no categories table
-        setCategories([
-          { id: 'all', name: 'All Categories' },
-          { id: 'design', name: 'Design & Graphics' },
-          { id: 'development', name: 'Web Development' },
-          { id: 'writing', name: 'Writing & Translation' },
-          { id: 'marketing', name: 'Digital Marketing' },
-          { id: 'video', name: 'Video & Animation' },
-          { id: 'music', name: 'Music & Audio' },
-        ]);
-
         const { data: gigsData } = await supabase
           .from('gigs')
           .select(`*, freelancers ( user_id, rating )`)
           .eq('status', 'active');
 
-        const formattedGigs = await Promise.all((gigsData || []).map(async (gig) => {
+        const formattedGigs = await Promise.all((gigsData || []).map(async (gig: any) => {
           const { data: profile } = await (supabase as any)
             .from('public_profiles')
             .select('full_name, profile_image_url')
@@ -72,7 +67,8 @@ const Explore = () => {
             reviews: reviews?.length || 0,
             price: Number(gig.base_price),
             image: gig.thumbnail_url || gig.images?.[0] || '',
-            category: gig.category_id
+            category: gig.category_slug || '',
+            subcategory: gig.subcategory_slug || '',
           };
         }));
 
@@ -86,9 +82,19 @@ const Explore = () => {
     fetchData();
   }, []);
 
-  const filteredGigs = selectedCategory === 'all' 
-    ? allGigs 
-    : allGigs.filter(gig => gig.category === selectedCategory);
+  // Sync URL params
+  useEffect(() => {
+    const params: Record<string, string> = {};
+    if (selectedCategory !== 'all') params.category = selectedCategory;
+    if (selectedSubcategory !== 'all') params.subcategory = selectedSubcategory;
+    setSearchParams(params, { replace: true });
+  }, [selectedCategory, selectedSubcategory, setSearchParams]);
+
+  const filteredGigs = allGigs.filter(gig => {
+    if (selectedCategory !== 'all' && gig.category !== selectedCategory) return false;
+    if (selectedSubcategory !== 'all' && gig.subcategory !== selectedSubcategory) return false;
+    return true;
+  });
 
   const searchFilteredGigs = searchQuery 
     ? filteredGigs.filter(gig => 
@@ -157,13 +163,26 @@ const Explore = () => {
 
               <select
                 value={selectedCategory}
-                onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
+                onChange={(e) => { setSelectedCategory(e.target.value); setSelectedSubcategory('all'); setCurrentPage(1); }}
                 className="px-4 py-3 rounded-xl border-0 outline-none bg-muted/50 text-foreground"
               >
                 {categories.map(category => (
-                  <option key={category.id} value={category.id}>{category.name}</option>
+                  <option key={category.slug} value={category.slug}>{category.name}</option>
                 ))}
               </select>
+
+              {activeCategory && (
+                <select
+                  value={selectedSubcategory}
+                  onChange={(e) => { setSelectedSubcategory(e.target.value); setCurrentPage(1); }}
+                  className="px-4 py-3 rounded-xl border-0 outline-none bg-muted/50 text-foreground"
+                >
+                  <option value="all">All {activeCategory.name}</option>
+                  {activeCategory.subcategories.map(sub => (
+                    <option key={sub.slug} value={sub.slug}>{sub.name}</option>
+                  ))}
+                </select>
+              )}
 
               <Dialog open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
                 <DialogTrigger asChild>

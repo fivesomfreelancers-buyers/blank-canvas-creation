@@ -1,5 +1,8 @@
 // Curated catalog used by the freelancer verification wizard.
-// Categories + subcategories (skills) and software/tools with simple-icons slugs.
+// Categories + subcategories (skills) come from the single source of truth in
+// `@/lib/categories` so the platform stays consistent everywhere.
+
+import { CATEGORIES as PLATFORM_CATEGORIES } from './categories';
 
 export interface CategoryDef {
   id: string;
@@ -7,48 +10,11 @@ export interface CategoryDef {
   subcategories: string[];
 }
 
-export const CATEGORIES: CategoryDef[] = [
-  {
-    id: 'web-dev',
-    name: 'Web Development',
-    subcategories: ['Frontend', 'Backend', 'Full Stack', 'WordPress', 'Shopify', 'E-commerce'],
-  },
-  {
-    id: 'mobile-dev',
-    name: 'Mobile Development',
-    subcategories: ['iOS (Swift)', 'Android (Kotlin)', 'React Native', 'Flutter'],
-  },
-  {
-    id: 'design',
-    name: 'Graphic Design',
-    subcategories: ['Logo Design', 'Brand Identity', 'Illustration', 'Print Design', 'Social Media Graphics'],
-  },
-  {
-    id: 'uiux',
-    name: 'UI/UX Design',
-    subcategories: ['Web Design', 'Mobile App Design', 'Wireframing', 'Prototyping', 'Design System'],
-  },
-  {
-    id: 'video',
-    name: 'Video Editing',
-    subcategories: ['Short Form (TikTok/Reels)', 'YouTube Edits', 'Wedding Videos', 'Motion Graphics', 'Color Grading'],
-  },
-  {
-    id: 'writing',
-    name: 'Writing & Translation',
-    subcategories: ['Copywriting', 'Article Writing', 'Translation (Somali ↔ English)', 'Proofreading'],
-  },
-  {
-    id: 'marketing',
-    name: 'Digital Marketing',
-    subcategories: ['Social Media Management', 'SEO', 'Google Ads', 'Facebook Ads', 'Email Marketing'],
-  },
-  {
-    id: 'audio',
-    name: 'Audio & Voice',
-    subcategories: ['Voice Over', 'Podcast Editing', 'Music Production', 'Mixing & Mastering'],
-  },
-];
+export const CATEGORIES: CategoryDef[] = PLATFORM_CATEGORIES.map((c) => ({
+  id: c.slug,
+  name: c.name,
+  subcategories: c.subcategories.map((s) => s.name),
+}));
 
 export interface SoftwareDef {
   name: string;
