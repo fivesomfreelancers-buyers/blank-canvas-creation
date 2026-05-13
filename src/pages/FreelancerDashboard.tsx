@@ -340,7 +340,31 @@ const FreelancerDashboard = () => {
               </Card>
             </div>
 
-            {verificationStatus === 'approved' ? (
+            {verificationStatus === 'removed' ? (
+              <Card className="border-destructive/40 bg-destructive/5">
+                <CardHeader>
+                  <CardTitle className="text-destructive flex items-center">
+                    <ShieldCheck className="w-5 h-5 mr-2" />
+                    Verification Removed
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="p-3 bg-background rounded-lg border border-destructive/20 space-y-2">
+                    <p className="font-medium text-sm sm:text-base text-destructive">Your verification has been removed by admin.</p>
+                    {removalInfo?.reason && (
+                      <p className="text-xs sm:text-sm text-muted-foreground"><span className="font-semibold text-foreground">Reason:</span> {removalInfo.reason}</p>
+                    )}
+                    {removalInfo?.at && (
+                      <p className="text-xs text-muted-foreground">Removed on {new Date(removalInfo.at).toLocaleString()}</p>
+                    )}
+                    <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                      <Button size="sm" variant="outline" onClick={() => setActiveSection('verify')}>Re-submit Verification</Button>
+                      <Button size="sm" variant="ghost" onClick={() => setActiveSection('help')}>Contact Support</Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : verificationStatus === 'approved' ? (
               <Card className="border-green-500/30 bg-green-500/10">
                 <CardHeader>
                   <CardTitle className="text-green-600 flex items-center">
