@@ -353,6 +353,9 @@ export type Database = {
           software_tools: Json | null
           total_earnings: number | null
           user_id: string
+          verification_removal_reason: string | null
+          verification_removed_at: string | null
+          verification_removed_by: string | null
           verified_at: string | null
           years_experience: string | null
         }
@@ -371,6 +374,9 @@ export type Database = {
           software_tools?: Json | null
           total_earnings?: number | null
           user_id: string
+          verification_removal_reason?: string | null
+          verification_removed_at?: string | null
+          verification_removed_by?: string | null
           verified_at?: string | null
           years_experience?: string | null
         }
@@ -389,6 +395,9 @@ export type Database = {
           software_tools?: Json | null
           total_earnings?: number | null
           user_id?: string
+          verification_removal_reason?: string | null
+          verification_removed_at?: string | null
+          verification_removed_by?: string | null
           verified_at?: string | null
           years_experience?: string | null
         }
@@ -1220,6 +1229,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_admin_user: { Args: { _user_id: string }; Returns: boolean }
       touch_last_seen: { Args: never; Returns: undefined }
     }
     Enums: {
