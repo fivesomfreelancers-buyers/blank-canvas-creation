@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { FileText, Tag, ArrowRight, X } from 'lucide-react';
 import { GigData } from '../../pages/CreateGig';
+import { CATEGORIES, getCategoryBySlug } from '@/lib/categories';
 
 interface GigOverviewProps {
   gigData: GigData;
@@ -17,22 +18,7 @@ interface GigOverviewProps {
 
 const GigOverview = ({ gigData, updateGigData, onNext }: GigOverviewProps) => {
   const [newTag, setNewTag] = useState('');
-
-  const categories = [
-    'Logo Design', 'Web Design', 'Video Editing', 'Content Writing', 
-    'App UI Design', 'Social Media Marketing', 'Translation', 'Voice Over'
-  ];
-
-  const subcategories: Record<string, string[]> = {
-    'Logo Design': ['Business Logo', 'Minimalist Logo', 'Vintage Logo', 'Mascot Logo'],
-    'Web Design': ['Landing Page', 'E-commerce', 'Portfolio', 'Blog Design'],
-    'Video Editing': ['Promotional Video', 'Social Media Video', 'Wedding Video', 'Youtube Video'],
-    'Content Writing': ['Blog Posts', 'Product Descriptions', 'Social Media Copy', 'Technical Writing'],
-    'App UI Design': ['Mobile App', 'Web App', 'Dashboard', 'Wireframes'],
-    'Social Media Marketing': ['Facebook Ads', 'Instagram Marketing', 'LinkedIn Marketing', 'Social Media Strategy'],
-    'Translation': ['Document Translation', 'Website Translation', 'Audio Translation', 'Live Translation'],
-    'Voice Over': ['Commercial Voice Over', 'Audiobook Narration', 'Phone System', 'Video Game Voice Over']
-  };
+  const activeCategory = getCategoryBySlug(gigData.category);
 
   const addTag = () => {
     if (newTag.trim() && gigData.tags.length < 5 && !gigData.tags.includes(newTag.trim())) {
