@@ -62,6 +62,66 @@ export type Database = {
           },
         ]
       }
+      admin_action_logs: {
+        Row: {
+          action: string
+          admin_id: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          target_id: string | null
+          target_table: string | null
+        }
+        Insert: {
+          action: string
+          admin_id: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          target_id?: string | null
+          target_table?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          target_id?: string | null
+          target_table?: string | null
+        }
+        Relationships: []
+      }
+      admin_announcements: {
+        Row: {
+          audience: string
+          created_at: string
+          created_by: string | null
+          id: string
+          message: string
+          severity: string
+          title: string
+        }
+        Insert: {
+          audience?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          message: string
+          severity?: string
+          title: string
+        }
+        Update: {
+          audience?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          message?: string
+          severity?: string
+          title?: string
+        }
+        Relationships: []
+      }
       buyer_support_tickets: {
         Row: {
           category: string | null
@@ -768,6 +828,39 @@ export type Database = {
           },
         ]
       }
+      platform_settings: {
+        Row: {
+          escrow_hold_days: number
+          homepage_announcement: string | null
+          id: boolean
+          maintenance_mode: boolean
+          platform_fee_percent: number
+          updated_at: string
+          updated_by: string | null
+          withdrawal_min: number
+        }
+        Insert: {
+          escrow_hold_days?: number
+          homepage_announcement?: string | null
+          id?: boolean
+          maintenance_mode?: boolean
+          platform_fee_percent?: number
+          updated_at?: string
+          updated_by?: string | null
+          withdrawal_min?: number
+        }
+        Update: {
+          escrow_hold_days?: number
+          homepage_announcement?: string | null
+          id?: boolean
+          maintenance_mode?: boolean
+          platform_fee_percent?: number
+          updated_at?: string
+          updated_by?: string | null
+          withdrawal_min?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           bio: string | null
@@ -840,6 +933,36 @@ export type Database = {
           created_at?: string | null
           id?: string
           name?: string
+        }
+        Relationships: []
+      }
+      support_ticket_replies: {
+        Row: {
+          created_at: string
+          id: string
+          is_admin: boolean
+          message: string
+          sender_id: string
+          ticket_id: string
+          ticket_table: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_admin?: boolean
+          message: string
+          sender_id: string
+          ticket_id: string
+          ticket_table: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_admin?: boolean
+          message?: string
+          sender_id?: string
+          ticket_id?: string
+          ticket_table?: string
         }
         Relationships: []
       }
