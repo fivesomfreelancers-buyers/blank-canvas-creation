@@ -99,8 +99,8 @@ const CreateGig = () => {
 
         setGigData({
           title: gig.title,
-          category: '',
-          subcategory: '',
+          category: (gig as any).category_slug || '',
+          subcategory: (gig as any).subcategory_slug || '',
           tags: gig.tags || [],
           packages: pkgMap,
           description: gig.description || '',
@@ -201,6 +201,8 @@ const CreateGig = () => {
           status: 'active',
           tags: gigData.tags,
           buyer_requirements: gigData.buyerRequirements,
+          category_slug: gigData.category,
+          subcategory_slug: gigData.subcategory,
         };
         if (imageUrls.length > 0) {
           updateData.images = imageUrls;
@@ -234,7 +236,9 @@ const CreateGig = () => {
           status: 'active',
           tags: gigData.tags,
           buyer_requirements: gigData.buyerRequirements,
-        }).select().single();
+          category_slug: gigData.category,
+          subcategory_slug: gigData.subcategory,
+        } as any).select().single();
         if (error) throw error;
         gigRecord = data;
       }
