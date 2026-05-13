@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard, Users, Trophy, DollarSign, Scale, LogOut, Shield, Sparkles,
+  ShieldCheck, Package, MessageSquare, CreditCard, Wallet, Star, FolderTree,
+  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -16,13 +18,47 @@ import AdminUsers from './AdminUsers';
 import AdminEscrow from './AdminEscrow';
 import AdminDisputes from './AdminDisputes';
 import AdminRanking from './AdminRanking';
+import AdminVerifications from './AdminVerifications';
+import AdminOrders from './AdminOrders';
+import AdminChats from './AdminChats';
+import AdminPayments from './AdminPayments';
+import AdminWithdrawals from './AdminWithdrawals';
+import AdminReviews from './AdminReviews';
+import AdminCategories from './AdminCategories';
+import AdminSupport from './AdminSupport';
+import AdminNotifications from './AdminNotifications';
+import AdminSecurity from './AdminSecurity';
+import AdminLogs from './AdminLogs';
+import AdminSettings from './AdminSettings';
 
-const menuItems = [
-  { key: 'overview', label: 'Overview', icon: LayoutDashboard },
-  { key: 'users', label: 'Users', icon: Users },
-  { key: 'escrow', label: 'Escrow', icon: DollarSign },
-  { key: 'disputes', label: 'Disputes', icon: Scale },
-  { key: 'ranking', label: 'Ranking', icon: Trophy },
+const menuGroups: { label: string; items: { key: string; label: string; icon: any }[] }[] = [
+  { label: 'Overview', items: [
+    { key: 'overview', label: 'Dashboard', icon: LayoutDashboard },
+  ]},
+  { label: 'Operations', items: [
+    { key: 'users', label: 'Users', icon: Users },
+    { key: 'verifications', label: 'Verifications', icon: ShieldCheck },
+    { key: 'orders', label: 'Orders', icon: Package },
+    { key: 'chats', label: 'Live Chats', icon: MessageSquare },
+  ]},
+  { label: 'Finance', items: [
+    { key: 'payments', label: 'Payments', icon: CreditCard },
+    { key: 'withdrawals', label: 'Withdrawals', icon: Wallet },
+    { key: 'escrow', label: 'Escrow', icon: DollarSign },
+  ]},
+  { label: 'Trust & Safety', items: [
+    { key: 'disputes', label: 'Disputes', icon: Scale },
+    { key: 'reviews', label: 'Reviews', icon: Star },
+    { key: 'support', label: 'Support', icon: LifeBuoy },
+    { key: 'security', label: 'Security', icon: Lock },
+  ]},
+  { label: 'System', items: [
+    { key: 'categories', label: 'Categories', icon: FolderTree },
+    { key: 'notifications', label: 'Notifications', icon: Bell },
+    { key: 'ranking', label: 'Ranking', icon: Trophy },
+    { key: 'logs', label: 'Activity Logs', icon: Activity },
+    { key: 'settings', label: 'Settings', icon: SettingsIcon },
+  ]},
 ];
 
 const AdminDashboardInner = () => {
