@@ -39,7 +39,7 @@ const Explore = () => {
       try {
         const { data: gigsData } = await supabase
           .from('gigs')
-          .select(`*, freelancers ( user_id, rating )`)
+          .select(`*, freelancers ( user_id, rating, is_verified )`)
           .eq('status', 'active');
 
         const formattedGigs = await Promise.all((gigsData || []).map(async (gig: any) => {
@@ -64,6 +64,7 @@ const Explore = () => {
             freelancer: profile?.full_name || 'Anonymous',
             freelancerId: gig.freelancer_id,
             freelancerAvatar: profile?.profile_image_url || '',
+            isVerified: !!gig.freelancers?.is_verified,
             rating: avgRating,
             reviews: reviews?.length || 0,
             price: Number(gig.base_price),
