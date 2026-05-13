@@ -213,6 +213,14 @@ const CreateGig = () => {
 
         // Delete old packages and re-insert
         await supabase.from('gig_packages').delete().eq('gig_id', gigId);
+
+        // Replace gig_media entries when new ones are uploaded
+        if (videoUrl) {
+          await supabase.from('gig_media').delete().eq('gig_id', gigId).eq('file_type', 'video');
+        }
+        if (docUrls.length > 0) {
+          await supabase.from('gig_media').delete().eq('gig_id', gigId).eq('file_type', 'document');
+        }
       } else {
         // Create new gig
         const { data, error } = await supabase.from('gigs').insert({
