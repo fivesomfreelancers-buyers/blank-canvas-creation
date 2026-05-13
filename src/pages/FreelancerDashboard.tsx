@@ -272,6 +272,19 @@ const FreelancerDashboard = () => {
     };
 
     loadDashboardData();
+
+    // Realtime: instantly reflect admin verification changes
+    let cleanup: (() => void) | undefined;
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const channel = supabase
+        .channel(`freelancer-self-${user.id}`)
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'freelancers', filter: `user_id=eq.${user.id}` }, () => loadDashboardData())
+        .subscribe();
+      cleanup = () => { supabase.removeChannel(channel); };
+    })();
+    return () => { cleanup?.(); };
   }, [activeSection]);
 
   const renderContent = () => {
