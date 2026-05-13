@@ -59,6 +59,28 @@ const AdminUsers = () => {
     const payload: any = { is_verified: !current, verified_at: !current ? new Date().toISOString() : null };
     const { error } = await supabase.from('freelancers').update(payload).eq('id', id);
     if (error) { toast.error('Failed to update'); return; }
+
+    // Keep verification_documents in sync so the freelancer's UI updates correctly
+    const f = freelancers.find(x => x.id === id);
+    if (f?.user_id) {
+      const { data: latest } = await supabase
+        .from('verification_documents')
+        .select('id')
+        .eq('user_id', f.user_id)
+        .order('submitted_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (latest?.id) {
+        await supabase
+          .from('verification_documents')
+          .update({
+            status: !current ? 'approved' : 'rejected',
+            note: !current ? 'Approved by admin' : 'Verification revoked by admin',
+          })
+          .eq('id', latest.id);
+      }
+    }
+
     toast.success(!current ? 'User verified ✓' : 'Verification removed');
     fetchFreelancers();
   };
