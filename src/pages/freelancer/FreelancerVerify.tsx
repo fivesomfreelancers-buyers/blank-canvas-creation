@@ -95,7 +95,7 @@ const FreelancerVerify: React.FC = () => {
         if (Array.isArray(tools)) setSelectedTools(tools);
         if (freelancer.is_verified) {
           setStatus('approved');
-        } else if (vDoc?.status) {
+        } else if (vDoc?.status && vDoc.status !== 'approved') {
           setStatus(vDoc.status as Status);
         }
       }
