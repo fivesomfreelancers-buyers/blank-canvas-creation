@@ -10,6 +10,8 @@ import ProfilePreviewModal from '@/components/profile/ProfilePreviewModal';
 import FreelancerFAQManager from '@/components/faq/FreelancerFAQManager';
 import { supabase } from '@/integrations/supabase/client';
 import BackToDashboard from '@/components/BackToDashboard';
+import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
+import PortfolioManager from '@/components/profile/PortfolioManager';
 
 const FreelancerProfile = () => {
   const [profile, setProfile] = useState<any>(null);
@@ -179,6 +181,19 @@ const FreelancerProfile = () => {
           {/* FAQ Manager */}
           {freelancerData?.id && (
             <FreelancerFAQManager freelancerId={freelancerData.id} />
+          )}
+
+          {/* Portfolio editor */}
+          {freelancerData?.id && (
+            <PortfolioManager freelancerId={freelancerData.id} />
+          )}
+
+          {/* Public preview — exactly what buyers see */}
+          {freelancerData?.id && (
+            <Card>
+              <CardHeader><CardTitle className="text-lg sm:text-xl flex items-center gap-2"><Eye className="w-5 h-5" /> Public Profile Preview</CardTitle></CardHeader>
+              <CardContent><FreelancerProfileCard freelancerId={freelancerData.id} /></CardContent>
+            </Card>
           )}
 
           {/* Feedback Display */}
