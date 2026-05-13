@@ -1,17 +1,19 @@
-import React from 'react';
-import { FileText, Download, Play, Lock } from 'lucide-react';
+import React, { useState } from 'react';
+import { FileText, Download, Lock, ZoomIn, X, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSignedAttachmentUrl } from '@/hooks/useSignedAttachmentUrl';
 
 const IMAGE_EXT = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg', 'heic'];
 const VIDEO_EXT = ['mp4', 'mov', 'webm', 'ogg', 'mkv', 'avi', 'm4v'];
+const PDF_EXT = ['pdf'];
 
-function getKind(url: string): 'image' | 'video' | 'doc' {
+function getKind(url: string): 'image' | 'video' | 'pdf' | 'doc' {
   try {
     const clean = url.split('?')[0];
     const ext = clean.split('.').pop()?.toLowerCase() || '';
     if (IMAGE_EXT.includes(ext)) return 'image';
     if (VIDEO_EXT.includes(ext)) return 'video';
+    if (PDF_EXT.includes(ext)) return 'pdf';
     return 'doc';
   } catch {
     return 'doc';
@@ -21,8 +23,7 @@ function getKind(url: string): 'image' | 'video' | 'doc' {
 function getFileName(url: string): string {
   try {
     const clean = url.split('?')[0];
-    const name = decodeURIComponent(clean.split('/').pop() || 'file');
-    return name;
+    return decodeURIComponent(clean.split('/').pop() || 'file');
   } catch {
     return 'file';
   }
@@ -35,13 +36,37 @@ interface Props {
   lockedHint?: string;
 }
 
+/** Repeated diagonal "Fivesom" watermark overlay shown on previews before payment release. */
+const Watermark: React.FC = () => (
+  <div
+    aria-hidden
+    className="pointer-events-none absolute inset-0 overflow-hidden rounded-lg select-none"
+    style={{
+      backgroundImage:
+        "repeating-linear-gradient(-30deg, rgba(255,255,255,0.18) 0 2px, transparent 2px 140px)",
+    }}
+  >
+    <div className="absolute inset-0 flex flex-wrap items-center justify-center gap-8 rotate-[-25deg] opacity-40">
+      {Array.from({ length: 24 }).map((_, i) => (
+        <span
+          key={i}
+          className="text-white text-lg font-bold tracking-widest drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]"
+        >
+          FIVESOM • PREVIEW
+        </span>
+      ))}
+    </div>
+  </div>
+);
+
 const AttachmentPreview: React.FC<Props> = ({ url, isOwn, allowDownload = true, lockedHint }) => {
   const signedUrl = useSignedAttachmentUrl(url);
   const kind = getKind(url);
   const name = getFileName(url);
   const ext = (name.split('.').pop() || '').toUpperCase();
+  const [zoomOpen, setZoomOpen] = useState(false);
 
-  const DownloadButton = () => (
+  const ActionButton = () =>
     allowDownload ? (
       <Button
         asChild
@@ -59,48 +84,114 @@ const AttachmentPreview: React.FC<Props> = ({ url, isOwn, allowDownload = true, 
         <Lock className="w-3.5 h-3.5" />
         <span>{lockedHint || 'Locked'}</span>
       </div>
-    )
-  );
+    );
 
   if (kind === 'image') {
     return (
-      <div className="mt-2 inline-block">
-        <img
-          src={signedUrl}
-          alt={name}
-          onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
-          className="max-w-[260px] max-h-[260px] rounded-lg border shadow-sm object-cover block"
-        />
-        <div className="mt-2 flex items-center justify-between gap-3">
-          <p className="text-xs text-muted-foreground truncate max-w-[170px]">{name}</p>
-          <DownloadButton />
+      <>
+        <div className="mt-2 inline-block">
+          <div
+            className="relative group cursor-zoom-in"
+            onClick={() => setZoomOpen(true)}
+          >
+            <img
+              src={signedUrl}
+              alt={name}
+              onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
+              draggable={allowDownload}
+              className={`max-w-[260px] max-h-[260px] rounded-lg border shadow-sm object-cover block ${!allowDownload ? 'blur-[1px]' : ''}`}
+            />
+            {!allowDownload && <Watermark />}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
+              <ZoomIn className="w-6 h-6 text-white drop-shadow" />
+            </div>
+          </div>
+          <div className="mt-2 flex items-center justify-between gap-3">
+            <p className="text-xs text-muted-foreground truncate max-w-[170px]">{name}</p>
+            <ActionButton />
+          </div>
         </div>
-      </div>
+
+        {zoomOpen && (
+          <div
+            className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+            onClick={() => setZoomOpen(false)}
+          >
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-4 right-4 text-white hover:bg-white/10"
+              onClick={(e) => { e.stopPropagation(); setZoomOpen(false); }}
+            >
+              <X className="w-6 h-6" />
+            </Button>
+            <div className="relative max-w-[95vw] max-h-[90vh]">
+              <img
+                src={signedUrl}
+                alt={name}
+                onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
+                className="max-w-[95vw] max-h-[90vh] object-contain rounded-lg"
+                onClick={(e) => e.stopPropagation()}
+              />
+              {!allowDownload && <Watermark />}
+            </div>
+          </div>
+        )}
+      </>
     );
   }
 
   if (kind === 'video') {
     return (
       <div className="mt-2 inline-block">
-        <video
-          src={signedUrl}
-          controls
-          controlsList={allowDownload ? undefined : 'nodownload'}
-          onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
-          preload="metadata"
-          className="max-w-[280px] max-h-[280px] rounded-lg border bg-black block"
-        >
-          <source src={signedUrl} />
-          Your browser does not support video.
-        </video>
+        <div className="relative">
+          <video
+            src={signedUrl}
+            controls
+            controlsList={allowDownload ? undefined : 'nodownload noremoteplayback'}
+            disablePictureInPicture={!allowDownload}
+            onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
+            preload="metadata"
+            className="max-w-[320px] max-h-[280px] rounded-lg border bg-black block"
+          >
+            <source src={signedUrl} />
+            Your browser does not support video.
+          </video>
+          {!allowDownload && <Watermark />}
+        </div>
         <div className="mt-2 flex items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground truncate max-w-[170px]">{name}</p>
-          <DownloadButton />
+          <ActionButton />
         </div>
       </div>
     );
   }
 
+  if (kind === 'pdf') {
+    return (
+      <div className="mt-2 w-full max-w-[520px]">
+        <div className="relative">
+          <iframe
+            src={`${signedUrl}#toolbar=${allowDownload ? 1 : 0}&navpanes=0`}
+            title={name}
+            className="w-full h-[420px] rounded-lg border bg-background"
+          />
+          {!allowDownload && (
+            <div className="absolute top-2 right-2 flex items-center gap-1.5 px-2 py-1 rounded-md bg-background/90 border text-xs text-muted-foreground shadow">
+              <Eye className="w-3.5 h-3.5" />
+              Preview only
+            </div>
+          )}
+        </div>
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground truncate max-w-[260px]">{name}</p>
+          <ActionButton />
+        </div>
+      </div>
+    );
+  }
+
+  // Generic doc
   return (
     <div
       className={`mt-2 flex items-center gap-3 p-3 rounded-lg border ${
@@ -118,7 +209,7 @@ const AttachmentPreview: React.FC<Props> = ({ url, isOwn, allowDownload = true, 
           {ext || 'FILE'}
         </p>
       </div>
-      <DownloadButton />
+      <ActionButton />
     </div>
   );
 };
