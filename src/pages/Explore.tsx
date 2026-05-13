@@ -278,7 +278,7 @@ const Explore = () => {
                           {gig.freelancer.split(' ').map((n: string) => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-xs text-muted-foreground">by {gig.freelancer}</span>
+                      <span className="text-xs text-muted-foreground inline-flex items-center gap-1">by {gig.freelancer}{gig.isVerified && <VerifiedBadge size="sm" />}</span>
                     </div>
                     
                     <div className="flex items-center justify-between">
