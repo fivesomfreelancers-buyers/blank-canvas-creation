@@ -30,9 +30,11 @@ const AdminUsers = () => {
   const [editUser, setEditUser] = useState<FreelancerUser | null>(null);
   const [editScore, setEditScore] = useState(0);
   const [editBio, setEditBio] = useState('');
+  const [removeUser, setRemoveUser] = useState<FreelancerUser | null>(null);
+  const [removeReason, setRemoveReason] = useState('');
 
   const fetchFreelancers = async () => {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('freelancers')
       .select('id, user_id, rating, completed_orders, is_verified, is_featured, ranking_score, bio, total_earnings');
 
