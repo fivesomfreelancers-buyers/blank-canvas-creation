@@ -319,6 +319,29 @@ const GigDetails = () => {
               </CardContent>
             </Card>
 
+            {/* Attached Documents */}
+            {docs.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Attached Files</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {docs.map((d, idx) => (
+                    <a
+                      key={idx}
+                      href={d.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 p-3 rounded-md border border-border hover:bg-muted/50 transition-colors text-sm"
+                    >
+                      <span className="truncate flex-1">{d.name}</span>
+                      <span className="text-primary text-xs">Open</span>
+                    </a>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
             {/* FAQ Section */}
             {faqs.length > 0 && (
               <Card>
