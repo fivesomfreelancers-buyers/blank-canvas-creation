@@ -184,7 +184,7 @@ const GigDetails = () => {
                       </Avatar>
                       <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
                     </div>
-                    <span className="font-medium">{gig.freelancerName}</span>
+                    <span className="font-medium inline-flex items-center gap-1">{gig.freelancerName}{gig.isVerified && <VerifiedBadge size="sm" />}</span>
                     <OnlineIndicator userId={gig.freelancerUserId} />
                   </div>
                   {gig.totalReviews > 0 && (
