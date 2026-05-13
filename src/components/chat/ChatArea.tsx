@@ -61,7 +61,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                 </span>
               </div>
               <div className="flex flex-col leading-tight">
-                <span className="text-sm sm:text-base">{selectedConvo.partnerName}</span>
+                <span className="text-sm sm:text-base inline-flex items-center gap-1">{selectedConvo.partnerName}{selectedConvo.partnerVerified && <VerifiedBadge size="sm" />}</span>
                 <OnlineIndicator userId={selectedConvo.partnerId} />
               </div>
             </div>
