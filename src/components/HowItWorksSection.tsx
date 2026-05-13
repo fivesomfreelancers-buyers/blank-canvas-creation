@@ -134,7 +134,7 @@ const HowItWorksSection = () => {
 
         <div className="text-center mt-12">
           <Link 
-            to="/how-it-works"
+            to="/docs"
             className="inline-flex items-center px-8 py-4 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-all transform hover:scale-105 shadow-lg"
           >
             Learn More About Our Process
