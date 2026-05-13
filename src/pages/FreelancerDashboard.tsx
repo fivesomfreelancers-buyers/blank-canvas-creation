@@ -141,9 +141,9 @@ const FreelancerDashboard = () => {
         });
       }
 
-      const { data: freelancer } = await supabase
+      const { data: freelancer } = await (supabase as any)
         .from('freelancers')
-        .select('is_verified, verified_at, total_earnings, completed_orders, id')
+        .select('is_verified, verified_at, total_earnings, completed_orders, id, verification_removed_at, verification_removal_reason')
         .eq('user_id', user.id)
         .single();
       
@@ -158,15 +158,19 @@ const FreelancerDashboard = () => {
           .limit(1)
           .maybeSingle();
         if (freelancer.is_verified) {
-          // Show celebratory "Account Verified" banner only for the first 24h after approval.
-          const verifiedAt = (freelancer as any).verified_at ? new Date((freelancer as any).verified_at).getTime() : 0;
+          const verifiedAt = freelancer.verified_at ? new Date(freelancer.verified_at).getTime() : 0;
           const within24h = verifiedAt > 0 && (Date.now() - verifiedAt) < 24 * 60 * 60 * 1000;
           setVerificationStatus(within24h ? 'approved' : 'none');
+          setRemovalInfo(null);
+        } else if (freelancer.verification_removed_at) {
+          setVerificationStatus('removed');
+          setRemovalInfo({ at: freelancer.verification_removed_at, reason: freelancer.verification_removal_reason });
         } else if (vDoc?.status && vDoc.status !== 'approved') {
-          // If is_verified is false, never trust a stale 'approved' document
           setVerificationStatus(vDoc.status as any);
+          setRemovalInfo(null);
         } else {
           setVerificationStatus('none');
+          setRemovalInfo(null);
         }
 
         const { count: gigsCount } = await supabase
