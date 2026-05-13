@@ -1,88 +1,90 @@
-## Goal
+# Super Admin Dashboard — Fivesom
 
-Rebuild the freelancer verification flow and public profile to feel like Fiverr/Upwork: gated by first completed order, multi-step structured application, rich public profile, and a verified badge that appears everywhere.
+Transform the existing Admin panel (currently: Overview, Users, Escrow, Disputes, Ranking) into a full professional super-admin control center matching Fiverr/Upwork-class admin tooling, using the data already available in the database.
 
-## 1. Gating: when verification appears
+## New sidebar structure
 
-- On `FreelancerDashboard`, only show the "Verify Your Account" card if `freelancers.completed_orders >= 1`.
-- Before that: show a friendly locked card explaining "Complete your first order to unlock verification."
-- After submission: show pending state for 24h (per existing rule), then allow re-check.
-- After admin approval: card disappears from dashboard; verified badge appears on profile + cards.
+```
+Dashboard
+├── Overview (Analytics)        ✅ exists — enhance
+├── Users Management            ✅ exists — enhance
+├── Verifications               🆕
+├── Orders Management           🆕
+├── Live Chats Monitor          🆕
+├── Payments                    🆕
+├── Withdrawals                 🆕
+├── Escrow                      ✅ exists
+├── Disputes                    ✅ exists
+├── Reviews                     🆕
+├── Categories                  🆕
+├── Support Tickets             🆕
+├── Notifications (Broadcast)   🆕
+├── Security Center             🆕
+├── Logs & Activity             🆕
+├── Ranking                     ✅ exists
+└── Settings                    🆕
+```
 
-## 2. New verification application (multi-step wizard)
+## Pages to build (all read/manage what's already in DB)
 
-Replace the current `FreelancerVerify` page with a 6-step wizard. Each step is one section, with progress indicator (reuse `StepIndicator`).
+1. **AdminVerifications** — list `verification_documents` (pending/approved/rejected) with full profile preview (skills, portfolio, experience, education, software, intro video, sample images via `freelancer_portfolio`). Actions: Approve / Reject / Request Changes (updates `status` + `freelancers.is_verified`).
 
-**Step 1 – Basic Info (auto-filled)**
-- Pulls `full_name`, `profile_image_url`, `languages`, `location` from `profiles`.
-- Editable inline; saving updates `profiles` directly (no duplication).
+2. **AdminOrders** — full table of `orders` with filters (active, pending, delivered, cancelled, revision). Drill-in shows buyer, freelancer, gig, amount, deadline, deliveries, requirements. Actions: Cancel, Refund, Force-Complete.
 
-**Step 2 – Skills**
-- Category dropdown sourced from existing `categories` table.
-- On category select → load `subcategories` for that category.
-- Multi-select subcategories saved as freelancer skills.
+3. **AdminChats** — list all `conversations`; open any to view full message history (`messages`) including attachments. Read-only monitoring with "Open Full Conversation" view. Useful for dispute investigation.
 
-**Step 3 – Portfolio**
-- Upload exactly 3 images + 1 video (max 60s, validated client-side via `video.duration`).
-- Stored in new `verification-portfolio` public bucket.
-- Saved to new `freelancer_portfolio` table.
+4. **AdminPayments** — read `orders` + `accepted_deliveries` + `wallets`. Cards: Total Revenue, Processing (escrow), Completed, Failed/Cancelled, Refunds. Charts (revenue daily/weekly/monthly).
 
-**Step 4 – Experience**
-- Single select: `< 1 year`, `1 year`, `2 years`, `3 years`, `5+ years`, `10+ years`.
+5. **AdminWithdrawals** — list `withdrawals` requests with user info. Approve / Reject / Hold actions (update status + processed_at).
 
-**Step 5 – Education**
-- Single select: `High School`, `Diploma`, `Bachelor`, `Master`, `PhD`.
+6. **AdminReviews** — list `gig_reviews` with gig + buyer info. Detect/flag fake/spam (low effort heuristic: very short, duplicate). Delete action.
 
-**Step 6 – Software / Tools**
-- Searchable multi-select with a curated catalog (Figma, Canva, Photoshop, Illustrator, VS Code, React, Node.js, Premiere Pro, After Effects, etc.).
-- Each item rendered with its logo (using `simple-icons` CDN: `https://cdn.simpleicons.org/{slug}`) so logos appear automatically beside name.
+7. **AdminCategories** — CRUD on `subcategories`. Main 5 categories stay locked (per project memory). Add/Edit/Delete subcategories.
 
-Final step submits one row to `verification_documents` (existing table) and writes structured data to `freelancers` and the new tables.
+8. **AdminSupport** — unified inbox of `support_tickets`, `buyer_support_tickets`, `freelancer_support_tickets`. Reply (text update), Resolve, Close.
 
-## 3. Database changes
+9. **AdminNotifications** — broadcast composer (uses Supabase realtime channel `system:announcements`). Sends a message that the app can subscribe to and toast.
 
-New columns on `freelancers`:
-- `years_experience text`
-- `education_level text`
-- `software_tools jsonb` (array of `{name, slug}`)
-- `professional_title text` (mirror; keep canonical on profiles)
+10. **AdminSecurity** — overview of `user_roles`, recently-joined users, suspicious patterns (e.g. profiles without verification, multiple accounts same name), admin action to assign/revoke roles.
 
-New table `freelancer_portfolio`:
-- `id, freelancer_id, media_url, media_type ('image'|'video'), position, created_at`
-- RLS: anyone can SELECT; owner can INSERT/UPDATE/DELETE.
+11. **AdminLogs** — recent activity feed assembled from latest rows across `orders`, `withdrawals`, `verification_documents`, `disputes`, `accepted_deliveries`, `user_roles` changes — sorted by time. Read-only.
 
-New storage bucket `verification-portfolio` (public) with owner-write RLS.
+12. **AdminSettings** — platform-level toggles stored in a new `platform_settings` table (single row): platform_fee_percent, withdrawal_min, escrow_hold_days, maintenance_mode, dark_mode_default, homepage_announcement.
 
-(All other verification data still flows through existing `verification_documents` admin queue.)
+13. **AdminOverview (enhanced)** — add live cards (Total Users, Active Orders, Total Revenue, Pending Verifications, Open Disputes, Pending Withdrawals, Open Tickets) + simple charts (Recharts) for revenue and signups (last 30 days).
 
-## 4. Public freelancer profile page
+## Database additions (single migration)
 
-Rebuild `FreelancerProfilePage` (the public one) with sections:
-- Hero: avatar, name, professional title, city/country, verified badge, languages, rating, reviews count, completed orders.
-- About.
-- Skills (chips).
-- Portfolio gallery (3 images + video player).
-- Experience + Education cards.
-- Software/tools grid with logos.
-- Reviews list.
+- `platform_settings` table (single-row, admin-managed via RLS).
+- `admin_announcements` table (id, title, message, audience, created_by, created_at) with admin-only insert / public select.
+- `admin_action_logs` table (id, admin_id, action, target_table, target_id, metadata jsonb, created_at) — populated from frontend admin actions for the Logs page.
 
-## 5. Profile card component
+All with proper RLS (admin-only write; public read where needed).
 
-New `FreelancerProfileCard` reusable component matching the uploaded reference style: avatar circle with verified check, name, title, location, star rating + reviews count, skill chips, "View Profile" CTA. Used in Explore + featured grids.
+## Tech & design
 
-## 6. Verified badge
+- Keep existing VIP dark gradient shell (`AdminDashboard.tsx`).
+- Sidebar: extend `menuItems` with new entries grouped by section labels (Operations, Finance, Trust & Safety, System).
+- Each page = `src/pages/admin/Admin<Name>.tsx`, lazy-rendered via the existing tab switch.
+- Real-time: Supabase channel subscriptions on each list page so cards/tables update live.
+- Charts: Recharts (already installed via shadcn).
+- Reuse shadcn `Table`, `Card`, `Badge`, `Dialog`, `Tabs`, `Sheet` components.
+- Strictly tokenized colors (no hex except inside the existing admin shell which already uses inline brand gradients).
 
-Small reusable `VerifiedBadge` (blue check) shown wherever freelancer name appears once `freelancers.is_verified = true`.
+## Out of scope (note to user)
 
-## Technical notes
+- AI moderation (spam/scam detection) — needs an LLM edge function; can be added in a follow-up.
+- Malware scanning of uploaded files — needs external service.
+- Geo-IP / device tracking — requires logging middleware on auth (separate task).
+- Two-factor auth logs — requires enabling 2FA in Supabase first.
+- File CDN management — Supabase storage UI already covers this.
 
-- Categories/subcategories: query `categories` + `subcategories` tables already in DB.
-- Software logos: `https://cdn.simpleicons.org/{slug}/3B82F6` — no extra package needed.
-- Video duration check: read `loadedmetadata` event before upload.
-- Gating uses existing `completed_orders` field updated by `handle_order_completion` trigger.
-- Migration will add columns, the portfolio table with RLS, and the storage bucket + policies in one call.
+These are flagged as "Coming soon" placeholders in their respective panels so the structure is in place.
 
-## Out of scope
+## Delivery order
 
-- Admin-side review UI changes (existing AdminUsers verification queue keeps working).
-- Payment / order flow changes.
+1. Migration (settings + announcements + action logs tables).
+2. Sidebar restructure in `AdminDashboard.tsx`.
+3. Build all 13 new admin pages.
+4. Enhance `AdminOverview` with new live cards + charts.
+5. Wire real-time subscriptions.
