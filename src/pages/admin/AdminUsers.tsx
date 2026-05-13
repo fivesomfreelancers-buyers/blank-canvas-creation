@@ -300,10 +300,6 @@ const AdminUsers = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
-  );
-};
-
 
       {/* Remove Verification Dialog */}
       <Dialog open={!!removeUser} onOpenChange={(o) => { if (!o) { setRemoveUser(null); setRemoveReason(''); } }}>
