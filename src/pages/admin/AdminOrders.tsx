@@ -37,7 +37,7 @@ const AdminOrders = () => {
 
   useEffect(() => { fetch(); }, []);
 
-  const update = async (id: string, status: string) => {
+  const update = async (id: string, status: 'pending' | 'in_progress' | 'delivered' | 'completed' | 'cancelled') => {
     const { error } = await supabase.from('orders').update({ status }).eq('id', id);
     if (error) return toast.error('Failed');
     toast.success(`Order ${status}`);

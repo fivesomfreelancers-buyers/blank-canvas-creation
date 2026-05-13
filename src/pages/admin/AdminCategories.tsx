@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FolderTree, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { MAIN_CATEGORIES } from '@/lib/categories';
+import { CATEGORIES as MAIN_CATEGORIES } from '@/lib/categories';
 
 const AdminCategories = () => {
   const [subs, setSubs] = useState<any[]>([]);
