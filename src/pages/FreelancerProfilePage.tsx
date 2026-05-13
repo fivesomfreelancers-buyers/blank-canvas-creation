@@ -248,6 +248,9 @@ const FreelancerProfilePage = () => {
                   <MessageSquare className="w-4 h-4 mr-2" />
                   {sendingMessage ? 'Sending...' : 'Contact Me'}
                 </Button>
+                <div className="sm:self-end">
+                  <ReportDialog reportedUserId={profileData.userId} buttonLabel="Report" />
+                </div>
               </div>
             </div>
           </CardContent>
