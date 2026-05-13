@@ -37,9 +37,7 @@ const ProfilePreviewModal = ({ open, onClose, profile, freelancerData, feedback 
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h2 className="text-2xl font-bold text-foreground">{name}</h2>
-                {freelancerData?.is_verified && (
-                  <Badge variant="secondary" className="text-green-600"><CheckCircle className="w-3 h-3 mr-1" />Verified</Badge>
-                )}
+                {freelancerData?.is_verified && <VerifiedBadge showLabel size="md" />}
               </div>
               <p className="text-muted-foreground mb-2">{profile?.professional_title || freelancerData?.bio || 'Freelancer'}</p>
               <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-3">
