@@ -405,7 +405,7 @@ const GigDetails = () => {
                     <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
                   </div>
                   <div>
-                    <h4 className="font-medium">{gig.freelancerName}</h4>
+                    <h4 className="font-medium inline-flex items-center gap-1.5">{gig.freelancerName}{gig.isVerified && <VerifiedBadge size="sm" />}</h4>
                     <p className="text-sm text-muted-foreground">{gig.completedOrders} orders completed</p>
                     <OnlineIndicator userId={gig.freelancerUserId} />
                   </div>
