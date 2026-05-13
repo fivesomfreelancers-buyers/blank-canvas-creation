@@ -64,6 +64,14 @@ const GigDetails = () => {
         setFaqs(faqData || []);
       }
 
+      // Load gig media (videos + documents)
+      const { data: mediaData } = await supabase.from('gig_media').select('*').eq('gig_id', id).order('created_at', { ascending: true });
+      const vid = (mediaData || []).find((m: any) => m.file_type === 'video');
+      setVideoUrl(vid ? vid.file_url : null);
+      setDocs((mediaData || [])
+        .filter((m: any) => m.file_type === 'document')
+        .map((m: any) => ({ url: m.file_url, name: decodeURIComponent(m.file_url.split('/').pop()?.split('?')[0] || 'Document') })));
+
       setGig({
         ...gigData,
         freelancerName: profile?.full_name || 'Anonymous',
