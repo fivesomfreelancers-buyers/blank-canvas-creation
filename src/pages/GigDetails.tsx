@@ -26,6 +26,8 @@ const GigDetails = () => {
   const [packages, setPackages] = useState<any[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<string>('basic');
   const [faqs, setFaqs] = useState<any[]>([]);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [docs, setDocs] = useState<{ url: string; name: string }[]>([]);
   
 
   useEffect(() => {
@@ -61,6 +63,14 @@ const GigDetails = () => {
         const { data: faqData } = await supabase.from('freelancer_faqs').select('*').eq('freelancer_id', gigData.freelancers.id);
         setFaqs(faqData || []);
       }
+
+      // Load gig media (videos + documents)
+      const { data: mediaData } = await supabase.from('gig_media').select('*').eq('gig_id', id).order('created_at', { ascending: true });
+      const vid = (mediaData || []).find((m: any) => m.file_type === 'video');
+      setVideoUrl(vid ? vid.file_url : null);
+      setDocs((mediaData || [])
+        .filter((m: any) => m.file_type === 'document')
+        .map((m: any) => ({ url: m.file_url, name: decodeURIComponent(m.file_url.split('/').pop()?.split('?')[0] || 'Document') })));
 
       setGig({
         ...gigData,
@@ -157,6 +167,21 @@ const GigDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Video */}
+            {videoUrl && (
+              <Card>
+                <CardContent className="p-0">
+                  <video
+                    src={videoUrl}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    poster={images[0] || undefined}
+                    className="w-full h-96 bg-black rounded-t-lg object-contain"
+                  />
+                </CardContent>
+              </Card>
+            )}
             {/* Image Gallery */}
             {images.length > 0 && (
               <Card>
@@ -293,6 +318,29 @@ const GigDetails = () => {
                 </Tabs>
               </CardContent>
             </Card>
+
+            {/* Attached Documents */}
+            {docs.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Attached Files</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {docs.map((d, idx) => (
+                    <a
+                      key={idx}
+                      href={d.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 p-3 rounded-md border border-border hover:bg-muted/50 transition-colors text-sm"
+                    >
+                      <span className="truncate flex-1">{d.name}</span>
+                      <span className="text-primary text-xs">Open</span>
+                    </a>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
 
             {/* FAQ Section */}
             {faqs.length > 0 && (

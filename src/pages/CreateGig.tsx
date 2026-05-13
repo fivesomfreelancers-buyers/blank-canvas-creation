@@ -161,6 +161,26 @@ const CreateGig = () => {
         imageUrls.push(publicUrl.publicUrl);
       }
 
+      // Upload video (if any) to gig-media bucket
+      let videoUrl: string | null = null;
+      if (gigData.video) {
+        const ext = gigData.video.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
+        const { error: vErr } = await supabase.storage.from('gig-media').upload(fileName, gigData.video, { contentType: gigData.video.type || 'video/mp4' });
+        if (vErr) { console.error('Video upload error:', vErr); }
+        else { videoUrl = supabase.storage.from('gig-media').getPublicUrl(fileName).data.publicUrl; }
+      }
+
+      // Upload documents
+      const docUrls: { url: string; name: string }[] = [];
+      for (const doc of gigData.documents) {
+        const ext = doc.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
+        const { error: dErr } = await supabase.storage.from('gig-media').upload(fileName, doc, { contentType: doc.type || 'application/octet-stream' });
+        if (dErr) { console.error('Doc upload error:', dErr); continue; }
+        docUrls.push({ url: supabase.storage.from('gig-media').getPublicUrl(fileName).data.publicUrl, name: doc.name });
+      }
+
       const activePackage = Object.values(gigData.packages).find(pkg => pkg.isActive);
       if (!activePackage || !activePackage.price) {
         toast({ title: "Package Required", description: "Please set a price for at least one package.", variant: "destructive" });
@@ -193,6 +213,14 @@ const CreateGig = () => {
 
         // Delete old packages and re-insert
         await supabase.from('gig_packages').delete().eq('gig_id', gigId);
+
+        // Replace gig_media entries when new ones are uploaded
+        if (videoUrl) {
+          await supabase.from('gig_media').delete().eq('gig_id', gigId).eq('file_type', 'video');
+        }
+        if (docUrls.length > 0) {
+          await supabase.from('gig_media').delete().eq('gig_id', gigId).eq('file_type', 'document');
+        }
       } else {
         // Create new gig
         const { data, error } = await supabase.from('gigs').insert({
@@ -228,6 +256,15 @@ const CreateGig = () => {
       if (packageEntries.length > 0) {
         const { error: pkgError } = await supabase.from('gig_packages').insert(packageEntries);
         if (pkgError) console.error('Error saving packages:', pkgError);
+      }
+
+      // Insert gig media (video + documents) into gig_media table
+      const mediaEntries: any[] = [];
+      if (videoUrl) mediaEntries.push({ gig_id: gigRecord.id, file_type: 'video', file_url: videoUrl });
+      for (const d of docUrls) mediaEntries.push({ gig_id: gigRecord.id, file_type: 'document', file_url: d.url });
+      if (mediaEntries.length > 0) {
+        const { error: mErr } = await supabase.from('gig_media').insert(mediaEntries);
+        if (mErr) console.error('Error saving gig media:', mErr);
       }
 
       // Save FAQs
