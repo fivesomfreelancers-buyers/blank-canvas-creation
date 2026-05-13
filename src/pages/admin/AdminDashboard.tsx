@@ -115,32 +115,33 @@ const AdminDashboardInner = () => {
               </SidebarGroupLabel>
               <SidebarGroupContent className="px-2">
                 <SidebarMenu className="gap-1">
-                  {menuItems.map((item) => {
-                    const active = activeTab === item.key;
-                    return (
-                      <SidebarMenuItem key={item.key}>
-                        <SidebarMenuButton
-                          onClick={() => setActiveTab(item.key)}
-                          className={`group relative rounded-lg transition-all duration-200 h-10 ${
-                            active
-                              ? 'text-white font-semibold'
-                              : 'text-slate-400 hover:text-white'
-                          }`}
-                          style={active ? {
-                            background: 'linear-gradient(90deg, rgba(0,163,255,0.22), rgba(0,204,255,0.06))',
-                            boxShadow: 'inset 0 0 0 1px rgba(0,163,255,0.4), 0 0 18px rgba(0,163,255,0.25)',
-                          } : undefined}
-                        >
-                          {active && (
-                            <span className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r"
-                                  style={{ background: 'linear-gradient(180deg,#00A3FF,#00CCFF)', boxShadow: '0 0 10px #00A3FF' }} />
-                          )}
-                          <item.icon className={`h-4 w-4 ${active ? 'text-[#00CCFF]' : ''}`} />
-                          <span>{item.label}</span>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    );
-                  })}
+                  {menuGroups.map((group) => (
+                    <React.Fragment key={group.label}>
+                      <div className="px-3 pt-3 pb-1 text-[10px] uppercase tracking-wider text-[#7aa7c4]/70 font-semibold">{group.label}</div>
+                      {group.items.map((item) => {
+                        const active = activeTab === item.key;
+                        return (
+                          <SidebarMenuItem key={item.key}>
+                            <SidebarMenuButton
+                              onClick={() => setActiveTab(item.key)}
+                              className={`group relative rounded-lg transition-all duration-200 h-9 ${active ? 'text-white font-semibold' : 'text-slate-400 hover:text-white'}`}
+                              style={active ? {
+                                background: 'linear-gradient(90deg, rgba(0,163,255,0.22), rgba(0,204,255,0.06))',
+                                boxShadow: 'inset 0 0 0 1px rgba(0,163,255,0.4), 0 0 18px rgba(0,163,255,0.25)',
+                              } : undefined}
+                            >
+                              {active && (
+                                <span className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r"
+                                      style={{ background: 'linear-gradient(180deg,#00A3FF,#00CCFF)', boxShadow: '0 0 10px #00A3FF' }} />
+                              )}
+                              <item.icon className={`h-4 w-4 ${active ? 'text-[#00CCFF]' : ''}`} />
+                              <span>{item.label}</span>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        );
+                      })}
+                    </React.Fragment>
+                  ))}
                   <div className="my-2 mx-2 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,163,255,0.4), transparent)' }} />
                   <SidebarMenuItem>
                     <SidebarMenuButton
