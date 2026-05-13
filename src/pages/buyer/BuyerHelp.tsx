@@ -44,12 +44,12 @@ const BuyerHelp = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-muted/30 p-6">
       <div className="max-w-6xl mx-auto">
         <BackToDashboard />
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Help Center</h1>
-          <p className="text-gray-600 mt-2">Get help with your orders and account</p>
+          <h1 className="text-3xl font-bold text-foreground">Help Center</h1>
+          <p className="text-muted-foreground mt-2">Get help with your orders and account</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -60,7 +60,7 @@ const BuyerHelp = () => {
               <CardHeader>
                 <CardTitle>Search Help Articles</CardTitle>
                 <div className="relative">
-                  <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                  <Search className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
                   <Input
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -79,12 +79,12 @@ const BuyerHelp = () => {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {helpCategories.map((category, index) => (
-                    <div key={index} className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <div key={index} className="p-4 border rounded-lg hover:bg-muted/30 cursor-pointer">
                       <div className="flex items-center space-x-3">
                         <category.icon className="w-8 h-8 text-purple-600" />
                         <div>
                           <h3 className="font-medium">{category.title}</h3>
-                          <p className="text-sm text-gray-600">{category.description}</p>
+                          <p className="text-sm text-muted-foreground">{category.description}</p>
                         </div>
                       </div>
                     </div>
@@ -191,7 +191,7 @@ const BuyerHelp = () => {
                     <span>Closed</span>
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-3">
+                <p className="text-xs text-muted-foreground mt-3">
                   We aim to respond to all inquiries within 24 hours during business days.
                 </p>
               </CardContent>

@@ -71,7 +71,7 @@ const AdminRanking = () => {
 
   const getRankDisplay = (index: number) => {
     if (index === 0) return <div className="flex items-center gap-1"><Crown className="h-5 w-5 text-yellow-500" /><span className="font-bold text-yellow-500">#1</span></div>;
-    if (index === 1) return <div className="flex items-center gap-1"><Medal className="h-5 w-5 text-gray-400" /><span className="font-bold text-muted-foreground">#2</span></div>;
+    if (index === 1) return <div className="flex items-center gap-1"><Medal className="h-5 w-5 text-muted-foreground" /><span className="font-bold text-muted-foreground">#2</span></div>;
     if (index === 2) return <div className="flex items-center gap-1"><Medal className="h-5 w-5 text-amber-700" /><span className="font-bold text-amber-700">#3</span></div>;
     return <span className="font-medium text-muted-foreground">#{index + 1}</span>;
   };
@@ -91,12 +91,12 @@ const AdminRanking = () => {
         {freelancers.slice(0, 3).map((f, i) => {
           const colors = [
             'border-yellow-400 bg-yellow-500/5',
-            'border-gray-300 bg-gray-500/5',
+            'border-border bg-gray-500/5',
             'border-amber-600 bg-amber-500/5',
           ];
           const icons = [
             <Crown className="h-8 w-8 text-yellow-500" />,
-            <Medal className="h-8 w-8 text-gray-400" />,
+            <Medal className="h-8 w-8 text-muted-foreground" />,
             <Medal className="h-8 w-8 text-amber-700" />,
           ];
           return (

@@ -103,7 +103,7 @@ const HelpCenter = () => {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
-      isDarkMode ? 'bg-gray-900' : 'bg-gray-50'
+      isDarkMode ? 'bg-gray-900' : 'bg-muted/30'
     }`}>
       <Navbar />
       
@@ -119,25 +119,25 @@ const HelpCenter = () => {
               Back to Support
             </Link>
             <h1 className={`text-3xl font-bold mb-4 ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
+              isDarkMode ? 'text-white' : 'text-foreground'
             }`}>
               Help Center
             </h1>
-            <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
+            <p className={isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}>
               Find answers to frequently asked questions and get the help you need
             </p>
           </div>
 
           {/* Search */}
           <Card className={`mb-8 ${
-            isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-card border-border'
           }`}>
             <CardHeader>
-              <CardTitle className={isDarkMode ? 'text-white' : 'text-gray-900'}>
+              <CardTitle className={isDarkMode ? 'text-white' : 'text-foreground'}>
                 Search Help Articles
               </CardTitle>
               <div className="relative">
-                <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
                 <Input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -151,23 +151,23 @@ const HelpCenter = () => {
           {/* Quick Help */}
           <div className="mb-8">
             <h2 className={`text-xl font-bold mb-4 ${
-              isDarkMode ? 'text-white' : 'text-gray-900'
+              isDarkMode ? 'text-white' : 'text-foreground'
             }`}>
               Quick Help
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {quickHelp.map((item, index) => (
                 <Card key={index} className={`cursor-pointer hover:shadow-lg transition-shadow ${
-                  isDarkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-200 hover:bg-gray-50'
+                  isDarkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-card border-border hover:bg-muted/30'
                 }`}>
                   <CardContent className="p-4">
                     <h3 className={`font-semibold mb-2 ${
-                      isDarkMode ? 'text-white' : 'text-gray-900'
+                      isDarkMode ? 'text-white' : 'text-foreground'
                     }`}>
                       {item.title}
                     </h3>
                     <p className={`text-sm ${
-                      isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                      isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'
                     }`}>
                       {item.description}
                     </p>
@@ -181,11 +181,11 @@ const HelpCenter = () => {
           <div className="space-y-8">
             {faqCategories.map((category, categoryIndex) => (
               <Card key={categoryIndex} className={
-                isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-card border-border'
               }>
                 <CardHeader>
                   <CardTitle className={`flex items-center ${
-                    isDarkMode ? 'text-white' : 'text-gray-900'
+                    isDarkMode ? 'text-white' : 'text-foreground'
                   }`}>
                     <HelpCircle className="w-5 h-5 mr-2" />
                     {category.title}
@@ -196,12 +196,12 @@ const HelpCenter = () => {
                     {category.faqs.map((faq, faqIndex) => (
                       <AccordionItem key={faqIndex} value={`item-${categoryIndex}-${faqIndex}`}>
                         <AccordionTrigger className={
-                          isDarkMode ? 'text-gray-200' : 'text-gray-900'
+                          isDarkMode ? 'text-gray-200' : 'text-foreground'
                         }>
                           {faq.question}
                         </AccordionTrigger>
                         <AccordionContent className={
-                          isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                          isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'
                         }>
                           {faq.answer}
                         </AccordionContent>
@@ -215,19 +215,19 @@ const HelpCenter = () => {
 
           {/* Contact Support */}
           <Card className={`mt-8 ${
-            isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-card border-border'
           }`}>
             <CardContent className="p-6 text-center">
               <MessageSquare className={`w-12 h-12 mx-auto mb-4 ${
                 isDarkMode ? 'text-cyan-400' : 'text-cyan-500'
               }`} />
               <h3 className={`text-lg font-semibold mb-2 ${
-                isDarkMode ? 'text-white' : 'text-gray-900'
+                isDarkMode ? 'text-white' : 'text-foreground'
               }`}>
                 Still need help?
               </h3>
               <p className={`mb-4 ${
-                isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'
               }`}>
                 Can't find what you're looking for? Our support team is here to help.
               </p>

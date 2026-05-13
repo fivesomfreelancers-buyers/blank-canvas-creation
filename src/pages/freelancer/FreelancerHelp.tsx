@@ -37,12 +37,12 @@ const FreelancerHelp = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-muted/30 p-6">
       <div className="max-w-6xl mx-auto">
         <BackToDashboard />
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Help Center</h1>
-          <p className="text-gray-600 mt-2">Find answers to common questions and get support</p>
+          <h1 className="text-3xl font-bold text-foreground">Help Center</h1>
+          <p className="text-muted-foreground mt-2">Find answers to common questions and get support</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -52,7 +52,7 @@ const FreelancerHelp = () => {
               <CardHeader>
                 <CardTitle>Search Help Articles</CardTitle>
                 <div className="relative">
-                  <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                  <Search className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
                   <Input
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}

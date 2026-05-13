@@ -164,7 +164,7 @@ const BuyerDashboard = () => {
               <div className="flex items-center gap-4">
                 <Avatar className="h-14 w-14 border-2 border-white/50">
                   <AvatarImage src={profile?.profile_image_url || undefined} />
-                  <AvatarFallback className="bg-white/20 text-white text-lg">{initials}</AvatarFallback>
+                  <AvatarFallback className="bg-card/20 text-white text-lg">{initials}</AvatarFallback>
                 </Avatar>
                 <div>
                   <h1 className="text-xl sm:text-2xl font-bold mb-1">Welcome back, {profile?.full_name || 'Buyer'}! 👋</h1>

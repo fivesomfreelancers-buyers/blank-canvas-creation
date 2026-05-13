@@ -47,12 +47,12 @@ const BuyerBrowse = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-muted/30 p-6">
       <div className="max-w-7xl mx-auto">
         <BackToDashboard />
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Browse Gigs</h1>
-          <p className="text-gray-600 mt-2">Find the perfect freelancer for your project</p>
+          <h1 className="text-3xl font-bold text-foreground">Browse Gigs</h1>
+          <p className="text-muted-foreground mt-2">Find the perfect freelancer for your project</p>
         </div>
 
         {/* Search and Filters */}
@@ -60,7 +60,7 @@ const BuyerBrowse = () => {
           <CardContent className="pt-6">
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
                 <Input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -107,8 +107,8 @@ const BuyerBrowse = () => {
           <Card>
             <CardContent className="p-12 text-center">
               <div className="space-y-4">
-                <h3 className="text-lg font-medium text-gray-900">No gigs available yet</h3>
-                <p className="text-gray-500">Check back soon for new services from talented freelancers</p>
+                <h3 className="text-lg font-medium text-foreground">No gigs available yet</h3>
+                <p className="text-muted-foreground">Check back soon for new services from talented freelancers</p>
               </div>
             </CardContent>
           </Card>
@@ -116,7 +116,7 @@ const BuyerBrowse = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {gigs.map((gig) => (
               <Card key={gig.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
-                <div className="relative h-48 bg-gray-200">
+                <div className="relative h-48 bg-muted">
                   {gig.images && gig.images.length > 0 ? (
                     <img 
                       src={gig.images[0]} 
@@ -131,20 +131,20 @@ const BuyerBrowse = () => {
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+                    className="absolute top-2 right-2 bg-card/80 hover:bg-card"
                   >
                     <Heart className="w-4 h-4" />
                   </Button>
                 </div>
                 <CardContent className="p-4">
-                  <h3 className="font-medium text-gray-900 mb-2 line-clamp-2">{gig.title}</h3>
+                  <h3 className="font-medium text-foreground mb-2 line-clamp-2">{gig.title}</h3>
                   <div className="flex items-center space-x-2 mb-2">
                     <Avatar className="w-6 h-6">
                       <AvatarFallback className="text-xs">
                         {gig.profiles?.full_name?.[0]?.toUpperCase() || 'F'}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-muted-foreground">
                       by {gig.profiles?.full_name || 'Freelancer'}
                     </span>
                   </div>
@@ -154,7 +154,7 @@ const BuyerBrowse = () => {
                   </div>
                   <div className="flex items-center justify-between mt-3">
                     <span className="text-lg font-bold text-green-600">${Number(gig.base_price).toFixed(2)}</span>
-                    <span className="text-sm text-gray-500">{gig.delivery_time_days} days</span>
+                    <span className="text-sm text-muted-foreground">{gig.delivery_time_days} days</span>
                   </div>
                   <Button size="sm" className="w-full mt-3" asChild>
                     <Link to={`/gig/${gig.id}`}>View Details</Link>

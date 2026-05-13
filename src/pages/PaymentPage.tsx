@@ -236,7 +236,7 @@ const PaymentPage = () => {
   const freelancerInitials = gig.freelancer.name.split(' ').map(n => n[0]).join('').toUpperCase();
 
   return (
-    <div className={`${isDarkMode ? "bg-gray-900" : "bg-gray-50"} min-h-screen`}>
+    <div className={`${isDarkMode ? "bg-gray-900" : "bg-muted/30"} min-h-screen`}>
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="mb-6 sm:mb-8">

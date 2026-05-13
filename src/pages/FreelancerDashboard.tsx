@@ -387,12 +387,12 @@ const FreelancerDashboard = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-white rounded-lg border border-red-100 gap-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-card rounded-lg border border-red-100 gap-3">
                     <div className="flex-1">
                       <p className="font-medium text-sm sm:text-base text-red-700">
                         {verificationStatus === 'rejected' ? 'Your verification was not approved' : 'Complete your verification'}
                       </p>
-                      <p className="text-xs sm:text-sm text-gray-600">
+                      <p className="text-xs sm:text-sm text-muted-foreground">
                         {verificationStatus === 'rejected'
                           ? 'Please re-submit your documents to try again.'
                           : 'Verify your identity to unlock full access and build buyer trust'}
