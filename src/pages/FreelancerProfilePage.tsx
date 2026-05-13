@@ -11,6 +11,8 @@ import { Star, MapPin, Calendar, MessageSquare, CheckCircle, Globe, GraduationCa
 import Navbar from '@/components/Navbar';
 import FreelancerFAQDisplay from '@/components/faq/FreelancerFAQDisplay';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import ReportDialog from '@/components/ReportDialog';
+import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -246,6 +248,9 @@ const FreelancerProfilePage = () => {
                   <MessageSquare className="w-4 h-4 mr-2" />
                   {sendingMessage ? 'Sending...' : 'Contact Me'}
                 </Button>
+                <div className="sm:self-end">
+                  <ReportDialog reportedUserId={profileData.userId} buttonLabel="Report" />
+                </div>
               </div>
             </div>
           </CardContent>
@@ -328,43 +333,10 @@ const FreelancerProfilePage = () => {
 
           <TabsContent value="about" className="space-y-6">
             <Card>
-              <CardHeader><CardTitle>About Me</CardTitle></CardHeader>
-              <CardContent>
-                <p className="text-foreground leading-relaxed">{profileData.bio || 'No information provided.'}</p>
+              <CardContent className="p-6">
+                <FreelancerProfileCard freelancerId={freelancerId} hidePortfolio />
               </CardContent>
             </Card>
-
-            <div className="grid gap-6 sm:grid-cols-2">
-              {profileData.years_experience && (
-                <Card>
-                  <CardHeader><CardTitle className="flex items-center text-base"><Briefcase className="w-4 h-4 mr-2" /> Experience</CardTitle></CardHeader>
-                  <CardContent><p className="text-foreground">{profileData.years_experience}</p></CardContent>
-                </Card>
-              )}
-              {profileData.education_level && (
-                <Card>
-                  <CardHeader><CardTitle className="flex items-center text-base"><GraduationCap className="w-4 h-4 mr-2" /> Education</CardTitle></CardHeader>
-                  <CardContent><p className="text-foreground">{profileData.education_level}</p></CardContent>
-                </Card>
-              )}
-            </div>
-
-            {profileData.software_tools && profileData.software_tools.length > 0 && (
-              <Card>
-                <CardHeader><CardTitle className="flex items-center text-base"><Wrench className="w-4 h-4 mr-2" /> Software & Tools</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {(profileData.software_tools as SoftwareDef[]).map(t => (
-                      <div key={t.slug} className="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-background">
-                        <img src={softwareLogo(t.slug)} alt={t.name} className="w-4 h-4" />
-                        <span className="text-sm">{t.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
             {freelancerId && <FreelancerFAQDisplay freelancerId={freelancerId} />}
           </TabsContent>
         </Tabs>

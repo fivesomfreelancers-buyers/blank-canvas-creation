@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard, Users, Trophy, DollarSign, Scale, LogOut, Shield, Sparkles,
   ShieldCheck, Package, MessageSquare, CreditCard, Wallet, Star, FolderTree,
-  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon,
+  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +30,7 @@ import AdminNotifications from './AdminNotifications';
 import AdminSecurity from './AdminSecurity';
 import AdminLogs from './AdminLogs';
 import AdminSettings from './AdminSettings';
+import AdminReports from './AdminReports';
 
 const menuGroups: { label: string; items: { key: string; label: string; icon: any }[] }[] = [
   { label: 'Overview', items: [
@@ -48,6 +49,7 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
   ]},
   { label: 'Trust & Safety', items: [
     { key: 'disputes', label: 'Disputes', icon: Scale },
+    { key: 'reports', label: 'Reports', icon: Flag },
     { key: 'reviews', label: 'Reviews', icon: Star },
     { key: 'support', label: 'Support', icon: LifeBuoy },
     { key: 'security', label: 'Security', icon: Lock },
@@ -82,6 +84,7 @@ const AdminDashboardInner = () => {
       case 'withdrawals': return <AdminWithdrawals />;
       case 'escrow': return <AdminEscrow />;
       case 'disputes': return <AdminDisputes />;
+      case 'reports': return <AdminReports />;
       case 'reviews': return <AdminReviews />;
       case 'support': return <AdminSupport />;
       case 'security': return <AdminSecurity />;

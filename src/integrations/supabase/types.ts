@@ -1005,6 +1005,60 @@ export type Database = {
         }
         Relationships: []
       }
+      user_reports: {
+        Row: {
+          admin_notes: string | null
+          category: string
+          context_url: string | null
+          created_at: string
+          details: string | null
+          id: string
+          reason: string
+          related_gig_id: string | null
+          related_message_id: string | null
+          related_order_id: string | null
+          reported_user_id: string | null
+          reporter_id: string
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          category?: string
+          context_url?: string | null
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason: string
+          related_gig_id?: string | null
+          related_message_id?: string | null
+          related_order_id?: string | null
+          reported_user_id?: string | null
+          reporter_id: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          category?: string
+          context_url?: string | null
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason?: string
+          related_gig_id?: string | null
+          related_message_id?: string | null
+          related_order_id?: string | null
+          reported_user_id?: string | null
+          reporter_id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
