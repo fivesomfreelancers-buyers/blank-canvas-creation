@@ -110,7 +110,8 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
 const FreelancerDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [isVerified, setIsVerified] = useState(false);
-  const [verificationStatus, setVerificationStatus] = useState<'none' | 'pending' | 'approved' | 'rejected'>('none');
+  const [verificationStatus, setVerificationStatus] = useState<'none' | 'pending' | 'approved' | 'rejected' | 'removed'>('none');
+  const [removalInfo, setRemovalInfo] = useState<{ at: string | null; reason: string | null } | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState({ totalGigs: 0, activeOrders: 0, pendingEarnings: 0, completedOrders: 0 });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
