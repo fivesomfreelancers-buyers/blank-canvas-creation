@@ -258,6 +258,15 @@ const CreateGig = () => {
         if (pkgError) console.error('Error saving packages:', pkgError);
       }
 
+      // Insert gig media (video + documents) into gig_media table
+      const mediaEntries: any[] = [];
+      if (videoUrl) mediaEntries.push({ gig_id: gigRecord.id, file_type: 'video', file_url: videoUrl });
+      for (const d of docUrls) mediaEntries.push({ gig_id: gigRecord.id, file_type: 'document', file_url: d.url });
+      if (mediaEntries.length > 0) {
+        const { error: mErr } = await supabase.from('gig_media').insert(mediaEntries);
+        if (mErr) console.error('Error saving gig media:', mErr);
+      }
+
       // Save FAQs
       if (gigData.faqs.length > 0 && freelancer) {
         // Delete old FAQs for this freelancer then re-insert
