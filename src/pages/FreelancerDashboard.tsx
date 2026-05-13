@@ -160,7 +160,8 @@ const FreelancerDashboard = () => {
           const verifiedAt = (freelancer as any).verified_at ? new Date((freelancer as any).verified_at).getTime() : 0;
           const within24h = verifiedAt > 0 && (Date.now() - verifiedAt) < 24 * 60 * 60 * 1000;
           setVerificationStatus(within24h ? 'approved' : 'none');
-        } else if (vDoc?.status) {
+        } else if (vDoc?.status && vDoc.status !== 'approved') {
+          // If is_verified is false, never trust a stale 'approved' document
           setVerificationStatus(vDoc.status as any);
         } else {
           setVerificationStatus('none');
