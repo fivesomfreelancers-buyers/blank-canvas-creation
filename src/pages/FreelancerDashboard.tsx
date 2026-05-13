@@ -25,6 +25,7 @@ import FreelancerHelp from './freelancer/FreelancerHelp';
 import FreelancerSettings from './freelancer/FreelancerSettings';
 import FreelancerProfile from './freelancer/FreelancerProfile';
 import FreelancerVerify from './freelancer/FreelancerVerify';
+import VerifiedBadge from '@/components/VerifiedBadge';
 
 interface UserProfile {
   full_name: string;
