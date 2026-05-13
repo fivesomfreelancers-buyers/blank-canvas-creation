@@ -230,17 +230,18 @@ const FreelancerOrderDetails = () => {
                           <Link2 className="w-4 h-4" />
                           External Links
                         </h4>
-                        <div className="space-y-2">
+                        <div className="flex flex-wrap gap-2">
                           {requirements.external_links.map((link: string, idx: number) => (
                             <a
                               key={idx}
                               href={link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-2 p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors text-sm text-primary underline"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-xs font-medium"
+                              title={link}
                             >
-                              <Link2 className="w-4 h-4 flex-shrink-0" />
-                              {link}
+                              <Link2 className="w-3.5 h-3.5" />
+                              Open Link {requirements.external_links.length > 1 ? idx + 1 : ''}
                             </a>
                           ))}
                         </div>
