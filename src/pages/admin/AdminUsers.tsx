@@ -248,9 +248,15 @@ const AdminUsers = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1 flex-wrap">
-                      <Button size="sm" variant={f.is_verified ? "destructive" : "default"} className="h-7 text-xs" onClick={() => toggleVerified(f.id, !!f.is_verified)}>
-                        {f.is_verified ? '✕ Unverify' : '✓ Verify'}
-                      </Button>
+                      {f.is_verified ? (
+                        <Button size="sm" variant="destructive" className="h-7 text-xs" onClick={() => { setRemoveUser(f); setRemoveReason(''); }}>
+                          ✕ Remove Verification
+                        </Button>
+                      ) : (
+                        <Button size="sm" variant="default" className="h-7 text-xs" onClick={() => verifyUser(f)}>
+                          ✓ Verify
+                        </Button>
+                      )}
                       <Button size="sm" variant={f.is_featured ? "outline" : "secondary"} className="h-7 text-xs" onClick={() => toggleFeatured(f.id, !!f.is_featured)}>
                         {f.is_featured ? '✕ Unfeature' : '⭐ Feature'}
                       </Button>
