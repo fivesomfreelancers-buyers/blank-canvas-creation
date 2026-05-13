@@ -167,6 +167,21 @@ const GigDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Video */}
+            {videoUrl && (
+              <Card>
+                <CardContent className="p-0">
+                  <video
+                    src={videoUrl}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    poster={images[0] || undefined}
+                    className="w-full h-96 bg-black rounded-t-lg object-contain"
+                  />
+                </CardContent>
+              </Card>
+            )}
             {/* Image Gallery */}
             {images.length > 0 && (
               <Card>
