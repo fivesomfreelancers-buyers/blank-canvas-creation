@@ -26,6 +26,8 @@ const GigDetails = () => {
   const [packages, setPackages] = useState<any[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<string>('basic');
   const [faqs, setFaqs] = useState<any[]>([]);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [docs, setDocs] = useState<{ url: string; name: string }[]>([]);
   
 
   useEffect(() => {
