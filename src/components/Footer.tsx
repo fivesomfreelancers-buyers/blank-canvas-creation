@@ -78,7 +78,12 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/how-it-works" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                <Link to="/docs" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link to="/docs#support" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
                   Help Center
                 </Link>
               </li>

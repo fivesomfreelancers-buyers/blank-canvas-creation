@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Explore from "./pages/Explore";
 import GigDetails from "./pages/GigDetails";
 import HowItWorks from "./pages/HowItWorks";
+import Docs from "./pages/Docs";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import BuyerRegister from "./pages/BuyerRegister";
@@ -61,6 +62,7 @@ const App = () => (
               <Route path="/explore" element={<Explore />} />
               <Route path="/gig/:id" element={<GigDetails />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
+              <Route path="/docs" element={<Docs />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/register/buyer" element={<BuyerRegister />} />
