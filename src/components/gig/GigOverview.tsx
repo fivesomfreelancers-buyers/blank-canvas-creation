@@ -76,8 +76,8 @@ const GigOverview = ({ gigData, updateGigData, onNext }: GigOverviewProps) => {
           className="mt-2 w-full h-12 px-3 bg-gray-50/50 border border-gray-200 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
         >
           <option value="">Select your service category</option>
-          {categories.map(cat => (
-            <option key={cat} value={cat}>{cat}</option>
+          {CATEGORIES.map(cat => (
+            <option key={cat.slug} value={cat.slug}>{cat.name}</option>
           ))}
         </select>
       </div>
@@ -93,8 +93,8 @@ const GigOverview = ({ gigData, updateGigData, onNext }: GigOverviewProps) => {
             className="mt-2 w-full h-12 px-3 bg-gray-50/50 border border-gray-200 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
           >
             <option value="">Select subcategory</option>
-            {subcategories[gigData.category]?.map(subcat => (
-              <option key={subcat} value={subcat}>{subcat}</option>
+            {activeCategory?.subcategories.map(subcat => (
+              <option key={subcat.slug} value={subcat.slug}>{subcat.name}</option>
             ))}
           </select>
         </div>
