@@ -75,9 +75,21 @@ const AdminDashboardInner = () => {
     switch (activeTab) {
       case 'overview': return <AdminOverview />;
       case 'users': return <AdminUsers />;
+      case 'verifications': return <AdminVerifications />;
+      case 'orders': return <AdminOrders />;
+      case 'chats': return <AdminChats />;
+      case 'payments': return <AdminPayments />;
+      case 'withdrawals': return <AdminWithdrawals />;
       case 'escrow': return <AdminEscrow />;
       case 'disputes': return <AdminDisputes />;
+      case 'reviews': return <AdminReviews />;
+      case 'support': return <AdminSupport />;
+      case 'security': return <AdminSecurity />;
+      case 'categories': return <AdminCategories />;
+      case 'notifications': return <AdminNotifications />;
       case 'ranking': return <AdminRanking />;
+      case 'logs': return <AdminLogs />;
+      case 'settings': return <AdminSettings />;
       default: return <AdminOverview />;
     }
   };
