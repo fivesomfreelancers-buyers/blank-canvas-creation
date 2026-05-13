@@ -12,6 +12,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import Navbar from '@/components/Navbar';
 import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
+import ReportDialog from '@/components/ReportDialog';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -252,27 +254,11 @@ const GigDetails = () => {
                     )}
                   </TabsContent>
                   <TabsContent value="about" className="mt-4">
-                    <div className="flex items-center space-x-4">
-                      <div className="relative">
-                        <Avatar className="w-16 h-16">
-                          <AvatarImage src={gig.freelancerImageUrl || ''} />
-                          <AvatarFallback className="bg-primary text-primary-foreground text-xl">{initials}</AvatarFallback>
-                        </Avatar>
-                        <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-lg inline-flex items-center gap-1.5">{gig.freelancerName}{gig.isVerified && <VerifiedBadge size="md" />}</h3>
-                        <p className="text-muted-foreground">{gig.completedOrders} orders completed</p>
-                        {gig.freelancerLanguages && gig.freelancerLanguages.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {gig.freelancerLanguages.map((lang: string) => (
-                              <Badge key={lang} variant="outline" className="text-xs">{lang}</Badge>
-                            ))}
-                          </div>
-                        )}
-                        {gig.freelancerBio && <p className="text-muted-foreground mt-2">{gig.freelancerBio}</p>}
-                      </div>
-                    </div>
+                    {gig.freelancerId ? (
+                      <FreelancerProfileCard freelancerId={gig.freelancerId} />
+                    ) : (
+                      <p className="text-muted-foreground text-sm">Profile unavailable</p>
+                    )}
                   </TabsContent>
                 </Tabs>
               </CardContent>
