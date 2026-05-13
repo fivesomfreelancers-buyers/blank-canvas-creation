@@ -73,7 +73,7 @@ const GigOverview = ({ gigData, updateGigData, onNext }: GigOverviewProps) => {
           id="category"
           value={gigData.category}
           onChange={(e) => updateGigData({ category: e.target.value, subcategory: '' })}
-          className="mt-2 w-full h-12 px-3 bg-muted/50 border border-border rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+          className="mt-2 w-full h-12 px-3 bg-background text-foreground border border-border rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
         >
           <option value="">Select your service category</option>
           {CATEGORIES.map(cat => (
@@ -90,7 +90,7 @@ const GigOverview = ({ gigData, updateGigData, onNext }: GigOverviewProps) => {
             id="subcategory"
             value={gigData.subcategory}
             onChange={(e) => updateGigData({ subcategory: e.target.value })}
-            className="mt-2 w-full h-12 px-3 bg-muted/50 border border-border rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+            className="mt-2 w-full h-12 px-3 bg-background text-foreground border border-border rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
           >
             <option value="">Select subcategory</option>
             {activeCategory?.subcategories.map(subcat => (
