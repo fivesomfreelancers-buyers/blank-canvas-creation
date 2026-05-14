@@ -13,9 +13,20 @@ const BuyerMessages = () => {
     chat.fetchConversations();
   }, [location.state]);
 
-  // Auto-open first conversation if navigated with state
+  // Auto-open conversation when navigated with state
   useEffect(() => {
-    if (location.state?.openConversation && chat.conversations.length > 0 && !chat.selectedConversationId) {
+    if (chat.conversations.length === 0 || chat.selectedConversationId) return;
+    const targetId = location.state?.openConversationId;
+    const partnerId = location.state?.partnerId;
+    if (targetId) {
+      const match = chat.conversations.find(c => c.conversationId === targetId);
+      if (match) { chat.selectConversation(match.conversationId, match.partnerId); return; }
+    }
+    if (partnerId) {
+      const match = chat.conversations.find(c => c.partnerId === partnerId);
+      if (match) { chat.selectConversation(match.conversationId, match.partnerId); return; }
+    }
+    if (location.state?.openConversation) {
       const first = chat.conversations[0];
       chat.selectConversation(first.conversationId, first.partnerId);
     }
