@@ -20,6 +20,7 @@ import { toast } from '@/hooks/use-toast';
 
 const FreelancerProfilePage = () => {
   const { freelancerId } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [profileData, setProfileData] = useState<any>(null);
   const [gigs, setGigs] = useState<any[]>([]);
