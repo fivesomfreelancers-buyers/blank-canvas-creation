@@ -1,15 +1,31 @@
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useConversations } from '@/hooks/useConversations';
 import ConversationList from '@/components/chat/ConversationList';
 import ChatArea from '@/components/chat/ChatArea';
 import BackToDashboard from '@/components/BackToDashboard';
 
 const FreelancerMessages = () => {
+  const location = useLocation();
   const chat = useConversations();
 
   useEffect(() => {
     chat.fetchConversations();
-  }, []);
+  }, [location.state]);
+
+  useEffect(() => {
+    if (chat.conversations.length === 0 || chat.selectedConversationId) return;
+    const targetId = location.state?.openConversationId;
+    const partnerId = location.state?.partnerId;
+    if (targetId) {
+      const match = chat.conversations.find(c => c.conversationId === targetId);
+      if (match) { chat.selectConversation(match.conversationId, match.partnerId); return; }
+    }
+    if (partnerId) {
+      const match = chat.conversations.find(c => c.partnerId === partnerId);
+      if (match) { chat.selectConversation(match.conversationId, match.partnerId); return; }
+    }
+  }, [location.state, chat.conversations, chat.selectedConversationId]);
 
   return (
     <div className="min-h-screen p-6 bg-background">
