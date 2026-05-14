@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,6 +20,7 @@ import { toast } from '@/hooks/use-toast';
 
 const FreelancerProfilePage = () => {
   const { freelancerId } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [profileData, setProfileData] = useState<any>(null);
   const [gigs, setGigs] = useState<any[]>([]);
@@ -132,21 +133,32 @@ const FreelancerProfilePage = () => {
       toast({ title: "Please log in", description: "You need to be logged in to contact.", variant: "destructive" });
       return;
     }
-    if (!contactMessage.trim() || !profileData?.userId) return;
+    if (!profileData?.userId) return;
+    if (user.id === profileData.userId) {
+      toast({ title: "That's you", description: "You can't message yourself.", variant: "destructive" });
+      return;
+    }
     setSendingMessage(true);
     try {
       const conversationId = await getOrCreateConversation(profileData.userId);
       if (!conversationId) throw new Error('Could not create conversation');
-      await supabase.from('messages').insert({
-        sender_id: user.id,
-        receiver_id: profileData.userId,
-        conversation_id: conversationId,
-        message: contactMessage.trim(),
-      });
-      toast({ title: "Message Sent!", description: `Your message has been sent to ${profileData.name}.` });
+      if (contactMessage.trim()) {
+        const { error } = await supabase.from('messages').insert({
+          sender_id: user.id,
+          receiver_id: profileData.userId,
+          conversation_id: conversationId,
+          message: contactMessage.trim(),
+        });
+        if (error) throw error;
+      }
+      const { data: buyerCheck } = await supabase.from('buyers').select('id').eq('user_id', user.id).maybeSingle();
+      const route = buyerCheck ? '/buyer/messages' : '/freelancer/messages';
       setContactMessage('');
-    } catch {
-      toast({ title: "Error", description: "Failed to send message.", variant: "destructive" });
+      toast({ title: "Opening chat…", description: `Continuing your conversation with ${profileData.name}.` });
+      navigate(route, { state: { openConversationId: conversationId, partnerId: profileData.userId } });
+    } catch (err: any) {
+      console.error('handleContact error', err);
+      toast({ title: "Error", description: err?.message || "Failed to open chat.", variant: "destructive" });
     } finally {
       setSendingMessage(false);
     }

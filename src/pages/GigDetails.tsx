@@ -127,18 +127,25 @@ const GigDetails = () => {
 
   const handleContact = async () => {
     if (!user) { toast({ title: "Please log in", description: "You need to be logged in to contact a freelancer.", variant: "destructive" }); return; }
-    if (!contactMessage.trim()) { toast({ title: "Empty message", description: "Please type a message.", variant: "destructive" }); return; }
+    if (!gig?.freelancerUserId) { toast({ title: "Error", description: "Seller information unavailable.", variant: "destructive" }); return; }
+    if (user.id === gig.freelancerUserId) { toast({ title: "That's your gig", description: "You can't message yourself.", variant: "destructive" }); return; }
     setSendingMessage(true);
     try {
       const conversationId = await getOrCreateConversation(gig.freelancerUserId);
       if (!conversationId) throw new Error('Could not create conversation');
-      const { error } = await supabase.from('messages').insert({ sender_id: user.id, receiver_id: gig.freelancerUserId, conversation_id: conversationId, message: contactMessage.trim() });
-      if (error) throw error;
-      toast({ title: "Message Sent!", description: `Your message has been sent to ${gig.freelancerName}.` });
+      if (contactMessage.trim()) {
+        const { error } = await supabase.from('messages').insert({ sender_id: user.id, receiver_id: gig.freelancerUserId, conversation_id: conversationId, message: contactMessage.trim() });
+        if (error) throw error;
+      }
+      // Decide route by role
+      const { data: buyerCheck } = await supabase.from('buyers').select('id').eq('user_id', user.id).maybeSingle();
+      const route = buyerCheck ? '/buyer/messages' : '/freelancer/messages';
       setContactMessage('');
-    } catch (err) {
-      console.error(err);
-      toast({ title: "Error", description: "Failed to send message.", variant: "destructive" });
+      toast({ title: "Opening chat…", description: `Continuing your conversation with ${gig.freelancerName}.` });
+      navigate(route, { state: { openConversationId: conversationId, partnerId: gig.freelancerUserId } });
+    } catch (err: any) {
+      console.error('handleContact error', err);
+      toast({ title: "Error", description: err?.message || "Failed to open chat.", variant: "destructive" });
     } finally { setSendingMessage(false); }
   };
 
