@@ -1479,6 +1479,11 @@ const Docs: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background" dir={isRtl ? 'rtl' : 'ltr'}>
+      <SEO
+        title="FIVESOM Documentation — Full A-Z Guide for Buyers & Freelancers"
+        description="Complete FIVESOM documentation in English, Somali, Arabic and French. Accounts, gigs, escrow, payments, security, disputes, VIP and more."
+        canonical="/docs"
+      />
       <Navbar />
 
       {/* Top docs bar with language switcher */}

@@ -136,6 +136,11 @@ const Explore = () => {
 
   return (
     <div className="min-h-screen transition-colors duration-300 bg-background">
+      <SEO
+        title="Explore Freelance Services & Gigs | FIVESOM"
+        description="Browse thousands of gigs from verified Somali freelancers. Find design, development, writing, video, marketing services and more on FIVESOM."
+        canonical="/explore"
+      />
       <Navbar />
       
       <div className="pt-20 pb-12 px-4 sm:px-6 lg:px-8">

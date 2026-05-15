@@ -43,6 +43,20 @@ const HowItWorks = () => {
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
+      <SEO
+        title="How FIVESOM Works — Buyers, Freelancers & Escrow"
+        description="Learn how FIVESOM connects buyers and Somali freelancers: ordering, secure escrow payments, deliveries, USSD support, and dispute resolution."
+        canonical="/how-it-works"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: [
+            { '@type': 'Question', name: 'How does FIVESOM escrow work?', acceptedAnswer: { '@type': 'Answer', text: 'Buyers fund the order upfront and FIVESOM holds the payment until delivery is accepted, then releases it to the freelancer.' } },
+            { '@type': 'Question', name: 'What payment methods are supported?', acceptedAnswer: { '@type': 'Answer', text: 'FIVESOM supports local Somali USSD-based mobile money providers in addition to wallet balances.' } },
+            { '@type': 'Question', name: 'How do I become a freelancer?', acceptedAnswer: { '@type': 'Answer', text: 'Sign up as a freelancer, complete your profile, submit verification documents, then publish your first gig.' } }
+          ]
+        }}
+      />
       <Navbar />
       
       {/* Use the updated HowItWorksSection component */}
