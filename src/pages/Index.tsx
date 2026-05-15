@@ -7,6 +7,7 @@ import FeaturedCategories from '../components/FeaturedCategories';
 import HowItWorksSection from '../components/HowItWorksSection';
 import InteractiveTutorial from '../components/InteractiveTutorial';
 import { Footer } from '../components/Footer';
+import SEO from '../components/SEO';
 import platformPreview from '../assets/platform-preview-collage.jpg';
 
 const Index = () => {
