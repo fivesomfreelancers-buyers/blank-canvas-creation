@@ -14,6 +14,7 @@ import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import ReportDialog from '@/components/ReportDialog';
+import SEO from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -173,6 +174,38 @@ const GigDetails = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={`${gig.title} | FIVESOM`}
+        description={(gig.description || gig.title || '').toString().slice(0, 160)}
+        canonical={`/gig/${gig.id}`}
+        type="product"
+        image={images[0]}
+        jsonLd={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: gig.title,
+            description: (gig.description || '').toString().slice(0, 500),
+            image: images,
+            offers: {
+              '@type': 'Offer',
+              price: Number(gig.base_price || 0),
+              priceCurrency: 'USD',
+              availability: 'https://schema.org/InStock',
+            },
+            ...(gig.rating ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: gig.rating, reviewCount: gig.reviewCount || 1 } } : {}),
+          },
+          ...(faqs && faqs.length > 0 ? [{
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: faqs.map((f: any) => ({
+              '@type': 'Question',
+              name: f.question,
+              acceptedAnswer: { '@type': 'Answer', text: f.answer },
+            })),
+          }] : []),
+        ]}
+      />
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-8 pt-24">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
