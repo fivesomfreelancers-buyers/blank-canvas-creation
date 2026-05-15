@@ -3,6 +3,7 @@ import { Shield, Clock, Star, Users, FileText, HelpCircle, Mail, Lock, BookOpen,
 import Navbar from '../components/Navbar';
 import HowItWorksSection from '../components/HowItWorksSection';
 import { useTheme } from '../components/ThemeProvider';
+import SEO from '../components/SEO';
 
 const HowItWorks = () => {
   const { theme } = useTheme();
