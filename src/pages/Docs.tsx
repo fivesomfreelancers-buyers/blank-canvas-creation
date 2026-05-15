@@ -1517,11 +1517,11 @@ const Docs: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex-1">
+      <div className="w-full px-4 sm:px-6 lg:px-0 flex-1">
         <div className="flex gap-8">
-          {/* Sidebar - desktop, sticky to the left edge */}
+          {/* Sidebar - desktop, pinned to the left edge of the screen */}
           <aside className={`hidden lg:block w-72 shrink-0 py-8 ${isRtl ? 'order-2' : ''}`}>
-            <div className="sticky top-32 max-h-[calc(100vh-9rem)] overflow-y-auto pr-2 border-r border-border pr-4">
+            <div className={`sticky top-32 max-h-[calc(100vh-9rem)] overflow-y-auto py-2 ${isRtl ? 'pr-6 pl-4 border-l' : 'pl-6 pr-4 border-r'} border-border`}>
               <p className="text-xs font-semibold uppercase text-muted-foreground mb-3 tracking-wider">{ui.onPage}</p>
               <nav className="space-y-1">
                 {SECTIONS.map(s => {
