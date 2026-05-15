@@ -1576,7 +1576,7 @@ const Docs: React.FC = () => {
           )}
 
           {/* Main content */}
-          <main className="flex-1 min-w-0 py-8 max-w-3xl">
+          <main className="flex-1 min-w-0 py-8 max-w-4xl pr-4 sm:pr-6 lg:pr-8">
             <header className="mb-12">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary mb-4">
                 FIVESOM Docs
