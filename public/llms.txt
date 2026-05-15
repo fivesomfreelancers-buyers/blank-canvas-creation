@@ -1,0 +1,17 @@
+# FIVESOM
+
+> FIVESOM is a freelancer marketplace built for the Somali market, connecting skilled freelancers with buyers through a secure escrow system and locally-friendly USSD payments.
+
+## Pages
+
+- [Home](/): Overview of FIVESOM and featured services.
+- [Explore](/explore): Browse active gigs from verified freelancers.
+- [How It Works](/how-it-works): Step-by-step guide for buyers and freelancers.
+- [Docs](/docs): Full A-Z documentation in English, Somali, Arabic, and French.
+- [VIP](/vip): VIP / featured seller program.
+- [Register as Buyer](/register/buyer): Sign up to hire freelancers.
+- [Register as Freelancer](/register/freelancer): Sign up to sell services.
+
+## Optional
+
+- [Login](/login): Existing user sign-in.
