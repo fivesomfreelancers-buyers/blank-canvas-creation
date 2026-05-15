@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import Navbar from '../components/Navbar';
+import SEO from '../components/SEO';
 import { useTheme } from '../components/ThemeProvider';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -135,6 +136,11 @@ const Explore = () => {
 
   return (
     <div className="min-h-screen transition-colors duration-300 bg-background">
+      <SEO
+        title="Explore Freelance Services & Gigs | FIVESOM"
+        description="Browse thousands of gigs from verified Somali freelancers. Find design, development, writing, video, marketing services and more on FIVESOM."
+        canonical="/explore"
+      />
       <Navbar />
       
       <div className="pt-20 pb-12 px-4 sm:px-6 lg:px-8">

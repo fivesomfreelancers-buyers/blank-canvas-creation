@@ -7,11 +7,17 @@ import FeaturedCategories from '../components/FeaturedCategories';
 import HowItWorksSection from '../components/HowItWorksSection';
 import InteractiveTutorial from '../components/InteractiveTutorial';
 import { Footer } from '../components/Footer';
+import SEO from '../components/SEO';
 import platformPreview from '../assets/platform-preview-collage.jpg';
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
+      <SEO
+        title="FIVESOM — Somali Freelance Marketplace for Buyers & Sellers"
+        description="Hire verified Somali freelancers or sell your skills on FIVESOM. Secure escrow, USSD payments, and trusted talent across design, development, writing and more."
+        canonical="/"
+      />
       <Navbar />
       <HeroSection />
       <FeaturedCategories />

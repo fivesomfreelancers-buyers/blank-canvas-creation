@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import Navbar from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
+import SEO from '@/components/SEO';
 
 const PERKS = [
   { icon: BadgeCheck, title: 'Priority Verified Tick', desc: 'Fast-tracked verification with a premium VIP badge.' },
@@ -68,6 +69,11 @@ const Vip: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="FIVESOM VIP — Featured Sellers, Boosted Ranking & Lower Fees"
+        description="Upgrade to FIVESOM VIP for priority verification, boosted gig ranking, featured placement, lower fees and 24/7 dedicated support."
+        canonical="/vip"
+      />
       <Navbar />
 
       {/* VIP Hero — admin-style dark gradient with neon glow */}
