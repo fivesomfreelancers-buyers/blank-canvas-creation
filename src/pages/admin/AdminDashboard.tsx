@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard, Users, Trophy, DollarSign, Scale, LogOut, Shield, Sparkles,
   ShieldCheck, Package, MessageSquare, CreditCard, Wallet, Star, FolderTree,
-  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag,
+  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag, Megaphone, Headphones,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -31,6 +31,8 @@ import AdminSecurity from './AdminSecurity';
 import AdminLogs from './AdminLogs';
 import AdminSettings from './AdminSettings';
 import AdminReports from './AdminReports';
+import AdminFivesomSupport from './AdminFivesomSupport';
+import AdminFivesomNews from './AdminFivesomNews';
 
 const menuGroups: { label: string; items: { key: string; label: string; icon: any }[] }[] = [
   { label: 'Overview', items: [
@@ -47,11 +49,15 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
     { key: 'withdrawals', label: 'Withdrawals', icon: Wallet },
     { key: 'escrow', label: 'Escrow', icon: DollarSign },
   ]},
+  { label: 'Fivesom Channels', items: [
+    { key: 'fivesom_support', label: 'Fivesom Support', icon: Headphones },
+    { key: 'fivesom_news', label: 'Fivesom News', icon: Megaphone },
+  ]},
   { label: 'Trust & Safety', items: [
     { key: 'disputes', label: 'Disputes', icon: Scale },
     { key: 'reports', label: 'Reports', icon: Flag },
     { key: 'reviews', label: 'Reviews', icon: Star },
-    { key: 'support', label: 'Support', icon: LifeBuoy },
+    { key: 'support', label: 'Support Tickets', icon: LifeBuoy },
     { key: 'security', label: 'Security', icon: Lock },
   ]},
   { label: 'System', items: [
@@ -87,6 +93,8 @@ const AdminDashboardInner = () => {
       case 'reports': return <AdminReports />;
       case 'reviews': return <AdminReviews />;
       case 'support': return <AdminSupport />;
+      case 'fivesom_support': return <AdminFivesomSupport />;
+      case 'fivesom_news': return <AdminFivesomNews />;
       case 'security': return <AdminSecurity />;
       case 'categories': return <AdminCategories />;
       case 'notifications': return <AdminNotifications />;

@@ -1005,6 +1005,86 @@ export type Database = {
         }
         Relationships: []
       }
+      system_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          last_message: string | null
+          last_message_at: string | null
+          status: string
+          type: Database["public"]["Enums"]["system_convo_type"]
+          unread_admin: number
+          unread_user: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_message?: string | null
+          last_message_at?: string | null
+          status?: string
+          type: Database["public"]["Enums"]["system_convo_type"]
+          unread_admin?: number
+          unread_user?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_message?: string | null
+          last_message_at?: string | null
+          status?: string
+          type?: Database["public"]["Enums"]["system_convo_type"]
+          unread_admin?: number
+          unread_user?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      system_messages: {
+        Row: {
+          admin_id: string | null
+          attachment_url: string | null
+          body: string
+          conversation_id: string
+          created_at: string
+          id: string
+          is_read_admin: boolean
+          is_read_user: boolean
+          sender_type: Database["public"]["Enums"]["system_sender_type"]
+        }
+        Insert: {
+          admin_id?: string | null
+          attachment_url?: string | null
+          body?: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          is_read_admin?: boolean
+          is_read_user?: boolean
+          sender_type: Database["public"]["Enums"]["system_sender_type"]
+        }
+        Update: {
+          admin_id?: string | null
+          attachment_url?: string | null
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          is_read_admin?: boolean
+          is_read_user?: boolean
+          sender_type?: Database["public"]["Enums"]["system_sender_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "system_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_reports: {
         Row: {
           admin_notes: string | null
@@ -1276,6 +1356,14 @@ export type Database = {
       }
     }
     Functions: {
+      bootstrap_system_conversations: {
+        Args: { _user_id: string }
+        Returns: undefined
+      }
+      broadcast_news: {
+        Args: { _attachment_url: string; _audience: string; _body: string }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1297,6 +1385,8 @@ export type Database = {
         | "delivered"
         | "completed"
         | "cancelled"
+      system_convo_type: "support" | "news"
+      system_sender_type: "user" | "admin" | "system"
       ticket_status: "open" | "in_progress" | "resolved"
       verification_status: "pending" | "approved" | "rejected"
       withdrawal_status: "pending" | "approved" | "rejected" | "completed"
@@ -1438,6 +1528,8 @@ export const Constants = {
         "completed",
         "cancelled",
       ],
+      system_convo_type: ["support", "news"],
+      system_sender_type: ["user", "admin", "system"],
       ticket_status: ["open", "in_progress", "resolved"],
       verification_status: ["pending", "approved", "rejected"],
       withdrawal_status: ["pending", "approved", "rejected", "completed"],
