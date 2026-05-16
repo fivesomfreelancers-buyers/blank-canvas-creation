@@ -56,6 +56,7 @@ const BuyerMessages = () => {
               selectedConvo={chat.selectedConvo}
               messages={chat.messages}
               currentUserId={chat.currentUserId}
+              selectedKind={chat.selectedKind}
               newMessage={chat.newMessage}
               setNewMessage={chat.setNewMessage}
               showEmojis={chat.showEmojis}
