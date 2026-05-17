@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Scale, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import DisputeChat from '@/components/dispute/DisputeChat';
 
 interface Dispute {
   id: string;
