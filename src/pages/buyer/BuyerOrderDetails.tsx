@@ -241,6 +241,10 @@ const BuyerOrderDetails = () => {
               </Card>
             )}
 
+            {(order.status === 'disputed' || order.status === 'cancelled') && (
+              <DisputeChat orderId={orderId} viewerRole="buyer" />
+            )}
+
             {/* Completed */}
             {order.status === 'completed' && (
               <Card className="border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-800">
