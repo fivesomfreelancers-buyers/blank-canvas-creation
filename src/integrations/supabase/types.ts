@@ -1415,6 +1415,10 @@ export type Database = {
         Returns: boolean
       }
       touch_last_seen: { Args: never; Returns: undefined }
+      user_owns_support_ticket: {
+        Args: { _ticket_id: string; _ticket_table: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "freelancer" | "buyer" | "admin" | "super_admin"
