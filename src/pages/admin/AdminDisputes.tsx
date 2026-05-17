@@ -257,6 +257,11 @@ const AdminDisputes = () => {
                   </>
                 )}
               </div>
+
+              <div className="border-t border-border pt-3">
+                <p className="text-xs text-muted-foreground mb-2">Private Mediation Chat — Buyer · Freelancer · Admin</p>
+                <DisputeChat disputeId={selected.id} viewerRole="admin" />
+              </div>
             </div>
           )}
           <DialogFooter className="gap-2">
