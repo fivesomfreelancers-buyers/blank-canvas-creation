@@ -191,6 +191,44 @@ export type Database = {
         }
         Relationships: []
       }
+      dispute_messages: {
+        Row: {
+          attachment_url: string | null
+          body: string
+          created_at: string
+          dispute_id: string
+          id: string
+          sender_id: string
+          sender_role: Database["public"]["Enums"]["dispute_sender_role"]
+        }
+        Insert: {
+          attachment_url?: string | null
+          body?: string
+          created_at?: string
+          dispute_id: string
+          id?: string
+          sender_id: string
+          sender_role: Database["public"]["Enums"]["dispute_sender_role"]
+        }
+        Update: {
+          attachment_url?: string | null
+          body?: string
+          created_at?: string
+          dispute_id?: string
+          id?: string
+          sender_id?: string
+          sender_role?: Database["public"]["Enums"]["dispute_sender_role"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dispute_messages_dispute_id_fkey"
+            columns: ["dispute_id"]
+            isOneToOne: false
+            referencedRelation: "disputes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       disputes: {
         Row: {
           buyer_id: string
@@ -1372,11 +1410,16 @@ export type Database = {
         Returns: boolean
       }
       is_admin_user: { Args: { _user_id: string }; Returns: boolean }
+      is_dispute_participant: {
+        Args: { _dispute_id: string; _user_id: string }
+        Returns: boolean
+      }
       touch_last_seen: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "freelancer" | "buyer" | "admin" | "super_admin"
       delivery_status: "submitted" | "approved" | "revision_requested"
+      dispute_sender_role: "buyer" | "freelancer" | "admin"
       gig_status: "active" | "paused" | "draft"
       media_type: "image" | "video" | "document"
       order_status:
@@ -1519,6 +1562,7 @@ export const Constants = {
     Enums: {
       app_role: ["freelancer", "buyer", "admin", "super_admin"],
       delivery_status: ["submitted", "approved", "revision_requested"],
+      dispute_sender_role: ["buyer", "freelancer", "admin"],
       gig_status: ["active", "paused", "draft"],
       media_type: ["image", "video", "document"],
       order_status: [
