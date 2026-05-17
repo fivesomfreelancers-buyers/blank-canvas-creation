@@ -67,7 +67,16 @@ const AdminVerifications = () => {
     fetchDocs();
   };
 
-  const filterStatus = (s: string) => docs.filter(d => d.status === s);
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const filterStatus = (s: string) => docs.filter(d => {
+    if (d.status !== s) return false;
+    // Hide approved verifications after 24 hours so the admin list stays clean
+    if (s === 'approved') {
+      const ts = new Date(d.submitted_at).getTime();
+      if (!isNaN(ts) && Date.now() - ts > DAY_MS) return false;
+    }
+    return true;
+  });
   const renderList = (items: VDoc[]) => (
     <div className="grid gap-3 mt-4">
       {items.length === 0 && <p className="text-center text-muted-foreground py-8">No requests</p>}
