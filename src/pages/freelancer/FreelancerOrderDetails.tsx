@@ -264,6 +264,10 @@ const FreelancerOrderDetails = () => {
                 )}
               </CardContent>
             </Card>
+
+            {(order.status === 'disputed' || order.status === 'cancelled') && (
+              <DisputeChat orderId={order.id} viewerRole="freelancer" />
+            )}
           </div>
 
           {/* Sidebar */}
