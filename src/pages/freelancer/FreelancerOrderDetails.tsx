@@ -7,6 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Clock, MessageSquare, Package, Download, FileText, Image, Video, Link2, ArrowLeft, User, RefreshCw } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
+import DisputeChat from '@/components/dispute/DisputeChat';
 
 const FreelancerOrderDetails = () => {
   const { orderId } = useParams();
@@ -263,6 +264,10 @@ const FreelancerOrderDetails = () => {
                 )}
               </CardContent>
             </Card>
+
+            {(order.status === 'disputed' || order.status === 'cancelled') && (
+              <DisputeChat orderId={order.id} viewerRole="freelancer" />
+            )}
           </div>
 
           {/* Sidebar */}

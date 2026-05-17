@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Scale, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import DisputeChat from '@/components/dispute/DisputeChat';
 
 interface Dispute {
   id: string;
@@ -219,7 +220,7 @@ const AdminDisputes = () => {
 
       {/* Dispute Detail Dialog */}
       <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Scale className="h-5 w-5 text-primary" /> Dispute Resolution
@@ -255,6 +256,11 @@ const AdminDisputes = () => {
                     <p className="text-foreground text-sm">{selected.details}</p>
                   </>
                 )}
+              </div>
+
+              <div className="border-t border-border pt-3">
+                <p className="text-xs text-muted-foreground mb-2">Private Mediation Chat — Buyer · Freelancer · Admin</p>
+                <DisputeChat disputeId={selected.id} viewerRole="admin" />
               </div>
             </div>
           )}
