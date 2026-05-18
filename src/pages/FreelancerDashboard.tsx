@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 import { 
   Home, Briefcase, ShoppingBag, MessageSquare, Package, Wallet, Settings, User,
-  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2, RefreshCw, ArrowLeft
+  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2, RefreshCw, ArrowLeft, Scale
 } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +26,7 @@ import FreelancerSettings from './freelancer/FreelancerSettings';
 import FreelancerProfile from './freelancer/FreelancerProfile';
 import FreelancerVerify from './freelancer/FreelancerVerify';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import DisputeChat from '@/components/dispute/DisputeChat';
 
 interface UserProfile {
   full_name: string;
@@ -116,6 +117,7 @@ const FreelancerDashboard = () => {
   const [stats, setStats] = useState({ totalGigs: 0, activeOrders: 0, pendingEarnings: 0, completedOrders: 0 });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [revisionRequests, setRevisionRequests] = useState<any[]>([]);
+  const [activeDisputes, setActiveDisputes] = useState<any[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -158,9 +160,7 @@ const FreelancerDashboard = () => {
           .limit(1)
           .maybeSingle();
         if (freelancer.is_verified) {
-          const verifiedAt = freelancer.verified_at ? new Date(freelancer.verified_at).getTime() : 0;
-          const within24h = verifiedAt > 0 && (Date.now() - verifiedAt) < 24 * 60 * 60 * 1000;
-          setVerificationStatus(within24h ? 'approved' : 'none');
+          setVerificationStatus('approved');
           setRemovalInfo(null);
         } else if (freelancer.verification_removed_at) {
           setVerificationStatus('removed');
@@ -178,11 +178,11 @@ const FreelancerDashboard = () => {
           .select('*', { count: 'exact', head: true })
           .eq('freelancer_id', freelancer.id);
 
-        const { count: ordersCount } = await supabase
+        const { count: ordersCount } = await (supabase as any)
           .from('orders')
           .select('*', { count: 'exact', head: true })
           .eq('freelancer_id', freelancer.id)
-          .in('status', ['pending', 'in_progress']);
+          .in('status', ['pending', 'in_progress', 'disputed']);
 
         const { data: pendingOrders } = await supabase
           .from('orders')
@@ -198,6 +198,29 @@ const FreelancerDashboard = () => {
           pendingEarnings,
           completedOrders: freelancer.completed_orders || 0
         });
+
+        const { data: disputes } = await (supabase as any)
+          .from('disputes')
+          .select('*')
+          .eq('freelancer_id', freelancer.id)
+          .neq('status', 'resolved')
+          .order('created_at', { ascending: false });
+
+        const disputeOrderIds = [...new Set<string>((disputes || []).map((d: any) => d.order_id).filter(Boolean))];
+        if (disputeOrderIds.length > 0) {
+          const { data: disputeOrders } = await supabase
+            .from('orders')
+            .select('id, amount, gigs(title)')
+            .in('id', disputeOrderIds);
+          const orderMap = new Map((disputeOrders || []).map((o: any) => [o.id, o]));
+          setActiveDisputes((disputes || []).map((d: any) => ({
+            ...d,
+            amount: orderMap.get(d.order_id)?.amount || 0,
+            gig_title: orderMap.get(d.order_id)?.gigs?.title || 'Order',
+          })));
+        } else {
+          setActiveDisputes([]);
+        }
 
         const { data: latestOrders } = await supabase
           .from('orders')
@@ -278,9 +301,16 @@ const FreelancerDashboard = () => {
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
+      const { data: freelancer } = await supabase
+        .from('freelancers')
+        .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle();
       const channel = supabase
         .channel(`freelancer-self-${user.id}`)
         .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'freelancers', filter: `user_id=eq.${user.id}` }, () => loadDashboardData())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders', filter: `freelancer_id=eq.${freelancer?.id || 'none'}` }, () => loadDashboardData())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'disputes', filter: `freelancer_id=eq.${freelancer?.id || 'none'}` }, () => loadDashboardData())
         .subscribe();
       cleanup = () => { supabase.removeChannel(channel); };
     })();
@@ -340,7 +370,30 @@ const FreelancerDashboard = () => {
               </Card>
             </div>
 
-            {verificationStatus === 'removed' ? (
+            {activeDisputes.length > 0 && (
+              <section className="space-y-4 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
+                <div className="flex items-center gap-2 text-base font-semibold text-destructive">
+                  <Scale className="h-5 w-5" />
+                  Active Dispute Chat
+                </div>
+                  {activeDisputes.map((dispute) => (
+                    <div key={dispute.id} className="space-y-3 rounded-lg border border-border bg-background p-3">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{dispute.gig_title}</p>
+                          <p className="text-xs text-muted-foreground">{dispute.reason}</p>
+                        </div>
+                        <Button size="sm" variant="outline" onClick={() => navigate(`/freelancer/order/${dispute.order_id}`)}>
+                          Open Order
+                        </Button>
+                      </div>
+                      <DisputeChat disputeId={dispute.id} viewerRole="freelancer" />
+                    </div>
+                  ))}
+              </section>
+            )}
+
+            {!isVerified && verificationStatus === 'removed' ? (
               <Card className="border-destructive/40 bg-destructive/5">
                 <CardHeader>
                   <CardTitle className="text-destructive flex items-center">
@@ -364,27 +417,7 @@ const FreelancerDashboard = () => {
                   </div>
                 </CardContent>
               </Card>
-            ) : verificationStatus === 'approved' ? (
-              <Card className="border-green-500/30 bg-green-500/10">
-                <CardHeader>
-                  <CardTitle className="text-green-600 flex items-center">
-                    <ShieldCheck className="w-5 h-5 mr-2" />
-                    Account Verified
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-background rounded-lg border border-green-500/20 gap-3">
-                    <div className="flex-1">
-                      <p className="font-medium text-sm sm:text-base text-green-600">You're verified ✓</p>
-                      <p className="text-xs sm:text-sm text-muted-foreground">Your identity has been approved. You now have a verified badge on your profile.</p>
-                    </div>
-                    <Badge variant="outline" className="text-green-600 border-green-500/30 bg-green-500/10 self-start sm:self-center">
-                      <CheckCircle className="w-3 h-3 mr-1" /> Verified
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : verificationStatus === 'pending' ? (
+            ) : isVerified ? null : verificationStatus === 'pending' ? (
               <Card className="border-yellow-500/30 bg-yellow-500/10">
                 <CardHeader>
                   <CardTitle className="text-yellow-600 flex items-center">
