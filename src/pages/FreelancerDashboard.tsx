@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 import { 
   Home, Briefcase, ShoppingBag, MessageSquare, Package, Wallet, Settings, User,
-  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2, RefreshCw, ArrowLeft
+  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2, RefreshCw, ArrowLeft, Scale
 } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +26,7 @@ import FreelancerSettings from './freelancer/FreelancerSettings';
 import FreelancerProfile from './freelancer/FreelancerProfile';
 import FreelancerVerify from './freelancer/FreelancerVerify';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import DisputeChat from '@/components/dispute/DisputeChat';
 
 interface UserProfile {
   full_name: string;
@@ -116,6 +117,7 @@ const FreelancerDashboard = () => {
   const [stats, setStats] = useState({ totalGigs: 0, activeOrders: 0, pendingEarnings: 0, completedOrders: 0 });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [revisionRequests, setRevisionRequests] = useState<any[]>([]);
+  const [activeDisputes, setActiveDisputes] = useState<any[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
