@@ -160,9 +160,7 @@ const FreelancerDashboard = () => {
           .limit(1)
           .maybeSingle();
         if (freelancer.is_verified) {
-          const verifiedAt = freelancer.verified_at ? new Date(freelancer.verified_at).getTime() : 0;
-          const within24h = verifiedAt > 0 && (Date.now() - verifiedAt) < 24 * 60 * 60 * 1000;
-          setVerificationStatus(within24h ? 'approved' : 'none');
+          setVerificationStatus('approved');
           setRemovalInfo(null);
         } else if (freelancer.verification_removed_at) {
           setVerificationStatus('removed');
@@ -184,7 +182,7 @@ const FreelancerDashboard = () => {
           .from('orders')
           .select('*', { count: 'exact', head: true })
           .eq('freelancer_id', freelancer.id)
-          .in('status', ['pending', 'in_progress']);
+          .in('status', ['pending', 'in_progress', 'disputed']);
 
         const { data: pendingOrders } = await supabase
           .from('orders')
@@ -200,6 +198,29 @@ const FreelancerDashboard = () => {
           pendingEarnings,
           completedOrders: freelancer.completed_orders || 0
         });
+
+        const { data: disputes } = await (supabase as any)
+          .from('disputes')
+          .select('*')
+          .eq('freelancer_id', freelancer.id)
+          .neq('status', 'resolved')
+          .order('created_at', { ascending: false });
+
+        const disputeOrderIds = [...new Set<string>((disputes || []).map((d: any) => d.order_id).filter(Boolean))];
+        if (disputeOrderIds.length > 0) {
+          const { data: disputeOrders } = await supabase
+            .from('orders')
+            .select('id, amount, gigs(title)')
+            .in('id', disputeOrderIds);
+          const orderMap = new Map((disputeOrders || []).map((o: any) => [o.id, o]));
+          setActiveDisputes((disputes || []).map((d: any) => ({
+            ...d,
+            amount: orderMap.get(d.order_id)?.amount || 0,
+            gig_title: orderMap.get(d.order_id)?.gigs?.title || 'Order',
+          })));
+        } else {
+          setActiveDisputes([]);
+        }
 
         const { data: latestOrders } = await supabase
           .from('orders')
