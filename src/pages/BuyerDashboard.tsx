@@ -12,7 +12,8 @@ import {
   CheckCircle,
   DollarSign,
   Wallet,
-  ArrowLeft
+  ArrowLeft,
+  Scale
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -34,6 +35,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import DisputeChat from '@/components/dispute/DisputeChat';
 import BuyerOrders from './buyer/BuyerOrders';
 import BuyerMessages from './buyer/BuyerMessages';
 import BuyerHelp from './buyer/BuyerHelp';
@@ -118,6 +120,7 @@ const BuyerDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [stats, setStats] = useState({ activeOrders: 0, completedOrders: 0, totalSpent: 0, walletBalance: 0 });
+  const [activeDisputes, setActiveDisputes] = useState<any[]>([]);
   const { user } = useAuth();
 
   const fetchProfile = async () => {
@@ -146,11 +149,43 @@ const BuyerDashboard = () => {
       totalSpent,
       walletBalance: wallet?.balance || 0,
     });
+
+    const { data: disputes } = await (supabase as any)
+      .from('disputes')
+      .select('*')
+      .eq('buyer_id', user.id)
+      .neq('status', 'resolved')
+      .order('created_at', { ascending: false });
+
+    const orderIds = [...new Set((disputes || []).map((d: any) => d.order_id).filter(Boolean))];
+    if (orderIds.length === 0) {
+      setActiveDisputes([]);
+      return;
+    }
+
+    const { data: disputeOrders } = await supabase
+      .from('orders')
+      .select('id, amount, gigs(title)')
+      .in('id', orderIds);
+    const orderMap = new Map((disputeOrders || []).map((o: any) => [o.id, o]));
+    setActiveDisputes((disputes || []).map((d: any) => ({
+      ...d,
+      amount: orderMap.get(d.order_id)?.amount || 0,
+      gig_title: orderMap.get(d.order_id)?.gigs?.title || 'Order',
+    })));
   };
 
   useEffect(() => {
     fetchProfile();
     fetchStats();
+    if (!user) return;
+    const channel = supabase
+      .channel(`buyer-dashboard:${user.id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders', filter: `buyer_id=eq.${user.id}` }, () => fetchStats())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'disputes', filter: `buyer_id=eq.${user.id}` }, () => fetchStats())
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
   }, [user]);
 
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'B';
