@@ -210,6 +210,33 @@ const BuyerDashboard = () => {
               </div>
             </div>
 
+            {activeDisputes.length > 0 && (
+              <Card className="border-destructive/40 bg-destructive/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-base text-destructive">
+                    <Scale className="h-5 w-5" />
+                    Active Dispute Chat
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {activeDisputes.map((dispute) => (
+                    <div key={dispute.id} className="space-y-3 rounded-lg border border-border bg-background p-3">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{dispute.gig_title}</p>
+                          <p className="text-xs text-muted-foreground">{dispute.reason}</p>
+                        </div>
+                        <Button size="sm" variant="outline" onClick={() => navigate(`/buyer/orders/${dispute.order_id}`)}>
+                          Open Order
+                        </Button>
+                      </div>
+                      <DisputeChat disputeId={dispute.id} viewerRole="buyer" />
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
