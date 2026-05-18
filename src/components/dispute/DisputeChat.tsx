@@ -175,7 +175,7 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
             </Badge>
           </div>
           <span className="text-xs text-muted-foreground flex items-center gap-1">
-            <Shield className="w-3 h-3" /> Private — Buyer · Freelancer · Admin
+            <Shield className="w-3 h-3" /> Private — Buyer · Freelancer · Fivesom
           </span>
         </CardTitle>
       </CardHeader>
@@ -183,7 +183,7 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
         <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[420px] min-h-[280px]">
           {messages.length === 0 ? (
             <div className="text-center text-sm text-muted-foreground py-8">
-              No messages yet. Share your side of the story — admin will mediate.
+              No messages yet. Share your side of the story — Fivesom will mediate.
             </div>
           ) : (
             messages.map((m) => {
@@ -193,7 +193,7 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
                   <div className={`max-w-[78%] rounded-2xl px-3 py-2 text-sm ${mine ? 'bg-primary text-primary-foreground rounded-br-md' : 'bg-muted rounded-bl-md'}`}>
                     <div className="flex items-center gap-1 mb-1">
                       <Badge variant="outline" className={`text-[10px] py-0 px-1.5 capitalize ${roleStyles[m.sender_role]}`}>
-                        {m.sender_role}
+                        {m.sender_role === 'admin' ? 'Fivesom' : m.sender_role}
                       </Badge>
                     </div>
                     {m.body && <p className="whitespace-pre-wrap">{m.body}</p>}
