@@ -157,7 +157,7 @@ const BuyerDashboard = () => {
       .neq('status', 'resolved')
       .order('created_at', { ascending: false });
 
-    const orderIds = [...new Set((disputes || []).map((d: any) => d.order_id).filter(Boolean))];
+    const orderIds = [...new Set<string>((disputes || []).map((d: any) => d.order_id).filter(Boolean))];
     if (orderIds.length === 0) {
       setActiveDisputes([]);
       return;
