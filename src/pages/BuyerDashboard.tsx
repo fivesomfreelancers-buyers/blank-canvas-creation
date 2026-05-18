@@ -139,7 +139,7 @@ const BuyerDashboard = () => {
 
   const fetchStats = async () => {
     if (!user) return;
-    const { count: activeCount } = await supabase.from('orders').select('*', { count: 'exact', head: true }).eq('buyer_id', user.id).in('status', ['pending', 'in_progress']);
+    const { count: activeCount } = await (supabase as any).from('orders').select('*', { count: 'exact', head: true }).eq('buyer_id', user.id).in('status', ['pending', 'in_progress', 'disputed']);
     const { count: completedCount } = await supabase.from('orders').select('*', { count: 'exact', head: true }).eq('buyer_id', user.id).eq('status', 'completed');
     const { data: completedOrders } = await supabase.from('orders').select('amount').eq('buyer_id', user.id).eq('status', 'completed');
     const totalSpent = completedOrders?.reduce((sum, o) => sum + Number(o.amount), 0) || 0;
@@ -212,14 +212,11 @@ const BuyerDashboard = () => {
             </div>
 
             {activeDisputes.length > 0 && (
-              <Card className="border-destructive/40 bg-destructive/5">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-base text-destructive">
-                    <Scale className="h-5 w-5" />
-                    Active Dispute Chat
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+              <section className="space-y-4 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
+                <div className="flex items-center gap-2 text-base font-semibold text-destructive">
+                  <Scale className="h-5 w-5" />
+                  Active Dispute Chat
+                </div>
                   {activeDisputes.map((dispute) => (
                     <div key={dispute.id} className="space-y-3 rounded-lg border border-border bg-background p-3">
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -234,8 +231,7 @@ const BuyerDashboard = () => {
                       <DisputeChat disputeId={dispute.id} viewerRole="buyer" />
                     </div>
                   ))}
-                </CardContent>
-              </Card>
+              </section>
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
