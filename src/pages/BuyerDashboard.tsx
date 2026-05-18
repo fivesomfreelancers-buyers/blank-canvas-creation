@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Home, 
   ShoppingBag, 
@@ -122,6 +122,7 @@ const BuyerDashboard = () => {
   const [stats, setStats] = useState({ activeOrders: 0, completedOrders: 0, totalSpent: 0, walletBalance: 0 });
   const [activeDisputes, setActiveDisputes] = useState<any[]>([]);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const fetchProfile = async () => {
     if (!user) return;
