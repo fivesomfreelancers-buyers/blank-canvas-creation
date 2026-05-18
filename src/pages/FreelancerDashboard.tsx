@@ -370,7 +370,34 @@ const FreelancerDashboard = () => {
               </Card>
             </div>
 
-            {verificationStatus === 'removed' ? (
+            {activeDisputes.length > 0 && (
+              <Card className="border-destructive/40 bg-destructive/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-base text-destructive">
+                    <Scale className="h-5 w-5" />
+                    Active Dispute Chat
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {activeDisputes.map((dispute) => (
+                    <div key={dispute.id} className="space-y-3 rounded-lg border border-border bg-background p-3">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{dispute.gig_title}</p>
+                          <p className="text-xs text-muted-foreground">{dispute.reason}</p>
+                        </div>
+                        <Button size="sm" variant="outline" onClick={() => navigate(`/freelancer/order/${dispute.order_id}`)}>
+                          Open Order
+                        </Button>
+                      </div>
+                      <DisputeChat disputeId={dispute.id} viewerRole="freelancer" />
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {!isVerified && verificationStatus === 'removed' ? (
               <Card className="border-destructive/40 bg-destructive/5">
                 <CardHeader>
                   <CardTitle className="text-destructive flex items-center">
@@ -391,26 +418,6 @@ const FreelancerDashboard = () => {
                       <Button size="sm" variant="outline" onClick={() => setActiveSection('verify')}>Re-submit Verification</Button>
                       <Button size="sm" variant="ghost" onClick={() => setActiveSection('help')}>Contact Support</Button>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : verificationStatus === 'approved' ? (
-              <Card className="border-green-500/30 bg-green-500/10">
-                <CardHeader>
-                  <CardTitle className="text-green-600 flex items-center">
-                    <ShieldCheck className="w-5 h-5 mr-2" />
-                    Account Verified
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-background rounded-lg border border-green-500/20 gap-3">
-                    <div className="flex-1">
-                      <p className="font-medium text-sm sm:text-base text-green-600">You're verified ✓</p>
-                      <p className="text-xs sm:text-sm text-muted-foreground">Your identity has been approved. You now have a verified badge on your profile.</p>
-                    </div>
-                    <Badge variant="outline" className="text-green-600 border-green-500/30 bg-green-500/10 self-start sm:self-center">
-                      <CheckCircle className="w-3 h-3 mr-1" /> Verified
-                    </Badge>
                   </div>
                 </CardContent>
               </Card>
