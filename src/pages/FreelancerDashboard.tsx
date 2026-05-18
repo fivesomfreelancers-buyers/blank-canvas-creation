@@ -371,14 +371,11 @@ const FreelancerDashboard = () => {
             </div>
 
             {activeDisputes.length > 0 && (
-              <Card className="border-destructive/40 bg-destructive/5">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-base text-destructive">
-                    <Scale className="h-5 w-5" />
-                    Active Dispute Chat
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+              <section className="space-y-4 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
+                <div className="flex items-center gap-2 text-base font-semibold text-destructive">
+                  <Scale className="h-5 w-5" />
+                  Active Dispute Chat
+                </div>
                   {activeDisputes.map((dispute) => (
                     <div key={dispute.id} className="space-y-3 rounded-lg border border-border bg-background p-3">
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -393,8 +390,7 @@ const FreelancerDashboard = () => {
                       <DisputeChat disputeId={dispute.id} viewerRole="freelancer" />
                     </div>
                   ))}
-                </CardContent>
-              </Card>
+              </section>
             )}
 
             {!isVerified && verificationStatus === 'removed' ? (
