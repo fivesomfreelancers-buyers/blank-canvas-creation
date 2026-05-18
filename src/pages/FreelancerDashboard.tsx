@@ -178,7 +178,7 @@ const FreelancerDashboard = () => {
           .select('*', { count: 'exact', head: true })
           .eq('freelancer_id', freelancer.id);
 
-        const { count: ordersCount } = await supabase
+        const { count: ordersCount } = await (supabase as any)
           .from('orders')
           .select('*', { count: 'exact', head: true })
           .eq('freelancer_id', freelancer.id)
@@ -301,9 +301,16 @@ const FreelancerDashboard = () => {
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
+      const { data: freelancer } = await supabase
+        .from('freelancers')
+        .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle();
       const channel = supabase
         .channel(`freelancer-self-${user.id}`)
         .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'freelancers', filter: `user_id=eq.${user.id}` }, () => loadDashboardData())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders', filter: `freelancer_id=eq.${freelancer?.id || 'none'}` }, () => loadDashboardData())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'disputes', filter: `freelancer_id=eq.${freelancer?.id || 'none'}` }, () => loadDashboardData())
         .subscribe();
       cleanup = () => { supabase.removeChannel(channel); };
     })();
