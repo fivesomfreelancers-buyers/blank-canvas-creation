@@ -421,7 +421,7 @@ const FreelancerDashboard = () => {
                   </div>
                 </CardContent>
               </Card>
-            ) : verificationStatus === 'pending' ? (
+            ) : isVerified ? null : verificationStatus === 'pending' ? (
               <Card className="border-yellow-500/30 bg-yellow-500/10">
                 <CardHeader>
                   <CardTitle className="text-yellow-600 flex items-center">
