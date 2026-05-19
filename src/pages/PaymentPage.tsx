@@ -307,18 +307,13 @@ const PaymentPage = () => {
             </CardContent>
           </Card>
 
-          {/* Payment Method Selection */}
+          {/* Payment Method Selection — Card / Bank only for buyers */}
           <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <Button variant={paymentType === 'card' ? 'default' : 'outline'} onClick={() => setPaymentType('card')} className="h-auto py-4 flex flex-col items-center gap-2">
+            <div className="grid grid-cols-1 gap-4">
+              <Button variant="default" onClick={() => setPaymentType('card')} className="h-auto py-4 flex flex-col items-center gap-2">
                 <CreditCard className="w-6 h-6" />
                 <span>Card Payment</span>
                 <span className="text-xs opacity-70">Visa / Mastercard</span>
-              </Button>
-              <Button variant={paymentType === 'mobile' ? 'default' : 'outline'} onClick={() => setPaymentType('mobile')} className="h-auto py-4 flex flex-col items-center gap-2">
-                <Smartphone className="w-6 h-6" />
-                <span>Mobile Money</span>
-                <span className="text-xs opacity-70">ZAAD, EVC, eDahab, eBiir</span>
               </Button>
             </div>
 

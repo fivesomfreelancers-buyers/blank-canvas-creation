@@ -1257,37 +1257,64 @@ export type Database = {
           account_number: string | null
           amount: number
           bank_name: string | null
+          city: string | null
+          country: string | null
+          country_code: string | null
           freelancer_id: string
           id: string
+          method: string | null
           mobile_number: string | null
           mobile_provider: string | null
           processed_at: string | null
+          reason: string | null
+          receiver_first_name: string | null
+          receiver_last_name: string | null
+          receiver_middle_name: string | null
           requested_at: string | null
           status: Database["public"]["Enums"]["withdrawal_status"] | null
+          swift_code: string | null
         }
         Insert: {
           account_number?: string | null
           amount: number
           bank_name?: string | null
+          city?: string | null
+          country?: string | null
+          country_code?: string | null
           freelancer_id: string
           id?: string
+          method?: string | null
           mobile_number?: string | null
           mobile_provider?: string | null
           processed_at?: string | null
+          reason?: string | null
+          receiver_first_name?: string | null
+          receiver_last_name?: string | null
+          receiver_middle_name?: string | null
           requested_at?: string | null
           status?: Database["public"]["Enums"]["withdrawal_status"] | null
+          swift_code?: string | null
         }
         Update: {
           account_number?: string | null
           amount?: number
           bank_name?: string | null
+          city?: string | null
+          country?: string | null
+          country_code?: string | null
           freelancer_id?: string
           id?: string
+          method?: string | null
           mobile_number?: string | null
           mobile_provider?: string | null
           processed_at?: string | null
+          reason?: string | null
+          receiver_first_name?: string | null
+          receiver_last_name?: string | null
+          receiver_middle_name?: string | null
           requested_at?: string | null
           status?: Database["public"]["Enums"]["withdrawal_status"] | null
+          swift_code?: string | null
         }
         Relationships: [
           {
