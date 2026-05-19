@@ -1,465 +1,820 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ArrowLeft, DollarSign, AlertTriangle, CheckCircle, Building2, Smartphone } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  ArrowLeft,
+  DollarSign,
+  AlertTriangle,
+  CheckCircle,
+  Building2,
+  Smartphone,
+  User,
+  MapPin,
+  Phone,
+  FileText,
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
-
-// Import mobile money logos
+// Mobile money provider logos
 import zaadLogo from '@/assets/zaad-logo.png';
 import evcLogo from '@/assets/evc-logo.png';
-import edahabLogo from '@/assets/edahab-logo.png';
-import ebirrLogo from '@/assets/ebirr-logo.png';
+import mpesaLogo from '@/assets/mpesa-logo.png';
+import premierWalletLogo from '@/assets/premier-wallet-logo.png';
 
 const mobileMoneyOptions = [
+  { id: 'evc', name: 'EVC Plus', logo: evcLogo },
   { id: 'zaad', name: 'ZAAD', logo: zaadLogo },
-  { id: 'evc', name: 'EVC', logo: evcLogo },
-  { id: 'edahab', name: 'eDahab', logo: ebirrLogo },
-  { id: 'ebiir', name: 'eBiir', logo: edahabLogo },
+  { id: 'mpesa', name: 'M-Pesa', logo: mpesaLogo },
+  { id: 'premier_wallet', name: 'Premier Wallet', logo: premierWalletLogo },
 ];
+
+const BANK_OPTIONS = [
+  'Dahabshiil Bank',
+  'Salaam Somali Bank',
+  'Premier Bank',
+  'IBS Bank',
+  'Amal Bank',
+  'Bank of Africa',
+  'Equity Bank',
+  'KCB Bank',
+  'Standard Chartered',
+  'Other',
+];
+
+const COUNTRY_OPTIONS = [
+  'Somalia',
+  'Kenya',
+  'Ethiopia',
+  'Djibouti',
+  'Uganda',
+  'Tanzania',
+  'United Arab Emirates',
+  'Saudi Arabia',
+  'Turkey',
+  'United Kingdom',
+  'United States',
+  'Canada',
+  'Other',
+];
+
+const COUNTRY_CODES = [
+  { code: '+252', label: '🇸🇴 +252' },
+  { code: '+254', label: '🇰🇪 +254' },
+  { code: '+251', label: '🇪🇹 +251' },
+  { code: '+253', label: '🇩🇯 +253' },
+  { code: '+256', label: '🇺🇬 +256' },
+  { code: '+971', label: '🇦🇪 +971' },
+  { code: '+966', label: '🇸🇦 +966' },
+  { code: '+90', label: '🇹🇷 +90' },
+  { code: '+44', label: '🇬🇧 +44' },
+  { code: '+1', label: '🇺🇸 +1' },
+];
+
+const REASON_OPTIONS = [
+  'Freelance Payment',
+  'Salary',
+  'Business Payment',
+  'Family Support',
+  'Other',
+];
+
+const minimumWithdrawal = 10;
 
 const FreelancerWithdraw = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  
-  // Mock data - replace with actual data from backend
-  const currentBalance = 1250.00;
-  const availableBalance = 1250.00;
-  const minimumWithdrawal = 10.00;
-  const hasPendingWithdrawal = false;
-  
-  const [withdrawMethod, setWithdrawMethod] = useState<'bank' | 'mobile'>('bank');
+  const { user } = useAuth();
+
+  const [availableBalance, setAvailableBalance] = useState(0);
+  const [hasPendingWithdrawal, setHasPendingWithdrawal] = useState(false);
+  const [freelancerId, setFreelancerId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const [method, setMethod] = useState<'bank' | 'mobile'>('bank');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // Bank form data
-  const [bankFormData, setBankFormData] = useState({
+
+  // Bank form
+  const [bank, setBank] = useState({
     amount: '',
+    firstName: '',
+    middleName: '',
+    lastName: '',
     bankName: '',
     accountNumber: '',
-    cardType: '',
-    saveDetails: false
-  });
-  
-  // Mobile money form data
-  const [mobileFormData, setMobileFormData] = useState({
-    amount: '',
-    fullName: '',
-    mobileProvider: '',
+    swiftCode: '',
+    country: '',
+    city: '',
+    countryCode: '+252',
     mobileNumber: '',
-    saveDetails: false
+    reason: '',
   });
-  
-  // Fee calculation
-  const withdrawFeeRate = 0.02; // 2%
-  const withdrawAmount = parseFloat(withdrawMethod === 'bank' ? bankFormData.amount : mobileFormData.amount) || 0;
-  const withdrawFee = withdrawAmount * withdrawFeeRate;
+
+  // Mobile form
+  const [mobile, setMobile] = useState({
+    amount: '',
+    firstName: '',
+    lastName: '',
+    provider: '',
+    countryCode: '+252',
+    mobileNumber: '',
+    country: '',
+    city: '',
+    reason: '',
+  });
+
+  useEffect(() => {
+    const load = async () => {
+      if (!user) return;
+      const { data: f } = await supabase
+        .from('freelancers')
+        .select('id, total_earnings')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      if (f) {
+        setFreelancerId(f.id);
+        setAvailableBalance(Number(f.total_earnings) || 0);
+
+        const { data: pending } = await supabase
+          .from('withdrawals')
+          .select('id')
+          .eq('freelancer_id', f.id)
+          .eq('status', 'pending')
+          .limit(1);
+        setHasPendingWithdrawal((pending?.length ?? 0) > 0);
+      }
+      setLoading(false);
+    };
+    load();
+  }, [user]);
+
+  const form = method === 'bank' ? bank : mobile;
+  const setField = (field: string, value: string) => {
+    if (method === 'bank') setBank((p) => ({ ...p, [field]: value }));
+    else setMobile((p) => ({ ...p, [field]: value }));
+  };
+
+  const withdrawAmount = parseFloat(form.amount) || 0;
+  const withdrawFee = withdrawAmount * 0.02;
   const amountAfterFee = withdrawAmount - withdrawFee;
-  
-  const canWithdraw = availableBalance >= minimumWithdrawal && !hasPendingWithdrawal;
-  const isAmountValid = withdrawAmount >= minimumWithdrawal && withdrawAmount <= availableBalance;
-  
-  const handleBankInputChange = (field: string, value: string | boolean) => {
-    setBankFormData(prev => ({ ...prev, [field]: value }));
-  };
-  
-  const handleMobileInputChange = (field: string, value: string | boolean) => {
-    setMobileFormData(prev => ({ ...prev, [field]: value }));
-  };
-  
-  const isBankFormValid = bankFormData.amount && bankFormData.bankName && bankFormData.accountNumber && bankFormData.cardType && isAmountValid;
-  const isMobileFormValid = mobileFormData.amount && mobileFormData.fullName && mobileFormData.mobileProvider && mobileFormData.mobileNumber && isAmountValid;
-  
-  const isFormValid = withdrawMethod === 'bank' ? isBankFormValid : isMobileFormValid;
-  
+  const isAmountValid =
+    withdrawAmount >= minimumWithdrawal && withdrawAmount <= availableBalance;
+  const canWithdraw =
+    availableBalance >= minimumWithdrawal && !hasPendingWithdrawal && !loading;
+
+  const isBankValid =
+    isAmountValid &&
+    bank.firstName.trim() &&
+    bank.lastName.trim() &&
+    bank.bankName &&
+    bank.accountNumber.trim() &&
+    bank.swiftCode.trim() &&
+    bank.country &&
+    bank.city.trim() &&
+    bank.countryCode &&
+    bank.mobileNumber.trim() &&
+    bank.reason;
+
+  const isMobileValid =
+    isAmountValid &&
+    mobile.firstName.trim() &&
+    mobile.lastName.trim() &&
+    mobile.provider &&
+    mobile.countryCode &&
+    mobile.mobileNumber.trim() &&
+    mobile.country &&
+    mobile.city.trim() &&
+    mobile.reason;
+
+  const isFormValid = method === 'bank' ? isBankValid : isMobileValid;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!isFormValid || !canWithdraw) return;
-    
+    if (!isFormValid || !canWithdraw || !freelancerId) return;
+
     setIsSubmitting(true);
-    
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const methodName = withdrawMethod === 'bank' 
-        ? bankFormData.bankName 
-        : mobileMoneyOptions.find(m => m.id === mobileFormData.mobileProvider)?.name || 'Mobile Money';
-      
+      const payload: any = {
+        freelancer_id: freelancerId,
+        amount: withdrawAmount,
+        status: 'pending',
+        method,
+        reason: form.reason,
+        country: form.country,
+        city: form.city,
+        country_code: form.countryCode,
+        mobile_number: form.mobileNumber,
+      };
+
+      if (method === 'bank') {
+        payload.receiver_first_name = bank.firstName;
+        payload.receiver_middle_name = bank.middleName || null;
+        payload.receiver_last_name = bank.lastName;
+        payload.bank_name = bank.bankName;
+        payload.account_number = bank.accountNumber;
+        payload.swift_code = bank.swiftCode;
+      } else {
+        payload.receiver_first_name = mobile.firstName;
+        payload.receiver_last_name = mobile.lastName;
+        payload.mobile_provider = mobile.provider;
+      }
+
+      const { error } = await supabase.from('withdrawals').insert(payload);
+      if (error) throw error;
+
       toast({
-        title: "Withdrawal Request Submitted",
-        description: `Your withdrawal request for $${withdrawAmount.toFixed(2)} via ${methodName} has been submitted. You will receive $${amountAfterFee.toFixed(2)} after the 2% fee.`,
+        title: 'Withdrawal Request Submitted',
+        description: `Your request for $${withdrawAmount.toFixed(2)} has been sent to the admin for processing. You will receive $${amountAfterFee.toFixed(2)} after the 2% fee.`,
       });
-      
       navigate('/freelancer/wallet');
-      
-    } catch (error) {
+    } catch (err: any) {
+      console.error(err);
       toast({
-        title: "Submission Failed",
-        description: "There was an error processing your withdrawal request. Please try again.",
-        variant: "destructive",
+        title: 'Submission Failed',
+        description: err?.message ?? 'Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsSubmitting(false);
     }
   };
-  
-  return (
-    <>
-      <div className="min-h-screen bg-background p-4 sm:p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-6 sm:mb-8">
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/freelancer/dashboard')}
-              className="mb-4 p-0 h-auto font-normal text-muted-foreground hover:text-foreground"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </Button>
-            <h1 className="text-2xl sm:text-3xl font-bold">Withdraw Earnings</h1>
-            <p className="text-muted-foreground mt-2 text-sm sm:text-base">Request a withdrawal of your available funds</p>
-          </div>
 
-          {/* Earnings Summary */}
-          <Card className="mb-6 sm:mb-8">
+  return (
+    <div className="min-h-screen bg-background p-4 sm:p-6">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-6 sm:mb-8">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/freelancer/dashboard')}
+            className="mb-4 p-0 h-auto font-normal text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </Button>
+          <h1 className="text-2xl sm:text-3xl font-bold">Withdraw Earnings</h1>
+          <p className="text-muted-foreground mt-2 text-sm sm:text-base">
+            Request a withdrawal of your available funds
+          </p>
+        </div>
+
+        {/* Earnings Summary */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <DollarSign className="w-5 h-5" />
+              Earnings Summary
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground text-sm">
+                Available to Withdraw
+              </span>
+              <span className="font-bold text-2xl text-green-600">
+                ${availableBalance.toFixed(2)}
+              </span>
+            </div>
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>Minimum withdrawal</span>
+              <span>${minimumWithdrawal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>Withdraw fee</span>
+              <span>2% deducted from amount</span>
+            </div>
+
+            {!loading && availableBalance < minimumWithdrawal && (
+              <div className="flex items-start gap-2 p-3 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg">
+                <AlertTriangle className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                <span className="text-xs sm:text-sm text-orange-700 dark:text-orange-300">
+                  You must have at least ${minimumWithdrawal.toFixed(2)} to withdraw funds.
+                </span>
+              </div>
+            )}
+
+            {hasPendingWithdrawal && (
+              <div className="flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <AlertTriangle className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                <span className="text-xs sm:text-sm text-blue-700 dark:text-blue-300">
+                  You have a pending withdrawal. Please wait for admin to process it.
+                </span>
+              </div>
+            )}
+
+            {canWithdraw && (
+              <div className="flex items-start gap-2 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                <span className="text-xs sm:text-sm text-green-700 dark:text-green-300">
+                  You can withdraw up to ${availableBalance.toFixed(2)}.
+                </span>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Method tabs */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <Button
+            type="button"
+            variant={method === 'bank' ? 'default' : 'outline'}
+            onClick={() => setMethod('bank')}
+            className="h-auto py-4 flex flex-col items-center gap-1.5"
+          >
+            <Building2 className="w-5 h-5" />
+            <span className="font-medium">Bank Account</span>
+            <span className="text-[11px] opacity-70">SWIFT / IBAN</span>
+          </Button>
+          <Button
+            type="button"
+            variant={method === 'mobile' ? 'default' : 'outline'}
+            onClick={() => setMethod('mobile')}
+            className="h-auto py-4 flex flex-col items-center gap-1.5"
+          >
+            <Smartphone className="w-5 h-5" />
+            <span className="font-medium">Mobile Wallet</span>
+            <span className="text-[11px] opacity-70">EVC, ZAAD, M-Pesa, Premier</span>
+          </Button>
+        </div>
+
+        {/* Forms */}
+        {method === 'bank' ? (
+          <Card className="border-border/60 shadow-sm">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2 text-lg sm:text-xl">
-                <DollarSign className="w-5 h-5" />
-                <span>Earnings Summary</span>
-              </CardTitle>
+              <CardTitle className="text-xl">Add Bank Receiver</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Provide the receiver's complete bank details
+              </p>
             </CardHeader>
-            <CardContent className="space-y-3 sm:space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground text-sm sm:text-base">Current Balance:</span>
-                <span className="font-semibold text-sm sm:text-base">${currentBalance.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground text-sm sm:text-base">Available to Withdraw:</span>
-                <span className="font-bold text-xl sm:text-2xl text-green-600">${availableBalance.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between items-center text-xs sm:text-sm">
-                <span className="text-muted-foreground">Minimum withdrawal:</span>
-                <span>${minimumWithdrawal.toFixed(2)}</span>
-              </div>
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0 text-xs sm:text-sm">
-                <span className="text-muted-foreground">Withdraw Fee:</span>
-                <span className="text-right sm:text-left">2% will be deducted from the amount you request</span>
-              </div>
-              
-              {/* Validation Messages */}
-              {availableBalance < minimumWithdrawal && (
-                <div className="flex items-start space-x-2 p-3 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg">
-                  <AlertTriangle className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-xs sm:text-sm text-orange-700 dark:text-orange-300">
-                    You must have at least ${minimumWithdrawal.toFixed(2)} to withdraw funds.
-                  </span>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Amount */}
+                <div className="space-y-2">
+                  <Label htmlFor="bank-amount">Withdrawal Amount (USD)</Label>
+                  <Input
+                    id="bank-amount"
+                    type="number"
+                    placeholder="Min $10"
+                    value={bank.amount}
+                    onChange={(e) => setField('amount', e.target.value)}
+                    disabled={!canWithdraw}
+                    min={minimumWithdrawal}
+                    max={availableBalance}
+                    step="0.01"
+                    className="rounded-lg h-11"
+                    required
+                  />
                 </div>
-              )}
-              
-              {hasPendingWithdrawal && (
-                <div className="flex items-start space-x-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                  <AlertTriangle className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-xs sm:text-sm text-blue-700 dark:text-blue-300">
-                    You have a pending withdrawal request. Please wait for it to be processed.
-                  </span>
-                </div>
-              )}
-              
-              {canWithdraw && (
-                <div className="flex items-start space-x-2 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                  <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-xs sm:text-sm text-green-700 dark:text-green-300">
-                    You can withdraw ${availableBalance.toFixed(2)} right now.
-                  </span>
-                </div>
-              )}
+
+                {/* Receiver name */}
+                <section className="space-y-4">
+                  <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-2">
+                    <User className="w-3.5 h-3.5" />
+                    Receiver's Name
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>First Name</Label>
+                      <Input
+                        placeholder="First name"
+                        value={bank.firstName}
+                        onChange={(e) => setField('firstName', e.target.value)}
+                        className="rounded-lg h-11"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Middle Name (optional)</Label>
+                      <Input
+                        placeholder="Middle name"
+                        value={bank.middleName}
+                        onChange={(e) => setField('middleName', e.target.value)}
+                        className="rounded-lg h-11"
+                      />
+                    </div>
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label>Last Name</Label>
+                      <Input
+                        placeholder="Last name"
+                        value={bank.lastName}
+                        onChange={(e) => setField('lastName', e.target.value)}
+                        className="rounded-lg h-11"
+                        required
+                      />
+                    </div>
+                  </div>
+                </section>
+
+                {/* Bank details */}
+                <section className="space-y-4">
+                  <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-2">
+                    <Building2 className="w-3.5 h-3.5" />
+                    Bank Account Details
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Bank Name</Label>
+                      <Select
+                        value={bank.bankName}
+                        onValueChange={(v) => setField('bankName', v)}
+                      >
+                        <SelectTrigger className="rounded-lg h-11">
+                          <SelectValue placeholder="Select bank" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {BANK_OPTIONS.map((b) => (
+                            <SelectItem key={b} value={b}>
+                              {b}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Account Number / IBAN</Label>
+                        <Input
+                          placeholder="Account number"
+                          value={bank.accountNumber}
+                          onChange={(e) =>
+                            setField('accountNumber', e.target.value)
+                          }
+                          className="rounded-lg h-11"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>SWIFT / BIC Code</Label>
+                        <Input
+                          placeholder="e.g. DAHBSOSO"
+                          value={bank.swiftCode}
+                          onChange={(e) =>
+                            setField('swiftCode', e.target.value.toUpperCase())
+                          }
+                          className="rounded-lg h-11"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Address */}
+                <section className="space-y-4">
+                  <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-2">
+                    <MapPin className="w-3.5 h-3.5" />
+                    Receiver's Address
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Country</Label>
+                      <Select
+                        value={bank.country}
+                        onValueChange={(v) => setField('country', v)}
+                      >
+                        <SelectTrigger className="rounded-lg h-11">
+                          <SelectValue placeholder="Select country" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {COUNTRY_OPTIONS.map((c) => (
+                            <SelectItem key={c} value={c}>
+                              {c}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>City / Town</Label>
+                      <Input
+                        placeholder="City"
+                        value={bank.city}
+                        onChange={(e) => setField('city', e.target.value)}
+                        className="rounded-lg h-11"
+                        required
+                      />
+                    </div>
+                  </div>
+                </section>
+
+                {/* Contact */}
+                <section className="space-y-4">
+                  <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-2">
+                    <Phone className="w-3.5 h-3.5" />
+                    Receiver's Contact Details
+                  </h3>
+                  <div className="grid grid-cols-[120px_1fr] gap-3">
+                    <div className="space-y-2">
+                      <Label>Code</Label>
+                      <Select
+                        value={bank.countryCode}
+                        onValueChange={(v) => setField('countryCode', v)}
+                      >
+                        <SelectTrigger className="rounded-lg h-11">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {COUNTRY_CODES.map((c) => (
+                            <SelectItem key={c.code} value={c.code}>
+                              {c.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Mobile Number</Label>
+                      <Input
+                        placeholder="Mobile number"
+                        value={bank.mobileNumber}
+                        onChange={(e) =>
+                          setField('mobileNumber', e.target.value)
+                        }
+                        className="rounded-lg h-11"
+                        required
+                      />
+                    </div>
+                  </div>
+                </section>
+
+                {/* Reason */}
+                <section className="space-y-4">
+                  <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-2">
+                    <FileText className="w-3.5 h-3.5" />
+                    Reason for Sending
+                  </h3>
+                  <Select
+                    value={bank.reason}
+                    onValueChange={(v) => setField('reason', v)}
+                  >
+                    <SelectTrigger className="rounded-lg h-11">
+                      <SelectValue placeholder="Select reason" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {REASON_OPTIONS.map((r) => (
+                        <SelectItem key={r} value={r}>
+                          {r}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </section>
+
+                {withdrawAmount > 0 && (
+                  <div className="p-4 bg-muted/40 rounded-xl space-y-1">
+                    <p className="text-sm text-muted-foreground">
+                      Withdrawal fee (2%):{' '}
+                      <span className="font-medium text-foreground">
+                        ${withdrawFee.toFixed(2)}
+                      </span>
+                    </p>
+                    <p className="font-semibold text-green-600">
+                      You will receive: ${amountAfterFee.toFixed(2)}
+                    </p>
+                  </div>
+                )}
+
+                <Button
+                  type="submit"
+                  className="w-full h-12 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold shadow-md"
+                  disabled={!canWithdraw || !isBankValid || isSubmitting}
+                  size="lg"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Save and Continue'}
+                </Button>
+              </form>
             </CardContent>
           </Card>
+        ) : (
+          <Card className="border-border/60 shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-xl">Add Mobile Wallet Receiver</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Withdraw to a mobile money wallet
+              </p>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Amount */}
+                <div className="space-y-2">
+                  <Label htmlFor="mobile-amount">Withdrawal Amount (USD)</Label>
+                  <Input
+                    id="mobile-amount"
+                    type="number"
+                    placeholder="Min $10"
+                    value={mobile.amount}
+                    onChange={(e) => setField('amount', e.target.value)}
+                    disabled={!canWithdraw}
+                    min={minimumWithdrawal}
+                    max={availableBalance}
+                    step="0.01"
+                    className="rounded-lg h-11"
+                    required
+                  />
+                </div>
 
-          {/* Withdrawal Method Selection */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <Button
-              variant={withdrawMethod === 'bank' ? 'default' : 'outline'}
-              onClick={() => setWithdrawMethod('bank')}
-              className="h-auto py-4 flex flex-col items-center gap-2"
-            >
-              <Building2 className="w-6 h-6" />
-              <span>Bank Account</span>
-              <span className="text-xs opacity-70">Visa / Mastercard</span>
-            </Button>
-            <Button
-              variant={withdrawMethod === 'mobile' ? 'default' : 'outline'}
-              onClick={() => setWithdrawMethod('mobile')}
-              className="h-auto py-4 flex flex-col items-center gap-2"
-            >
-              <Smartphone className="w-6 h-6" />
-              <span>Mobile Money</span>
-              <span className="text-xs opacity-70">ZAAD, EVC, eDahab, eBiir</span>
-            </Button>
-          </div>
-
-          {/* Withdrawal Forms - Side by Side on Desktop */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Bank Account Form */}
-            {withdrawMethod === 'bank' && (
-              <Card className="lg:col-span-2">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Building2 className="w-5 h-5" />
-                    Bank Account Details
-                  </CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    Provide your bank account information for the withdrawal
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="flex gap-2 mb-4">
-                      <img src="https://img.icons8.com/color/48/visa.png" alt="Visa" className="h-8" />
-                      <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard" className="h-8" />
+                {/* Receiver name */}
+                <section className="space-y-4">
+                  <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-2">
+                    <User className="w-3.5 h-3.5" />
+                    Receiver's Name
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>First Name</Label>
+                      <Input
+                        placeholder="First name"
+                        value={mobile.firstName}
+                        onChange={(e) => setField('firstName', e.target.value)}
+                        className="rounded-lg h-11"
+                        required
+                      />
                     </div>
+                    <div className="space-y-2">
+                      <Label>Last Name</Label>
+                      <Input
+                        placeholder="Last name"
+                        value={mobile.lastName}
+                        onChange={(e) => setField('lastName', e.target.value)}
+                        className="rounded-lg h-11"
+                        required
+                      />
+                    </div>
+                  </div>
+                </section>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="bank-amount">Withdrawal Amount</Label>
-                        <Input
-                          id="bank-amount"
-                          type="number"
-                          placeholder="Enter amount (min $10)"
-                          value={bankFormData.amount}
-                          onChange={(e) => handleBankInputChange('amount', e.target.value)}
-                          disabled={!canWithdraw}
-                          min={minimumWithdrawal}
-                          max={availableBalance}
-                          step="0.01"
-                          required
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="bankName">Bank Name</Label>
-                        <Input
-                          id="bankName"
-                          placeholder="e.g. Bank of America"
-                          value={bankFormData.bankName}
-                          onChange={(e) => handleBankInputChange('bankName', e.target.value)}
-                          disabled={!canWithdraw}
-                          required
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="accountNumber">Account Number / IBAN</Label>
-                        <Input
-                          id="accountNumber"
-                          placeholder="Enter your account number or IBAN"
-                          value={bankFormData.accountNumber}
-                          onChange={(e) => handleBankInputChange('accountNumber', e.target.value)}
-                          disabled={!canWithdraw}
-                          required
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="cardType">Card Type</Label>
-                        <Select 
-                          value={bankFormData.cardType} 
-                          onValueChange={(value) => handleBankInputChange('cardType', value)}
-                          disabled={!canWithdraw}
+                {/* Mobile account */}
+                <section className="space-y-4">
+                  <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-2">
+                    <Smartphone className="w-3.5 h-3.5" />
+                    Mobile Account Details
+                  </h3>
+
+                  <div className="space-y-2">
+                    <Label>Provider</Label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {mobileMoneyOptions.map((opt) => (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => setField('provider', opt.id)}
+                          className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                            mobile.provider === opt.id
+                              ? 'border-primary bg-primary/5'
+                              : 'border-border hover:border-primary/50'
+                          }`}
                         >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select card type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Visa">Visa</SelectItem>
-                            <SelectItem value="Mastercard">Mastercard</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                          <img
+                            src={opt.logo}
+                            alt={opt.name}
+                            className="w-10 h-10 object-contain"
+                          />
+                          <span className="text-xs font-medium">{opt.name}</span>
+                        </button>
+                      ))}
                     </div>
+                  </div>
 
-                    {withdrawAmount > 0 && (
-                      <div className="p-4 bg-muted/50 rounded-lg space-y-1">
-                        <p className="text-sm text-muted-foreground">
-                          Withdrawal fee (2%): <span className="font-medium">${withdrawFee.toFixed(2)}</span>
-                        </p>
-                        <p className="font-semibold text-green-600">
-                          You will receive: ${amountAfterFee.toFixed(2)}
-                        </p>
-                      </div>
-                    )}
-                    
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="bank-saveDetails"
-                        checked={bankFormData.saveDetails}
-                        onCheckedChange={(checked) => handleBankInputChange('saveDetails', checked as boolean)}
-                        disabled={!canWithdraw}
+                  <div className="grid grid-cols-[120px_1fr] gap-3">
+                    <div className="space-y-2">
+                      <Label>Code</Label>
+                      <Select
+                        value={mobile.countryCode}
+                        onValueChange={(v) => setField('countryCode', v)}
+                      >
+                        <SelectTrigger className="rounded-lg h-11">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {COUNTRY_CODES.map((c) => (
+                            <SelectItem key={c.code} value={c.code}>
+                              {c.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Mobile Wallet Number</Label>
+                      <Input
+                        placeholder="Wallet number"
+                        value={mobile.mobileNumber}
+                        onChange={(e) =>
+                          setField('mobileNumber', e.target.value)
+                        }
+                        className="rounded-lg h-11"
+                        required
                       />
-                      <Label htmlFor="bank-saveDetails" className="text-sm">
-                        Save these details for future withdrawals
-                      </Label>
                     </div>
-                    
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={!canWithdraw || !isBankFormValid || isSubmitting}
-                      size="lg"
-                    >
-                      {isSubmitting ? (
-                        "Processing..."
-                      ) : withdrawAmount > 0 ? (
-                        `Request Withdrawal - $${withdrawAmount.toFixed(2)}`
-                      ) : (
-                        "Request Withdrawal"
-                      )}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            )}
+                  </div>
+                </section>
 
-            {/* Mobile Money Form */}
-            {withdrawMethod === 'mobile' && (
-              <Card className="lg:col-span-2">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Smartphone className="w-5 h-5" />
-                    Somali Mobile Money
-                  </CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    Withdraw to your mobile money account
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Mobile Money Provider Selection */}
-                    <div>
-                      <Label className="mb-3 block">Select Mobile Money Provider</Label>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        {mobileMoneyOptions.map((option) => (
-                          <button
-                            key={option.id}
-                            type="button"
-                            onClick={() => handleMobileInputChange('mobileProvider', option.id)}
-                            disabled={!canWithdraw}
-                            className={`p-3 rounded-lg border-2 transition-all flex flex-col items-center gap-2 ${
-                              mobileFormData.mobileProvider === option.id
-                                ? 'border-primary bg-primary/5'
-                                : 'border-border hover:border-primary/50'
-                            } ${!canWithdraw ? 'opacity-50 cursor-not-allowed' : ''}`}
-                          >
-                            <img src={option.logo} alt={option.name} className="w-12 h-12 object-contain" />
-                            <span className="text-sm font-medium">{option.name}</span>
-                          </button>
-                        ))}
-                      </div>
+                {/* Address */}
+                <section className="space-y-4">
+                  <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-2">
+                    <MapPin className="w-3.5 h-3.5" />
+                    Receiver's Address
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Country</Label>
+                      <Select
+                        value={mobile.country}
+                        onValueChange={(v) => setField('country', v)}
+                      >
+                        <SelectTrigger className="rounded-lg h-11">
+                          <SelectValue placeholder="Select country" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {COUNTRY_OPTIONS.map((c) => (
+                            <SelectItem key={c} value={c}>
+                              {c}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="mobile-amount">Withdrawal Amount</Label>
-                        <Input
-                          id="mobile-amount"
-                          type="number"
-                          placeholder="Enter amount (min $10)"
-                          value={mobileFormData.amount}
-                          onChange={(e) => handleMobileInputChange('amount', e.target.value)}
-                          disabled={!canWithdraw}
-                          min={minimumWithdrawal}
-                          max={availableBalance}
-                          step="0.01"
-                          required
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="fullName">Full Name (3 names)</Label>
-                        <Input
-                          id="fullName"
-                          placeholder="e.g. Mohamed Ali Hassan"
-                          value={mobileFormData.fullName}
-                          onChange={(e) => handleMobileInputChange('fullName', e.target.value)}
-                          disabled={!canWithdraw}
-                          required
-                        />
-                      </div>
-                      
-                      <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor="mobileNumber">Mobile Number</Label>
-                        <Input
-                          id="mobileNumber"
-                          placeholder="e.g. 252 61 1234567"
-                          value={mobileFormData.mobileNumber}
-                          onChange={(e) => handleMobileInputChange('mobileNumber', e.target.value)}
-                          disabled={!canWithdraw}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    {withdrawAmount > 0 && (
-                      <div className="p-4 bg-muted/50 rounded-lg space-y-1">
-                        <p className="text-sm text-muted-foreground">
-                          Withdrawal fee (2%): <span className="font-medium">${withdrawFee.toFixed(2)}</span>
-                        </p>
-                        <p className="font-semibold text-green-600">
-                          You will receive: ${amountAfterFee.toFixed(2)}
-                        </p>
-                      </div>
-                    )}
-                    
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="mobile-saveDetails"
-                        checked={mobileFormData.saveDetails}
-                        onCheckedChange={(checked) => handleMobileInputChange('saveDetails', checked as boolean)}
-                        disabled={!canWithdraw}
+                    <div className="space-y-2">
+                      <Label>City / Town</Label>
+                      <Input
+                        placeholder="City"
+                        value={mobile.city}
+                        onChange={(e) => setField('city', e.target.value)}
+                        className="rounded-lg h-11"
+                        required
                       />
-                      <Label htmlFor="mobile-saveDetails" className="text-sm">
-                        Save these details for future withdrawals
-                      </Label>
                     </div>
+                  </div>
+                </section>
 
-                    <div className="flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-sm text-blue-700 dark:text-blue-300">
-                      <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                      <span>Admin will process your withdrawal manually. You'll receive funds within 24-48 hours.</span>
-                    </div>
-                    
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={!canWithdraw || !isMobileFormValid || isSubmitting}
-                      size="lg"
-                    >
-                      {isSubmitting ? (
-                        "Processing..."
-                      ) : withdrawAmount > 0 ? (
-                        `Request Withdrawal - $${withdrawAmount.toFixed(2)}`
-                      ) : (
-                        "Request Withdrawal"
-                      )}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            )}
-          </div>
+                {/* Reason */}
+                <section className="space-y-4">
+                  <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-2">
+                    <FileText className="w-3.5 h-3.5" />
+                    Reason for Sending
+                  </h3>
+                  <Select
+                    value={mobile.reason}
+                    onValueChange={(v) => setField('reason', v)}
+                  >
+                    <SelectTrigger className="rounded-lg h-11">
+                      <SelectValue placeholder="Select reason" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {REASON_OPTIONS.map((r) => (
+                        <SelectItem key={r} value={r}>
+                          {r}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </section>
 
-          {!canWithdraw && (
-            <p className="text-sm text-muted-foreground text-center mt-6">
-              Withdrawal is currently not available
-            </p>
-          )}
-        </div>
+                {withdrawAmount > 0 && (
+                  <div className="p-4 bg-muted/40 rounded-xl space-y-1">
+                    <p className="text-sm text-muted-foreground">
+                      Withdrawal fee (2%):{' '}
+                      <span className="font-medium text-foreground">
+                        ${withdrawFee.toFixed(2)}
+                      </span>
+                    </p>
+                    <p className="font-semibold text-green-600">
+                      You will receive: ${amountAfterFee.toFixed(2)}
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-sm text-blue-700 dark:text-blue-300">
+                  <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <span>
+                    Admin will process your withdrawal manually. Funds usually arrive within 24–48 hours.
+                  </span>
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full h-12 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold shadow-md"
+                  disabled={!canWithdraw || !isMobileValid || isSubmitting}
+                  size="lg"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Save and Continue'}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 
