@@ -77,13 +77,13 @@ const AdminWithdrawals = () => {
 
   useEffect(() => { fetchData(); }, []);
 
-  const update = async (id: string, status: 'paid' | 'rejected') => {
+  const update = async (id: string, status: 'completed' | 'rejected') => {
     const { error } = await supabase
       .from('withdrawals')
       .update({ status, processed_at: new Date().toISOString() })
       .eq('id', id);
     if (error) return toast.error('Failed');
-    toast.success(`Withdrawal ${status}`);
+    toast.success(`Withdrawal ${status === 'completed' ? 'paid' : status}`);
     setSelected(null);
     fetchData();
   };
