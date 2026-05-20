@@ -53,6 +53,7 @@ const Navbar = () => {
   const dashboardPath = userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard';
   const profilePath = userRole === 'freelancer' ? '/freelancer/profile' : '/buyer/settings';
   const settingsPath = userRole === 'freelancer' ? '/freelancer/settings' : '/buyer/settings';
+  const messagesPath = userRole === 'freelancer' ? '/freelancer/messages' : '/buyer/messages';
 
   const handleLogout = async () => {
     await signOut();
