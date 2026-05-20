@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Moon, Sun, Menu, X, User, LogOut, Settings, LayoutDashboard } from 'lucide-react';
+import { Moon, Sun, Menu, X, User, LogOut, Settings, LayoutDashboard, MessageSquare } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { Logo } from './Logo';
 import { useAuth } from '@/hooks/useAuth';
+import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
