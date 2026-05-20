@@ -86,19 +86,35 @@ const Navbar = () => {
             </button>
 
             {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="flex items-center space-x-2 focus:outline-none">
-                    <Avatar className="h-9 w-9 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/50 transition-all">
-                      {profile?.profile_image_url ? (
-                        <AvatarImage src={profile.profile_image_url} alt={profile?.full_name || 'User'} />
-                      ) : null}
-                      <AvatarFallback className="bg-primary text-primary-foreground text-sm font-medium">
-                        {initials}
-                      </AvatarFallback>
-                    </Avatar>
-                  </button>
-                </DropdownMenuTrigger>
+              <>
+                <Link
+                  to={messagesPath}
+                  aria-label="Messages"
+                  className="relative p-2 rounded-full hover:bg-accent transition-colors"
+                >
+                  <MessageSquare className="h-5 w-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none ring-2 ring-background">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
+                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center space-x-2 focus:outline-none relative">
+                      <Avatar className="h-9 w-9 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/50 transition-all">
+                        {profile?.profile_image_url ? (
+                          <AvatarImage src={profile.profile_image_url} alt={profile?.full_name || 'User'} />
+                        ) : null}
+                        <AvatarFallback className="bg-primary text-primary-foreground text-sm font-medium">
+                          {initials}
+                        </AvatarFallback>
+                      </Avatar>
+                      {unreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-background" />
+                      )}
+                    </button>
+                  </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <div className="px-3 py-2">
                     <p className="text-sm font-medium text-foreground">{profile?.full_name || user.email}</p>
