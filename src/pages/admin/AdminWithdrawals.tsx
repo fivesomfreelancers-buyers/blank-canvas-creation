@@ -99,7 +99,7 @@ const AdminWithdrawals = () => {
   const pending = items.filter((i) => i.status === 'pending');
   const totalPending = pending.reduce((s, i) => s + Number(i.amount), 0);
   const totalPaid = items
-    .filter((i) => i.status === 'paid')
+    .filter((i) => i.status === 'completed' || (i.status as any) === 'paid' || i.status === 'approved')
     .reduce((s, i) => s + Number(i.amount), 0);
 
   const isBank = (w: WithdrawalRow) => w.method === 'bank' || !!w.bank_name;
