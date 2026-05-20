@@ -163,7 +163,7 @@ const AdminWithdrawals = () => {
                   <TableCell className="text-xs">{fullName(w)}</TableCell>
                   <TableCell>
                     <Badge
-                      variant={w.status === 'paid' ? 'default' : w.status === 'rejected' ? 'destructive' : 'outline'}
+                      variant={(w.status === 'completed' || (w.status as any) === 'paid' || w.status === 'approved') ? 'default' : w.status === 'rejected' ? 'destructive' : 'outline'}
                     >
                       {w.status}
                     </Badge>
