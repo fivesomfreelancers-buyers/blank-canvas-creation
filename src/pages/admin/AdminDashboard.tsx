@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard, Users, Trophy, DollarSign, Scale, LogOut, Shield, Sparkles,
   ShieldCheck, Package, MessageSquare, CreditCard, Wallet, Star, FolderTree,
-  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag, Megaphone, Headphones,
+  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag, Megaphone, Headphones, Crown,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -33,6 +33,7 @@ import AdminSettings from './AdminSettings';
 import AdminReports from './AdminReports';
 import AdminFivesomSupport from './AdminFivesomSupport';
 import AdminFivesomNews from './AdminFivesomNews';
+import AdminVip from './AdminVip';
 
 const menuGroups: { label: string; items: { key: string; label: string; icon: any }[] }[] = [
   { label: 'Overview', items: [
@@ -48,6 +49,7 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
     { key: 'payments', label: 'Payments', icon: CreditCard },
     { key: 'withdrawals', label: 'Withdrawals', icon: Wallet },
     { key: 'escrow', label: 'Escrow', icon: DollarSign },
+    { key: 'vip', label: 'VIP Memberships', icon: Crown },
   ]},
   { label: 'Fivesom Channels', items: [
     { key: 'fivesom_support', label: 'Fivesom Support', icon: Headphones },
@@ -89,6 +91,7 @@ const AdminDashboardInner = () => {
       case 'payments': return <AdminPayments />;
       case 'withdrawals': return <AdminWithdrawals />;
       case 'escrow': return <AdminEscrow />;
+      case 'vip': return <AdminVip />;
       case 'disputes': return <AdminDisputes />;
       case 'reports': return <AdminReports />;
       case 'reviews': return <AdminReviews />;
