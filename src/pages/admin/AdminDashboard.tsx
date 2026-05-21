@@ -33,6 +33,7 @@ import AdminSettings from './AdminSettings';
 import AdminReports from './AdminReports';
 import AdminFivesomSupport from './AdminFivesomSupport';
 import AdminFivesomNews from './AdminFivesomNews';
+import AdminVip from './AdminVip';
 
 const menuGroups: { label: string; items: { key: string; label: string; icon: any }[] }[] = [
   { label: 'Overview', items: [
