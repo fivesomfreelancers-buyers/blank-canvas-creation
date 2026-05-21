@@ -49,6 +49,7 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
     { key: 'payments', label: 'Payments', icon: CreditCard },
     { key: 'withdrawals', label: 'Withdrawals', icon: Wallet },
     { key: 'escrow', label: 'Escrow', icon: DollarSign },
+    { key: 'vip', label: 'VIP Memberships', icon: Crown },
   ]},
   { label: 'Fivesom Channels', items: [
     { key: 'fivesom_support', label: 'Fivesom Support', icon: Headphones },
