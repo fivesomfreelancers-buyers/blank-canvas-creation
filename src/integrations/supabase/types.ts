@@ -395,6 +395,9 @@ export type Database = {
           verification_removed_at: string | null
           verification_removed_by: string | null
           verified_at: string | null
+          vip_expires_at: string | null
+          vip_started_at: string | null
+          vip_tier: Database["public"]["Enums"]["vip_tier"] | null
           years_experience: string | null
         }
         Insert: {
@@ -416,6 +419,9 @@ export type Database = {
           verification_removed_at?: string | null
           verification_removed_by?: string | null
           verified_at?: string | null
+          vip_expires_at?: string | null
+          vip_started_at?: string | null
+          vip_tier?: Database["public"]["Enums"]["vip_tier"] | null
           years_experience?: string | null
         }
         Update: {
@@ -437,6 +443,9 @@ export type Database = {
           verification_removed_at?: string | null
           verification_removed_by?: string | null
           verified_at?: string | null
+          vip_expires_at?: string | null
+          vip_started_at?: string | null
+          vip_tier?: Database["public"]["Enums"]["vip_tier"] | null
           years_experience?: string | null
         }
         Relationships: []
@@ -1231,6 +1240,48 @@ export type Database = {
         }
         Relationships: []
       }
+      vip_memberships: {
+        Row: {
+          activated_at: string | null
+          created_at: string
+          expires_at: string | null
+          freelancer_id: string | null
+          granted_by: string | null
+          id: string
+          notes: string | null
+          payment_status: string
+          tier: Database["public"]["Enums"]["vip_tier"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activated_at?: string | null
+          created_at?: string
+          expires_at?: string | null
+          freelancer_id?: string | null
+          granted_by?: string | null
+          id?: string
+          notes?: string | null
+          payment_status?: string
+          tier: Database["public"]["Enums"]["vip_tier"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activated_at?: string | null
+          created_at?: string
+          expires_at?: string | null
+          freelancer_id?: string | null
+          granted_by?: string | null
+          id?: string
+          notes?: string | null
+          payment_status?: string
+          tier?: Database["public"]["Enums"]["vip_tier"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       wallets: {
         Row: {
           balance: number | null
@@ -1421,6 +1472,14 @@ export type Database = {
       }
     }
     Functions: {
+      admin_remove_vip: { Args: { _user_id: string }; Returns: undefined }
+      admin_set_vip: {
+        Args: {
+          _tier: Database["public"]["Enums"]["vip_tier"]
+          _user_id: string
+        }
+        Returns: undefined
+      }
       bootstrap_system_conversations: {
         Args: { _user_id: string }
         Returns: undefined
@@ -1429,6 +1488,7 @@ export type Database = {
         Args: { _attachment_url: string; _audience: string; _body: string }
         Returns: number
       }
+      expire_vip_memberships: { Args: never; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1463,6 +1523,7 @@ export type Database = {
       system_sender_type: "user" | "admin" | "system"
       ticket_status: "open" | "in_progress" | "resolved"
       verification_status: "pending" | "approved" | "rejected"
+      vip_tier: "golden" | "platinum"
       withdrawal_status: "pending" | "approved" | "rejected" | "completed"
     }
     CompositeTypes: {
@@ -1607,6 +1668,7 @@ export const Constants = {
       system_sender_type: ["user", "admin", "system"],
       ticket_status: ["open", "in_progress", "resolved"],
       verification_status: ["pending", "approved", "rejected"],
+      vip_tier: ["golden", "platinum"],
       withdrawal_status: ["pending", "approved", "rejected", "completed"],
     },
   },
