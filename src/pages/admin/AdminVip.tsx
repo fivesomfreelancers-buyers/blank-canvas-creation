@@ -45,7 +45,7 @@ const AdminVip: React.FC = () => {
       .order('created_at', { ascending: false });
     if (error) { toast.error(error.message); setLoading(false); return; }
 
-    const ids = Array.from(new Set((data || []).map((r: any) => r.user_id)));
+    const ids = Array.from(new Set((data || []).map((r: any) => r.user_id))) as string[];
     let profiles: any[] = [];
     if (ids.length) {
       const { data: p } = await supabase.from('profiles').select('id, full_name, email, profile_image_url').in('id', ids);
