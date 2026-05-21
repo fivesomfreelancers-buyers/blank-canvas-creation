@@ -91,6 +91,7 @@ const AdminDashboardInner = () => {
       case 'payments': return <AdminPayments />;
       case 'withdrawals': return <AdminWithdrawals />;
       case 'escrow': return <AdminEscrow />;
+      case 'vip': return <AdminVip />;
       case 'disputes': return <AdminDisputes />;
       case 'reports': return <AdminReports />;
       case 'reviews': return <AdminReviews />;
