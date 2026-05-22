@@ -222,17 +222,33 @@ const GigDetails = () => {
             {/* Title & Info */}
             <Card className={vipCardClass} style={vipCardStyle}>
               <CardHeader>
-                <h1 className="text-2xl font-bold mb-2">{gig.title}</h1>
+                {vipTheme && (
+                  <div className="flex items-center gap-2 mb-3 px-3 py-1.5 rounded-full w-fit text-[10px] font-bold tracking-widest uppercase"
+                       style={{ background: vipTheme.gradient, color: '#0B0E14', boxShadow: `0 0 16px ${vipTheme.accent}aa` }}>
+                    <vipTheme.Icon className="w-3.5 h-3.5" /> {vipTheme.label}
+                  </div>
+                )}
+                <h1 className={`text-2xl font-bold mb-2 ${vipTheme ? 'bg-clip-text text-transparent' : ''}`}
+                    style={vipTheme ? { backgroundImage: vipTheme.textGradient } : undefined}>{gig.title}</h1>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
                     <div className="relative">
-                      <Avatar className="w-8 h-8">
+                      <Avatar className="w-8 h-8" style={vipTheme ? { boxShadow: vipTheme.ring } : undefined}>
                         <AvatarImage src={gig.freelancerImageUrl || ''} />
                         <AvatarFallback className="bg-primary text-primary-foreground text-sm">{initials}</AvatarFallback>
                       </Avatar>
                       <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
                     </div>
-                    <span className="font-medium inline-flex items-center gap-1">{gig.freelancerName}{gig.isVerified && <VerifiedBadge size="sm" />}</span>
+                    <span className="font-medium inline-flex items-center gap-1.5">
+                      {gig.freelancerName}
+                      {gig.isVerified && <VerifiedBadge size="sm" />}
+                      {vipTheme && (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold"
+                              style={{ background: vipTheme.gradient, color: '#0B0E14' }}>
+                          <vipTheme.Icon className="w-2.5 h-2.5" /> {vipTheme.shortLabel}
+                        </span>
+                      )}
+                    </span>
                     <OnlineIndicator userId={gig.freelancerUserId} />
                   </div>
                   {gig.totalReviews > 0 && (
