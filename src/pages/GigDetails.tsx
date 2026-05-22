@@ -173,6 +173,9 @@ const GigDetails = () => {
 
   const images = gig.images && gig.images.length > 0 ? gig.images : [];
   const currentPkg = packages.find(p => p.package_type === selectedPackage);
+  const vipTheme = getVipTheme(gig.vipTier);
+  const vipCardStyle = vipTheme ? { background: vipTheme.cardBg, boxShadow: vipTheme.cardShadow, borderColor: 'transparent' } : undefined;
+  const vipCardClass = vipTheme ? 'border-0 backdrop-blur-xl' : '';
 
   return (
     <div className="min-h-screen bg-background">
