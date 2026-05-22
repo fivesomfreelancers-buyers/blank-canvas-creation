@@ -178,7 +178,7 @@ const GigDetails = () => {
   const vipCardClass = vipTheme ? 'border-0 backdrop-blur-xl' : '';
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative" style={vipTheme ? { backgroundImage: vipTheme.pageGlow } : undefined}>
       <SEO
         title={`${gig.title} | FIVESOM`}
         description={(gig.description || gig.title || '').toString().slice(0, 160)}
@@ -220,7 +220,7 @@ const GigDetails = () => {
             <UnifiedGallery videoUrl={videoUrl} images={images} title={gig.title} />
 
             {/* Title & Info */}
-            <Card>
+            <Card className={vipCardClass} style={vipCardStyle}>
               <CardHeader>
                 <h1 className="text-2xl font-bold mb-2">{gig.title}</h1>
                 <div className="flex items-center space-x-4">
