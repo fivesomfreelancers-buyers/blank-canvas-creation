@@ -177,7 +177,7 @@ const AdminVip: React.FC = () => {
           {loading ? (
             <div className="flex items-center justify-center py-8 text-slate-400"><Loader2 className="h-5 w-5 animate-spin mr-2" /> Loading…</div>
           ) : filtered.length === 0 ? (
-            <p className="text-center py-8 text-slate-400">No {tab === 'requests' ? 'pending requests' : 'active VIPs'}.</p>
+            <p className="text-center py-8 text-slate-400">No {tab === 'requests' ? 'pending requests' : tab === 'active' ? 'active VIPs' : 'history records'}.</p>
           ) : (
             <div className="overflow-x-auto">
               <Table>
