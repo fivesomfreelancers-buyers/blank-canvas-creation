@@ -18,6 +18,7 @@ import SEO from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
+import { getVipTheme, resolveVipTier } from '@/lib/vipTheme';
 
 const GigDetails = () => {
   const { id } = useParams();
@@ -41,7 +42,7 @@ const GigDetails = () => {
 
       const { data: gigData, error } = await supabase
         .from('gigs')
-        .select(`*, freelancers ( id, user_id, rating, completed_orders, is_verified, bio )`)
+        .select(`*, freelancers ( id, user_id, rating, completed_orders, is_verified, bio, vip_tier, vip_expires_at )`)
         .eq('id', id)
         .single();
 
@@ -90,6 +91,7 @@ const GigDetails = () => {
         isVerified: gigData.freelancers?.is_verified || false,
         completedOrders: gigData.freelancers?.completed_orders || 0,
         freelancerBio: gigData.freelancers?.bio || '',
+        vipTier: resolveVipTier(gigData.freelancers?.vip_tier, gigData.freelancers?.vip_expires_at),
       });
       setLoading(false);
     };
@@ -171,9 +173,12 @@ const GigDetails = () => {
 
   const images = gig.images && gig.images.length > 0 ? gig.images : [];
   const currentPkg = packages.find(p => p.package_type === selectedPackage);
+  const vipTheme = getVipTheme(gig.vipTier);
+  const vipCardStyle = vipTheme ? { background: vipTheme.cardBg, boxShadow: vipTheme.cardShadow, borderColor: 'transparent' } : undefined;
+  const vipCardClass = vipTheme ? 'border-0 backdrop-blur-xl' : '';
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative" style={vipTheme ? { backgroundImage: vipTheme.pageGlow } : undefined}>
       <SEO
         title={`${gig.title} | FIVESOM`}
         description={(gig.description || gig.title || '').toString().slice(0, 160)}
@@ -215,19 +220,35 @@ const GigDetails = () => {
             <UnifiedGallery videoUrl={videoUrl} images={images} title={gig.title} />
 
             {/* Title & Info */}
-            <Card>
+            <Card className={vipCardClass} style={vipCardStyle}>
               <CardHeader>
-                <h1 className="text-2xl font-bold mb-2">{gig.title}</h1>
+                {vipTheme && (
+                  <div className="flex items-center gap-2 mb-3 px-3 py-1.5 rounded-full w-fit text-[10px] font-bold tracking-widest uppercase"
+                       style={{ background: vipTheme.gradient, color: '#0B0E14', boxShadow: `0 0 16px ${vipTheme.accent}aa` }}>
+                    <vipTheme.Icon className="w-3.5 h-3.5" /> {vipTheme.label}
+                  </div>
+                )}
+                <h1 className={`text-2xl font-bold mb-2 ${vipTheme ? 'bg-clip-text text-transparent' : ''}`}
+                    style={vipTheme ? { backgroundImage: vipTheme.textGradient } : undefined}>{gig.title}</h1>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
                     <div className="relative">
-                      <Avatar className="w-8 h-8">
+                      <Avatar className="w-8 h-8" style={vipTheme ? { boxShadow: vipTheme.ring } : undefined}>
                         <AvatarImage src={gig.freelancerImageUrl || ''} />
                         <AvatarFallback className="bg-primary text-primary-foreground text-sm">{initials}</AvatarFallback>
                       </Avatar>
                       <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
                     </div>
-                    <span className="font-medium inline-flex items-center gap-1">{gig.freelancerName}{gig.isVerified && <VerifiedBadge size="sm" />}</span>
+                    <span className="font-medium inline-flex items-center gap-1.5">
+                      {gig.freelancerName}
+                      {gig.isVerified && <VerifiedBadge size="sm" />}
+                      {vipTheme && (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold"
+                              style={{ background: vipTheme.gradient, color: '#0B0E14' }}>
+                          <vipTheme.Icon className="w-2.5 h-2.5" /> {vipTheme.shortLabel}
+                        </span>
+                      )}
+                    </span>
                     <OnlineIndicator userId={gig.freelancerUserId} />
                   </div>
                   {gig.totalReviews > 0 && (
@@ -306,7 +327,7 @@ const GigDetails = () => {
 
             {/* Attached Documents */}
             {docs.length > 0 && (
-              <Card>
+              <Card className={vipCardClass} style={vipCardStyle}>
                 <CardHeader>
                   <CardTitle>Attached Files</CardTitle>
                 </CardHeader>
@@ -329,7 +350,7 @@ const GigDetails = () => {
 
             {/* FAQ Section */}
             {faqs.length > 0 && (
-              <Card>
+              <Card className={vipCardClass} style={vipCardStyle}>
                 <CardHeader>
                   <CardTitle>Frequently Asked Questions</CardTitle>
                 </CardHeader>
@@ -351,7 +372,7 @@ const GigDetails = () => {
           <div className="space-y-6">
             {/* Package Selection */}
             {packages.length > 0 ? (
-              <Card>
+              <Card className={vipCardClass} style={vipCardStyle}>
                 <CardHeader className="pb-3">
                   <div className="flex border-b border-border">
                     {packages.map((pkg) => (
@@ -397,7 +418,8 @@ const GigDetails = () => {
                           ))}
                         </div>
                       )}
-                      <Button onClick={() => handleOrder(currentPkg)} className="w-full">
+                      <Button onClick={() => handleOrder(currentPkg)} className="w-full text-white border-0"
+                              style={vipTheme ? { background: vipTheme.gradient, color: '#0B0E14', boxShadow: `0 0 16px ${vipTheme.accent}80` } : undefined}>
                         Continue (${Number(currentPkg.price).toFixed(2)})
                       </Button>
                     </>
@@ -405,7 +427,7 @@ const GigDetails = () => {
                 </CardContent>
               </Card>
             ) : (
-              <Card>
+              <Card className={vipCardClass} style={vipCardStyle}>
                 <CardHeader><CardTitle>Order This Gig</CardTitle></CardHeader>
                 <CardContent className="space-y-4">
                   <span className="text-2xl font-bold text-green-600">${Number(gig.base_price).toFixed(2)}</span>
@@ -419,12 +441,12 @@ const GigDetails = () => {
             )}
 
             {/* About Seller */}
-            <Card>
+            <Card className={vipCardClass} style={vipCardStyle}>
               <CardHeader><CardTitle>About the Seller</CardTitle></CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <div className="relative">
-                    <Avatar className="w-12 h-12">
+                    <Avatar className="w-12 h-12" style={vipTheme ? { boxShadow: vipTheme.ring } : undefined}>
                       <AvatarImage src={gig.freelancerImageUrl || ''} />
                       <AvatarFallback className="bg-primary text-primary-foreground">{initials}</AvatarFallback>
                     </Avatar>
@@ -436,6 +458,12 @@ const GigDetails = () => {
                     <OnlineIndicator userId={gig.freelancerUserId} />
                   </div>
                 </div>
+                {vipTheme && (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-md text-xs font-semibold"
+                       style={{ background: vipTheme.accentSoft, color: vipTheme.accent, boxShadow: `inset 0 0 0 1px ${vipTheme.accent}55` }}>
+                    <vipTheme.Icon className="w-4 h-4" /> {vipTheme.label}
+                  </div>
+                )}
                 {gig.isVerified && (
                   <div className="flex items-center text-sm">
                     <Shield className="w-4 h-4 mr-2 text-green-500" />
@@ -446,7 +474,7 @@ const GigDetails = () => {
             </Card>
 
             {/* Contact Seller */}
-            <Card>
+            <Card className={vipCardClass} style={vipCardStyle}>
               <CardHeader><CardTitle>Contact Seller</CardTitle></CardHeader>
               <CardContent className="space-y-3">
                 <Textarea placeholder="Hi, I'm interested in your service..." value={contactMessage} onChange={(e) => setContactMessage(e.target.value)} rows={3} />

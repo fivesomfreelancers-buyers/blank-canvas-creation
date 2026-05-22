@@ -10,6 +10,7 @@ import GigDetails from "./pages/GigDetails";
 import HowItWorks from "./pages/HowItWorks";
 import Docs from "./pages/Docs";
 import Vip from "./pages/Vip";
+import VipCheckout from "./pages/VipCheckout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import BuyerRegister from "./pages/BuyerRegister";
@@ -65,6 +66,7 @@ const App = () => (
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/docs" element={<Docs />} />
               <Route path="/vip" element={<Vip />} />
+              <Route path="/vip-checkout" element={<VipCheckout />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/register/buyer" element={<BuyerRegister />} />

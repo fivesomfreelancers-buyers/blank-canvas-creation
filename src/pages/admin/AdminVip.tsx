@@ -29,7 +29,7 @@ const TIER_STYLE: Record<'golden'|'platinum', { color: string; bg: string; label
 const AdminVip: React.FC = () => {
   const [rows, setRows] = useState<VipRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<'requests' | 'active'>('requests');
+  const [tab, setTab] = useState<'requests' | 'active' | 'history'>('requests');
   const [search, setSearch] = useState('');
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -89,6 +89,17 @@ const AdminVip: React.FC = () => {
     load();
   };
 
+  const changeTier = async (row: VipRow, newTier: 'golden' | 'platinum') => {
+    if (newTier === row.tier) return;
+    const verb = newTier === 'platinum' ? 'Upgrade to PLATINUM' : 'Downgrade to GOLDEN';
+    if (!confirm(`${verb} for ${row.profile?.full_name || row.profile?.email || 'user'}?`)) return;
+    setBusy(row.id);
+    const { error } = await (supabase as any).rpc('admin_set_vip', { _user_id: row.user_id, _tier: newTier });
+    if (error) toast.error(error.message); else toast.success(`Changed to ${TIER_STYLE[newTier].label}`);
+    setBusy(null);
+    load();
+  };
+
   const grantToEmail = async () => {
     if (!grantEmail.trim()) return;
     setBusy('grant');
@@ -106,7 +117,9 @@ const AdminVip: React.FC = () => {
     const name = (r.profile?.full_name || '').toLowerCase();
     const email = (r.profile?.email || '').toLowerCase();
     const matchSearch = !q || name.includes(q) || email.includes(q);
-    const matchTab = tab === 'requests' ? r.payment_status === 'pending' : r.payment_status === 'activated';
+    const matchTab = tab === 'requests' ? r.payment_status === 'pending'
+      : tab === 'active' ? r.payment_status === 'activated'
+      : ['expired', 'removed', 'rejected'].includes(r.payment_status);
     return matchSearch && matchTab;
   });
 
@@ -151,6 +164,9 @@ const AdminVip: React.FC = () => {
             <Button size="sm" variant={tab === 'active' ? 'default' : 'outline'} onClick={() => setTab('active')}>
               Active VIPs ({rows.filter(r => r.payment_status === 'activated').length})
             </Button>
+            <Button size="sm" variant={tab === 'history' ? 'default' : 'outline'} onClick={() => setTab('history')}>
+              History ({rows.filter(r => ['expired','removed','rejected'].includes(r.payment_status)).length})
+            </Button>
           </div>
           <div className="relative w-full sm:w-64">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
@@ -161,7 +177,7 @@ const AdminVip: React.FC = () => {
           {loading ? (
             <div className="flex items-center justify-center py-8 text-slate-400"><Loader2 className="h-5 w-5 animate-spin mr-2" /> Loading…</div>
           ) : filtered.length === 0 ? (
-            <p className="text-center py-8 text-slate-400">No {tab === 'requests' ? 'pending requests' : 'active VIPs'}.</p>
+            <p className="text-center py-8 text-slate-400">No {tab === 'requests' ? 'pending requests' : tab === 'active' ? 'active VIPs' : 'history records'}.</p>
           ) : (
             <div className="overflow-x-auto">
               <Table>
@@ -204,9 +220,22 @@ const AdminVip: React.FC = () => {
                               </Button>
                             </div>
                           ) : (
-                            <Button size="sm" variant="destructive" onClick={() => remove(r)} disabled={busy === r.id}>
-                              Remove VIP
-                            </Button>
+                            <div className="flex gap-2 justify-end flex-wrap">
+                              {r.tier === 'golden' ? (
+                                <Button size="sm" onClick={() => changeTier(r, 'platinum')} disabled={busy === r.id}
+                                  className="bg-gradient-to-r from-[#A78BFA] to-[#8A7FFF] text-white">
+                                  ⬆ Upgrade to Platinum
+                                </Button>
+                              ) : (
+                                <Button size="sm" onClick={() => changeTier(r, 'golden')} disabled={busy === r.id}
+                                  className="bg-gradient-to-r from-[#FFD700] to-[#B8860B] text-slate-900">
+                                  ⬇ Downgrade to Golden
+                                </Button>
+                              )}
+                              <Button size="sm" variant="destructive" onClick={() => remove(r)} disabled={busy === r.id}>
+                                Remove VIP
+                              </Button>
+                            </div>
                           )}
                         </TableCell>
                       </TableRow>
