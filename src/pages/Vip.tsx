@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Crown, Sparkles, BadgeCheck, Trophy, Zap, Star, Headphones,
   TrendingUp, Gift, Lock, ArrowRight, Check, Rocket, Gem, Shield,
@@ -7,7 +7,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import Navbar from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
@@ -73,39 +72,19 @@ const TIERS = [
 
 const Vip: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [submitting, setSubmitting] = useState<string | null>(null);
 
   const requestVip = async (tier: typeof TIERS[number]) => {
     if (!user) {
-      toast.error('Please sign in to request VIP membership');
+      toast.error('Please sign in to purchase VIP membership');
+      navigate('/login');
       return;
     }
     setSubmitting(tier.id);
-    try {
-      // 1. Create a VIP membership request record (admin notification)
-      const { error: vipErr } = await (supabase as any).from('vip_memberships').insert({
-        user_id: user.id,
-        tier: tier.id,
-        payment_status: 'pending',
-        notes: `User requested ${tier.name} (${tier.price}${tier.period})`,
-      });
-      if (vipErr) throw vipErr;
-
-      // 2. Open a support ticket so admins are notified
-      await supabase.from('support_tickets').insert({
-        user_id: user.id,
-        subject: `VIP Membership Request — ${tier.name}`,
-        message: `User ${user.email} is requesting ${tier.name} (${tier.price}${tier.period}, ${tier.duration}). Please review and activate.`,
-        category: 'vip_request',
-        status: 'open',
-      } as any);
-
-      toast.success(`Your ${tier.name} request was sent. Admin will activate after payment confirmation.`);
-    } catch (e: any) {
-      toast.error(e.message || 'Failed to submit request. Try again.');
-    } finally {
-      setSubmitting(null);
-    }
+    // Go straight to bank checkout — admin will activate after verification
+    navigate('/vip-checkout', { state: { tier: tier.id } });
+    setSubmitting(null);
   };
 
   return (
