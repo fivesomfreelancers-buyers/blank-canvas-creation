@@ -18,6 +18,7 @@ import SEO from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
+import { getVipTheme, resolveVipTier } from '@/lib/vipTheme';
 
 const GigDetails = () => {
   const { id } = useParams();
@@ -41,7 +42,7 @@ const GigDetails = () => {
 
       const { data: gigData, error } = await supabase
         .from('gigs')
-        .select(`*, freelancers ( id, user_id, rating, completed_orders, is_verified, bio )`)
+        .select(`*, freelancers ( id, user_id, rating, completed_orders, is_verified, bio, vip_tier, vip_expires_at )`)
         .eq('id', id)
         .single();
 
@@ -90,6 +91,7 @@ const GigDetails = () => {
         isVerified: gigData.freelancers?.is_verified || false,
         completedOrders: gigData.freelancers?.completed_orders || 0,
         freelancerBio: gigData.freelancers?.bio || '',
+        vipTier: resolveVipTier(gigData.freelancers?.vip_tier, gigData.freelancers?.vip_expires_at),
       });
       setLoading(false);
     };
