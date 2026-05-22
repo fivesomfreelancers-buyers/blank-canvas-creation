@@ -187,7 +187,7 @@ const Vip: React.FC = () => {
                   disabled={submitting === t.id}
                   className="w-full text-white border-0 h-12 text-base font-semibold"
                   style={{ background: t.gradient, color: '#0B0E14', boxShadow: t.glow }}>
-                  {submitting === t.id ? 'Sending request…' : `Request ${t.name}`}
+                  {submitting === t.id ? 'Opening…' : `Buy ${t.name} — ${t.price}${t.period}`}
                 </Button>
               </div>
             ))}
