@@ -89,6 +89,17 @@ const AdminVip: React.FC = () => {
     load();
   };
 
+  const changeTier = async (row: VipRow, newTier: 'golden' | 'platinum') => {
+    if (newTier === row.tier) return;
+    const verb = newTier === 'platinum' ? 'Upgrade to PLATINUM' : 'Downgrade to GOLDEN';
+    if (!confirm(`${verb} for ${row.profile?.full_name || row.profile?.email || 'user'}?`)) return;
+    setBusy(row.id);
+    const { error } = await (supabase as any).rpc('admin_set_vip', { _user_id: row.user_id, _tier: newTier });
+    if (error) toast.error(error.message); else toast.success(`Changed to ${TIER_STYLE[newTier].label}`);
+    setBusy(null);
+    load();
+  };
+
   const grantToEmail = async () => {
     if (!grantEmail.trim()) return;
     setBusy('grant');
