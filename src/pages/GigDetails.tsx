@@ -327,7 +327,7 @@ const GigDetails = () => {
 
             {/* Attached Documents */}
             {docs.length > 0 && (
-              <Card>
+              <Card className={vipCardClass} style={vipCardStyle}>
                 <CardHeader>
                   <CardTitle>Attached Files</CardTitle>
                 </CardHeader>
@@ -350,7 +350,7 @@ const GigDetails = () => {
 
             {/* FAQ Section */}
             {faqs.length > 0 && (
-              <Card>
+              <Card className={vipCardClass} style={vipCardStyle}>
                 <CardHeader>
                   <CardTitle>Frequently Asked Questions</CardTitle>
                 </CardHeader>
@@ -372,7 +372,7 @@ const GigDetails = () => {
           <div className="space-y-6">
             {/* Package Selection */}
             {packages.length > 0 ? (
-              <Card>
+              <Card className={vipCardClass} style={vipCardStyle}>
                 <CardHeader className="pb-3">
                   <div className="flex border-b border-border">
                     {packages.map((pkg) => (
@@ -426,7 +426,7 @@ const GigDetails = () => {
                 </CardContent>
               </Card>
             ) : (
-              <Card>
+              <Card className={vipCardClass} style={vipCardStyle}>
                 <CardHeader><CardTitle>Order This Gig</CardTitle></CardHeader>
                 <CardContent className="space-y-4">
                   <span className="text-2xl font-bold text-green-600">${Number(gig.base_price).toFixed(2)}</span>
@@ -440,7 +440,7 @@ const GigDetails = () => {
             )}
 
             {/* About Seller */}
-            <Card>
+            <Card className={vipCardClass} style={vipCardStyle}>
               <CardHeader><CardTitle>About the Seller</CardTitle></CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center space-x-3">
@@ -467,7 +467,7 @@ const GigDetails = () => {
             </Card>
 
             {/* Contact Seller */}
-            <Card>
+            <Card className={vipCardClass} style={vipCardStyle}>
               <CardHeader><CardTitle>Contact Seller</CardTitle></CardHeader>
               <CardContent className="space-y-3">
                 <Textarea placeholder="Hi, I'm interested in your service..." value={contactMessage} onChange={(e) => setContactMessage(e.target.value)} rows={3} />
