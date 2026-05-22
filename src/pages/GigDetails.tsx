@@ -418,7 +418,8 @@ const GigDetails = () => {
                           ))}
                         </div>
                       )}
-                      <Button onClick={() => handleOrder(currentPkg)} className="w-full">
+                      <Button onClick={() => handleOrder(currentPkg)} className="w-full text-white border-0"
+                              style={vipTheme ? { background: vipTheme.gradient, color: '#0B0E14', boxShadow: `0 0 16px ${vipTheme.accent}80` } : undefined}>
                         Continue (${Number(currentPkg.price).toFixed(2)})
                       </Button>
                     </>
