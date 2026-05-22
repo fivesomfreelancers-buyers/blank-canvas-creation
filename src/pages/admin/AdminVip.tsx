@@ -29,7 +29,7 @@ const TIER_STYLE: Record<'golden'|'platinum', { color: string; bg: string; label
 const AdminVip: React.FC = () => {
   const [rows, setRows] = useState<VipRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<'requests' | 'active'>('requests');
+  const [tab, setTab] = useState<'requests' | 'active' | 'history'>('requests');
   const [search, setSearch] = useState('');
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -117,7 +117,9 @@ const AdminVip: React.FC = () => {
     const name = (r.profile?.full_name || '').toLowerCase();
     const email = (r.profile?.email || '').toLowerCase();
     const matchSearch = !q || name.includes(q) || email.includes(q);
-    const matchTab = tab === 'requests' ? r.payment_status === 'pending' : r.payment_status === 'activated';
+    const matchTab = tab === 'requests' ? r.payment_status === 'pending'
+      : tab === 'active' ? r.payment_status === 'activated'
+      : ['expired', 'removed', 'rejected'].includes(r.payment_status);
     return matchSearch && matchTab;
   });
 
@@ -161,6 +163,9 @@ const AdminVip: React.FC = () => {
             </Button>
             <Button size="sm" variant={tab === 'active' ? 'default' : 'outline'} onClick={() => setTab('active')}>
               Active VIPs ({rows.filter(r => r.payment_status === 'activated').length})
+            </Button>
+            <Button size="sm" variant={tab === 'history' ? 'default' : 'outline'} onClick={() => setTab('history')}>
+              History ({rows.filter(r => ['expired','removed','rejected'].includes(r.payment_status)).length})
             </Button>
           </div>
           <div className="relative w-full sm:w-64">
