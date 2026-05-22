@@ -445,7 +445,7 @@ const GigDetails = () => {
               <CardContent className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <div className="relative">
-                    <Avatar className="w-12 h-12">
+                    <Avatar className="w-12 h-12" style={vipTheme ? { boxShadow: vipTheme.ring } : undefined}>
                       <AvatarImage src={gig.freelancerImageUrl || ''} />
                       <AvatarFallback className="bg-primary text-primary-foreground">{initials}</AvatarFallback>
                     </Avatar>
@@ -457,6 +457,12 @@ const GigDetails = () => {
                     <OnlineIndicator userId={gig.freelancerUserId} />
                   </div>
                 </div>
+                {vipTheme && (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-md text-xs font-semibold"
+                       style={{ background: vipTheme.accentSoft, color: vipTheme.accent, boxShadow: `inset 0 0 0 1px ${vipTheme.accent}55` }}>
+                    <vipTheme.Icon className="w-4 h-4" /> {vipTheme.label}
+                  </div>
+                )}
                 {gig.isVerified && (
                   <div className="flex items-center text-sm">
                     <Shield className="w-4 h-4 mr-2 text-green-500" />
