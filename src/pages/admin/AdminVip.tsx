@@ -215,9 +215,22 @@ const AdminVip: React.FC = () => {
                               </Button>
                             </div>
                           ) : (
-                            <Button size="sm" variant="destructive" onClick={() => remove(r)} disabled={busy === r.id}>
-                              Remove VIP
-                            </Button>
+                            <div className="flex gap-2 justify-end flex-wrap">
+                              {r.tier === 'golden' ? (
+                                <Button size="sm" onClick={() => changeTier(r, 'platinum')} disabled={busy === r.id}
+                                  className="bg-gradient-to-r from-[#A78BFA] to-[#8A7FFF] text-white">
+                                  ⬆ Upgrade to Platinum
+                                </Button>
+                              ) : (
+                                <Button size="sm" onClick={() => changeTier(r, 'golden')} disabled={busy === r.id}
+                                  className="bg-gradient-to-r from-[#FFD700] to-[#B8860B] text-slate-900">
+                                  ⬇ Downgrade to Golden
+                                </Button>
+                              )}
+                              <Button size="sm" variant="destructive" onClick={() => remove(r)} disabled={busy === r.id}>
+                                Remove VIP
+                              </Button>
+                            </div>
                           )}
                         </TableCell>
                       </TableRow>
