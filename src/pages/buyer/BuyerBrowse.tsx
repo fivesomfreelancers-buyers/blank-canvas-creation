@@ -10,6 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Search, Filter, Star, Heart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import BackToDashboard from '@/components/BackToDashboard';
+import VipBadge from '@/components/VipBadge';
 
 const BuyerBrowse = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,7 +29,9 @@ const BuyerBrowse = () => {
           *,
           freelancers(
             user_id,
-            rating
+            rating,
+            vip_tier,
+            vip_expires_at
           ),
           profiles!gigs_freelancer_id_fkey(
             full_name
@@ -147,6 +150,7 @@ const BuyerBrowse = () => {
                     <span className="text-sm text-muted-foreground">
                       by {gig.profiles?.full_name || 'Freelancer'}
                     </span>
+                    <VipBadge vip_tier={gig.freelancers?.vip_tier} vip_expires_at={gig.freelancers?.vip_expires_at} size="xs" />
                   </div>
                   <div className="flex items-center space-x-1 mb-3">
                     <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
