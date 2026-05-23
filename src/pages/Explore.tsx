@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import VipBadge from '@/components/VipBadge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -40,7 +41,7 @@ const Explore = () => {
       try {
         const { data: gigsData } = await supabase
           .from('gigs')
-          .select(`*, freelancers ( user_id, rating, is_verified )`)
+          .select(`*, freelancers ( user_id, rating, is_verified, vip_tier, vip_expires_at )`)
           .eq('status', 'active');
 
         const formattedGigs = await Promise.all((gigsData || []).map(async (gig: any) => {
@@ -66,6 +67,8 @@ const Explore = () => {
             freelancerId: gig.freelancer_id,
             freelancerAvatar: profile?.profile_image_url || '',
             isVerified: !!gig.freelancers?.is_verified,
+            vipTierRaw: gig.freelancers?.vip_tier,
+            vipExpiresAt: gig.freelancers?.vip_expires_at,
             rating: avgRating,
             reviews: reviews?.length || 0,
             price: Number(gig.base_price),
@@ -270,6 +273,9 @@ const Explore = () => {
                         <span className="text-muted-foreground text-sm">No image</span>
                       </div>
                     )}
+                    <div className="absolute top-2 left-2">
+                      <VipBadge vip_tier={gig.vipTierRaw} vip_expires_at={gig.vipExpiresAt} size="sm" />
+                    </div>
                   </div>
                   
                   <div className="p-4">
@@ -284,7 +290,7 @@ const Explore = () => {
                           {gig.freelancer.split(' ').map((n: string) => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-xs text-muted-foreground inline-flex items-center gap-1">by {gig.freelancer}{gig.isVerified && <VerifiedBadge size="sm" />}</span>
+                      <span className="text-xs text-muted-foreground inline-flex items-center gap-1">by {gig.freelancer}{gig.isVerified && <VerifiedBadge size="sm" />}<VipBadge vip_tier={gig.vipTierRaw} vip_expires_at={gig.vipExpiresAt} size="xs" showLabel={false} /></span>
                     </div>
                     
                     <div className="flex items-center justify-between">
