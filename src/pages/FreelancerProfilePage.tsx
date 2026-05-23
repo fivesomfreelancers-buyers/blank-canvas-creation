@@ -11,6 +11,8 @@ import { Star, MapPin, Calendar, MessageSquare, CheckCircle, Globe, GraduationCa
 import Navbar from '@/components/Navbar';
 import FreelancerFAQDisplay from '@/components/faq/FreelancerFAQDisplay';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import VipBadge from '@/components/VipBadge';
+import { resolveVipTier, getVipTheme } from '@/lib/vipTheme';
 import ReportDialog from '@/components/ReportDialog';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
@@ -186,16 +188,24 @@ const FreelancerProfilePage = () => {
 
   const initials = profileData.name.split(' ').map((n: string) => n[0]).join('').toUpperCase();
 
+  const vipTier = resolveVipTier(profileData.vip_tier, profileData.vip_expires_at);
+  const vipTheme = getVipTheme(vipTier);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="max-w-6xl mx-auto px-4 py-8 pt-24">
         {/* Profile Header */}
-        <Card className="mb-8">
+        <Card className="mb-8 relative overflow-hidden" style={vipTheme ? { background: vipTheme.cardBg, boxShadow: vipTheme.cardShadow } : undefined}>
+          {vipTheme && (
+            <div className="absolute top-3 right-3 z-10">
+              <VipBadge tier={vipTier} size="md" />
+            </div>
+          )}
           <CardContent className="p-6">
             <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-6">
               <div className="relative">
-                <Avatar className="w-24 h-24">
+                <Avatar className="w-24 h-24" style={vipTheme ? { boxShadow: vipTheme.ring } : undefined}>
                   <AvatarImage src={profileData.imageUrl || ''} alt={profileData.name} className="object-cover" />
                   <AvatarFallback className="text-2xl bg-primary text-primary-foreground">{initials}</AvatarFallback>
                 </Avatar>
@@ -205,9 +215,11 @@ const FreelancerProfilePage = () => {
               </div>
               <div className="flex-1">
                 <div className="flex items-center space-x-3 mb-1 flex-wrap gap-y-2">
-                  <h1 className="text-3xl font-bold text-foreground">{profileData.name}</h1>
+                  <h1 className={`text-3xl font-bold ${vipTheme ? 'bg-clip-text text-transparent' : 'text-foreground'}`}
+                      style={vipTheme ? { backgroundImage: vipTheme.textGradient } : undefined}>{profileData.name}</h1>
                   {profileData.is_verified && <VerifiedBadge showLabel />}
-                  {profileData.is_featured && (
+                  {vipTheme && <VipBadge tier={vipTier} size="sm" />}
+                  {profileData.is_featured && !vipTheme && (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-500/15 text-yellow-600 border border-yellow-500/30">
                       <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" /> Top Rated
                     </span>
