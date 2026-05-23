@@ -65,6 +65,27 @@ export const CATEGORIES: CategoryDef[] = [
       { slug: 'ux-prototyping', name: 'UX Prototyping' },
     ],
   },
+  {
+    slug: 'graphic-design',
+    name: 'Graphic Design',
+    subcategories: [
+      { slug: 'flyer-design', name: 'Flyer Design' },
+      { slug: 'poster-design', name: 'Poster Design' },
+      { slug: 'banner-design', name: 'Banner Design' },
+      { slug: 'business-card', name: 'Business Card Design' },
+      { slug: 'social-media-graphics', name: 'Social Media Graphics' },
+      { slug: 'brochure-design', name: 'Brochure Design' },
+      { slug: 'menu-design', name: 'Menu Design' },
+      { slug: 'invitation-design', name: 'Invitation Design' },
+      { slug: 'packaging-design', name: 'Packaging Design' },
+      { slug: 't-shirt-design', name: 'T-Shirt Design' },
+      { slug: 'book-cover-design', name: 'Book Cover Design' },
+      { slug: 'infographic-design', name: 'Infographic Design' },
+      { slug: 'illustration', name: 'Illustration' },
+      { slug: 'photo-editing', name: 'Photo Editing' },
+      { slug: 'branding-kit', name: 'Branding Kit' },
+    ],
+  },
 ];
 
 export const getCategoryBySlug = (slug?: string | null) =>
