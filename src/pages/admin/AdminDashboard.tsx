@@ -34,6 +34,7 @@ import AdminReports from './AdminReports';
 import AdminFivesomSupport from './AdminFivesomSupport';
 import AdminFivesomNews from './AdminFivesomNews';
 import AdminVip from './AdminVip';
+import { useAdminBadges, type AdminBadgeKey } from '@/hooks/useAdminBadges';
 
 const menuGroups: { label: string; items: { key: string; label: string; icon: any }[] }[] = [
   { label: 'Overview', items: [
