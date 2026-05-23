@@ -76,6 +76,7 @@ const AdminDashboardInner = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const { signOut } = useAuth();
   const navigate = useNavigate();
+  const { badges } = useAdminBadges();
 
   const handleSignOut = async () => {
     await signOut();
