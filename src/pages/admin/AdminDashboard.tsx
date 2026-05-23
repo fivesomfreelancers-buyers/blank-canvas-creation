@@ -148,6 +148,7 @@ const AdminDashboardInner = () => {
                       <div className="px-3 pt-3 pb-1 text-[10px] uppercase tracking-wider text-[#7aa7c4]/70 font-semibold">{group.label}</div>
                       {group.items.map((item) => {
                         const active = activeTab === item.key;
+                        const count = (badges as any)[item.key as AdminBadgeKey] as number | undefined;
                         return (
                           <SidebarMenuItem key={item.key}>
                             <SidebarMenuButton
@@ -163,7 +164,16 @@ const AdminDashboardInner = () => {
                                       style={{ background: 'linear-gradient(180deg,#00A3FF,#00CCFF)', boxShadow: '0 0 10px #00A3FF' }} />
                               )}
                               <item.icon className={`h-4 w-4 ${active ? 'text-[#00CCFF]' : ''}`} />
-                              <span>{item.label}</span>
+                              <span className="flex-1">{item.label}</span>
+                              {count && count > 0 ? (
+                                <span
+                                  className="ml-auto inline-flex items-center justify-center min-w-[18px] h-[18px] px-1.5 rounded-full text-[10px] font-bold text-white animate-pulse"
+                                  style={{ background: '#ef4444', boxShadow: '0 0 10px rgba(239,68,68,0.7)' }}
+                                  title={`${count} new`}
+                                >
+                                  {count > 99 ? '99+' : count}
+                                </span>
+                              ) : null}
                             </SidebarMenuButton>
                           </SidebarMenuItem>
                         );
