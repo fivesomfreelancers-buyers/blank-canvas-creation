@@ -9,7 +9,6 @@ import { Megaphone, Send, Image as ImageIcon, Loader2, Trash2 } from 'lucide-rea
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { SocialLinks } from '@/components/SocialLinks';
-import { SocialLinks } from '@/components/SocialLinks';
 
 const AdminFivesomNews: React.FC = () => {
   const { user } = useAuth();
