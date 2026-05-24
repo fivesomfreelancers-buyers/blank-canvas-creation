@@ -9,6 +9,7 @@ import { Send, Search, Paperclip, Loader2, LifeBuoy } from 'lucide-react';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { SocialLinks } from '@/components/SocialLinks';
 
 interface SupportConvo {
   id: string;
