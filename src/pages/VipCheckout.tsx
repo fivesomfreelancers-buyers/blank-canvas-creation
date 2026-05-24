@@ -29,7 +29,8 @@ const VipCheckout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const tier: 'golden' | 'platinum' = (location.state?.tier === 'platinum' ? 'platinum' : 'golden');
-  const theme = VIP_THEMES[tier];
+  const { theme: mode } = useTheme();
+  const theme = getVipTheme(tier, mode)!;
   const pricing = TIER_PRICES[tier];
 
   const [bankName, setBankName] = useState('');
