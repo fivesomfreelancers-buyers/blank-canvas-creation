@@ -69,34 +69,12 @@ const FreelancerProfileCard: React.FC<Props> = ({ freelancerId, userId, hidePort
   const languages: string[] = p.languages || [];
   const skills: string[] = data.skills || [];
 
-  // VIP tier check (auto-treat as null when expired)
-  const isVipActive = data.vip_tier && (!data.vip_expires_at || new Date(data.vip_expires_at) > new Date());
-  const vipTier: 'golden' | 'platinum' | null = isVipActive ? data.vip_tier : null;
-
-  const vipTheme = vipTier === 'platinum'
-    ? {
-        label: 'PLATINUM VIP SELLER',
-        accent: '#A78BFA',
-        gradient: 'linear-gradient(135deg,#E0E0FF,#A78BFA,#8A7FFF)',
-        ring: '0 0 0 2px #A78BFA, 0 0 32px rgba(167,139,250,0.55)',
-        frameBg: 'radial-gradient(800px 300px at 20% 0%, rgba(167,139,250,0.25), transparent 60%), linear-gradient(180deg, #0d1228, #060818)',
-        textGradient: 'linear-gradient(90deg,#E0E0FF,#A78BFA)',
-        Icon: Gem,
-      }
-    : vipTier === 'golden'
-    ? {
-        label: 'GOLDEN VIP SELLER',
-        accent: '#FFD166',
-        gradient: 'linear-gradient(135deg,#FFD700,#B8860B,#FFD166)',
-        ring: '0 0 0 2px #FFD166, 0 0 32px rgba(255,209,102,0.55)',
-        frameBg: 'radial-gradient(800px 300px at 20% 0%, rgba(255,209,102,0.22), transparent 60%), linear-gradient(180deg, #1a1303, #0a0700)',
-        textGradient: 'linear-gradient(90deg,#FFD166,#FFEFC2)',
-        Icon: Crown,
-      }
-    : null;
+  const { theme: mode } = useTheme();
+  const vipTier = resolveVipTier(data.vip_tier, data.vip_expires_at);
+  const vipTheme = getVipTheme(vipTier, mode);
 
   const wrapperClass = vipTheme ? 'space-y-5 p-6 rounded-2xl relative overflow-hidden' : 'space-y-5';
-  const wrapperStyle = vipTheme ? { background: vipTheme.frameBg, boxShadow: `inset 0 0 0 1.5px ${vipTheme.accent}, 0 0 40px ${vipTheme.accent}33` } : undefined;
+  const wrapperStyle = vipTheme ? { background: vipTheme.cardBg, boxShadow: vipTheme.cardShadow, color: vipTheme.bodyText } : undefined;
 
   return (
     <div className={wrapperClass} style={wrapperStyle}>
