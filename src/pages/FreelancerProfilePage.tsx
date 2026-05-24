@@ -191,7 +191,7 @@ const FreelancerProfilePage = () => {
   const initials = profileData.name.split(' ').map((n: string) => n[0]).join('').toUpperCase();
 
   const vipTier = resolveVipTier(profileData.vip_tier, profileData.vip_expires_at);
-  const vipTheme = getVipTheme(vipTier);
+  const vipTheme = getVipTheme(vipTier, mode);
 
   return (
     <div className="min-h-screen bg-background">
