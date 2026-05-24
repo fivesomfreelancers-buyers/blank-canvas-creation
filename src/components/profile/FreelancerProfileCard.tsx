@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Star, MapPin, Calendar, Globe, GraduationCap, Briefcase, Wrench, CheckCircle, ImageIcon, Crown, Gem } from 'lucide-react';
+import { Star, MapPin, Calendar, Globe, GraduationCap, Briefcase, Wrench, CheckCircle, ImageIcon } from 'lucide-react';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
 import { supabase } from '@/integrations/supabase/client';
+import { getVipTheme, resolveVipTier } from '@/lib/vipTheme';
+import { useTheme } from '@/components/ThemeProvider';
 
 interface Props {
   /** Pass either freelancerId (freelancers.id) or userId — the component resolves both. */
