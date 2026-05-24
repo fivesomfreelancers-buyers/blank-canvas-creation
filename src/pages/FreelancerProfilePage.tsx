@@ -13,6 +13,7 @@ import FreelancerFAQDisplay from '@/components/faq/FreelancerFAQDisplay';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import VipBadge from '@/components/VipBadge';
 import { resolveVipTier, getVipTheme } from '@/lib/vipTheme';
+import { useTheme } from '@/components/ThemeProvider';
 import ReportDialog from '@/components/ReportDialog';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
