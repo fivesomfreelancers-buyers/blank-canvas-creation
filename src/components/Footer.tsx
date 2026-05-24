@@ -31,9 +31,11 @@ export const Footer: React.FC = () => {
             <p className="text-sm text-muted-foreground mb-4">
               Connect with talented freelancers and grow your business with confidence.
             </p>
-            
+
+            <SocialLinks iconSize={18} showLabel />
+
             {/* Theme Toggle */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 mt-4">
               <span className="text-sm text-muted-foreground">Theme:</span>
               <Button
                 variant="outline"
