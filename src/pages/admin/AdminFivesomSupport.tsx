@@ -236,6 +236,7 @@ const AdminFivesomSupport: React.FC = () => {
         </CardContent>
       </Card>
     </div>
+  </div>
   );
 };
 
