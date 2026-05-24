@@ -9,6 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import Navbar from '@/components/Navbar';
 import logo from '@/assets/logo.png';
 import { supabase } from '@/integrations/supabase/client';
+import { SocialLinks } from '@/components/SocialLinks';
 
 const Login = () => {
   const [googleLoading, setGoogleLoading] = useState(false);

@@ -4,6 +4,7 @@ import { useConversations } from '@/hooks/useConversations';
 import ConversationList from '@/components/chat/ConversationList';
 import ChatArea from '@/components/chat/ChatArea';
 import BackToDashboard from '@/components/BackToDashboard';
+import { SocialLinks } from '@/components/SocialLinks';
 
 const FreelancerMessages = () => {
   const location = useLocation();
