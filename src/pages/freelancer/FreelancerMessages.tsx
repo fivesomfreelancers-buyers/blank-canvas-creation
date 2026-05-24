@@ -4,6 +4,7 @@ import { useConversations } from '@/hooks/useConversations';
 import ConversationList from '@/components/chat/ConversationList';
 import ChatArea from '@/components/chat/ChatArea';
 import BackToDashboard from '@/components/BackToDashboard';
+import { SocialLinks } from '@/components/SocialLinks';
 
 const FreelancerMessages = () => {
   const location = useLocation();
@@ -64,6 +65,10 @@ const FreelancerMessages = () => {
             />
           </div>
         )}
+        <div className="mt-8 flex items-center justify-center gap-2">
+          <span className="text-sm text-muted-foreground">Follow Fivesom:</span>
+          <SocialLinks iconSize={18} />
+        </div>
       </div>
     </div>
   );

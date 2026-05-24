@@ -6,6 +6,7 @@ import { Search, HelpCircle, MessageSquare, ArrowLeft } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import { SocialLinks } from '@/components/SocialLinks';
 
 const HelpCenter = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -236,6 +237,9 @@ const HelpCenter = () => {
                   Contact Support
                 </Button>
               </Link>
+              <div className="mt-6 pt-6 border-t border-border flex justify-center">
+                <SocialLinks iconSize={22} showLabel />
+              </div>
             </CardContent>
           </Card>
         </div>

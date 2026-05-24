@@ -17,6 +17,7 @@ import {
   Search
 } from 'lucide-react';
 import Navbar from '../../components/Navbar';
+import { SocialLinks } from '@/components/SocialLinks';
 
 const Support = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -226,6 +227,9 @@ const Support = () => {
                   Browse Help Center
                 </Button>
               </Link>
+            </div>
+            <div className="mt-6 pt-6 border-t border-border flex justify-center">
+              <SocialLinks iconSize={22} showLabel />
             </div>
           </div>
         </div>

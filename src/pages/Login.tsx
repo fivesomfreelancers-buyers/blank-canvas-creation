@@ -9,6 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import Navbar from '@/components/Navbar';
 import logo from '@/assets/logo.png';
 import { supabase } from '@/integrations/supabase/client';
+import { SocialLinks } from '@/components/SocialLinks';
 
 const Login = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -220,6 +221,12 @@ const Login = () => {
                   Join here
                 </Link>
               </p>
+            </div>
+
+            {/* Social Links */}
+            <div className="mt-4 pt-4 border-t border-border flex flex-col items-center gap-2">
+              <span className="text-sm text-muted-foreground">Follow Fivesom</span>
+              <SocialLinks iconSize={22} />
             </div>
           </div>
         </div>

@@ -1,0 +1,83 @@
+import React from 'react';
+
+interface SocialLinksProps {
+  className?: string;
+  iconSize?: number;
+  showLabel?: boolean;
+}
+
+export const socialLinks = [
+  {
+    name: 'Facebook',
+    url: 'https://www.facebook.com/profile.php?id=61590213487504',
+    icon: (size: number) => (
+      <svg width={size} height={size} viewBox="0 1 24 24" fill="currentColor">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 1.312 0 2.686.063 4.043v.068h2.212c-.068-1.344.1-2.586.1-2.586-1.328-.094-2.649.11-3.864.601a5.06 5.06 0 00-2.218 2.22c-.49 1.214-.695 2.535-.601 3.864H9.68v3.47h2.469v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+      </svg>
+    ),
+    color: 'hover:text-[#1877F2]',
+    bgColor: 'hover:bg-[#1877F2]/10',
+  },
+  {
+    name: 'Instagram',
+    url: 'https://www.instagram.com/fivesomofficial/',
+    icon: (size: number) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.2-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 1 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+      </svg>
+    ),
+    color: 'hover:text-[#E4405F]',
+    bgColor: 'hover:bg-[#E4405F]/10',
+  },
+  {
+    name: 'TikTok',
+    url: 'https://www.tiktok.com/@fivesomofficial',
+    icon: (size: number) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.27-1.33-3.55-3.84-3.64-6.38-.06-1.54.37-3.09 1.2-4.38.94-1.47 2.43-2.58 4.15-3.05 1.29-.36 2.68-.35 3.96-.03v4.04c-.71-.33-1.52-.48-2.33-.42-.77.05-1.51.34-2.08.83-.75.64-1.15 1.57-1.18 2.52-.03.93.29 1.87.89 2.56.6.68 1.46 1.1 2.37 1.17.78.06 1.58-.1 2.26-.5.69-.42 1.2-1.08 1.46-1.83.14-.37.21-.77.21-1.17V.02z"/>
+      </svg>
+    ),
+    color: 'hover:text-[#000000] dark:hover:text-white',
+    bgColor: 'hover:bg-black/5 dark:hover:bg-white/10',
+  },
+  {
+    name: 'YouTube',
+    url: 'https://www.youtube.com/@Fivesom-freelancers',
+    icon: (size: number) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+      </svg>
+    ),
+    color: 'hover:text-[#FF0000]',
+    bgColor: 'hover:bg-[#FF0000]/10',
+  },
+];
+
+export const SocialLinks: React.FC<SocialLinksProps> = ({ 
+  className = '', 
+  iconSize = 20,
+  showLabel = false 
+}) => {
+  return (
+    <div className={`flex items-center gap-2 ${className}`}>
+      {showLabel && (
+        <span className="text-sm text-muted-foreground mr-1">Follow us:</span>
+      )}
+      {socialLinks.map((link) => (
+        <a
+          key={link.name}
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={link.name}
+          className={`p-2 rounded-lg transition-all duration-200 text-muted-foreground ${link.color} ${link.bgColor} hover:scale-110`}
+          title={link.name}
+        >
+          {link.icon(iconSize)}
+        </a>
+      ))}
+    </div>
+  );
+};
+
+export default SocialLinks;

@@ -20,6 +20,7 @@ import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
+import { SocialLinks } from '@/components/SocialLinks';
 
 const FreelancerProfilePage = () => {
   const { freelancerId } = useParams();
@@ -277,6 +278,12 @@ const FreelancerProfilePage = () => {
                 <div className="sm:self-end">
                   <ReportDialog reportedUserId={profileData.userId} buttonLabel="Report" />
                 </div>
+              </div>
+
+              {/* Social Links */}
+              <div className="mt-4 flex items-center gap-3">
+                <span className="text-sm text-muted-foreground">Follow Fivesom:</span>
+                <SocialLinks iconSize={18} />
               </div>
             </div>
           </CardContent>

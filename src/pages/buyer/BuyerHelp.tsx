@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Search, HelpCircle, MessageSquare, Mail, Shield, CreditCard } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import BackToDashboard from '@/components/BackToDashboard';
+import { SocialLinks } from '@/components/SocialLinks';
 
 const BuyerHelp = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -143,6 +143,16 @@ const BuyerHelp = () => {
                   <Mail className="w-4 h-4 mr-2" />
                   Send Message
                 </Button>
+              </CardContent>
+            </Card>
+
+            {/* Social Media */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>Follow Fivesom</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SocialLinks iconSize={22} />
               </CardContent>
             </Card>
 

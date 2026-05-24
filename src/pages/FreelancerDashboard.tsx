@@ -6,6 +6,7 @@ import {
   Home, Briefcase, ShoppingBag, MessageSquare, Package, Wallet, Settings, User,
   Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2, RefreshCw, ArrowLeft, Scale
 } from 'lucide-react';
+import { SocialLinks } from '@/components/SocialLinks';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -101,6 +102,9 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
               <p className="text-sm font-medium truncate inline-flex items-center gap-1">{userProfile?.full_name || 'Freelancer'}{isVerified && <VerifiedBadge size="sm" />}</p>
               <p className="text-xs text-muted-foreground truncate">{userProfile?.email || 'Online'}</p>
             </div>
+          </div>
+          <div className="mt-3 flex justify-center">
+            <SocialLinks iconSize={16} />
           </div>
         </div>
       </SidebarFooter>
