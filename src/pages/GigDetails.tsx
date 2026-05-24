@@ -19,6 +19,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { getVipTheme, resolveVipTier } from '@/lib/vipTheme';
+import { useTheme } from '@/components/ThemeProvider';
 
 const GigDetails = () => {
   const { id } = useParams();
