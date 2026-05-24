@@ -10,7 +10,8 @@ import Navbar from '@/components/Navbar';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { VIP_THEMES } from '@/lib/vipTheme';
+import { getVipTheme } from '@/lib/vipTheme';
+import { useTheme } from '@/components/ThemeProvider';
 
 const BANK_ACCOUNTS = [
   { bank: 'Salaam Somali Bank', account_name: 'Fivesom Marketplace', account_number: '1001-220-3045' },
@@ -28,7 +29,8 @@ const VipCheckout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const tier: 'golden' | 'platinum' = (location.state?.tier === 'platinum' ? 'platinum' : 'golden');
-  const theme = VIP_THEMES[tier];
+  const { theme: mode } = useTheme();
+  const theme = getVipTheme(tier, mode)!;
   const pricing = TIER_PRICES[tier];
 
   const [bankName, setBankName] = useState('');
@@ -97,25 +99,25 @@ const VipCheckout: React.FC = () => {
           {/* Order summary */}
           <Card className="lg:col-span-1 border-0" style={{ background: theme.cardBg, boxShadow: theme.cardShadow }}>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
+              <CardTitle className="flex items-center gap-2" style={{ color: theme.bodyText }}>
                 <theme.Icon className="w-5 h-5" style={{ color: theme.accent }} />
                 <span className="bg-clip-text text-transparent" style={{ backgroundImage: theme.textGradient }}>
                   {tier === 'platinum' ? 'Platinum VIP' : 'Golden VIP'}
                 </span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-slate-100">
+            <CardContent className="space-y-4" style={{ color: theme.bodyText }}>
               <div className="flex items-baseline gap-1">
                 <span className="text-4xl font-extrabold">${pricing.price}</span>
-                <span className="text-sm text-slate-300">{pricing.period}</span>
+                <span className="text-sm" style={{ color: theme.mutedText }}>{pricing.period}</span>
               </div>
-              <p className="text-xs text-slate-400">Auto-expires after {pricing.duration} unless renewed.</p>
-              <div className="border-t border-slate-700 pt-3 space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-slate-400">Plan</span><span>{tier.toUpperCase()}</span></div>
-                <div className="flex justify-between"><span className="text-slate-400">Duration</span><span>{pricing.duration}</span></div>
-                <div className="flex justify-between text-base font-bold pt-1 border-t border-slate-700"><span>Total</span><span style={{ color: theme.accent }}>${pricing.price}.00</span></div>
+              <p className="text-xs" style={{ color: theme.mutedText }}>Auto-expires after {pricing.duration} unless renewed.</p>
+              <div className="pt-3 space-y-2 text-sm" style={{ borderTop: `1px solid ${theme.accent}55` }}>
+                <div className="flex justify-between"><span style={{ color: theme.mutedText }}>Plan</span><span>{tier.toUpperCase()}</span></div>
+                <div className="flex justify-between"><span style={{ color: theme.mutedText }}>Duration</span><span>{pricing.duration}</span></div>
+                <div className="flex justify-between text-base font-bold pt-1" style={{ borderTop: `1px solid ${theme.accent}55` }}><span>Total</span><span style={{ color: theme.accent }}>${pricing.price}.00</span></div>
               </div>
-              <div className="flex items-start gap-2 text-xs text-slate-400 pt-2">
+              <div className="flex items-start gap-2 text-xs pt-2" style={{ color: theme.mutedText }}>
                 <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: theme.accent }} />
                 <span>Activation is manual and verified by an admin once your bank transfer is received.</span>
               </div>

@@ -19,11 +19,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { getVipTheme, resolveVipTier } from '@/lib/vipTheme';
+import { useTheme } from '@/components/ThemeProvider';
 
 const GigDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { theme: mode } = useTheme();
   const [gig, setGig] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [contactMessage, setContactMessage] = useState('');
@@ -173,7 +175,7 @@ const GigDetails = () => {
 
   const images = gig.images && gig.images.length > 0 ? gig.images : [];
   const currentPkg = packages.find(p => p.package_type === selectedPackage);
-  const vipTheme = getVipTheme(gig.vipTier);
+  const vipTheme = getVipTheme(gig.vipTier, mode);
   const vipCardStyle = vipTheme ? { background: vipTheme.cardBg, boxShadow: vipTheme.cardShadow, borderColor: 'transparent' } : undefined;
   const vipCardClass = vipTheme ? 'border-0 backdrop-blur-xl' : '';
 

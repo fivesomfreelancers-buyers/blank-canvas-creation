@@ -13,6 +13,7 @@ import FreelancerFAQDisplay from '@/components/faq/FreelancerFAQDisplay';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import VipBadge from '@/components/VipBadge';
 import { resolveVipTier, getVipTheme } from '@/lib/vipTheme';
+import { useTheme } from '@/components/ThemeProvider';
 import ReportDialog from '@/components/ReportDialog';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
@@ -24,6 +25,7 @@ const FreelancerProfilePage = () => {
   const { freelancerId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { theme: mode } = useTheme();
   const [profileData, setProfileData] = useState<any>(null);
   const [gigs, setGigs] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
@@ -189,7 +191,7 @@ const FreelancerProfilePage = () => {
   const initials = profileData.name.split(' ').map((n: string) => n[0]).join('').toUpperCase();
 
   const vipTier = resolveVipTier(profileData.vip_tier, profileData.vip_expires_at);
-  const vipTheme = getVipTheme(vipTier);
+  const vipTheme = getVipTheme(vipTier, mode);
 
   return (
     <div className="min-h-screen bg-background">
