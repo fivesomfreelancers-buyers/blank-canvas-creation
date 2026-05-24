@@ -25,6 +25,7 @@ const GigDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { theme: mode } = useTheme();
   const [gig, setGig] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [contactMessage, setContactMessage] = useState('');
