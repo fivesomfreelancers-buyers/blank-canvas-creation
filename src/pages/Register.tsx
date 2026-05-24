@@ -203,6 +203,12 @@ const Register = () => {
                 <Link to="/login" className="text-primary hover:text-primary/80 font-medium">Sign in here</Link>
               </p>
             </div>
+
+            {/* Social Links */}
+            <div className="mt-4 pt-4 border-t border-border flex flex-col items-center gap-2">
+              <span className="text-sm text-muted-foreground">Follow Fivesom</span>
+              <SocialLinks iconSize={22} />
+            </div>
           </div>
         </div>
       </div>

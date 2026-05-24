@@ -70,6 +70,10 @@ const BuyerMessages = () => {
             />
           </div>
         )}
+        <div className="mt-8 flex items-center justify-center gap-2">
+          <span className="text-sm text-muted-foreground">Follow Fivesom:</span>
+          <SocialLinks iconSize={18} />
+        </div>
       </div>
     </div>
   );

@@ -77,6 +77,10 @@ const AdminFivesomNews: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <div className="flex items-center justify-end gap-2">
+        <span className="text-sm text-muted-foreground">Follow Fivesom:</span>
+        <SocialLinks iconSize={18} />
+      </div>
       <Card className="border-border bg-card">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">

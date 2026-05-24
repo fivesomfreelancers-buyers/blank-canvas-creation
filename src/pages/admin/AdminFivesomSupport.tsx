@@ -155,7 +155,12 @@ const AdminFivesomSupport: React.FC = () => {
   if (loading) return <div className="flex justify-center py-16"><Loader2 className="animate-spin h-8 w-8" /></div>;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[75vh]">
+    <div className="space-y-2">
+      <div className="flex items-center justify-end gap-2">
+        <span className="text-sm text-muted-foreground">Follow Fivesom:</span>
+        <SocialLinks iconSize={18} />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[75vh]">
       <Card className="border-border bg-card flex flex-col">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2"><LifeBuoy className="h-4 w-4" /> Fivesom Support · {convos.length}</CardTitle>
