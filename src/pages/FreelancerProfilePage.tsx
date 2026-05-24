@@ -25,6 +25,7 @@ const FreelancerProfilePage = () => {
   const { freelancerId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { theme: mode } = useTheme();
   const [profileData, setProfileData] = useState<any>(null);
   const [gigs, setGigs] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
