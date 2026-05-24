@@ -10,7 +10,8 @@ import Navbar from '@/components/Navbar';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { VIP_THEMES } from '@/lib/vipTheme';
+import { getVipTheme } from '@/lib/vipTheme';
+import { useTheme } from '@/components/ThemeProvider';
 
 const BANK_ACCOUNTS = [
   { bank: 'Salaam Somali Bank', account_name: 'Fivesom Marketplace', account_number: '1001-220-3045' },
