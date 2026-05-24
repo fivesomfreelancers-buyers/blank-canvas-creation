@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { Button } from './ui/button';
+import { SocialLinks }  from './SocialLinks';
 import logoLight from '@/assets/logo.png';
 import logoDark from '@/assets/logo-new.png';
 

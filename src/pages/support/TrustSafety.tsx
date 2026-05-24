@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,6 +15,7 @@ import {
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { useTheme } from '../../components/ThemeProvider';
+import { SocialLinks } from '@/components/SocialLinks';
 
 const TrustSafety = () => {
   const { theme } = useTheme();

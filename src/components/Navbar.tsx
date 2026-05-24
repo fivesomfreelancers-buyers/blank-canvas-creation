@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Moon, Sun, Menu, X, User, LogOut, Settings, LayoutDashboard, MessageSquare } from 'lucide-react';
+import { SocialLinks } from './SocialLinks';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { Logo } from './Logo';
