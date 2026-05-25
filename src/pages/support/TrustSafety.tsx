@@ -15,7 +15,7 @@ import {
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { useTheme } from '../../components/ThemeProvider';
-import { SocialLinks } from '@/components/SocialLinks';
+
 
 const TrustSafety = () => {
   const { theme } = useTheme();
