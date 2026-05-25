@@ -223,11 +223,6 @@ const Login = () => {
               </p>
             </div>
 
-            {/* Social Links */}
-            <div className="mt-4 pt-4 border-t border-border flex flex-col items-center gap-2">
-              <span className="text-sm text-muted-foreground">Follow Fivesom</span>
-              <SocialLinks iconSize={22} />
-            </div>
           </div>
         </div>
       </div>
