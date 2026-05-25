@@ -102,6 +102,7 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
               <p className="text-sm font-medium truncate inline-flex items-center gap-1">{userProfile?.full_name || 'Freelancer'}{isVerified && <VerifiedBadge size="sm" />}</p>
               <p className="text-xs text-muted-foreground truncate">{userProfile?.email || 'Online'}</p>
             </div>
+          </div>
         </div>
       </SidebarFooter>
     </Sidebar>
