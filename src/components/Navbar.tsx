@@ -205,11 +205,6 @@ const Navbar = () => {
                 </Link>
               </>
             )}
-            {/* Social links in mobile menu */}
-            <div className="pt-4 border-t border-border">
-              <p className="text-xs text-muted-foreground mb-2">Follow Fivesom</p>
-              <SocialLinks iconSize={22} />
-            </div>
           </div>
         )}
       </div>
