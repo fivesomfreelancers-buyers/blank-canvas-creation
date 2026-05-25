@@ -298,10 +298,6 @@ const TrustSafety = () => {
                       Emergency Hotline: +1 (555) 911-HELP
                     </Button>
                   </div>
-                  <div className="mt-4 pt-4 border-t border-red-200/30 flex items-center gap-3">
-                    <span className={`text-sm ${isDarkMode ? 'text-red-200' : 'text-red-700'}`}>Follow us:</span>
-                    <SocialLinks iconSize={20} />
-                  </div>
                 </div>
               </div>
             </CardContent>
