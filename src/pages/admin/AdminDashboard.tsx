@@ -197,8 +197,8 @@ const AdminDashboardInner = () => {
         </Sidebar>
 
         <SidebarInset className="bg-transparent">
-          <header className="h-16 flex items-center justify-between px-6 backdrop-blur-xl border-b sticky top-0 z-10"
-                  style={{ background: 'rgba(11,14,20,0.55)', borderColor: 'rgba(0,163,255,0.15)' }}>
+          <header className="h-16 flex items-center justify-between px-6 border-b sticky top-0 z-30 shadow-lg"
+                  style={{ background: '#0B0E14', borderColor: 'rgba(0,163,255,0.25)' }}>
             <div className="flex items-center gap-3">
               <SidebarTrigger className="text-slate-300 hover:text-white" />
               <div>
