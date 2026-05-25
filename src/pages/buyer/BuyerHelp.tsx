@@ -146,15 +146,6 @@ const BuyerHelp = () => {
               </CardContent>
             </Card>
 
-            {/* Social Media */}
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle>Follow Fivesom</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SocialLinks iconSize={22} />
-              </CardContent>
-            </Card>
 
             {/* Quick Links */}
             <Card>
