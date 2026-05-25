@@ -6,7 +6,7 @@ import { Search, HelpCircle, MessageSquare, ArrowLeft } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
-import { SocialLinks } from '@/components/SocialLinks';
+
 
 const HelpCenter = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
