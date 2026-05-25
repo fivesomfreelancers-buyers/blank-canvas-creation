@@ -112,8 +112,8 @@ const AdminDashboardInner = () => {
 
   return (
     <SidebarProvider>
-      {/* VIP Admin shell — dark gradient + ambient neon glow */}
-      <div className="admin-vip min-h-screen flex w-full relative overflow-hidden text-slate-100"
+      {/* VIP Admin shell — always dark, regardless of global theme */}
+      <div className="dark admin-vip min-h-screen flex w-full relative overflow-hidden text-slate-100"
            style={{ background: 'radial-gradient(1200px 600px at 10% -10%, rgba(0,163,255,0.15), transparent 60%), radial-gradient(900px 500px at 110% 10%, rgba(0,204,255,0.12), transparent 60%), #0B0E14' }}>
         {/* Decorative grid + orbs */}
         <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.06]"
@@ -197,8 +197,8 @@ const AdminDashboardInner = () => {
         </Sidebar>
 
         <SidebarInset className="bg-transparent">
-          <header className="h-16 flex items-center justify-between px-6 backdrop-blur-xl border-b sticky top-0 z-10"
-                  style={{ background: 'rgba(11,14,20,0.55)', borderColor: 'rgba(0,163,255,0.15)' }}>
+          <header className="h-16 flex items-center justify-between px-6 border-b sticky top-0 z-30 shadow-lg"
+                  style={{ background: '#0B0E14', borderColor: 'rgba(0,163,255,0.25)' }}>
             <div className="flex items-center gap-3">
               <SidebarTrigger className="text-slate-300 hover:text-white" />
               <div>

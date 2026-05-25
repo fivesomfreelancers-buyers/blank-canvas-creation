@@ -38,17 +38,19 @@ export function useAdminBadges() {
       headCount(sb.from('withdrawals').select('id', { count: 'exact', head: true }).eq('status', 'pending')),
       headCount(sb.from('verification_documents').select('id', { count: 'exact', head: true }).eq('status', 'pending')),
       headCount(sb.from('vip_memberships').select('id', { count: 'exact', head: true }).eq('payment_status', 'pending')),
-      sb.from('system_conversations').select('unread_admin'),
+      sb.from('system_conversations').select('unread_admin, type'),
     ]);
-    const chats = (sysconvo.data || []).reduce(
-      (s: number, r: any) => s + (Number(r.unread_admin) || 0), 0,
-    );
+    const rows = (sysconvo.data || []) as Array<{ unread_admin: number; type: string }>;
+    const chats = rows.reduce((s, r) => s + (Number(r.unread_admin) || 0), 0);
+    const fivesomSupportUnread = rows
+      .filter(r => r.type === 'support')
+      .reduce((s, r) => s + (Number(r.unread_admin) || 0), 0);
     setBadges({
       orders, disputes, reports, reviews,
       support: st + bst + fst,
       withdrawals, verifications, vip,
       chats,
-      fivesom_support: st + bst + fst,
+      fivesom_support: fivesomSupportUnread,
     });
   }, []);
 
