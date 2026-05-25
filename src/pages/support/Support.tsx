@@ -17,7 +17,7 @@ import {
   Search
 } from 'lucide-react';
 import Navbar from '../../components/Navbar';
-import { SocialLinks } from '@/components/SocialLinks';
+
 
 const Support = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
