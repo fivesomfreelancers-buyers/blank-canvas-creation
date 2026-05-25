@@ -114,14 +114,6 @@ const FreelancerHelp = () => {
               </CardContent>
             </Card>
 
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Follow Fivesom</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SocialLinks iconSize={22} />
-              </CardContent>
-            </Card>
 
             <Card className="mt-6">
               <CardHeader>
