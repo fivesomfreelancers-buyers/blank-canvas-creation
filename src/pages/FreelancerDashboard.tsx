@@ -6,7 +6,7 @@ import {
   Home, Briefcase, ShoppingBag, MessageSquare, Package, Wallet, Settings, User,
   Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2, RefreshCw, ArrowLeft, Scale
 } from 'lucide-react';
-import { SocialLinks } from '@/components/SocialLinks';
+
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
