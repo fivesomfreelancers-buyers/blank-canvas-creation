@@ -237,9 +237,6 @@ const HelpCenter = () => {
                   Contact Support
                 </Button>
               </Link>
-              <div className="mt-6 pt-6 border-t border-border flex justify-center">
-                <SocialLinks iconSize={22} showLabel />
-              </div>
             </CardContent>
           </Card>
         </div>
