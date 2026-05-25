@@ -20,7 +20,7 @@ import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
-import { SocialLinks } from '@/components/SocialLinks';
+
 
 const FreelancerProfilePage = () => {
   const { freelancerId } = useParams();
