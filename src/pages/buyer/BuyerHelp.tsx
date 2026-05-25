@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Search, HelpCircle, MessageSquare, Mail, Shield, CreditCard } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import BackToDashboard from '@/components/BackToDashboard';
-import { SocialLinks } from '@/components/SocialLinks';
+
 
 const BuyerHelp = () => {
   const [searchQuery, setSearchQuery] = useState('');
