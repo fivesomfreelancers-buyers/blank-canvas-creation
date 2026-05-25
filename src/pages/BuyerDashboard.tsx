@@ -15,7 +15,7 @@ import {
   ArrowLeft,
   Scale
 } from 'lucide-react';
-import { SocialLinks } from '@/components/SocialLinks';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -110,9 +110,6 @@ const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSect
               <p className="text-sm font-medium">{profile?.full_name || 'Buyer'}</p>
               <p className="text-xs text-muted-foreground">Online</p>
             </div>
-          </div>
-          <div className="mt-3 flex justify-center">
-            <SocialLinks iconSize={16} />
           </div>
         </div>
       </SidebarFooter>

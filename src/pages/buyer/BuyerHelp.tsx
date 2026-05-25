@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Search, HelpCircle, MessageSquare, Mail, Shield, CreditCard } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import BackToDashboard from '@/components/BackToDashboard';
-import { SocialLinks } from '@/components/SocialLinks';
+
 
 const BuyerHelp = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -146,15 +146,6 @@ const BuyerHelp = () => {
               </CardContent>
             </Card>
 
-            {/* Social Media */}
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle>Follow Fivesom</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SocialLinks iconSize={22} />
-              </CardContent>
-            </Card>
 
             {/* Quick Links */}
             <Card>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Moon, Sun, Menu, X, User, LogOut, Settings, LayoutDashboard, MessageSquare } from 'lucide-react';
-import { SocialLinks } from './SocialLinks';
+
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { Logo } from './Logo';
@@ -78,7 +78,6 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <SocialLinks iconSize={18} />
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-accent transition-colors"
@@ -206,11 +205,6 @@ const Navbar = () => {
                 </Link>
               </>
             )}
-            {/* Social links in mobile menu */}
-            <div className="pt-4 border-t border-border">
-              <p className="text-xs text-muted-foreground mb-2">Follow Fivesom</p>
-              <SocialLinks iconSize={22} />
-            </div>
           </div>
         )}
       </div>

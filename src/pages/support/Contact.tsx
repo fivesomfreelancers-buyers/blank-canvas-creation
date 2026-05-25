@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Mail, MessageSquare, Phone, Clock, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
-import { SocialLinks } from '@/components/SocialLinks';
+
 
 const Contact = () => {
   const { toast } = useToast();
@@ -157,15 +157,6 @@ const Contact = () => {
                 ))}
               </div>
 
-              {/* Social Media */}
-              <Card className="mt-6">
-                <CardHeader>
-                  <CardTitle className="text-foreground">Follow Fivesom</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <SocialLinks iconSize={22} />
-                </CardContent>
-              </Card>
 
               {/* Additional Resources */}
               <Card className="mt-6">

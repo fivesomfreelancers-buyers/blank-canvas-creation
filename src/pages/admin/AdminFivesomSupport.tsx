@@ -9,7 +9,7 @@ import { Send, Search, Paperclip, Loader2, LifeBuoy } from 'lucide-react';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { SocialLinks } from '@/components/SocialLinks';
+
 
 interface SupportConvo {
   id: string;
@@ -156,10 +156,6 @@ const AdminFivesomSupport: React.FC = () => {
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-end gap-2">
-        <span className="text-sm text-muted-foreground">Follow Fivesom:</span>
-        <SocialLinks iconSize={18} />
-      </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[75vh]">
       <Card className="border-border bg-card flex flex-col">
         <CardHeader className="pb-2">
