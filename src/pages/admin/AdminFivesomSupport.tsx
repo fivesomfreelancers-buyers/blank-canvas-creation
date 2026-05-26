@@ -184,7 +184,7 @@ const AdminFivesomSupport: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Card className="border-border bg-card lg:col-span-2 flex flex-col">
+      <Card className="border-border bg-card lg:col-span-2 flex flex-col min-h-0">
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center justify-between">
             <span>{selected ? selected.user_name : 'Select a conversation'}</span>
