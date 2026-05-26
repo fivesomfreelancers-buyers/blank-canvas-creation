@@ -33,12 +33,60 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 const AdminReports: React.FC = () => {
+  const { user } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [profiles, setProfiles] = useState<Record<string, { full_name: string | null; email: string | null }>>({});
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [savingId, setSavingId] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
+  const [supportReply, setSupportReply] = useState<Record<string, string>>({});
+  const [sendingId, setSendingId] = useState<string | null>(null);
+
+  const sendSupportReply = async (reporterId: string, reportId: string) => {
+    const body = (supportReply[reportId] || '').trim();
+    if (!body || !user) return toast({ title: 'Type a reply first', variant: 'destructive' });
+    setSendingId(reportId);
+    try {
+      // get-or-create the user's Fivesom Support conversation
+      let convoId: string | null = null;
+      const { data: existing } = await (supabase as any)
+        .from('system_conversations')
+        .select('id')
+        .eq('user_id', reporterId)
+        .eq('type', 'support')
+        .maybeSingle();
+      if (existing?.id) {
+        convoId = existing.id;
+      } else {
+        const { data: created, error: ce } = await (supabase as any)
+          .from('system_conversations')
+          .insert({ user_id: reporterId, type: 'support', status: 'open', last_message: body, last_message_at: new Date().toISOString() })
+          .select('id')
+          .single();
+        if (ce) throw ce;
+        convoId = created.id;
+      }
+      const { error: me } = await (supabase as any).from('system_messages').insert({
+        conversation_id: convoId,
+        sender_type: 'admin',
+        admin_id: user.id,
+        body,
+      });
+      if (me) throw me;
+      await (supabase as any)
+        .from('system_conversations')
+        .update({ last_message: body, last_message_at: new Date().toISOString(), unread_user: 1 })
+        .eq('id', convoId);
+      toast({ title: 'Reply sent via Fivesom Support' });
+      setSupportReply(prev => ({ ...prev, [reportId]: '' }));
+    } catch (err: any) {
+      toast({ title: 'Failed to send', description: err.message, variant: 'destructive' });
+    } finally {
+      setSendingId(null);
+    }
+  };
+
 
   const load = async () => {
     setLoading(true);
