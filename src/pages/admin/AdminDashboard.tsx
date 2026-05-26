@@ -78,6 +78,8 @@ const AdminDashboardInner = () => {
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const { badges } = useAdminBadges();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   const handleSignOut = async () => {
     await signOut();
