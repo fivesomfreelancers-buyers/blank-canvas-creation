@@ -113,21 +113,48 @@ const AdminDashboardInner = () => {
     }
   };
 
+  // Theme-aware palette
+  const shellBg = isDark
+    ? 'radial-gradient(1200px 600px at 10% -10%, rgba(0,163,255,0.15), transparent 60%), radial-gradient(900px 500px at 110% 10%, rgba(0,204,255,0.12), transparent 60%), #0B0E14'
+    : 'radial-gradient(1200px 600px at 10% -10%, rgba(0,123,255,0.08), transparent 60%), radial-gradient(900px 500px at 110% 10%, rgba(0,204,255,0.06), transparent 60%), #F5F8FC';
+  const sidebarBg = isDark
+    ? 'linear-gradient(180deg, rgba(13,17,26,0.85), rgba(11,14,20,0.9))'
+    : 'linear-gradient(180deg, #ffffff, #f1f5f9)';
+  const headerBg = isDark ? '#0B0E14' : '#ffffff';
+  const headerBorder = isDark ? 'rgba(0,163,255,0.25)' : 'rgba(0,123,255,0.15)';
+  const sidebarBorder = isDark ? 'rgba(0,163,255,0.18)' : 'rgba(0,123,255,0.12)';
+  const titleGradient = isDark ? 'linear-gradient(90deg,#ffffff,#9bdcff)' : 'linear-gradient(90deg,#0b3a66,#007BFF)';
+  const brandGradient = isDark ? 'linear-gradient(90deg,#fff,#9bdcff)' : 'linear-gradient(90deg,#0b3a66,#007BFF)';
+  const mutedText = isDark ? 'text-[#7aa7c4]' : 'text-slate-500';
+  const labelText = isDark ? 'text-[#7aa7c4]/70' : 'text-slate-400';
+  const inactiveItemText = isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900';
+  const activeItemText = isDark ? 'text-white font-semibold' : 'text-slate-900 font-semibold';
+  const activeItemStyle = isDark ? {
+    background: 'linear-gradient(90deg, rgba(0,163,255,0.22), rgba(0,204,255,0.06))',
+    boxShadow: 'inset 0 0 0 1px rgba(0,163,255,0.4), 0 0 18px rgba(0,163,255,0.25)',
+  } : {
+    background: 'linear-gradient(90deg, rgba(0,123,255,0.10), rgba(0,204,255,0.04))',
+    boxShadow: 'inset 0 0 0 1px rgba(0,123,255,0.30)',
+  };
+  const triggerText = isDark ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-slate-900';
+
   return (
     <SidebarProvider>
-      {/* VIP Admin shell — always dark, regardless of global theme */}
-      <div className="dark admin-vip min-h-screen flex w-full relative overflow-hidden text-slate-100"
-           style={{ background: 'radial-gradient(1200px 600px at 10% -10%, rgba(0,163,255,0.15), transparent 60%), radial-gradient(900px 500px at 110% 10%, rgba(0,204,255,0.12), transparent 60%), #0B0E14' }}>
+      <div className={`admin-vip min-h-screen flex w-full relative overflow-hidden ${isDark ? 'text-slate-100' : 'text-slate-800'}`}
+           style={{ background: shellBg }}>
         {/* Decorative grid + orbs */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.06]"
-             style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        <div aria-hidden className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full blur-3xl" style={{ background: 'radial-gradient(closest-side, rgba(0,163,255,0.35), transparent)' }} />
-        <div aria-hidden className="pointer-events-none absolute -bottom-32 -right-32 h-[28rem] w-[28rem] rounded-full blur-3xl" style={{ background: 'radial-gradient(closest-side, rgba(0,204,255,0.25), transparent)' }} />
+        <div aria-hidden className={`pointer-events-none absolute inset-0 ${isDark ? 'opacity-[0.06]' : 'opacity-[0.04]'}`}
+             style={{ backgroundImage: isDark
+               ? 'linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px)'
+               : 'linear-gradient(rgba(0,80,160,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(0,80,160,.5) 1px, transparent 1px)',
+               backgroundSize: '40px 40px' }} />
+        <div aria-hidden className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full blur-3xl" style={{ background: 'radial-gradient(closest-side, rgba(0,163,255,0.25), transparent)' }} />
+        <div aria-hidden className="pointer-events-none absolute -bottom-32 -right-32 h-[28rem] w-[28rem] rounded-full blur-3xl" style={{ background: 'radial-gradient(closest-side, rgba(0,204,255,0.18), transparent)' }} />
 
         <Sidebar collapsible="icon" className="border-r-0">
           <SidebarContent
             className="backdrop-blur-xl border-r"
-            style={{ background: 'linear-gradient(180deg, rgba(13,17,26,0.85), rgba(11,14,20,0.9))', borderColor: 'rgba(0,163,255,0.18)' }}
+            style={{ background: sidebarBg, borderColor: sidebarBorder }}
           >
             <SidebarGroup>
               <SidebarGroupLabel className="px-4 py-5">
@@ -139,8 +166,8 @@ const AdminDashboardInner = () => {
                   </div>
                   <div className="leading-tight">
                     <p className="font-bold text-sm tracking-wide bg-clip-text text-transparent"
-                       style={{ backgroundImage: 'linear-gradient(90deg,#fff,#9bdcff)' }}>FIVESOM ADMIN</p>
-                    <p className="text-[10px] text-[#7aa7c4] flex items-center gap-1"><Sparkles className="h-3 w-3" /> VIP Control Center</p>
+                       style={{ backgroundImage: brandGradient }}>FIVESOM ADMIN</p>
+                    <p className={`text-[10px] flex items-center gap-1 ${mutedText}`}><Sparkles className="h-3 w-3" /> VIP Control Center</p>
                   </div>
                 </div>
               </SidebarGroupLabel>
@@ -148,7 +175,7 @@ const AdminDashboardInner = () => {
                 <SidebarMenu className="gap-1">
                   {menuGroups.map((group) => (
                     <React.Fragment key={group.label}>
-                      <div className="px-3 pt-3 pb-1 text-[10px] uppercase tracking-wider text-[#7aa7c4]/70 font-semibold">{group.label}</div>
+                      <div className={`px-3 pt-3 pb-1 text-[10px] uppercase tracking-wider font-semibold ${labelText}`}>{group.label}</div>
                       {group.items.map((item) => {
                         const active = activeTab === item.key;
                         const count = (badges as any)[item.key as AdminBadgeKey] as number | undefined;
@@ -156,17 +183,14 @@ const AdminDashboardInner = () => {
                           <SidebarMenuItem key={item.key}>
                             <SidebarMenuButton
                               onClick={() => setActiveTab(item.key)}
-                              className={`group relative rounded-lg transition-all duration-200 h-9 ${active ? 'text-white font-semibold' : 'text-slate-400 hover:text-white'}`}
-                              style={active ? {
-                                background: 'linear-gradient(90deg, rgba(0,163,255,0.22), rgba(0,204,255,0.06))',
-                                boxShadow: 'inset 0 0 0 1px rgba(0,163,255,0.4), 0 0 18px rgba(0,163,255,0.25)',
-                              } : undefined}
+                              className={`group relative rounded-lg transition-all duration-200 h-9 ${active ? activeItemText : inactiveItemText}`}
+                              style={active ? activeItemStyle : undefined}
                             >
                               {active && (
                                 <span className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r"
                                       style={{ background: 'linear-gradient(180deg,#00A3FF,#00CCFF)', boxShadow: '0 0 10px #00A3FF' }} />
                               )}
-                              <item.icon className={`h-4 w-4 ${active ? 'text-[#00CCFF]' : ''}`} />
+                              <item.icon className={`h-4 w-4 ${active ? 'text-[#00A3FF]' : ''}`} />
                               <span className="flex-1">{item.label}</span>
                               {count && count > 0 ? (
                                 <span
@@ -187,7 +211,7 @@ const AdminDashboardInner = () => {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       onClick={handleSignOut}
-                      className="rounded-lg h-10 text-rose-300 hover:text-white hover:bg-rose-500/15"
+                      className={`rounded-lg h-10 ${isDark ? 'text-rose-300 hover:text-white hover:bg-rose-500/15' : 'text-rose-600 hover:text-rose-700 hover:bg-rose-500/10'}`}
                     >
                       <LogOut className="h-4 w-4" />
                       <span>Sign Out</span>
@@ -200,20 +224,20 @@ const AdminDashboardInner = () => {
         </Sidebar>
 
         <SidebarInset className="bg-transparent">
-          <header className="h-16 flex items-center justify-between px-6 border-b sticky top-0 z-30 shadow-lg"
-                  style={{ background: '#0B0E14', borderColor: 'rgba(0,163,255,0.25)' }}>
+          <header className="h-16 flex items-center justify-between px-6 border-b sticky top-0 z-30 shadow-sm"
+                  style={{ background: headerBg, borderColor: headerBorder }}>
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-slate-300 hover:text-white" />
+              <SidebarTrigger className={triggerText} />
               <div>
                 <h1 className="text-lg font-bold capitalize bg-clip-text text-transparent"
-                    style={{ backgroundImage: 'linear-gradient(90deg,#ffffff,#9bdcff)' }}>{activeTab}</h1>
-                <p className="text-[11px] text-[#7aa7c4]">Real-time platform monitoring</p>
+                    style={{ backgroundImage: titleGradient }}>{activeTab}</h1>
+                <p className={`text-[11px] ${mutedText}`}>Real-time platform monitoring</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Badge variant="outline"
-                     className="border-0 text-emerald-300 px-2.5 py-1 text-[11px]"
-                     style={{ background: 'rgba(16,185,129,0.12)', boxShadow: 'inset 0 0 0 1px rgba(16,185,129,0.35)' }}>
+                     className={`border-0 px-2.5 py-1 text-[11px] ${isDark ? 'text-emerald-300' : 'text-emerald-700'}`}
+                     style={{ background: isDark ? 'rgba(16,185,129,0.12)' : 'rgba(16,185,129,0.10)', boxShadow: 'inset 0 0 0 1px rgba(16,185,129,0.35)' }}>
                 <span className="h-2 w-2 rounded-full bg-emerald-400 mr-1.5 inline-block animate-pulse" style={{ boxShadow: '0 0 8px #10b981' }} />
                 Live
               </Badge>
