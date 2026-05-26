@@ -240,6 +240,25 @@ const AdminReports: React.FC = () => {
                         {savingId === r.id ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save Notes'}
                       </Button>
                     </div>
+                    <div className="space-y-2 pt-3 mt-2 border-t border-slate-700/40">
+                      <p className="text-xs font-medium flex items-center gap-1.5 text-muted-foreground">
+                        <LifeBuoy className="w-3.5 h-3.5" /> Reply to reporter via Fivesom Support
+                      </p>
+                      <Textarea
+                        placeholder="Type your reply… it will be delivered to the user in their Fivesom Support inbox."
+                        value={supportReply[r.id] || ''}
+                        onChange={e => setSupportReply(prev => ({ ...prev, [r.id]: e.target.value }))}
+                        rows={2}
+                      />
+                      <Button
+                        size="sm"
+                        disabled={sendingId === r.id || !(supportReply[r.id] || '').trim()}
+                        onClick={() => sendSupportReply(r.reporter_id, r.id)}
+                      >
+                        {sendingId === r.id ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Send className="w-4 h-4 mr-1" />}
+                        Send via Fivesom Support
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
