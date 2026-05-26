@@ -156,8 +156,8 @@ const AdminFivesomSupport: React.FC = () => {
 
   return (
     <div className="space-y-2">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[75vh]">
-      <Card className="border-border bg-card flex flex-col">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-10rem)]">
+      <Card className="border-border bg-card flex flex-col min-h-0">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2"><LifeBuoy className="h-4 w-4" /> Fivesom Support · {convos.length}</CardTitle>
           <div className="relative mt-2">
