@@ -4,9 +4,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Flag, Loader2, ExternalLink } from 'lucide-react';
+import { Flag, Loader2, ExternalLink, Send, LifeBuoy } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 interface Report {
   id: string;
@@ -32,12 +33,60 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 const AdminReports: React.FC = () => {
+  const { user } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [profiles, setProfiles] = useState<Record<string, { full_name: string | null; email: string | null }>>({});
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [savingId, setSavingId] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
+  const [supportReply, setSupportReply] = useState<Record<string, string>>({});
+  const [sendingId, setSendingId] = useState<string | null>(null);
+
+  const sendSupportReply = async (reporterId: string, reportId: string) => {
+    const body = (supportReply[reportId] || '').trim();
+    if (!body || !user) return toast({ title: 'Type a reply first', variant: 'destructive' });
+    setSendingId(reportId);
+    try {
+      // get-or-create the user's Fivesom Support conversation
+      let convoId: string | null = null;
+      const { data: existing } = await (supabase as any)
+        .from('system_conversations')
+        .select('id')
+        .eq('user_id', reporterId)
+        .eq('type', 'support')
+        .maybeSingle();
+      if (existing?.id) {
+        convoId = existing.id;
+      } else {
+        const { data: created, error: ce } = await (supabase as any)
+          .from('system_conversations')
+          .insert({ user_id: reporterId, type: 'support', status: 'open', last_message: body, last_message_at: new Date().toISOString() })
+          .select('id')
+          .single();
+        if (ce) throw ce;
+        convoId = created.id;
+      }
+      const { error: me } = await (supabase as any).from('system_messages').insert({
+        conversation_id: convoId,
+        sender_type: 'admin',
+        admin_id: user.id,
+        body,
+      });
+      if (me) throw me;
+      await (supabase as any)
+        .from('system_conversations')
+        .update({ last_message: body, last_message_at: new Date().toISOString(), unread_user: 1 })
+        .eq('id', convoId);
+      toast({ title: 'Reply sent via Fivesom Support' });
+      setSupportReply(prev => ({ ...prev, [reportId]: '' }));
+    } catch (err: any) {
+      toast({ title: 'Failed to send', description: err.message, variant: 'destructive' });
+    } finally {
+      setSendingId(null);
+    }
+  };
+
 
   const load = async () => {
     setLoading(true);
@@ -189,6 +238,25 @@ const AdminReports: React.FC = () => {
                       </Select>
                       <Button size="sm" disabled={savingId === r.id} onClick={() => updateStatus(r.id, r.status)}>
                         {savingId === r.id ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save Notes'}
+                      </Button>
+                    </div>
+                    <div className="space-y-2 pt-3 mt-2 border-t border-slate-700/40">
+                      <p className="text-xs font-medium flex items-center gap-1.5 text-muted-foreground">
+                        <LifeBuoy className="w-3.5 h-3.5" /> Reply to reporter via Fivesom Support
+                      </p>
+                      <Textarea
+                        placeholder="Type your reply… it will be delivered to the user in their Fivesom Support inbox."
+                        value={supportReply[r.id] || ''}
+                        onChange={e => setSupportReply(prev => ({ ...prev, [r.id]: e.target.value }))}
+                        rows={2}
+                      />
+                      <Button
+                        size="sm"
+                        disabled={sendingId === r.id || !(supportReply[r.id] || '').trim()}
+                        onClick={() => sendSupportReply(r.reporter_id, r.id)}
+                      >
+                        {sendingId === r.id ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Send className="w-4 h-4 mr-1" />}
+                        Send via Fivesom Support
                       </Button>
                     </div>
                   </div>
