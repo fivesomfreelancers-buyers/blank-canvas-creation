@@ -424,21 +424,15 @@ const FreelancerWithdraw = () => {
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label>Bank Name</Label>
-                      <Select
+                      <Input
+                        placeholder="Enter your bank name (e.g. Premier Bank, Dahabshiil)"
                         value={bank.bankName}
-                        onValueChange={(v) => setField('bankName', v)}
-                      >
-                        <SelectTrigger className="rounded-lg h-11">
-                          <SelectValue placeholder="Select bank" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {BANK_OPTIONS.map((b) => (
-                            <SelectItem key={b} value={b}>
-                              {b}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        onChange={(e) => setField('bankName', e.target.value)}
+                        className="rounded-lg h-11"
+                        maxLength={60}
+                        required
+                      />
+                      <p className="text-[11px] text-muted-foreground">Type the full official name of your bank.</p>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">

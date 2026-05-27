@@ -18,6 +18,7 @@ type VipRow = {
   expires_at: string | null;
   created_at: string;
   notes: string | null;
+  active_vip_gigs?: number;
   profile?: { full_name: string | null; email: string | null; profile_image_url: string | null } | null;
 };
 
@@ -47,11 +48,34 @@ const AdminVip: React.FC = () => {
 
     const ids = Array.from(new Set((data || []).map((r: any) => r.user_id))) as string[];
     let profiles: any[] = [];
+    let freelancers: any[] = [];
+    let vipGigCounts: Record<string, number> = {};
     if (ids.length) {
-      const { data: p } = await supabase.from('profiles').select('id, full_name, email, profile_image_url').in('id', ids);
+      const [{ data: p }, { data: fl }] = await Promise.all([
+        supabase.from('profiles').select('id, full_name, email, profile_image_url').in('id', ids),
+        supabase.from('freelancers').select('id, user_id').in('user_id', ids),
+      ]);
       profiles = p || [];
+      freelancers = fl || [];
+      const fIds = freelancers.map((f: any) => f.id);
+      if (fIds.length) {
+        const { data: gigs } = await supabase
+          .from('gigs')
+          .select('freelancer_id')
+          .in('freelancer_id', fIds)
+          .eq('is_vip', true)
+          .eq('status', 'active');
+        (gigs || []).forEach((g: any) => {
+          const fl = freelancers.find((f: any) => f.id === g.freelancer_id);
+          if (fl) vipGigCounts[fl.user_id] = (vipGigCounts[fl.user_id] || 0) + 1;
+        });
+      }
     }
-    const enriched = (data || []).map((r: any) => ({ ...r, profile: profiles.find((p) => p.id === r.user_id) || null }));
+    const enriched = (data || []).map((r: any) => ({
+      ...r,
+      profile: profiles.find((p) => p.id === r.user_id) || null,
+      active_vip_gigs: vipGigCounts[r.user_id] || 0,
+    }));
     setRows(enriched);
     setLoading(false);
   }, []);
@@ -188,6 +212,7 @@ const AdminVip: React.FC = () => {
                     <TableHead className="text-slate-400">Status</TableHead>
                     <TableHead className="text-slate-400">Activated</TableHead>
                     <TableHead className="text-slate-400">Expires</TableHead>
+                    <TableHead className="text-slate-400">VIP Gigs</TableHead>
                     <TableHead className="text-slate-400 text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -209,6 +234,10 @@ const AdminVip: React.FC = () => {
                         <TableCell><span className="capitalize text-slate-200">{r.payment_status}</span></TableCell>
                         <TableCell className="text-xs text-slate-300">{r.activated_at ? new Date(r.activated_at).toLocaleDateString() : '—'}</TableCell>
                         <TableCell className="text-xs text-slate-300">{r.expires_at ? new Date(r.expires_at).toLocaleDateString() : '—'}</TableCell>
+                        <TableCell>
+                          <span className="text-sm font-bold text-white">{r.active_vip_gigs || 0}</span>
+                          <span className="text-xs text-slate-400"> / {r.tier === 'platinum' ? 3 : 2}</span>
+                        </TableCell>
                         <TableCell className="text-right">
                           {r.payment_status === 'pending' ? (
                             <div className="flex gap-2 justify-end">

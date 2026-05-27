@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard, Users, Trophy, DollarSign, Scale, LogOut, Shield, Sparkles,
   ShieldCheck, Package, MessageSquare, CreditCard, Wallet, Star, FolderTree,
-  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag, Megaphone, Headphones, Crown,
+  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag, Megaphone, Headphones, Crown, BadgeCheck,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -34,6 +34,7 @@ import AdminReports from './AdminReports';
 import AdminFivesomSupport from './AdminFivesomSupport';
 import AdminFivesomNews from './AdminFivesomNews';
 import AdminVip from './AdminVip';
+import AdminBlueTick from './AdminBlueTick';
 import { useAdminBadges, type AdminBadgeKey } from '@/hooks/useAdminBadges';
 import { useTheme } from '@/components/ThemeProvider';
 
@@ -44,6 +45,7 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
   { label: 'Operations', items: [
     { key: 'users', label: 'Users', icon: Users },
     { key: 'verifications', label: 'Verifications', icon: ShieldCheck },
+    { key: 'blue_tick', label: 'Blue Tick Requests', icon: BadgeCheck },
     { key: 'orders', label: 'Orders', icon: Package },
     { key: 'chats', label: 'Live Chats', icon: MessageSquare },
   ]},
@@ -91,6 +93,7 @@ const AdminDashboardInner = () => {
       case 'overview': return <AdminOverview />;
       case 'users': return <AdminUsers />;
       case 'verifications': return <AdminVerifications />;
+      case 'blue_tick': return <AdminBlueTick />;
       case 'orders': return <AdminOrders />;
       case 'chats': return <AdminChats />;
       case 'payments': return <AdminPayments />;

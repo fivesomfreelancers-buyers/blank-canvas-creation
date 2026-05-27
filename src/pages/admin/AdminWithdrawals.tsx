@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Wallet, Eye, Building2, Smartphone, Check, X } from 'lucide-react';
+import { Wallet, Eye, Building2, Smartphone, Check, X, Copy } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface WithdrawalRow {
@@ -32,12 +32,27 @@ interface WithdrawalRow {
   user_email?: string;
 }
 
-const Field = ({ label, value }: { label: string; value?: string | number | null }) => (
-  <div className="space-y-0.5">
-    <p className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</p>
-    <p className="text-sm font-medium text-foreground break-words">{value || '—'}</p>
-  </div>
-);
+const Field = ({ label, value, copyable }: { label: string; value?: string | number | null; copyable?: boolean }) => {
+  const v = value == null || value === '' ? null : String(value);
+  return (
+    <div className="space-y-0.5">
+      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</p>
+      <div className="flex items-center gap-2">
+        <p className="text-sm font-medium text-foreground break-words flex-1">{v || '—'}</p>
+        {copyable && v && (
+          <button
+            type="button"
+            onClick={() => { navigator.clipboard.writeText(v); toast.success(`${label} copied`); }}
+            className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground"
+            title={`Copy ${label}`}
+          >
+            <Copy className="h-3.5 w-3.5" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const AdminWithdrawals = () => {
   const [items, setItems] = useState<WithdrawalRow[]>([]);
@@ -237,18 +252,19 @@ const AdminWithdrawals = () => {
                   <div>
                     <h4 className="text-sm font-semibold text-foreground mb-3">Bank details</h4>
                     <div className="grid grid-cols-2 gap-4">
-                      <Field label="Bank Name" value={selected.bank_name} />
-                      <Field label="Account Number" value={selected.account_number} />
-                      <Field label="SWIFT / IBAN" value={selected.swift_code} />
-                      <Field label="Country" value={selected.country} />
-                      <Field label="City" value={selected.city} />
+                      <Field label="Bank Name" value={selected.bank_name} copyable />
+                      <Field label="Account Number" value={selected.account_number} copyable />
+                      <Field label="SWIFT / IBAN" value={selected.swift_code} copyable />
+                      <Field label="Country" value={selected.country} copyable />
+                      <Field label="City" value={selected.city} copyable />
+                      <Field label="Mobile" value={selected.country_code ? `${selected.country_code} ${selected.mobile_number || ''}` : selected.mobile_number} copyable />
                     </div>
                   </div>
                 ) : (
                   <div>
                     <h4 className="text-sm font-semibold text-foreground mb-3">Mobile wallet details</h4>
                     <div className="grid grid-cols-2 gap-4">
-                      <Field label="Provider" value={selected.mobile_provider} />
+                      <Field label="Provider" value={selected.mobile_provider} copyable />
                       <Field
                         label="Mobile Number"
                         value={
@@ -256,8 +272,10 @@ const AdminWithdrawals = () => {
                             ? `${selected.country_code} ${selected.mobile_number || ''}`
                             : selected.mobile_number
                         }
+                        copyable
                       />
-                      <Field label="Country" value={selected.country} />
+                      <Field label="Country" value={selected.country} copyable />
+                      <Field label="City" value={selected.city} copyable />
                     </div>
                   </div>
                 )}
