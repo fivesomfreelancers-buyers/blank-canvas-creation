@@ -18,6 +18,7 @@ type VipRow = {
   expires_at: string | null;
   created_at: string;
   notes: string | null;
+  active_vip_gigs?: number;
   profile?: { full_name: string | null; email: string | null; profile_image_url: string | null } | null;
 };
 
