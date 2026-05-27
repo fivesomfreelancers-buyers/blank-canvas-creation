@@ -47,11 +47,34 @@ const AdminVip: React.FC = () => {
 
     const ids = Array.from(new Set((data || []).map((r: any) => r.user_id))) as string[];
     let profiles: any[] = [];
+    let freelancers: any[] = [];
+    let vipGigCounts: Record<string, number> = {};
     if (ids.length) {
-      const { data: p } = await supabase.from('profiles').select('id, full_name, email, profile_image_url').in('id', ids);
+      const [{ data: p }, { data: fl }] = await Promise.all([
+        supabase.from('profiles').select('id, full_name, email, profile_image_url').in('id', ids),
+        supabase.from('freelancers').select('id, user_id').in('user_id', ids),
+      ]);
       profiles = p || [];
+      freelancers = fl || [];
+      const fIds = freelancers.map((f: any) => f.id);
+      if (fIds.length) {
+        const { data: gigs } = await supabase
+          .from('gigs')
+          .select('freelancer_id')
+          .in('freelancer_id', fIds)
+          .eq('is_vip', true)
+          .eq('status', 'active');
+        (gigs || []).forEach((g: any) => {
+          const fl = freelancers.find((f: any) => f.id === g.freelancer_id);
+          if (fl) vipGigCounts[fl.user_id] = (vipGigCounts[fl.user_id] || 0) + 1;
+        });
+      }
     }
-    const enriched = (data || []).map((r: any) => ({ ...r, profile: profiles.find((p) => p.id === r.user_id) || null }));
+    const enriched = (data || []).map((r: any) => ({
+      ...r,
+      profile: profiles.find((p) => p.id === r.user_id) || null,
+      active_vip_gigs: vipGigCounts[r.user_id] || 0,
+    }));
     setRows(enriched);
     setLoading(false);
   }, []);
