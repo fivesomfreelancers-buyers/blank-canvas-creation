@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star, MapPin, Calendar, Globe, GraduationCap, Briefcase, Wrench, CheckCircle, ImageIcon } from 'lucide-react';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import BlueTickBadge from '@/components/BlueTickBadge';
 import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
 import { supabase } from '@/integrations/supabase/client';
@@ -97,6 +98,7 @@ const FreelancerProfileCard: React.FC<Props> = ({ freelancerId, userId, hidePort
             <h3 className={`text-xl font-bold ${vipTheme ? 'bg-clip-text text-transparent' : ''}`}
                 style={vipTheme ? { backgroundImage: vipTheme.textGradient } : undefined}>{name}</h3>
             {data.is_verified && <VerifiedBadge showLabel size="md" />}
+            {data.has_blue_tick && <BlueTickBadge showLabel size="md" />}
             {vipTheme && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold"
                     style={{ background: vipTheme.gradient, color: '#0B0E14' }}>

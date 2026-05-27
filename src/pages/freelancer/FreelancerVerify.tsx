@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import BackToDashboard from '@/components/BackToDashboard';
+import BlueTickApply from '@/components/freelancer/BlueTickApply';
 import {
   CATEGORIES, SOFTWARE_CATALOG, EXPERIENCE_OPTIONS, EDUCATION_OPTIONS, softwareLogo, SoftwareDef,
 } from '@/lib/verificationCatalog';
@@ -291,7 +292,7 @@ const FreelancerVerify: React.FC = () => {
   if (status === 'approved') {
     return (
       <div className="min-h-screen p-4 sm:p-6 bg-background">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto space-y-6">
           <BackToDashboard />
           <Card className="border-green-500/30 bg-green-500/5">
             <CardContent className="py-12 text-center flex flex-col items-center gap-4">
@@ -302,6 +303,7 @@ const FreelancerVerify: React.FC = () => {
               <p className="text-muted-foreground max-w-md">Your profile shows a verified badge to all buyers.</p>
             </CardContent>
           </Card>
+          <BlueTickApply userId={userId} freelancerId={freelancerId} />
         </div>
       </div>
     );
