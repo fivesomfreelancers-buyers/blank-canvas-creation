@@ -122,6 +122,51 @@ export type Database = {
         }
         Relationships: []
       }
+      blue_tick_applications: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          experience: string | null
+          freelancer_id: string
+          id: string
+          portfolio_links: string[] | null
+          reason: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          experience?: string | null
+          freelancer_id: string
+          id?: string
+          portfolio_links?: string[] | null
+          reason: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          experience?: string | null
+          freelancer_id?: string
+          id?: string
+          portfolio_links?: string[] | null
+          reason?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       buyer_support_tickets: {
         Row: {
           category: string | null
@@ -378,9 +423,13 @@ export type Database = {
       freelancers: {
         Row: {
           bio: string | null
+          blue_tick_granted_at: string | null
+          blue_tick_removed_at: string | null
+          blue_tick_removed_reason: string | null
           completed_orders: number | null
           created_at: string | null
           education_level: string | null
+          has_blue_tick: boolean
           id: string
           is_featured: boolean | null
           is_verified: boolean | null
@@ -402,9 +451,13 @@ export type Database = {
         }
         Insert: {
           bio?: string | null
+          blue_tick_granted_at?: string | null
+          blue_tick_removed_at?: string | null
+          blue_tick_removed_reason?: string | null
           completed_orders?: number | null
           created_at?: string | null
           education_level?: string | null
+          has_blue_tick?: boolean
           id?: string
           is_featured?: boolean | null
           is_verified?: boolean | null
@@ -426,9 +479,13 @@ export type Database = {
         }
         Update: {
           bio?: string | null
+          blue_tick_granted_at?: string | null
+          blue_tick_removed_at?: string | null
+          blue_tick_removed_reason?: string | null
           completed_orders?: number | null
           created_at?: string | null
           education_level?: string | null
+          has_blue_tick?: boolean
           id?: string
           is_featured?: boolean | null
           is_verified?: boolean | null
@@ -586,6 +643,7 @@ export type Database = {
           freelancer_id: string
           id: string
           images: string[] | null
+          is_vip: boolean
           status: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id: string | null
           subcategory_slug: string | null
@@ -605,6 +663,7 @@ export type Database = {
           freelancer_id: string
           id?: string
           images?: string[] | null
+          is_vip?: boolean
           status?: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id?: string | null
           subcategory_slug?: string | null
@@ -624,6 +683,7 @@ export type Database = {
           freelancer_id?: string
           id?: string
           images?: string[] | null
+          is_vip?: boolean
           status?: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id?: string | null
           subcategory_slug?: string | null
@@ -1472,7 +1532,19 @@ export type Database = {
       }
     }
     Functions: {
+      admin_grant_blue_tick: {
+        Args: { _application_id?: string; _notes?: string; _user_id: string }
+        Returns: undefined
+      }
+      admin_reject_blue_tick: {
+        Args: { _application_id: string; _notes?: string }
+        Returns: undefined
+      }
       admin_remove_vip: { Args: { _user_id: string }; Returns: undefined }
+      admin_revoke_blue_tick: {
+        Args: { _reason?: string; _user_id: string }
+        Returns: undefined
+      }
       admin_set_vip: {
         Args: {
           _tier: Database["public"]["Enums"]["vip_tier"]
