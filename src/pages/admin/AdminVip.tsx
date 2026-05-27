@@ -212,6 +212,7 @@ const AdminVip: React.FC = () => {
                     <TableHead className="text-slate-400">Status</TableHead>
                     <TableHead className="text-slate-400">Activated</TableHead>
                     <TableHead className="text-slate-400">Expires</TableHead>
+                    <TableHead className="text-slate-400">VIP Gigs</TableHead>
                     <TableHead className="text-slate-400 text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -233,6 +234,10 @@ const AdminVip: React.FC = () => {
                         <TableCell><span className="capitalize text-slate-200">{r.payment_status}</span></TableCell>
                         <TableCell className="text-xs text-slate-300">{r.activated_at ? new Date(r.activated_at).toLocaleDateString() : '—'}</TableCell>
                         <TableCell className="text-xs text-slate-300">{r.expires_at ? new Date(r.expires_at).toLocaleDateString() : '—'}</TableCell>
+                        <TableCell>
+                          <span className="text-sm font-bold text-white">{r.active_vip_gigs || 0}</span>
+                          <span className="text-xs text-slate-400"> / {r.tier === 'platinum' ? 3 : 2}</span>
+                        </TableCell>
                         <TableCell className="text-right">
                           {r.payment_status === 'pending' ? (
                             <div className="flex gap-2 justify-end">
