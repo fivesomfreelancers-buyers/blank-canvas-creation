@@ -57,13 +57,14 @@ const HeroSection = () => {
             Popular searches:
           </p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-            {['Logo Design', 'Video Editing', 'Web Design', 'Content Writing', 'App UI Design'].map(term => 
-              <button 
-                key={term} 
+            {['Logo Design', 'Video Editing', 'Web Design', 'Content Writing', 'App UI Design', 'Graphic Design', 'App Development', 'Web Development'].map(term => 
+              <Link
+                key={term}
+                to={`/explore?q=${encodeURIComponent(term)}`}
                 className="px-3 sm:px-4 py-1.5 sm:py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-full text-xs sm:text-sm font-medium transition-colors"
               >
                 {term}
-              </button>
+              </Link>
             )}
           </div>
         </div>
