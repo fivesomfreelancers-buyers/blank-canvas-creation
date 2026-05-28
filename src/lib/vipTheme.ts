@@ -3,6 +3,12 @@ import { Crown, Gem, type LucideIcon } from 'lucide-react';
 export type VipTier = 'golden' | 'platinum' | null;
 export type ThemeMode = 'light' | 'dark';
 
+export const NORMAL_GIG_LIMIT = 1;
+export const VIP_GIG_LIMITS: Record<'golden' | 'platinum', number> = {
+  golden: 2,
+  platinum: 3,
+};
+
 export interface VipTheme {
   tier: 'golden' | 'platinum';
   label: string;
@@ -99,6 +105,10 @@ export function resolveVipTier(vip_tier: any, vip_expires_at: any): VipTier {
   if (!vip_tier) return null;
   if (vip_expires_at && new Date(vip_expires_at) < new Date()) return null;
   return vip_tier === 'platinum' ? 'platinum' : 'golden';
+}
+
+export function getGigLimitForVipTier(tier: VipTier): number {
+  return tier ? VIP_GIG_LIMITS[tier] : NORMAL_GIG_LIMIT;
 }
 
 export function getVipTheme(tier: VipTier, mode: ThemeMode = 'dark'): VipTheme | null {

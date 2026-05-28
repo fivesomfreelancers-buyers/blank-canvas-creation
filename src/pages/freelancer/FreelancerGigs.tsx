@@ -7,9 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import BackToDashboard from '@/components/BackToDashboard';
-import { resolveVipTier } from '@/lib/vipTheme';
-
-const MAX_GIGS = 1;
+import { getGigLimitForVipTier, resolveVipTier } from '@/lib/vipTheme';
 
 const FreelancerGigs = () => {
   const navigate = useNavigate();
@@ -17,8 +15,10 @@ const FreelancerGigs = () => {
   const [loading, setLoading] = useState(true);
   const [vipTier, setVipTier] = useState<'golden' | 'platinum' | null>(null);
 
-  const vipLimit = vipTier === 'platinum' ? 3 : vipTier === 'golden' ? 2 : 0;
-  const vipUsed = gigs.filter(g => g.is_vip && g.status === 'active').length;
+  const gigLimit = getGigLimitForVipTier(vipTier);
+  const activeGigsUsed = gigs.filter(g => g.status === 'active').length;
+  const remainingGigs = Math.max(gigLimit - activeGigsUsed, 0);
+  const hasReachedLimit = activeGigsUsed >= gigLimit;
 
   useEffect(() => { fetchGigs(); }, []);
 
@@ -49,8 +49,8 @@ const FreelancerGigs = () => {
   };
 
   const handleCreateNewGig = () => {
-    if (gigs.length >= MAX_GIGS) {
-      toast({ title: "You've reached your gig limit", description: "Please delete an existing gig to add a new one.", variant: "destructive" });
+    if (hasReachedLimit) {
+      toast({ title: "You've reached your gig limit", description: vipTier ? "Your VIP gig limit is full. Delete a gig or upgrade your VIP plan." : "Please delete an existing gig or upgrade to VIP to add a new one.", variant: "destructive" });
       return;
     }
     navigate('/create-gig');
@@ -62,6 +62,10 @@ const FreelancerGigs = () => {
       return;
     }
     const newVal = !gig.is_vip;
+    if (newVal && activeGigsUsed > gigLimit) {
+      toast({ title: 'VIP limit reached', description: `Your ${vipTier === 'platinum' ? 'Platinum' : 'Golden'} VIP plan allows ${gigLimit} active gigs.`, variant: 'destructive' });
+      return;
+    }
     const { error } = await (supabase as any).from('gigs').update({ is_vip: newVal }).eq('id', gig.id);
     if (error) {
       toast({ title: 'Cannot update', description: error.message, variant: 'destructive' });
@@ -93,17 +97,17 @@ const FreelancerGigs = () => {
               <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Gigs</h1>
               <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Manage all your service offerings</p>
             </div>
-            <Button onClick={handleCreateNewGig} className="flex items-center justify-center space-x-2 w-full sm:w-auto">
+            <Button onClick={handleCreateNewGig} disabled={loading || hasReachedLimit} className="flex items-center justify-center space-x-2 w-full sm:w-auto">
               <Plus className="w-4 h-4" /><span>Create New Gig</span>
             </Button>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
-            <div className="text-muted-foreground">{gigs.length} / {MAX_GIGS} gigs used</div>
+            <div className="text-muted-foreground">{activeGigsUsed} / {gigLimit} active gigs used</div>
             {vipTier && (
-              <Badge variant="outline" className="border-[#FFD166]/40 text-foreground">
-                {vipTier === 'platinum' ? <Gem className="w-3.5 h-3.5 mr-1 text-[#A78BFA]" /> : <Crown className="w-3.5 h-3.5 mr-1 text-[#FFD166]" />}
-                VIP Gigs: {vipUsed} / {vipLimit}
+              <Badge variant="outline" className="border-primary/40 bg-primary/10 text-foreground shadow-sm">
+                {vipTier === 'platinum' ? <Gem className="w-3.5 h-3.5 mr-1 text-primary" /> : <Crown className="w-3.5 h-3.5 mr-1 text-primary" />}
+                VIP Gigs: {activeGigsUsed} / {gigLimit} · {remainingGigs} left
               </Badge>
             )}
           </div>
