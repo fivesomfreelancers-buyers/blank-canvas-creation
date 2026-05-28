@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Palette, Video, Monitor, PenTool, Smartphone } from 'lucide-react';
+import { Palette, Video, Monitor, PenTool, Smartphone, Brush, Code, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const FeaturedCategories = () => {
