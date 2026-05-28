@@ -97,17 +97,17 @@ const FreelancerGigs = () => {
               <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Gigs</h1>
               <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Manage all your service offerings</p>
             </div>
-            <Button onClick={handleCreateNewGig} className="flex items-center justify-center space-x-2 w-full sm:w-auto">
+            <Button onClick={handleCreateNewGig} disabled={loading || hasReachedLimit} className="flex items-center justify-center space-x-2 w-full sm:w-auto">
               <Plus className="w-4 h-4" /><span>Create New Gig</span>
             </Button>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
-            <div className="text-muted-foreground">{gigs.length} / {MAX_GIGS} gigs used</div>
+            <div className="text-muted-foreground">{activeGigsUsed} / {gigLimit} active gigs used</div>
             {vipTier && (
-              <Badge variant="outline" className="border-[#FFD166]/40 text-foreground">
-                {vipTier === 'platinum' ? <Gem className="w-3.5 h-3.5 mr-1 text-[#A78BFA]" /> : <Crown className="w-3.5 h-3.5 mr-1 text-[#FFD166]" />}
-                VIP Gigs: {vipUsed} / {vipLimit}
+              <Badge variant="outline" className="border-primary/40 bg-primary/10 text-foreground shadow-sm">
+                {vipTier === 'platinum' ? <Gem className="w-3.5 h-3.5 mr-1 text-primary" /> : <Crown className="w-3.5 h-3.5 mr-1 text-primary" />}
+                VIP Gigs: {activeGigsUsed} / {gigLimit} · {remainingGigs} left
               </Badge>
             )}
           </div>
