@@ -7,9 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import BackToDashboard from '@/components/BackToDashboard';
-import { resolveVipTier } from '@/lib/vipTheme';
-
-const MAX_GIGS = 1;
+import { getGigLimitForVipTier, resolveVipTier } from '@/lib/vipTheme';
 
 const FreelancerGigs = () => {
   const navigate = useNavigate();
@@ -17,8 +15,10 @@ const FreelancerGigs = () => {
   const [loading, setLoading] = useState(true);
   const [vipTier, setVipTier] = useState<'golden' | 'platinum' | null>(null);
 
-  const vipLimit = vipTier === 'platinum' ? 3 : vipTier === 'golden' ? 2 : 0;
-  const vipUsed = gigs.filter(g => g.is_vip && g.status === 'active').length;
+  const gigLimit = getGigLimitForVipTier(vipTier);
+  const activeGigsUsed = gigs.filter(g => g.status === 'active').length;
+  const remainingGigs = Math.max(gigLimit - activeGigsUsed, 0);
+  const hasReachedLimit = activeGigsUsed >= gigLimit;
 
   useEffect(() => { fetchGigs(); }, []);
 
@@ -49,8 +49,8 @@ const FreelancerGigs = () => {
   };
 
   const handleCreateNewGig = () => {
-    if (gigs.length >= MAX_GIGS) {
-      toast({ title: "You've reached your gig limit", description: "Please delete an existing gig to add a new one.", variant: "destructive" });
+    if (hasReachedLimit) {
+      toast({ title: "You've reached your gig limit", description: vipTier ? "Your VIP gig limit is full. Delete a gig or upgrade your VIP plan." : "Please delete an existing gig or upgrade to VIP to add a new one.", variant: "destructive" });
       return;
     }
     navigate('/create-gig');
@@ -62,6 +62,10 @@ const FreelancerGigs = () => {
       return;
     }
     const newVal = !gig.is_vip;
+    if (newVal && activeGigsUsed > gigLimit) {
+      toast({ title: 'VIP limit reached', description: `Your ${vipTier === 'platinum' ? 'Platinum' : 'Golden'} VIP plan allows ${gigLimit} active gigs.`, variant: 'destructive' });
+      return;
+    }
     const { error } = await (supabase as any).from('gigs').update({ is_vip: newVal }).eq('id', gig.id);
     if (error) {
       toast({ title: 'Cannot update', description: error.message, variant: 'destructive' });
