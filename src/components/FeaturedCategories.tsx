@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Palette, Video, Monitor, PenTool, Smartphone } from 'lucide-react';
+import { Palette, Video, Monitor, PenTool, Smartphone, Brush, Code, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const FeaturedCategories = () => {
@@ -44,6 +44,30 @@ const FeaturedCategories = () => {
       description: 'Beautiful UI/UX design for apps',
       subcategories: ['Mobile App UI', 'Web App Design', 'UX Prototyping'],
       gradient: 'from-orange-400 to-red-500'
+    },
+    {
+      id: 'graphic-design',
+      title: 'Graphic Design',
+      icon: Brush,
+      description: 'Flyers, posters, branding & more',
+      subcategories: ['Flyer Design', 'Poster Design', 'Social Media Graphics'],
+      gradient: 'from-fuchsia-400 to-pink-500'
+    },
+    {
+      id: 'app-development',
+      title: 'App Development',
+      icon: Code,
+      description: 'iOS, Android & cross-platform apps',
+      subcategories: ['iOS Apps', 'Android Apps', 'Flutter / React Native'],
+      gradient: 'from-amber-400 to-orange-500'
+    },
+    {
+      id: 'web-development',
+      title: 'Web Development',
+      icon: Globe,
+      description: 'Modern websites & web applications',
+      subcategories: ['Business Websites', 'E-commerce', 'Web Apps'],
+      gradient: 'from-teal-400 to-cyan-500'
     }
   ];
 

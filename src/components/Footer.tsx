@@ -65,11 +65,20 @@ export const Footer: React.FC = () => {
               Categories
             </h4>
             <ul className="space-y-2">
-              {['Logo Design', 'Video Editing', 'Web Design', 'Content Writing', 'App UI Design'].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
-                    {item}
-                  </a>
+              {[
+                { name: 'Logo Design', slug: 'logo-design' },
+                { name: 'Video Editing', slug: 'video-editing' },
+                { name: 'Web Design', slug: 'web-design' },
+                { name: 'Content Writing', slug: 'content-writing' },
+                { name: 'App UI Design', slug: 'app-ui-design' },
+                { name: 'Graphic Design', slug: 'graphic-design' },
+                { name: 'App Development', slug: 'app-development' },
+                { name: 'Web Development', slug: 'web-development' },
+              ].map((item) => (
+                <li key={item.slug}>
+                  <Link to={`/explore?category=${item.slug}`} className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                    {item.name}
+                  </Link>
                 </li>
               ))}
             </ul>

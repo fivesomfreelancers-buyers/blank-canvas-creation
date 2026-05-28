@@ -86,6 +86,31 @@ export const CATEGORIES: CategoryDef[] = [
       { slug: 'branding-kit', name: 'Branding Kit' },
     ],
   },
+  {
+    slug: 'app-development',
+    name: 'App Development',
+    subcategories: [
+      { slug: 'ios-app', name: 'iOS App Development' },
+      { slug: 'android-app', name: 'Android App Development' },
+      { slug: 'cross-platform-app', name: 'Cross-Platform App (Flutter/React Native)' },
+      { slug: 'app-maintenance', name: 'App Maintenance & Updates' },
+      { slug: 'app-bug-fixing', name: 'App Bug Fixing' },
+      { slug: 'app-publishing', name: 'App Store Publishing' },
+    ],
+  },
+  {
+    slug: 'web-development',
+    name: 'Web Development',
+    subcategories: [
+      { slug: 'landing-page-dev', name: 'Landing Page Development' },
+      { slug: 'business-website-dev', name: 'Business Website Development' },
+      { slug: 'ecommerce-dev', name: 'E-commerce Development' },
+      { slug: 'wordpress', name: 'WordPress Development' },
+      { slug: 'web-app', name: 'Web Application' },
+      { slug: 'api-backend', name: 'API & Backend Development' },
+      { slug: 'website-bug-fixing', name: 'Website Bug Fixing' },
+    ],
+  },
 ];
 
 export const getCategoryBySlug = (slug?: string | null) =>
