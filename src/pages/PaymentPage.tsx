@@ -120,7 +120,7 @@ const PaymentPage = () => {
   }
 
   const { gig, selectedPackage } = state;
-  const serviceFee = Math.round(selectedPackage.price * 0.05);
+  const serviceFee = 1;
   const totalAmount = selectedPackage.price + serviceFee;
 
   const selectedMobileOption = mobileMoneyOptions.find(m => m.id === selectedMobileMethod);
