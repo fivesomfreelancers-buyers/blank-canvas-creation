@@ -1561,6 +1561,10 @@ export type Database = {
         Returns: number
       }
       expire_vip_memberships: { Args: never; Returns: number }
+      get_freelancer_gig_limit: {
+        Args: { _freelancer_id: string }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

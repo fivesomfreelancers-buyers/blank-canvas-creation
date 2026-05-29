@@ -235,8 +235,18 @@ const AdminVip: React.FC = () => {
                         <TableCell className="text-xs text-slate-300">{r.activated_at ? new Date(r.activated_at).toLocaleDateString() : '—'}</TableCell>
                         <TableCell className="text-xs text-slate-300">{r.expires_at ? new Date(r.expires_at).toLocaleDateString() : '—'}</TableCell>
                         <TableCell>
-                          <span className="text-sm font-bold text-white">{r.active_vip_gigs || 0}</span>
-                          <span className="text-xs text-slate-400"> / {r.tier === 'platinum' ? 3 : 2}</span>
+                          {(() => {
+                            const limit = r.tier === 'platinum' ? 3 : 2;
+                            const used = r.active_vip_gigs || 0;
+                            const remaining = Math.max(limit - used, 0);
+                            const isActive = r.payment_status === 'activated' && (!r.expires_at || new Date(r.expires_at) > new Date());
+                            return (
+                              <div className="flex flex-col text-xs">
+                                <span className="text-sm font-bold text-white">{used} / {limit}</span>
+                                <span className="text-slate-400">{remaining} left · {isActive ? 'active' : 'inactive'}</span>
+                              </div>
+                            );
+                          })()}
                         </TableCell>
                         <TableCell className="text-right">
                           {r.payment_status === 'pending' ? (
