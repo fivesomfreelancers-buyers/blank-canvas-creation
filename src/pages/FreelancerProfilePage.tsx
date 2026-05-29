@@ -70,13 +70,10 @@ const FreelancerProfilePage = () => {
       if (gigIds.length > 0) {
         const { data: reviewsData } = await supabase
           .from('gig_reviews')
-          .select('rating, comment, created_at, buyer_id')
+          .select('rating, comment, created_at')
           .in('gig_id', gigIds);
 
-        allReviews = await Promise.all((reviewsData || []).map(async (r) => {
-          const { data: bp } = await (supabase as any).from('public_profiles').select('full_name').eq('id', r.buyer_id).single();
-          return { ...r, buyerName: bp?.full_name || 'Anonymous' };
-        }));
+        allReviews = (reviewsData || []).map((r) => ({ ...r, buyerName: 'Anonymous' }));
       }
 
       const avgRating = allReviews.length > 0
