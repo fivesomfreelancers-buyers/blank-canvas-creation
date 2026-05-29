@@ -54,12 +54,9 @@ const GigDetails = () => {
 
       
 
-      const { data: reviews } = await supabase.from('gig_reviews').select('rating, comment, created_at, buyer_id').eq('gig_id', id);
+      const { data: reviews } = await supabase.from('gig_reviews').select('rating, comment, created_at').eq('gig_id', id);
 
-      const reviewsWithNames = await Promise.all((reviews || []).map(async (review) => {
-        const { data: buyerProfile } = await (supabase as any).from('public_profiles').select('full_name').eq('id', review.buyer_id).single();
-        return { ...review, buyerName: buyerProfile?.full_name || 'Anonymous Buyer' };
-      }));
+      const reviewsWithNames = (reviews || []).map((review) => ({ ...review, buyerName: 'Anonymous Buyer' }));
 
       const avgRating = reviews && reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
 
