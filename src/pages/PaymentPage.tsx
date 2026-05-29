@@ -120,7 +120,7 @@ const PaymentPage = () => {
   }
 
   const { gig, selectedPackage } = state;
-  const serviceFee = Math.round(selectedPackage.price * 0.05);
+  const serviceFee = 1;
   const totalAmount = selectedPackage.price + serviceFee;
 
   const selectedMobileOption = mobileMoneyOptions.find(m => m.id === selectedMobileMethod);
@@ -299,8 +299,8 @@ const PaymentPage = () => {
               <Separator />
 
               <div className="space-y-2">
-                <div className="flex justify-between"><span>Package Price</span><span>${selectedPackage.price}</span></div>
-                <div className="flex justify-between text-sm text-muted-foreground"><span>Service Fee (5%)</span><span>${serviceFee}</span></div>
+                <div className="flex justify-between"><span>Gig Price</span><span>${selectedPackage.price}</span></div>
+                <div className="flex justify-between text-sm text-muted-foreground"><span>Buyer Service Fee</span><span>${serviceFee}</span></div>
                 <Separator />
                 <div className="flex justify-between font-semibold text-lg"><span>Total</span><span>${totalAmount}</span></div>
               </div>
