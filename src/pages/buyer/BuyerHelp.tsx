@@ -123,25 +123,8 @@ const BuyerHelp = () => {
                   Contact Support
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="subject">Subject</Label>
-                  <Input id="subject" placeholder="Describe your issue briefly..." />
-                </div>
-                <div>
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea
-                    id="message"
-                    value={supportMessage}
-                    onChange={(e) => setSupportMessage(e.target.value)}
-                    placeholder="Please describe your issue in detail..."
-                    rows={6}
-                  />
-                </div>
-                <Button className="w-full">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Send Message
-                </Button>
+              <CardContent>
+                <ContactSupportForm />
               </CardContent>
             </Card>
 
