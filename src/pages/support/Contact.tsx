@@ -26,10 +26,10 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       if (!user) {
         toast({
           title: "Login Required",
@@ -40,28 +40,53 @@ const Contact = () => {
         return;
       }
 
-      const { error } = await supabase
-        .from('support_tickets')
-        .insert({
-          user_id: user.id,
-          subject: formData.subject,
-          message: formData.message,
-          category: formData.category || 'general',
-        });
+      const subject = formData.subject.trim();
+      const message = formData.message.trim();
+      if (!subject || !message) {
+        toast({ title: "Missing fields", description: "Subject and message are required.", variant: "destructive" });
+        setIsSubmitting(false);
+        return;
+      }
 
+      // Get or create the user's support system conversation
+      let convoId: string | null = null;
+      const { data: existing } = await (supabase as any)
+        .from('system_conversations')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('type', 'support')
+        .maybeSingle();
+      convoId = existing?.id ?? null;
+      if (!convoId) {
+        const { data: created, error: cErr } = await (supabase as any)
+          .from('system_conversations')
+          .insert({ user_id: user.id, type: 'support' })
+          .select('id')
+          .single();
+        if (cErr) throw cErr;
+        convoId = created.id;
+      }
+
+      const body = `📌 ${subject}${formData.category ? ` (${formData.category})` : ''}\n\n${message}`;
+      const { error } = await (supabase as any).from('system_messages').insert({
+        conversation_id: convoId,
+        sender_type: 'user',
+        sender_id: user.id,
+        body,
+      });
       if (error) throw error;
 
       toast({
         title: "Message Sent!",
-        description: "Your support request has been submitted. We'll respond within 24 hours.",
+        description: "Your support request has been delivered to Fivesom Support.",
       });
 
       setFormData({ name: '', email: '', subject: '', category: '', message: '' });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Support request error:', error);
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: error?.message || "Failed to send message. Please try again.",
         variant: "destructive"
       });
     } finally {
