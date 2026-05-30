@@ -39,13 +39,15 @@ const ContactSupportForm: React.FC = () => {
       convoId = existing?.id ?? null;
 
       if (!convoId) {
-        const { data: created, error: cErr } = await (supabase as any)
+        await (supabase as any).rpc('bootstrap_system_conversations', { _user_id: user.id });
+        const { data: after } = await (supabase as any)
           .from('system_conversations')
-          .insert({ user_id: user.id, type: 'support' })
           .select('id')
-          .single();
-        if (cErr) throw cErr;
-        convoId = created.id;
+          .eq('user_id', user.id)
+          .eq('type', 'support')
+          .maybeSingle();
+        convoId = after?.id ?? null;
+        if (!convoId) throw new Error('Could not open a support conversation.');
       }
 
       const body = `📌 ${s}\n\n${m}`;
