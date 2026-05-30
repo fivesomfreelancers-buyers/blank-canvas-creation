@@ -66,13 +66,7 @@ const AdminFivesomSupport: React.FC = () => {
     setLoading(false);
   };
 
-  const fetchMessages = async (cid: string) => {
-    const { data } = await (supabase as any)
-      .from('system_messages')
-      .select('*')
-      .eq('conversation_id', cid)
-      .order('created_at');
-    setMessages((data || []) as SysMsg[]);
+  const markRead = async (cid: string) => {
     await (supabase as any)
       .from('system_conversations')
       .update({ unread_admin: 0 })
@@ -82,6 +76,17 @@ const AdminFivesomSupport: React.FC = () => {
       .update({ is_read_admin: true })
       .eq('conversation_id', cid)
       .eq('is_read_admin', false);
+    setConvos(prev => prev.map(c => c.id === cid ? { ...c, unread_admin: 0 } : c));
+  };
+
+  const fetchMessages = async (cid: string) => {
+    const { data } = await (supabase as any)
+      .from('system_messages')
+      .select('*')
+      .eq('conversation_id', cid)
+      .order('created_at');
+    setMessages((data || []) as SysMsg[]);
+    await markRead(cid);
   };
 
   useEffect(() => { fetchConvos(); }, []);
@@ -89,17 +94,22 @@ const AdminFivesomSupport: React.FC = () => {
   useEffect(() => {
     const ch = supabase
       .channel('admin-support-rt')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'system_messages' }, (p: any) => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'system_messages' }, async (p: any) => {
         if (selected && p.new?.conversation_id === selected.id) {
-          fetchMessages(selected.id);
+          await fetchMessages(selected.id);
+        } else {
+          fetchConvos();
         }
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'system_conversations' }, () => {
         fetchConvos();
       })
       .subscribe();
     return () => { supabase.removeChannel(ch); };
-  }, [selected]);
+  }, [selected?.id]);
 
   useEffect(() => { if (selected) fetchMessages(selected.id); }, [selected?.id]);
+
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
   const sendReply = async () => {
