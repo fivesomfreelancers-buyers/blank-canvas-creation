@@ -238,7 +238,7 @@ const PaymentPage = () => {
   return (
     <div className={`${isDarkMode ? "bg-gray-900" : "bg-muted/30"} min-h-screen`}>
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-6 sm:pb-8">
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">Complete Your Order</h1>
           <p className="text-muted-foreground text-sm sm:text-base">Choose your payment method and proceed</p>
