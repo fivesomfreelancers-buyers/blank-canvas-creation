@@ -3,7 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Smile, Paperclip, Loader2, Pin, Megaphone } from 'lucide-react';
+import { Send, Smile, Paperclip, Loader2, Pin } from 'lucide-react';
+import newsLogo from '@/assets/fivesom-news-logo.png';
+import supportLogo from '@/assets/fivesom-support-logo.png';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import ReportDialog from '@/components/ReportDialog';
 import AttachmentPreview from './AttachmentPreview';
@@ -78,7 +80,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                 </span>
                 {isSystem ? (
                   <span className="text-xs text-muted-foreground flex items-center gap-1">
-                    {isNews ? <><Megaphone className="w-3 h-3" /> Official announcements</> : 'Official Fivesom support · 24/7'}
+                    {isNews ? <><img src={newsLogo} alt="" className="w-4 h-4 object-contain" /> Official announcements</> : <><img src={supportLogo} alt="" className="w-4 h-4 object-contain" /> Official Fivesom support · 24/7</>}
                   </span>
                 ) : (
                   <OnlineIndicator userId={selectedConvo.partnerId} />
