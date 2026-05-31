@@ -5,8 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Send, Image as ImageIcon, Loader2, Trash2 } from 'lucide-react';
-import newsLogo from '@/assets/fivesom-news-logo.png';
+import { Megaphone, Send, Image as ImageIcon, Loader2, Trash2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 
@@ -81,7 +80,7 @@ const AdminFivesomNews: React.FC = () => {
       <Card className="border-border bg-card">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <img src={newsLogo} alt="Fivesom News" className="h-6 w-6 object-contain" /> Fivesom News · Broadcast
+            <Megaphone className="h-4 w-4" /> Fivesom News · Broadcast
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
