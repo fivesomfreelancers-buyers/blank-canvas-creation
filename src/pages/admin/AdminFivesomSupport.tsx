@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Search, Paperclip, Loader2, LifeBuoy } from 'lucide-react';
+import { Send, Search, Paperclip, Loader2 } from 'lucide-react';
+import supportLogo from '@/assets/fivesom-support-logo.png';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -169,7 +170,7 @@ const AdminFivesomSupport: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-2rem)]">
       <Card className="border-border bg-card flex flex-col min-h-0">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm flex items-center gap-2"><LifeBuoy className="h-4 w-4" /> Fivesom Support · {convos.length}</CardTitle>
+          <CardTitle className="text-sm flex items-center gap-2"><img src={supportLogo} alt="Fivesom Support" className="h-6 w-6 object-contain" /> Fivesom Support · {convos.length}</CardTitle>
           <div className="relative mt-2">
             <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
             <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search users…" className="pl-8 h-9" />
