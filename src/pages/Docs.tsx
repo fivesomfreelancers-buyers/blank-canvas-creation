@@ -1435,6 +1435,7 @@ const LANG_OPTIONS: { code: Lang; flag: string; label: string }[] = [
 ];
 
 const Docs: React.FC = () => {
+  const { userRole } = useAuth();
   const [lang, setLang] = useState<Lang>(() => (localStorage.getItem('docs-lang') as Lang) || 'en');
   const [activeId, setActiveId] = useState<string>('intro');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
