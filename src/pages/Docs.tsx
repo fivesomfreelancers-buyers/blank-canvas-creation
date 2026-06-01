@@ -287,7 +287,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'profile', icon: IdCard, image: imgProfile, cta: { label: { en: 'Edit Profile', so: 'Wax ka Beddel Profile', ar: 'تعديل الملف', fr: 'Modifier le profil' }, to: '/freelancer/profile' },
+    id: 'profile', icon: IdCard, image: imgProfile, audience: 'freelancer', cta: { label: { en: 'Edit Profile', so: 'Wax ka Beddel Profile', ar: 'تعديل الملف', fr: 'Modifier le profil' }, to: '/freelancer/profile' },
     t: {
       en: {
         title: '4. Freelancer Profile Setup',
