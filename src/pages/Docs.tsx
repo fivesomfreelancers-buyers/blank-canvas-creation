@@ -445,7 +445,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'gig', icon: Briefcase, image: imgGig, cta: { label: { en: 'Create a Gig', so: 'Samee Gig', ar: 'إنشاء خدمة', fr: 'Créer un gig' }, to: '/create-gig' },
+    id: 'gig', icon: Briefcase, image: imgGig, audience: 'freelancer', cta: { label: { en: 'Create a Gig', so: 'Samee Gig', ar: 'إنشاء خدمة', fr: 'Créer un gig' }, to: '/create-gig' },
     t: {
       en: {
         title: '6. Creating a Service (Gig)',
