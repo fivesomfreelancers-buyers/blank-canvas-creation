@@ -51,6 +51,8 @@ interface Section {
   icon: React.ElementType;
   image: string;
   cta?: { label: Record<Lang, string>; to: string };
+  /** Who the CTA / action is intended for. Defaults to 'both'. */
+  audience?: 'freelancer' | 'buyer' | 'both';
   t: Record<Lang, SectionContent>;
 }
 
