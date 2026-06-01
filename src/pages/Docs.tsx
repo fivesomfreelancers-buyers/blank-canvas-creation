@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/hooks/useAuth';
 
 // Section illustrations — externally hosted (provided by product team)
 const imgIntro = 'https://i.postimg.cc/Vknzq7BP/5f01f0f6-0e76-4d74-9fd2-ac233c98db20.png';
