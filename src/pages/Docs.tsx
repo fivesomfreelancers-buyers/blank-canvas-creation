@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/hooks/useAuth';
 
 // Section illustrations — externally hosted (provided by product team)
 const imgIntro = 'https://i.postimg.cc/Vknzq7BP/5f01f0f6-0e76-4d74-9fd2-ac233c98db20.png';
@@ -51,6 +52,8 @@ interface Section {
   icon: React.ElementType;
   image: string;
   cta?: { label: Record<Lang, string>; to: string };
+  /** Who the CTA / action is intended for. Defaults to 'both'. */
+  audience?: 'freelancer' | 'buyer' | 'both';
   t: Record<Lang, SectionContent>;
 }
 
@@ -285,7 +288,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'profile', icon: IdCard, image: imgProfile, cta: { label: { en: 'Edit Profile', so: 'Wax ka Beddel Profile', ar: 'تعديل الملف', fr: 'Modifier le profil' }, to: '/freelancer/profile' },
+    id: 'profile', icon: IdCard, image: imgProfile, audience: 'freelancer', cta: { label: { en: 'Edit Profile', so: 'Wax ka Beddel Profile', ar: 'تعديل الملف', fr: 'Modifier le profil' }, to: '/freelancer/profile' },
     t: {
       en: {
         title: '4. Freelancer Profile Setup',
@@ -443,7 +446,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'gig', icon: Briefcase, image: imgGig, cta: { label: { en: 'Create a Gig', so: 'Samee Gig', ar: 'إنشاء خدمة', fr: 'Créer un gig' }, to: '/create-gig' },
+    id: 'gig', icon: Briefcase, image: imgGig, audience: 'freelancer', cta: { label: { en: 'Create a Gig', so: 'Samee Gig', ar: 'إنشاء خدمة', fr: 'Créer un gig' }, to: '/create-gig' },
     t: {
       en: {
         title: '6. Creating a Service (Gig)',
@@ -524,7 +527,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'ordering', icon: ShoppingCart, image: imgOrdering, cta: { label: { en: 'Browse Services', so: 'Eeg Adeegyada', ar: 'تصفح', fr: 'Parcourir' }, to: '/explore' },
+    id: 'ordering', icon: ShoppingCart, image: imgOrdering, audience: 'buyer', cta: { label: { en: 'Browse Services', so: 'Eeg Adeegyada', ar: 'تصفح', fr: 'Parcourir' }, to: '/explore' },
     t: {
       en: {
         title: '7. Ordering Services',
@@ -605,7 +608,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'messaging', icon: MessageSquare, image: imgMessaging, cta: { label: { en: 'Open Messages', so: 'Fur Fariimaha', ar: 'الرسائل', fr: 'Messages' }, to: '/buyer/messages' },
+    id: 'messaging', icon: MessageSquare, image: imgMessaging, audience: 'buyer', cta: { label: { en: 'Open Messages', so: 'Fur Fariimaha', ar: 'الرسائل', fr: 'Messages' }, to: '/buyer/messages' },
     t: {
       en: {
         title: '8. Messaging & Communication',
@@ -678,7 +681,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'payment', icon: Wallet, image: imgPayment, cta: { label: { en: 'Open Wallet', so: 'Fur Wallet-ka', ar: 'المحفظة', fr: 'Portefeuille' }, to: '/freelancer/wallet' },
+    id: 'payment', icon: Wallet, image: imgPayment, audience: 'freelancer', cta: { label: { en: 'Open Wallet', so: 'Fur Wallet-ka', ar: 'المحفظة', fr: 'Portefeuille' }, to: '/freelancer/wallet' },
     t: {
       en: {
         title: '9. Payment System',
@@ -751,7 +754,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'orders', icon: ListChecks, image: imgOrders, cta: { label: { en: 'My Orders', so: 'Orders-keyga', ar: 'طلباتي', fr: 'Mes commandes' }, to: '/buyer/orders' },
+    id: 'orders', icon: ListChecks, image: imgOrders, audience: 'buyer', cta: { label: { en: 'My Orders', so: 'Orders-keyga', ar: 'طلباتي', fr: 'Mes commandes' }, to: '/buyer/orders' },
     t: {
       en: {
         title: '10. Order Management',
@@ -1205,23 +1208,23 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'tick', icon: BadgeCheck, image: imgTick, cta: { label: { en: 'Get Verified', so: 'Hel Tick-ga', ar: 'احصل على التوثيق', fr: 'Vérifiez-vous' }, to: '/freelancer/verify' },
+    id: 'tick', icon: BadgeCheck, image: imgTick, audience: 'freelancer', cta: { label: { en: 'Get Verified', so: 'Hel Tick-ga', ar: 'احصل على التوثيق', fr: 'Vérifiez-vous' }, to: '/freelancer/verify' },
     t: {
       en: {
         title: '16. Verified Tick',
         subtitle: 'A blue tick is the strongest trust signal you can earn.',
         description: [
-          'The blue verified tick on a freelancer\'s profile means our admin team has personally reviewed their identity, portfolio, and activity. Verified freelancers consistently earn more orders and command higher prices.',
-          'Apply by submitting your government ID and a portfolio that proves your skills. Reviews typically take a few business days. Verification can be removed at any time if a freelancer breaks the rules.',
+          'The blue verified tick on a freelancer\'s profile means our admin team has personally reviewed their profile, portfolio, and activity. Verified freelancers consistently earn more orders and command higher prices.',
+          'No ID document is required. Verification is based on a complete profile — photo, skills, description, portfolio and contact info — plus consistent activity on the platform. Reviews typically take a few business days. Verification can be removed at any time if a freelancer breaks the rules.',
         ],
         steps: [
-          { title: 'Submit your ID', body: 'Government ID uploaded securely (not public).' },
+          { title: 'Complete your profile', body: 'Profile photo, skills, description and contact info.' },
           { title: 'Submit your portfolio', body: 'Real samples of your work.' },
-          { title: 'Admin reviews', body: 'Our team verifies identity and skills.' },
+          { title: 'Admin reviews', body: 'Our team verifies your profile and activity.' },
           { title: 'Tick appears', body: 'Blue tick shown next to your name across the platform.' },
         ],
         bullets: [
-          'Government ID required.',
+          'Complete profile required (photo, skills, description, portfolio, contact).',
           'Portfolio must be your own work.',
           'Reviewed by senior admins.',
           'Blue tick visible everywhere your name appears.',
@@ -1232,17 +1235,17 @@ const SECTIONS: Section[] = [
         title: '16. Tick (Calaamadda Xaqiijinta)',
         subtitle: 'Tick buluug ah waa calaamadda kalsoonida ugu xoog badan.',
         description: [
-          'Tick buluug ah profile freelancer waxay ka dhigan tahay in admin si gaar ah u eegay aqoonsiga, portfolio, iyo dhaqanka.',
-          'Codso adoo soo gudbinaya ID dawladeed iyo portfolio. Eegista waxay qaadataa maalmo shaqo.',
+          'Tick buluug ah profile freelancer waxay ka dhigan tahay in admin si gaar ah u eegay profile-ka, portfolio, iyo dhaqanka.',
+          'ID looma baahna. Xaqiijintu waxay ku salaysan tahay dhamaystirka profile-ka — sawir, skills, sharaxaad, portfolio, iyo macluumaadka xidhiidhka — iyo dhaqdhaqaaqa joogtada ah. Eegista waxay qaadataa maalmo shaqo.',
         ],
         steps: [
-          { title: 'Soo gudbi ID', body: 'ID dawladeed si ammaan ah.' },
+          { title: 'Dhamaystir profile-kaaga', body: 'Sawir, skills, sharaxaad iyo xidhiidh.' },
           { title: 'Soo gudbi portfolio', body: 'Tusaalooyin dhab ah.' },
-          { title: 'Admin eegay', body: 'Kooxda waxay xaqiijinaysaa.' },
+          { title: 'Admin eegay', body: 'Kooxda waxay xaqiijinaysaa profile iyo dhaqdhaqaaq.' },
           { title: 'Tick muuqdaa', body: 'Buluug ag magacaaga.' },
         ],
         bullets: [
-          'ID dawladeed.',
+          'Profile dhamaystiran (sawir, skills, sharaxaad, portfolio, xidhiidh).',
           'Portfolio shaqadaada.',
           'Admin sare.',
           'Buluug muuqdaa meel kasta.',
@@ -1252,27 +1255,27 @@ const SECTIONS: Section[] = [
       ar: {
         title: '16. علامة التوثيق',
         subtitle: 'العلامة الزرقاء أقوى إشارة ثقة.',
-        description: ['تم التحقق منها يدويًا.', 'مراجعة خلال أيام عمل.'],
+        description: ['لا حاجة لوثيقة هوية. يعتمد التحقق على اكتمال الملف الشخصي والنشاط.', 'مراجعة خلال أيام عمل.'],
         steps: [
-          { title: 'الهوية', body: 'هوية رسمية.' },
+          { title: 'اكمل ملفك', body: 'صورة، مهارات، وصف، تواصل.' },
           { title: 'الأعمال', body: 'نماذج حقيقية.' },
           { title: 'المراجعة', body: 'إدارة كبار.' },
           { title: 'العلامة', body: 'تظهر بجانب اسمك.' },
         ],
-        bullets: ['هوية رسمية.', 'أعمالك.', 'إدارة كبار.', 'مرئية في كل مكان.'],
+        bullets: ['ملف مكتمل.', 'أعمالك.', 'إدارة كبار.', 'مرئية في كل مكان.'],
         tip: 'أعلى عائد للمستقل.',
       },
       fr: {
         title: '16. Badge vérifié',
         subtitle: 'Le badge bleu est le plus fort signal de confiance.',
-        description: ['Vérification manuelle par l\'admin.', 'Examen sous quelques jours.'],
+        description: ['Aucun document d\'identité requis. La vérification se base sur un profil complet et l\'activité.', 'Examen sous quelques jours.'],
         steps: [
-          { title: 'Pièce d\'identité', body: 'ID officiel.' },
+          { title: 'Complétez votre profil', body: 'Photo, compétences, description, contact.' },
           { title: 'Portfolio', body: 'Vos vrais travaux.' },
           { title: 'Examen', body: 'Admin senior.' },
           { title: 'Badge', body: 'À côté de votre nom.' },
         ],
-        bullets: ['ID officiel.', 'Vos travaux.', 'Admin senior.', 'Visible partout.'],
+        bullets: ['Profil complet.', 'Vos travaux.', 'Admin senior.', 'Visible partout.'],
         tip: 'Plus haut ROI pour un freelance.',
       },
     },
@@ -1432,6 +1435,7 @@ const LANG_OPTIONS: { code: Lang; flag: string; label: string }[] = [
 ];
 
 const Docs: React.FC = () => {
+  const { userRole } = useAuth();
   const [lang, setLang] = useState<Lang>(() => (localStorage.getItem('docs-lang') as Lang) || 'en');
   const [activeId, setActiveId] = useState<string>('intro');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -1693,14 +1697,40 @@ const Docs: React.FC = () => {
                       </Accordion>
                     )}
 
-                    {s.cta && (
-                      <Link to={s.cta.to}>
-                        <Button className="gap-2">
-                          {s.cta.label[lang]}
-                          <ArrowRight className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
-                        </Button>
-                      </Link>
-                    )}
+                    {s.cta && (() => {
+                      const audience = s.audience ?? 'both';
+                      const audienceMismatch = userRole && audience !== 'both' && audience !== userRole;
+                      if (audienceMismatch) {
+                        const notice = {
+                          en: audience === 'freelancer'
+                            ? 'This action is for freelancers only.'
+                            : 'This action is for buyers only.',
+                          so: audience === 'freelancer'
+                            ? 'Tani waxay u qoondaysan tahay freelancers kaliya.'
+                            : 'Tani waxay u qoondaysan tahay buyers kaliya.',
+                          ar: audience === 'freelancer'
+                            ? 'هذا الإجراء للمستقلين فقط.'
+                            : 'هذا الإجراء للمشترين فقط.',
+                          fr: audience === 'freelancer'
+                            ? 'Cette action est réservée aux freelances.'
+                            : 'Cette action est réservée aux acheteurs.',
+                        }[lang];
+                        return (
+                          <div className="inline-flex items-center gap-2 rounded-lg border border-border bg-muted/40 px-4 py-2 text-sm text-muted-foreground">
+                            <Lock className="h-4 w-4" />
+                            {notice}
+                          </div>
+                        );
+                      }
+                      return (
+                        <Link to={s.cta.to}>
+                          <Button className="gap-2">
+                            {s.cta.label[lang]}
+                            <ArrowRight className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
+                          </Button>
+                        </Link>
+                      );
+                    })()}
                   </section>
                 );
               })}
