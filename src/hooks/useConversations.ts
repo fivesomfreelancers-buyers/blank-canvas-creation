@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import supportLogoAsset from '@/assets/fivesom-support-logo.png';
+import newsLogoAsset from '@/assets/fivesom-news-logo.png';
 
 export type ConversationKind = 'dm' | 'support' | 'news';
 
