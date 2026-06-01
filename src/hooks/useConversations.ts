@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import supportLogoAsset from '@/assets/fivesom-support-logo.png';
+import newsLogoAsset from '@/assets/fivesom-news-logo.png';
 
 export type ConversationKind = 'dm' | 'support' | 'news';
 
@@ -27,8 +29,8 @@ export interface ChatMessage {
   attachment_url?: string | null;
 }
 
-const SUPPORT_LOGO = 'https://i.postimg.cc/7YVGccVY/63739c62-da0b-4362-9367-1f994c7007b3.png';
-const NEWS_LOGO = 'https://i.postimg.cc/Pf12LXXq/a811259e-3756-43f3-b36c-2239cb753d55.png';
+const SUPPORT_LOGO = supportLogoAsset;
+const NEWS_LOGO = newsLogoAsset;
 
 export function useConversations() {
   const [conversations, setConversations] = useState<ConversationItem[]>([]);
