@@ -753,7 +753,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'orders', icon: ListChecks, image: imgOrders, cta: { label: { en: 'My Orders', so: 'Orders-keyga', ar: 'طلباتي', fr: 'Mes commandes' }, to: '/buyer/orders' },
+    id: 'orders', icon: ListChecks, image: imgOrders, audience: 'buyer', cta: { label: { en: 'My Orders', so: 'Orders-keyga', ar: 'طلباتي', fr: 'Mes commandes' }, to: '/buyer/orders' },
     t: {
       en: {
         title: '10. Order Management',
