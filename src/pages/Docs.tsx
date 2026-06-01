@@ -1207,7 +1207,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'tick', icon: BadgeCheck, image: imgTick, cta: { label: { en: 'Get Verified', so: 'Hel Tick-ga', ar: 'احصل على التوثيق', fr: 'Vérifiez-vous' }, to: '/freelancer/verify' },
+    id: 'tick', icon: BadgeCheck, image: imgTick, audience: 'freelancer', cta: { label: { en: 'Get Verified', so: 'Hel Tick-ga', ar: 'احصل على التوثيق', fr: 'Vérifiez-vous' }, to: '/freelancer/verify' },
     t: {
       en: {
         title: '16. Verified Tick',
