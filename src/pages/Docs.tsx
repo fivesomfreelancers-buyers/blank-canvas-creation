@@ -526,7 +526,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'ordering', icon: ShoppingCart, image: imgOrdering, cta: { label: { en: 'Browse Services', so: 'Eeg Adeegyada', ar: 'تصفح', fr: 'Parcourir' }, to: '/explore' },
+    id: 'ordering', icon: ShoppingCart, image: imgOrdering, audience: 'buyer', cta: { label: { en: 'Browse Services', so: 'Eeg Adeegyada', ar: 'تصفح', fr: 'Parcourir' }, to: '/explore' },
     t: {
       en: {
         title: '7. Ordering Services',
