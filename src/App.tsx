@@ -47,6 +47,7 @@ import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import { ThemeProvider } from "./components/ThemeProvider";
 import PresenceTracker from "./components/presence/PresenceTracker";
+import RoleGuard from "./components/RoleGuard";
 
 const queryClient = new QueryClient();
 
