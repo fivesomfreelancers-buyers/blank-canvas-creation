@@ -607,7 +607,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'messaging', icon: MessageSquare, image: imgMessaging, cta: { label: { en: 'Open Messages', so: 'Fur Fariimaha', ar: 'الرسائل', fr: 'Messages' }, to: '/buyer/messages' },
+    id: 'messaging', icon: MessageSquare, image: imgMessaging, audience: 'buyer', cta: { label: { en: 'Open Messages', so: 'Fur Fariimaha', ar: 'الرسائل', fr: 'Messages' }, to: '/buyer/messages' },
     t: {
       en: {
         title: '8. Messaging & Communication',
