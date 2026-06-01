@@ -75,40 +75,41 @@ const App = () => (
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/select-role" element={<RoleSelection />} />
               <Route path="/complete-profile/:role" element={<CompleteProfile />} />
-              <Route path="/seller/payment" element={<SellerPayment />} />
-              <Route path="/payment" element={<PaymentPage />} />
-              <Route path="/create-gig" element={<CreateGig />} />
-              <Route path="/edit-gig/:gigId" element={<CreateGig />} />
+              <Route path="/seller/payment" element={<RoleGuard allow="freelancer"><SellerPayment /></RoleGuard>} />
+              <Route path="/payment" element={<RoleGuard allow="buyer"><PaymentPage /></RoleGuard>} />
+              <Route path="/create-gig" element={<RoleGuard allow="freelancer"><CreateGig /></RoleGuard>} />
+              <Route path="/edit-gig/:gigId" element={<RoleGuard allow="freelancer"><CreateGig /></RoleGuard>} />
               
               {/* Public Freelancer Profile Route */}
               <Route path="/profile/:freelancerId" element={<FreelancerProfilePage />} />
               
               {/* Freelancer Routes */}
-              <Route path="/freelancer/dashboard" element={<FreelancerDashboard />} />
-              <Route path="/freelancer/gigs" element={<FreelancerGigs />} />
-              <Route path="/freelancer/orders" element={<FreelancerOrders />} />
-              <Route path="/freelancer/order/:orderId" element={<FreelancerOrderDetails />} />
-              <Route path="/freelancer/messages" element={<FreelancerMessages />} />
-              <Route path="/freelancer/deliver" element={<FreelancerDeliverWork />} />
-              <Route path="/freelancer/wallet" element={<FreelancerWallet />} />
-              <Route path="/freelancer/wallet/withdraw" element={<FreelancerWithdraw />} />
-              <Route path="/freelancer/help" element={<FreelancerHelp />} />
-              <Route path="/freelancer/settings" element={<FreelancerSettings />} />
-              <Route path="/freelancer/profile" element={<FreelancerProfile />} />
-              <Route path="/freelancer/verify" element={<FreelancerVerify />} />
+              <Route path="/freelancer/dashboard" element={<RoleGuard allow="freelancer"><FreelancerDashboard /></RoleGuard>} />
+              <Route path="/freelancer/gigs" element={<RoleGuard allow="freelancer"><FreelancerGigs /></RoleGuard>} />
+              <Route path="/freelancer/orders" element={<RoleGuard allow="freelancer"><FreelancerOrders /></RoleGuard>} />
+              <Route path="/freelancer/order/:orderId" element={<RoleGuard allow="freelancer"><FreelancerOrderDetails /></RoleGuard>} />
+              <Route path="/freelancer/messages" element={<RoleGuard allow="freelancer"><FreelancerMessages /></RoleGuard>} />
+              <Route path="/freelancer/deliver" element={<RoleGuard allow="freelancer"><FreelancerDeliverWork /></RoleGuard>} />
+              <Route path="/freelancer/wallet" element={<RoleGuard allow="freelancer"><FreelancerWallet /></RoleGuard>} />
+              <Route path="/freelancer/wallet/withdraw" element={<RoleGuard allow="freelancer"><FreelancerWithdraw /></RoleGuard>} />
+              <Route path="/freelancer/help" element={<RoleGuard allow="freelancer"><FreelancerHelp /></RoleGuard>} />
+              <Route path="/freelancer/settings" element={<RoleGuard allow="freelancer"><FreelancerSettings /></RoleGuard>} />
+              <Route path="/freelancer/profile" element={<RoleGuard allow="freelancer"><FreelancerProfile /></RoleGuard>} />
+              <Route path="/freelancer/verify" element={<RoleGuard allow="freelancer"><FreelancerVerify /></RoleGuard>} />
               
               {/* Buyer Routes */}
-              <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
-              <Route path="/buyer/browse" element={<BuyerBrowse />} />
-              <Route path="/buyer/orders" element={<BuyerOrders />} />
-              <Route path="/buyer/messages" element={<BuyerMessages />} />
-              <Route path="/buyer/payments" element={<BuyerPayments />} />
-              <Route path="/buyer/help" element={<BuyerHelp />} />
-              <Route path="/buyer/settings" element={<BuyerSettings />} />
-              <Route path="/buyer/order/:orderId" element={<BuyerOrderDetails />} />
-              <Route path="/buyer/orders/:orderId" element={<BuyerOrderDetails />} />
-              <Route path="/buyer/order/:orderId/requirements" element={<SubmitRequirements />} />
-              <Route path="/buyer/orders/:orderId/requirements" element={<SubmitRequirements />} />
+              <Route path="/buyer/dashboard" element={<RoleGuard allow="buyer"><BuyerDashboard /></RoleGuard>} />
+              <Route path="/buyer/browse" element={<RoleGuard allow="buyer"><BuyerBrowse /></RoleGuard>} />
+              <Route path="/buyer/orders" element={<RoleGuard allow="buyer"><BuyerOrders /></RoleGuard>} />
+              <Route path="/buyer/messages" element={<RoleGuard allow="buyer"><BuyerMessages /></RoleGuard>} />
+              <Route path="/buyer/payments" element={<RoleGuard allow="buyer"><BuyerPayments /></RoleGuard>} />
+              <Route path="/buyer/help" element={<RoleGuard allow="buyer"><BuyerHelp /></RoleGuard>} />
+              <Route path="/buyer/settings" element={<RoleGuard allow="buyer"><BuyerSettings /></RoleGuard>} />
+              <Route path="/buyer/order/:orderId" element={<RoleGuard allow="buyer"><BuyerOrderDetails /></RoleGuard>} />
+              <Route path="/buyer/orders/:orderId" element={<RoleGuard allow="buyer"><BuyerOrderDetails /></RoleGuard>} />
+              <Route path="/buyer/order/:orderId/requirements" element={<RoleGuard allow="buyer"><SubmitRequirements /></RoleGuard>} />
+              <Route path="/buyer/orders/:orderId/requirements" element={<RoleGuard allow="buyer"><SubmitRequirements /></RoleGuard>} />
+              <Route path="/vip-checkout" element={<RoleGuard allow="freelancer"><VipCheckout /></RoleGuard>} />
               
               {/* Admin Routes */}
               <Route path="/admin/*" element={<AdminDashboard />} />
