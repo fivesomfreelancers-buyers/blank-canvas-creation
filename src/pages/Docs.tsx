@@ -1697,14 +1697,40 @@ const Docs: React.FC = () => {
                       </Accordion>
                     )}
 
-                    {s.cta && (
-                      <Link to={s.cta.to}>
-                        <Button className="gap-2">
-                          {s.cta.label[lang]}
-                          <ArrowRight className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
-                        </Button>
-                      </Link>
-                    )}
+                    {s.cta && (() => {
+                      const audience = s.audience ?? 'both';
+                      const audienceMismatch = userRole && audience !== 'both' && audience !== userRole;
+                      if (audienceMismatch) {
+                        const notice = {
+                          en: audience === 'freelancer'
+                            ? 'This action is for freelancers only.'
+                            : 'This action is for buyers only.',
+                          so: audience === 'freelancer'
+                            ? 'Tani waxay u qoondaysan tahay freelancers kaliya.'
+                            : 'Tani waxay u qoondaysan tahay buyers kaliya.',
+                          ar: audience === 'freelancer'
+                            ? 'هذا الإجراء للمستقلين فقط.'
+                            : 'هذا الإجراء للمشترين فقط.',
+                          fr: audience === 'freelancer'
+                            ? 'Cette action est réservée aux freelances.'
+                            : 'Cette action est réservée aux acheteurs.',
+                        }[lang];
+                        return (
+                          <div className="inline-flex items-center gap-2 rounded-lg border border-border bg-muted/40 px-4 py-2 text-sm text-muted-foreground">
+                            <Lock className="h-4 w-4" />
+                            {notice}
+                          </div>
+                        );
+                      }
+                      return (
+                        <Link to={s.cta.to}>
+                          <Button className="gap-2">
+                            {s.cta.label[lang]}
+                            <ArrowRight className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
+                          </Button>
+                        </Link>
+                      );
+                    })()}
                   </section>
                 );
               })}
