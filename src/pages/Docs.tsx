@@ -680,7 +680,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'payment', icon: Wallet, image: imgPayment, cta: { label: { en: 'Open Wallet', so: 'Fur Wallet-ka', ar: 'المحفظة', fr: 'Portefeuille' }, to: '/freelancer/wallet' },
+    id: 'payment', icon: Wallet, image: imgPayment, audience: 'freelancer', cta: { label: { en: 'Open Wallet', so: 'Fur Wallet-ka', ar: 'المحفظة', fr: 'Portefeuille' }, to: '/freelancer/wallet' },
     t: {
       en: {
         title: '9. Payment System',
