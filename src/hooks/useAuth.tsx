@@ -149,7 +149,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           { user_id: data.user.id, role },
           { onConflict: 'user_id,role' }
         );
-        // Note: profiles.role is locked by RLS; role lives in user_roles.
+        await (supabase as any).from('profiles').update({ role }).eq('id', data.user.id);
 
         if (role === 'freelancer') {
           await supabase.from('freelancers').upsert({ user_id: data.user.id } as any, { onConflict: 'user_id' });

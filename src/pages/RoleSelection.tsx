@@ -29,18 +29,22 @@ const RoleSelection = () => {
     setIsLoading(true);
 
     try {
-      // Insert role into user_roles (idempotent)
-      const { error: roleError } = await (supabase as any)
-        .from('user_roles')
-        .upsert({ user_id: user.id, role }, { onConflict: 'user_id,role' });
+      // Insert role into user_roles
+      const { error: roleError } = await supabase.from('user_roles').insert({
+        user_id: user.id,
+        role: role,
+      } as any);
 
       if (roleError) throw roleError;
 
-      // Create freelancer or buyer record (idempotent)
+      // Update profile with role
+      await supabase.from('profiles').update({ role } as any).eq('id', user.id);
+
+      // Create freelancer or buyer record
       if (role === 'freelancer') {
-        await (supabase as any).from('freelancers').upsert({ user_id: user.id }, { onConflict: 'user_id' });
+        await supabase.from('freelancers').insert({ user_id: user.id } as any);
       } else {
-        await (supabase as any).from('buyers').upsert({ user_id: user.id }, { onConflict: 'user_id' });
+        await supabase.from('buyers').insert({ user_id: user.id } as any);
       }
 
       toast({ title: 'Role Selected!', description: `You joined as a ${role}.` });
