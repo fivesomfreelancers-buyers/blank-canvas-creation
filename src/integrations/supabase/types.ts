@@ -1449,38 +1449,91 @@ export type Database = {
       public_freelancers: {
         Row: {
           bio: string | null
+          blue_tick_granted_at: string | null
           completed_orders: number | null
           created_at: string | null
+          education_level: string | null
+          has_blue_tick: boolean | null
           id: string | null
           is_featured: boolean | null
           is_verified: boolean | null
+          professional_title: string | null
           rating: number | null
           skills: string[] | null
+          software_tools: Json | null
           user_id: string | null
+          verified_at: string | null
+          years_experience: string | null
         }
         Insert: {
           bio?: string | null
+          blue_tick_granted_at?: string | null
           completed_orders?: number | null
           created_at?: string | null
+          education_level?: string | null
+          has_blue_tick?: boolean | null
           id?: string | null
           is_featured?: boolean | null
           is_verified?: boolean | null
+          professional_title?: string | null
           rating?: number | null
           skills?: string[] | null
+          software_tools?: Json | null
           user_id?: string | null
+          verified_at?: string | null
+          years_experience?: string | null
         }
         Update: {
           bio?: string | null
+          blue_tick_granted_at?: string | null
           completed_orders?: number | null
           created_at?: string | null
+          education_level?: string | null
+          has_blue_tick?: boolean | null
           id?: string | null
           is_featured?: boolean | null
           is_verified?: boolean | null
+          professional_title?: string | null
           rating?: number | null
           skills?: string[] | null
+          software_tools?: Json | null
           user_id?: string | null
+          verified_at?: string | null
+          years_experience?: string | null
         }
         Relationships: []
+      }
+      public_gig_reviews: {
+        Row: {
+          comment: string | null
+          created_at: string | null
+          gig_id: string | null
+          id: string | null
+          rating: number | null
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string | null
+          gig_id?: string | null
+          id?: string | null
+          rating?: number | null
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string | null
+          gig_id?: string | null
+          id?: string | null
+          rating?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gig_reviews_gig_id_fkey"
+            columns: ["gig_id"]
+            isOneToOne: false
+            referencedRelation: "gigs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       public_profiles: {
         Row: {
