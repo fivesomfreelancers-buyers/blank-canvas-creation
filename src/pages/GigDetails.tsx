@@ -54,7 +54,7 @@ const GigDetails = () => {
 
       
 
-      const { data: reviews } = await supabase.from('gig_reviews').select('rating, comment, created_at').eq('gig_id', id);
+      const { data: reviews } = await (supabase as any).from('public_gig_reviews').select('rating, comment, created_at').eq('gig_id', id);
 
       const reviewsWithNames = (reviews || []).map((review) => ({ ...review, buyerName: 'Anonymous Buyer' }));
 
