@@ -69,7 +69,7 @@ const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSect
           <SidebarGroupLabel>
             <Link to="/" className="flex items-center space-x-2 p-2">
               <img 
-                src="https://i.postimg.cc/SsmSvr3z/Logo-with-Glowing-Fist-Silhouette-removebg-preview.png" 
+                src={fivesomLogo} 
                 alt="FIVESOM Logo" 
                 width="40"
                 height="40"
