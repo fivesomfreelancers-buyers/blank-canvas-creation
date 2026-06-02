@@ -68,8 +68,8 @@ const FreelancerProfilePage = () => {
       const gigIds = (gigsData || []).map(g => g.id);
       let allReviews: any[] = [];
       if (gigIds.length > 0) {
-        const { data: reviewsData } = await supabase
-          .from('gig_reviews')
+        const { data: reviewsData } = await (supabase as any)
+          .from('public_gig_reviews')
           .select('rating, comment, created_at')
           .in('gig_id', gigIds);
 
