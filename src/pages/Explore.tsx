@@ -51,8 +51,8 @@ const Explore = () => {
             .eq('id', gig.freelancers?.user_id)
             .maybeSingle() as { data: any };
 
-          const { data: reviews } = await supabase
-            .from('gig_reviews')
+          const { data: reviews } = await (supabase as any)
+            .from('public_gig_reviews')
             .select('rating')
             .eq('gig_id', gig.id);
 
