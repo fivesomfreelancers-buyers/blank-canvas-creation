@@ -173,6 +173,10 @@ export function useConversations() {
 
   const markAsRead = useCallback(async (conversationId: string, kind: ConversationKind) => {
     if (!currentUserId) return;
+    // Optimistically clear the unread badge in the list immediately
+    setConversations(prev =>
+      prev.map(c => c.conversationId === conversationId ? { ...c, unreadCount: 0 } : c)
+    );
     if (kind === 'dm') {
       await supabase
         .from('messages')
@@ -200,6 +204,10 @@ export function useConversations() {
     const kind: ConversationKind = partnerId === 'system:support' ? 'support'
       : partnerId === 'system:news' ? 'news' : 'dm';
     setSelectedKind(kind);
+    // Optimistically clear the red dot immediately on open
+    setConversations(prev =>
+      prev.map(c => c.conversationId === conversationId ? { ...c, unreadCount: 0 } : c)
+    );
   }, []);
 
   useEffect(() => {
