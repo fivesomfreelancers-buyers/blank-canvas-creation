@@ -40,8 +40,8 @@ const FreelancerProfilePage = () => {
       if (!freelancerId) return;
 
       // freelancerId here is the freelancers table id
-      const { data: freelancer } = await supabase
-        .from('freelancers')
+      const { data: freelancer } = await (supabase as any)
+        .from('public_freelancers')
         .select('*')
         .eq('id', freelancerId)
         .single();
