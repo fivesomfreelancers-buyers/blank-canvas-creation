@@ -25,7 +25,8 @@ const Explore = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || 'all');
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>(searchParams.get('subcategory') || 'all');
   const [currentPage, setCurrentPage] = useState(1);
-  const gigsPerPage = 12;
+  const gigsPerPage = 18;
+
   const [allGigs, setAllGigs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
@@ -41,7 +42,7 @@ const Explore = () => {
       try {
         const { data: gigsData } = await supabase
           .from('gigs')
-          .select(`*, freelancers ( user_id, rating, is_verified, vip_tier, vip_expires_at )`)
+          .select(`*, freelancers ( user_id, rating, is_verified, has_blue_tick, is_featured, completed_orders, ranking_score, vip_tier, vip_expires_at )`)
           .eq('status', 'active');
 
         const formattedGigs = await Promise.all((gigsData || []).map(async (gig: any) => {
@@ -67,6 +68,10 @@ const Explore = () => {
             freelancerId: gig.freelancer_id,
             freelancerAvatar: profile?.profile_image_url || '',
             isVerified: !!gig.freelancers?.is_verified,
+            hasBlueTick: !!gig.freelancers?.has_blue_tick,
+            isFeatured: !!gig.freelancers?.is_featured,
+            completedOrders: gig.freelancers?.completed_orders || 0,
+            rankingScore: gig.freelancers?.ranking_score || 0,
             vipTierRaw: gig.freelancers?.vip_tier,
             vipExpiresAt: gig.freelancers?.vip_expires_at,
             rating: avgRating,
@@ -78,7 +83,18 @@ const Explore = () => {
           };
         }));
 
+        // Priority sort: verified/blue-tick → weekly winners (is_featured) → high completed orders → ranking score
+        formattedGigs.sort((a, b) => {
+          const score = (g: any) =>
+            (g.hasBlueTick || g.isVerified ? 1000 : 0) +
+            (g.isFeatured ? 500 : 0) +
+            Math.min(g.completedOrders, 200) +
+            g.rankingScore * 0.1;
+          return score(b) - score(a);
+        });
+
         setAllGigs(formattedGigs);
+
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -254,59 +270,63 @@ const Explore = () => {
               <p className="text-sm text-muted-foreground mt-2">Try adjusting your filters or search query</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 mb-8">
               {currentGigs.map(gig => (
                 <Link
                   key={gig.id}
                   to={`/gig/${gig.id}`}
-                  className="group backdrop-blur-lg rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl bg-card border border-border"
+                  className="group backdrop-blur-lg rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl bg-card border border-border"
                 >
                   <div className="relative overflow-hidden">
                     {gig.image ? (
                       <img
                         src={gig.image}
                         alt={gig.title}
-                        className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                        className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-300"
                       />
                     ) : (
-                      <div className="w-full h-48 bg-muted flex items-center justify-center">
-                        <span className="text-muted-foreground text-sm">No image</span>
+                      <div className="w-full h-32 bg-muted flex items-center justify-center">
+                        <span className="text-muted-foreground text-xs">No image</span>
                       </div>
                     )}
-                    <div className="absolute top-2 left-2">
-                      <VipBadge vip_tier={gig.vipTierRaw} vip_expires_at={gig.vipExpiresAt} size="sm" />
+                    <div className="absolute top-1.5 left-1.5">
+                      <VipBadge vip_tier={gig.vipTierRaw} vip_expires_at={gig.vipExpiresAt} size="xs" />
                     </div>
                   </div>
-                  
-                  <div className="p-4">
-                    <h3 className="font-semibold mb-2 line-clamp-2 text-sm text-foreground group-hover:text-primary transition-colors">
+
+                  <div className="p-2.5">
+                    <h3 className="font-semibold mb-1.5 line-clamp-2 text-xs leading-snug text-foreground group-hover:text-primary transition-colors min-h-[2rem]">
                       {gig.title}
                     </h3>
-                    
-                    <div className="flex items-center space-x-2 mb-3">
-                      <Avatar className="w-5 h-5">
+
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <Avatar className="w-4 h-4">
                         <AvatarImage src={gig.freelancerAvatar} alt={gig.freelancer} />
-                        <AvatarFallback className="text-xs bg-primary text-primary-foreground">
+                        <AvatarFallback className="text-[8px] bg-primary text-primary-foreground">
                           {gig.freelancer.split(' ').map((n: string) => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-xs text-muted-foreground inline-flex items-center gap-1">by {gig.freelancer}{gig.isVerified && <VerifiedBadge size="sm" />}<VipBadge vip_tier={gig.vipTierRaw} vip_expires_at={gig.vipExpiresAt} size="xs" showLabel={false} /></span>
+                      <span className="text-[10px] text-muted-foreground inline-flex items-center gap-0.5 truncate">
+                        {gig.freelancer}
+                        {(gig.hasBlueTick || gig.isVerified) && <VerifiedBadge size="sm" />}
+                      </span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-1">
+                      <div className="flex items-center gap-0.5">
                         <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                        <span className="text-xs font-medium text-foreground">
+                        <span className="text-[10px] font-medium text-foreground">
                           {gig.rating > 0 ? gig.rating.toFixed(1) : 'New'}
                         </span>
-                        <span className="text-xs text-muted-foreground">({gig.reviews})</span>
+                        <span className="text-[10px] text-muted-foreground">({gig.reviews})</span>
                       </div>
-                      <div className="text-sm font-bold text-primary">${gig.price}</div>
+                      <div className="text-xs font-bold text-primary">${gig.price}</div>
                     </div>
                   </div>
                 </Link>
               ))}
             </div>
+
           )}
 
           {/* Pagination */}
