@@ -64,6 +64,8 @@ const ContactSupportForm: React.FC = () => {
       toast.success('Message sent! Our support team will reply shortly.');
       setSubject('');
       setMessage('');
+      const target = userRole === 'freelancer' ? '/freelancer/messages' : '/buyer/messages';
+      setTimeout(() => navigate(target), 600);
     } catch (err: any) {
       toast.error(err.message || 'Failed to send. Please try again.');
     } finally {
