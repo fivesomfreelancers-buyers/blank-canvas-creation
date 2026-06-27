@@ -119,7 +119,7 @@ const SubmitRequirements = () => {
       await supabase.from('orders').update({ status: 'in_progress' }).eq('id', orderId);
 
       toast({ title: "Requirements Submitted! 🎉", description: "The freelancer can now start working on your project." });
-      navigate('/buyer/orders');
+      navigate(`/buyer/orders/${orderId}`, { replace: true });
     } catch (error) {
       console.error('Error submitting requirements:', error);
       toast({ title: "Error", description: "Failed to submit requirements. Please try again.", variant: "destructive" });
