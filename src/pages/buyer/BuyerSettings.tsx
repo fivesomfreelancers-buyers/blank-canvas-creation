@@ -178,7 +178,7 @@ const BuyerSettings = ({ onProfileUpdated }: BuyerSettingsProps) => {
                 <div className="flex items-center gap-6">
                   <div className="relative group">
                     <Avatar className="h-20 w-20">
-                      <AvatarImage src={profile.profile_image_url || undefined} />
+                      <AvatarImage src={profile.profile_image_url || undefined} className="object-cover" />
                       <AvatarFallback className="bg-purple-500 text-white text-xl">{initials}</AvatarFallback>
                     </Avatar>
                     <label className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
