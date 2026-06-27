@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,7 +10,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
 const ContactSupportForm: React.FC = () => {
-  const { user } = useAuth();
+  const { user, userRole } = useAuth();
+  const navigate = useNavigate();
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
@@ -62,6 +64,8 @@ const ContactSupportForm: React.FC = () => {
       toast.success('Message sent! Our support team will reply shortly.');
       setSubject('');
       setMessage('');
+      const target = userRole === 'freelancer' ? '/freelancer/messages' : '/buyer/messages';
+      setTimeout(() => navigate(target), 600);
     } catch (err: any) {
       toast.error(err.message || 'Failed to send. Please try again.');
     } finally {
