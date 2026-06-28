@@ -12,6 +12,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import Navbar from '@/components/Navbar';
 import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import BlueTickBadge from '@/components/BlueTickBadge';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import ReportDialog from '@/components/ReportDialog';
 import SEO from '@/components/SEO';
