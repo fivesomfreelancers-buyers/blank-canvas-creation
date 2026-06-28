@@ -12,6 +12,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import Navbar from '@/components/Navbar';
 import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import VerifiedBadge from '@/components/VerifiedBadge';
+import BlueTickBadge from '@/components/BlueTickBadge';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import ReportDialog from '@/components/ReportDialog';
 import SEO from '@/components/SEO';
@@ -44,7 +45,7 @@ const GigDetails = () => {
 
       const { data: gigData, error } = await supabase
         .from('gigs')
-        .select(`*, freelancers ( id, user_id, rating, completed_orders, is_verified, bio, vip_tier, vip_expires_at )`)
+        .select(`*, freelancers ( id, user_id, rating, completed_orders, is_verified, has_blue_tick, bio, vip_tier, vip_expires_at )`)
         .eq('id', id)
         .single();
 
@@ -88,6 +89,7 @@ const GigDetails = () => {
         totalReviews: reviews?.length || 0,
         reviews: reviewsWithNames,
         isVerified: gigData.freelancers?.is_verified || false,
+        hasBlueTick: !!(gigData.freelancers as any)?.has_blue_tick,
         completedOrders: gigData.freelancers?.completed_orders || 0,
         freelancerBio: gigData.freelancers?.bio || '',
         vipTier: resolveVipTier(gigData.freelancers?.vip_tier, gigData.freelancers?.vip_expires_at),
@@ -240,7 +242,8 @@ const GigDetails = () => {
                     </div>
                     <span className="font-medium inline-flex items-center gap-1.5">
                       {gig.freelancerName}
-                      {gig.isVerified && <VerifiedBadge size="sm" />}
+                      {gig.hasBlueTick && <BlueTickBadge size="sm" />}
+                      {gig.isVerified && !gig.hasBlueTick && <VerifiedBadge size="sm" />}
                       {vipTheme && (
                         <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold"
                               style={{ background: vipTheme.gradient, color: '#0B0E14' }}>
@@ -452,7 +455,7 @@ const GigDetails = () => {
                     <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
                   </div>
                   <div>
-                    <h4 className="font-medium inline-flex items-center gap-1.5">{gig.freelancerName}{gig.isVerified && <VerifiedBadge size="sm" />}</h4>
+                    <h4 className="font-medium inline-flex items-center gap-1.5">{gig.freelancerName}{gig.hasBlueTick && <BlueTickBadge size="sm" />}</h4>
                     <p className="text-sm text-muted-foreground">{gig.completedOrders} orders completed</p>
                     <OnlineIndicator userId={gig.freelancerUserId} />
                   </div>

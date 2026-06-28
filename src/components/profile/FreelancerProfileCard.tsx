@@ -97,8 +97,8 @@ const FreelancerProfileCard: React.FC<Props> = ({ freelancerId, userId, hidePort
           <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
             <h3 className={`text-xl font-bold ${vipTheme ? 'bg-clip-text text-transparent' : ''}`}
                 style={vipTheme ? { backgroundImage: vipTheme.textGradient } : undefined}>{name}</h3>
-            {data.is_verified && <VerifiedBadge showLabel size="md" />}
             {data.has_blue_tick && <BlueTickBadge showLabel size="md" />}
+            {data.is_verified && !data.has_blue_tick && <VerifiedBadge showLabel size="md" />}
             {vipTheme && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold"
                     style={{ background: vipTheme.gradient, color: '#0B0E14' }}>

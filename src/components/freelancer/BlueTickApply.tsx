@@ -12,11 +12,14 @@ import BlueTickBadge from '@/components/BlueTickBadge';
 
 interface Props { userId: string; freelancerId: string; }
 
-const REQ = { orders: 5, rating: 4.0, activeDays: 30 };
+const REQ = { orders: 10, rating: 4.5, activeDays: 30, memberDays: 40, activeIn30: 15, earnings: 50, responseRate: 90, maxWarnings: 3 };
 
 const BlueTickApply: React.FC<Props> = ({ userId, freelancerId }) => {
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({ orders: 0, rating: 0, isVerified: false, lastSeen: null as string | null, hasBlueTick: false });
+  const [stats, setStats] = useState({
+    orders: 0, rating: 0, isVerified: false, lastSeen: null as string | null,
+    hasBlueTick: false, memberDays: 0, warnings: 0, earnings: 0,
+  });
   const [existing, setExisting] = useState<any>(null);
   const [reason, setReason] = useState('');
   const [experience, setExperience] = useState('');
@@ -25,18 +28,26 @@ const BlueTickApply: React.FC<Props> = ({ userId, freelancerId }) => {
 
   const load = async () => {
     setLoading(true);
-    const [{ count }, { data: f }, { data: p }, { data: app }] = await Promise.all([
+    const [{ count }, { data: f }, { data: p }, { data: app }, { count: warnCount }, { data: completedOrders }] = await Promise.all([
       supabase.from('orders').select('*', { count: 'exact', head: true }).eq('freelancer_id', freelancerId).eq('status', 'completed'),
       supabase.from('freelancers').select('rating, is_verified, has_blue_tick').eq('id', freelancerId).maybeSingle(),
-      supabase.from('profiles').select('last_seen').eq('id', userId).maybeSingle(),
+      supabase.from('profiles').select('last_seen, created_at').eq('id', userId).maybeSingle(),
       (supabase as any).from('blue_tick_applications').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1).maybeSingle(),
+      (supabase as any).from('user_reports').select('*', { count: 'exact', head: true }).eq('reported_user_id', userId).in('status', ['resolved', 'upheld', 'actioned']),
+      supabase.from('orders').select('total_amount').eq('freelancer_id', freelancerId).eq('status', 'completed'),
     ]);
+    const memberDays = (p as any)?.created_at
+      ? Math.floor((Date.now() - new Date((p as any).created_at).getTime()) / 86400000) : 0;
+    const earnings = (completedOrders || []).reduce((s: number, o: any) => s + (Number(o.total_amount) || 0), 0);
     setStats({
       orders: count || 0,
       rating: Number(f?.rating) || 0,
       isVerified: !!f?.is_verified,
       lastSeen: p?.last_seen || null,
       hasBlueTick: !!(f as any)?.has_blue_tick,
+      memberDays,
+      warnings: warnCount || 0,
+      earnings,
     });
     setExisting(app);
     setLoading(false);
@@ -49,7 +60,10 @@ const BlueTickApply: React.FC<Props> = ({ userId, freelancerId }) => {
     stats.orders >= REQ.orders &&
     stats.rating >= REQ.rating &&
     stats.isVerified &&
-    daysSinceActive <= REQ.activeDays;
+    daysSinceActive <= REQ.activeDays &&
+    stats.memberDays >= REQ.memberDays &&
+    stats.warnings <= REQ.maxWarnings &&
+    stats.earnings >= REQ.earnings;
 
   const submit = async () => {
     if (!reason.trim() || reason.trim().length < 30) return toast.error('Reason must be at least 30 characters');
@@ -97,10 +111,13 @@ const BlueTickApply: React.FC<Props> = ({ userId, freelancerId }) => {
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Eligibility</p>
           <ul className="space-y-1.5">
+            <Item ok={stats.isVerified} label="Verified seller (identity confirmed)" />
+            <Item ok={stats.memberDays >= REQ.memberDays} label={`Member for ${stats.memberDays}/${REQ.memberDays}+ days`} />
+            <Item ok={daysSinceActive <= REQ.activeDays} label={`Active in the last ${REQ.activeDays} days`} />
             <Item ok={stats.orders >= REQ.orders} label={`${stats.orders}/${REQ.orders} completed orders`} />
-            <Item ok={stats.isVerified} label="Account is verified" />
-            <Item ok={daysSinceActive <= REQ.activeDays} label={`Active in last ${REQ.activeDays} days`} />
-            <Item ok={stats.rating >= REQ.rating} label={`Average rating ${stats.rating.toFixed(1)} / ${REQ.rating}`} />
+            <Item ok={stats.earnings >= REQ.earnings} label={`$${stats.earnings.toFixed(0)} / $${REQ.earnings}+ earned`} />
+            <Item ok={stats.rating >= REQ.rating} label={`Rating ${stats.rating.toFixed(1)} / ${REQ.rating}+ stars`} />
+            <Item ok={stats.warnings <= REQ.maxWarnings} label={`${stats.warnings} warnings (max ${REQ.maxWarnings})`} />
           </ul>
         </div>
 
