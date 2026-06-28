@@ -12,7 +12,7 @@ import BlueTickBadge from '@/components/BlueTickBadge';
 
 interface Props { userId: string; freelancerId: string; }
 
-const REQ = { orders: 5, rating: 4.0, activeDays: 30 };
+const REQ = { orders: 10, rating: 4.5, activeDays: 30, memberDays: 40, activeIn30: 15, earnings: 50, responseRate: 90, maxWarnings: 3 };
 
 const BlueTickApply: React.FC<Props> = ({ userId, freelancerId }) => {
   const [loading, setLoading] = useState(true);
