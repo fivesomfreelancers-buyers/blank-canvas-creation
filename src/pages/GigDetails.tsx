@@ -44,7 +44,7 @@ const GigDetails = () => {
 
       const { data: gigData, error } = await supabase
         .from('gigs')
-        .select(`*, freelancers ( id, user_id, rating, completed_orders, is_verified, bio, vip_tier, vip_expires_at )`)
+        .select(`*, freelancers ( id, user_id, rating, completed_orders, is_verified, has_blue_tick, bio, vip_tier, vip_expires_at )`)
         .eq('id', id)
         .single();
 
