@@ -111,10 +111,13 @@ const BlueTickApply: React.FC<Props> = ({ userId, freelancerId }) => {
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Eligibility</p>
           <ul className="space-y-1.5">
+            <Item ok={stats.isVerified} label="Verified seller (identity confirmed)" />
+            <Item ok={stats.memberDays >= REQ.memberDays} label={`Member for ${stats.memberDays}/${REQ.memberDays}+ days`} />
+            <Item ok={daysSinceActive <= REQ.activeDays} label={`Active in the last ${REQ.activeDays} days`} />
             <Item ok={stats.orders >= REQ.orders} label={`${stats.orders}/${REQ.orders} completed orders`} />
-            <Item ok={stats.isVerified} label="Account is verified" />
-            <Item ok={daysSinceActive <= REQ.activeDays} label={`Active in last ${REQ.activeDays} days`} />
-            <Item ok={stats.rating >= REQ.rating} label={`Average rating ${stats.rating.toFixed(1)} / ${REQ.rating}`} />
+            <Item ok={stats.earnings >= REQ.earnings} label={`$${stats.earnings.toFixed(0)} / $${REQ.earnings}+ earned`} />
+            <Item ok={stats.rating >= REQ.rating} label={`Rating ${stats.rating.toFixed(1)} / ${REQ.rating}+ stars`} />
+            <Item ok={stats.warnings <= REQ.maxWarnings} label={`${stats.warnings} warnings (max ${REQ.maxWarnings})`} />
           </ul>
         </div>
 
