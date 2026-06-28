@@ -88,6 +88,7 @@ const GigDetails = () => {
         totalReviews: reviews?.length || 0,
         reviews: reviewsWithNames,
         isVerified: gigData.freelancers?.is_verified || false,
+        hasBlueTick: !!(gigData.freelancers as any)?.has_blue_tick,
         completedOrders: gigData.freelancers?.completed_orders || 0,
         freelancerBio: gigData.freelancers?.bio || '',
         vipTier: resolveVipTier(gigData.freelancers?.vip_tier, gigData.freelancers?.vip_expires_at),
