@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, TrendingUp, Clock, ArrowUpRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import BackToDashboard from '@/components/BackToDashboard';
 
 const FreelancerWallet = () => {
   const navigate = useNavigate();
@@ -65,7 +64,6 @@ const FreelancerWallet = () => {
   return (
     <div className="min-h-screen bg-muted/30 p-6">
       <div className="max-w-6xl mx-auto">
-        <BackToDashboard />
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Wallet</h1>
           <p className="text-muted-foreground mt-2">Manage your earnings and withdrawals</p>

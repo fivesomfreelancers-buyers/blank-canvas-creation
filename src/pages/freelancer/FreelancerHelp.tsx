@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, HelpCircle, MessageSquare, Mail } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import BackToDashboard from '@/components/BackToDashboard';
 import ContactSupportForm from '@/components/support/ContactSupportForm';
 
 
@@ -38,7 +37,6 @@ const FreelancerHelp = () => {
   return (
     <div className="min-h-screen bg-muted/30 p-6">
       <div className="max-w-6xl mx-auto">
-        <BackToDashboard />
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Help Center</h1>
           <p className="text-muted-foreground mt-2">Find answers to common questions and get support</p>

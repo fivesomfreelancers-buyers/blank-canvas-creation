@@ -10,7 +10,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { User, Bell, Shield, CreditCard } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import BackToDashboard from '@/components/BackToDashboard';
 
 const FreelancerSettings = () => {
   const [loading, setLoading] = useState(true);
@@ -98,7 +97,6 @@ const FreelancerSettings = () => {
   return (
     <div className="min-h-screen bg-background p-3 sm:p-6">
       <div className="max-w-4xl mx-auto">
-        <BackToDashboard />
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Settings</h1>
           <p className="text-muted-foreground mt-2">Manage your account preferences and settings</p>

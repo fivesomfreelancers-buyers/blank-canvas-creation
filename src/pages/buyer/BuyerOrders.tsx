@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MessageSquare, Star, CheckCircle, RefreshCw, Eye, PackageCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import BackToDashboard from '@/components/BackToDashboard';
 
 const BuyerOrders = () => {
   const navigate = useNavigate();
@@ -68,7 +67,6 @@ const BuyerOrders = () => {
   return (
     <div className="min-h-screen bg-background p-3 sm:p-6">
       <div className="max-w-6xl mx-auto">
-        <BackToDashboard />
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Orders</h1>
           <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Track your current and past orders</p>

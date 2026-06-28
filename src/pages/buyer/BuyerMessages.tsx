@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import { useConversations } from '@/hooks/useConversations';
 import ConversationList from '@/components/chat/ConversationList';
 import ChatArea from '@/components/chat/ChatArea';
-import BackToDashboard from '@/components/BackToDashboard';
 
 
 const BuyerMessages = () => {
@@ -36,7 +35,6 @@ const BuyerMessages = () => {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
-        <BackToDashboard />
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Messages</h1>
           <p className="text-muted-foreground mt-2">Communicate with your freelancers</p>
