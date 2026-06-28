@@ -1,5 +1,5 @@
 import React from 'react';
-import { BadgeCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface VerifiedBadgeProps {
@@ -9,26 +9,34 @@ interface VerifiedBadgeProps {
 }
 
 const sizeMap = {
-  sm: 'w-3.5 h-3.5',
-  md: 'w-4 h-4',
-  lg: 'w-5 h-5',
+  sm: 'w-3 h-3',
+  md: 'w-3.5 h-3.5',
+  lg: 'w-4 h-4',
+};
+
+const textMap = {
+  sm: 'text-[10px]',
+  md: 'text-xs',
+  lg: 'text-sm',
 };
 
 /**
- * Twitter-style verified blue checkmark.
- * White check inside a solid blue badge — visually unambiguous.
+ * "Verified Seller" — green shield label.
+ * Granted to freelancers who completed identity verification (after first order).
+ * This is NOT the Blue Tick — that's a separate, stricter award.
  */
-const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({ className, showLabel = false, size = 'md' }) => {
+const VerifiedBadge: React.FC<VerifiedBadgeProps> = ({ className, showLabel = true, size = 'sm' }) => {
   return (
     <span
-      title="Verified by Fivesom"
-      className={cn('inline-flex items-center gap-1 align-middle', className)}
+      title="Verified Seller — identity confirmed by Fivesom"
+      className={cn(
+        'inline-flex items-center gap-1 align-middle font-medium text-emerald-500',
+        textMap[size],
+        className
+      )}
     >
-      <BadgeCheck
-        className={cn(sizeMap[size], 'text-white')}
-        style={{ fill: '#1d9bf0' }}
-      />
-      {showLabel && <span className="text-xs font-semibold text-[#1d9bf0]">Verified</span>}
+      <ShieldCheck className={cn(sizeMap[size], 'text-emerald-500')} />
+      {showLabel && <span>Verified seller</span>}
     </span>
   );
 };
