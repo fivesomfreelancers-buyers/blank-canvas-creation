@@ -299,17 +299,22 @@ const Explore = () => {
                       {gig.title}
                     </h3>
 
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <Avatar className="w-4 h-4">
-                        <AvatarImage src={gig.freelancerAvatar} alt={gig.freelancer} />
+                    <div className="flex items-start gap-1.5 mb-2">
+                      <Avatar className="w-5 h-5 shrink-0">
+                        <AvatarImage src={gig.freelancerAvatar} alt={gig.freelancer} className="object-cover" />
                         <AvatarFallback className="text-[8px] bg-primary text-primary-foreground">
                           {gig.freelancer.split(' ').map((n: string) => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-[10px] text-muted-foreground inline-flex items-center gap-0.5 truncate">
-                        {gig.freelancer}
-                        {(gig.hasBlueTick || gig.isVerified) && <VerifiedBadge size="sm" />}
-                      </span>
+                      <div className="min-w-0 flex flex-col">
+                        <span className="text-[10px] text-muted-foreground inline-flex items-center gap-0.5 truncate">
+                          {gig.freelancer}
+                          {gig.hasBlueTick && <BlueTickBadge size="sm" />}
+                        </span>
+                        {gig.isVerified && !gig.hasBlueTick && (
+                          <VerifiedBadge size="sm" />
+                        )}
+                      </div>
                     </div>
 
                     <div className="flex items-center justify-between">
