@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { Upload, FileText, Image, Video, X, CheckCircle, Clock, Link2, Plus, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import BackToDashboard from '@/components/BackToDashboard';
 
 
 const FreelancerDeliverWork = () => {
@@ -150,7 +149,8 @@ const FreelancerDeliverWork = () => {
       await supabase.from('orders').update({ status: 'delivered' as const }).eq('id', selectedOrder);
 
       toast({ title: "Delivery Submitted! 🎉", description: "Your work has been delivered to the buyer for review." });
-      navigate('/freelancer/orders');
+      const from = (location.state as any)?.from as string | undefined;
+      navigate(from || `/freelancer/orders/${selectedOrder}`, { replace: true });
     } catch (error) {
       console.error('Delivery error:', error);
       toast({ title: "Error", description: "Failed to submit delivery. Please try again.", variant: "destructive" });
@@ -162,7 +162,6 @@ const FreelancerDeliverWork = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <BackToDashboard />
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Deliver Work</h1>
           <p className="text-muted-foreground mt-2">Submit your completed work to buyers</p>

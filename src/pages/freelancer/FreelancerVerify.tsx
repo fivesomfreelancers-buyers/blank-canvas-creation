@@ -13,7 +13,6 @@ import {
   Briefcase, GraduationCap, Wrench, Image as ImageIcon, Video, X, Plus, Search,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import BackToDashboard from '@/components/BackToDashboard';
 import BlueTickApply from '@/components/freelancer/BlueTickApply';
 import {
   CATEGORIES, SOFTWARE_CATALOG, EXPERIENCE_OPTIONS, EDUCATION_OPTIONS, softwareLogo, SoftwareDef,
@@ -293,7 +292,6 @@ const FreelancerVerify: React.FC = () => {
     return (
       <div className="min-h-screen p-4 sm:p-6 bg-background">
         <div className="max-w-3xl mx-auto space-y-6">
-          <BackToDashboard />
           <Card className="border-green-500/30 bg-green-500/5">
             <CardContent className="py-12 text-center flex flex-col items-center gap-4">
               <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center">
@@ -313,7 +311,6 @@ const FreelancerVerify: React.FC = () => {
     return (
       <div className="min-h-screen p-4 sm:p-6 bg-background">
         <div className="max-w-3xl mx-auto">
-          <BackToDashboard />
           <Card className="border-yellow-500/30 bg-yellow-500/5">
             <CardContent className="py-12 text-center flex flex-col items-center gap-4">
               <div className="w-20 h-20 rounded-full bg-yellow-500/10 flex items-center justify-center">
@@ -334,7 +331,6 @@ const FreelancerVerify: React.FC = () => {
     return (
       <div className="min-h-screen p-4 sm:p-6 bg-background">
         <div className="max-w-3xl mx-auto">
-          <BackToDashboard />
           <Card className="border-muted">
             <CardContent className="py-12 text-center flex flex-col items-center gap-4">
               <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
@@ -359,7 +355,6 @@ const FreelancerVerify: React.FC = () => {
   return (
     <div className="min-h-screen p-4 sm:p-6 bg-background">
       <div className="max-w-4xl mx-auto">
-        <BackToDashboard />
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-2">
             <ShieldCheck className="w-7 h-7 text-primary" />

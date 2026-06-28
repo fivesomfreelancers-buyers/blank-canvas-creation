@@ -11,7 +11,6 @@ import { User, Bell, Shield, Camera, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import BackToDashboard from '@/components/BackToDashboard';
 
 interface BuyerSettingsProps {
   onProfileUpdated?: () => void;
@@ -146,7 +145,6 @@ const BuyerSettings = ({ onProfileUpdated }: BuyerSettingsProps) => {
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6">
       <div className="max-w-4xl mx-auto">
-        <BackToDashboard />
         <div className="mb-8">
           <h1 className="text-3xl font-bold">Account Settings</h1>
           <p className="text-muted-foreground mt-2">Manage your account preferences and information</p>
