@@ -149,8 +149,7 @@ const FreelancerDeliverWork = () => {
       await supabase.from('orders').update({ status: 'delivered' as const }).eq('id', selectedOrder);
 
       toast({ title: "Delivery Submitted! 🎉", description: "Your work has been delivered to the buyer for review." });
-      const from = (location.state as any)?.from as string | undefined;
-      navigate(from || `/freelancer/orders/${selectedOrder}`, { replace: true });
+      navigate(`/freelancer/delivery-success/${selectedOrder}`, { replace: true });
     } catch (error) {
       console.error('Delivery error:', error);
       toast({ title: "Error", description: "Failed to submit delivery. Please try again.", variant: "destructive" });

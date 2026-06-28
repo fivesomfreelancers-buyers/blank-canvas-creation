@@ -25,6 +25,7 @@ import FreelancerGigs from "./pages/freelancer/FreelancerGigs";
 import FreelancerOrders from "./pages/freelancer/FreelancerOrders";
 import FreelancerMessages from "./pages/freelancer/FreelancerMessages";
 import FreelancerDeliverWork from "./pages/freelancer/FreelancerDeliverWork";
+import DeliverySuccess from "./pages/freelancer/DeliverySuccess";
 import FreelancerOrderDetails from "./pages/freelancer/FreelancerOrderDetails";
 import FreelancerWallet from "./pages/freelancer/FreelancerWallet";
 import FreelancerWithdraw from "./pages/freelancer/FreelancerWithdraw";
@@ -89,6 +90,7 @@ const App = () => (
               <Route path="/freelancer/order/:orderId" element={<FreelancerOrderDetails />} />
               <Route path="/freelancer/messages" element={<FreelancerMessages />} />
               <Route path="/freelancer/deliver" element={<FreelancerDeliverWork />} />
+              <Route path="/freelancer/delivery-success/:orderId" element={<DeliverySuccess />} />
               <Route path="/freelancer/wallet" element={<FreelancerWallet />} />
               <Route path="/freelancer/wallet/withdraw" element={<FreelancerWithdraw />} />
               <Route path="/freelancer/help" element={<FreelancerHelp />} />
