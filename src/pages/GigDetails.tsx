@@ -242,7 +242,8 @@ const GigDetails = () => {
                     </div>
                     <span className="font-medium inline-flex items-center gap-1.5">
                       {gig.freelancerName}
-                      {gig.isVerified && <VerifiedBadge size="sm" />}
+                      {gig.hasBlueTick && <BlueTickBadge size="sm" />}
+                      {gig.isVerified && !gig.hasBlueTick && <VerifiedBadge size="sm" />}
                       {vipTheme && (
                         <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold"
                               style={{ background: vipTheme.gradient, color: '#0B0E14' }}>
