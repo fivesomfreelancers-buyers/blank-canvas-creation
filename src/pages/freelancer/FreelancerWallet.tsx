@@ -119,6 +119,7 @@ const FreelancerWallet = () => {
               <Button 
                 className="flex items-center space-x-2"
                 onClick={() => navigate('/freelancer/wallet/withdraw')}
+                disabled={earnings.available < 20}
               >
                 <ArrowUpRight className="w-4 h-4" />
                 <span>Withdraw</span>
