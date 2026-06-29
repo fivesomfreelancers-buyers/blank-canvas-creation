@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Upload, MapPin, Briefcase, Globe, X, ArrowRight } from 'lucide-react';
+import { Upload, MapPin, Briefcase, Globe, X, ArrowRight, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,6 +17,30 @@ const AVAILABLE_LANGUAGES = [
   'English', 'Somali', 'Arabic', 'Italian', 'French', 'Spanish', 'German',
   'Portuguese', 'Turkish', 'Swahili', 'Amharic', 'Hindi', 'Urdu', 'Chinese',
   'Japanese', 'Korean', 'Russian', 'Dutch', 'Swedish', 'Norwegian'
+];
+
+const BUYER_INDUSTRIES = [
+  'Tech Startup / IT',
+  'E-commerce / Retail',
+  'Content Creation / Marketing',
+  'Local Business',
+  'Agency / Consulting',
+  'Education / E-learning',
+  'Healthcare / Medical',
+  'Finance / Fintech',
+  'Real Estate',
+  'Hospitality / Travel',
+  'Food & Beverage / Restaurant',
+  'Fashion / Beauty',
+  'Media / Entertainment',
+  'Non-Profit / NGO',
+  'Government / Public Sector',
+  'Logistics / Transportation',
+  'Construction / Engineering',
+  'Manufacturing',
+  'Agriculture',
+  'Religious / Community Organization',
+  'Personal Project / Other',
 ];
 
 const CompleteProfile = () => {
@@ -30,6 +55,7 @@ const CompleteProfile = () => {
     professionalTitle: '',
     bio: '',
     location: '',
+    industry: '',
     languages: [] as string[],
     profileImage: null as File | null,
   });
@@ -55,11 +81,15 @@ const CompleteProfile = () => {
     e.preventDefault();
     if (!user) return;
 
+    if (!isFreelancer && !formData.industry) {
+      toast({ title: 'Industry required', description: 'Please select your industry / business type.', variant: 'destructive' });
+      return;
+    }
+
     setIsLoading(true);
 
     let profileImageUrl = existingAvatar;
 
-    // Upload profile image if new one selected
     if (formData.profileImage) {
       const fileExt = formData.profileImage.name.split('.').pop();
       const fileName = `${user.id}/avatar.${fileExt}`;
@@ -73,21 +103,30 @@ const CompleteProfile = () => {
       }
     }
 
-    // Update profile
-    await supabase.from('profiles').update({
+    const profileUpdate: any = {
       full_name: formData.fullName,
-      professional_title: formData.professionalTitle || null,
-      bio: formData.bio || null,
       location: formData.location || null,
-      languages: formData.languages,
       ...(profileImageUrl ? { profile_image_url: profileImageUrl } : {}),
-    }).eq('id', user.id);
+    };
 
-    // Update freelancer record if applicable
+    if (isFreelancer) {
+      profileUpdate.professional_title = formData.professionalTitle || null;
+      profileUpdate.bio = formData.bio || null;
+      profileUpdate.languages = formData.languages;
+    } else {
+      profileUpdate.industry = formData.industry;
+    }
+
+    await (supabase as any).from('profiles').update(profileUpdate).eq('id', user.id);
+
     if (isFreelancer) {
       await (supabase as any).from('freelancers').update({
         bio: formData.bio || null,
         skills: formData.professionalTitle ? [formData.professionalTitle] : [],
+      }).eq('user_id', user.id);
+    } else {
+      await (supabase as any).from('buyers').update({
+        industry: formData.industry,
       }).eq('user_id', user.id);
     }
 
@@ -146,14 +185,13 @@ const CompleteProfile = () => {
           </div>
 
           <div className="bg-card/80 backdrop-blur-lg rounded-2xl p-6 sm:p-8 shadow-xl border border-border">
-            {/* Avatar preview */}
             <div className="flex justify-center mb-6">
               <div className="relative">
                 <Avatar className="h-24 w-24 ring-4 ring-primary/20">
                   {formData.profileImage ? (
                     <AvatarImage src={URL.createObjectURL(formData.profileImage)} alt="Preview" className="object-cover" />
                   ) : existingAvatar ? (
-                    <AvatarImage src={existingAvatar} alt="Google avatar" className="object-cover" />
+                    <AvatarImage src={existingAvatar} alt="Avatar" className="object-cover" />
                   ) : null}
                   <AvatarFallback className="bg-primary text-primary-foreground text-2xl">{initials}</AvatarFallback>
                 </Avatar>
@@ -163,6 +201,11 @@ const CompleteProfile = () => {
                 </label>
               </div>
             </div>
+            {!isFreelancer && (
+              <p className="text-center text-xs text-muted-foreground -mt-3 mb-6">
+                Optional: upload a personal picture or company logo
+              </p>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
@@ -180,55 +223,73 @@ const CompleteProfile = () => {
                 </div>
               )}
 
-              <div>
-                <Label htmlFor="bio" className="text-foreground font-medium">
-                  {isFreelancer ? 'Professional Bio' : 'About You'} {isFreelancer && '*'}
-                </Label>
-                <Textarea
-                  id="bio"
-                  name="bio"
-                  required={isFreelancer}
-                  value={formData.bio}
-                  onChange={handleInputChange}
-                  className="mt-1 min-h-[100px] resize-none"
-                  placeholder={isFreelancer ? 'Describe your skills, experience, and what makes you unique (min 50 characters)' : 'Tell us a bit about yourself'}
-                />
-                {isFreelancer && <p className="text-sm text-muted-foreground mt-1">{formData.bio.length}/500 characters</p>}
-              </div>
+              {isFreelancer ? (
+                <div>
+                  <Label htmlFor="bio" className="text-foreground font-medium">Professional Bio *</Label>
+                  <Textarea
+                    id="bio"
+                    name="bio"
+                    required
+                    value={formData.bio}
+                    onChange={handleInputChange}
+                    className="mt-1 min-h-[100px] resize-none"
+                    placeholder="Describe your skills, experience, and what makes you unique (min 50 characters)"
+                  />
+                  <p className="text-sm text-muted-foreground mt-1">{formData.bio.length}/500 characters</p>
+                </div>
+              ) : (
+                <div>
+                  <Label htmlFor="industry" className="text-foreground font-medium">Industry / Business Type *</Label>
+                  <Select value={formData.industry} onValueChange={(v) => setFormData(prev => ({ ...prev, industry: v }))}>
+                    <SelectTrigger id="industry" className="mt-1 h-12">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-5 h-5 text-muted-foreground" />
+                        <SelectValue placeholder="Select your industry" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent className="max-h-72">
+                      {BUYER_INDUSTRIES.map(ind => (
+                        <SelectItem key={ind} value={ind}>{ind}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
 
               <div>
-                <Label htmlFor="location" className="text-foreground font-medium">Location</Label>
+                <Label htmlFor="location" className="text-foreground font-medium">Location *</Label>
                 <div className="relative mt-1">
                   <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                  <Input id="location" name="location" value={formData.location} onChange={handleInputChange} className="pl-10 h-12" placeholder="City, Country" />
+                  <Input id="location" name="location" required value={formData.location} onChange={handleInputChange} className="pl-10 h-12" placeholder="City, Country" />
                 </div>
               </div>
 
-              {/* Languages */}
-              <div>
-                <Label className="text-foreground font-medium">Languages Spoken</Label>
-                <div className="flex flex-wrap gap-2 my-2">
-                  {formData.languages.map(lang => (
-                    <Badge key={lang} variant="secondary" className="flex items-center gap-1 px-3 py-1">
-                      {lang}
-                      <X className="w-3 h-3 cursor-pointer hover:text-destructive" onClick={() => removeLanguage(lang)} />
-                    </Badge>
-                  ))}
-                </div>
-                <div className="relative">
-                  <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                  <Input value={langSearch} onChange={(e) => setLangSearch(e.target.value)} className="pl-10 h-12" placeholder="Search and select languages..." />
-                </div>
-                {langSearch && filteredLanguages.length > 0 && (
-                  <div className="mt-1 border border-border rounded-md bg-popover max-h-40 overflow-y-auto">
-                    {filteredLanguages.map(lang => (
-                      <button key={lang} type="button" onClick={() => addLanguage(lang)} className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
+              {isFreelancer && (
+                <div>
+                  <Label className="text-foreground font-medium">Languages Spoken</Label>
+                  <div className="flex flex-wrap gap-2 my-2">
+                    {formData.languages.map(lang => (
+                      <Badge key={lang} variant="secondary" className="flex items-center gap-1 px-3 py-1">
                         {lang}
-                      </button>
+                        <X className="w-3 h-3 cursor-pointer hover:text-destructive" onClick={() => removeLanguage(lang)} />
+                      </Badge>
                     ))}
                   </div>
-                )}
-              </div>
+                  <div className="relative">
+                    <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                    <Input value={langSearch} onChange={(e) => setLangSearch(e.target.value)} className="pl-10 h-12" placeholder="Search and select languages..." />
+                  </div>
+                  {langSearch && filteredLanguages.length > 0 && (
+                    <div className="mt-1 border border-border rounded-md bg-popover max-h-40 overflow-y-auto">
+                      {filteredLanguages.map(lang => (
+                        <button key={lang} type="button" onClick={() => addLanguage(lang)} className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
+                          {lang}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
               <Button type="submit" disabled={isLoading} className="w-full h-12">
                 {isLoading ? (

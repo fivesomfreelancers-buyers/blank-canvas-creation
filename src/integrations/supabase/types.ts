@@ -201,16 +201,19 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
+          industry: string | null
           user_id: string
         }
         Insert: {
           created_at?: string | null
           id?: string
+          industry?: string | null
           user_id: string
         }
         Update: {
           created_at?: string | null
           id?: string
+          industry?: string | null
           user_id?: string
         }
         Relationships: []
@@ -984,6 +987,7 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          industry: string | null
           languages: string[] | null
           last_seen: string | null
           location: string | null
@@ -1001,6 +1005,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          industry?: string | null
           languages?: string[] | null
           last_seen?: string | null
           location?: string | null
@@ -1018,6 +1023,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          industry?: string | null
           languages?: string[] | null
           last_seen?: string | null
           location?: string | null
