@@ -216,6 +216,14 @@ const FreelancerWithdraw = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (withdrawAmount > availableBalance) {
+      toast({
+        title: 'Insufficient Funds',
+        description: INSUFFICIENT_FUNDS_MSG,
+        variant: 'destructive',
+      });
+      return;
+    }
     if (!isFormValid || !canWithdraw || !freelancerId) return;
 
     setIsSubmitting(true);
