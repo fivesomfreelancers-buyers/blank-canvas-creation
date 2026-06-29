@@ -90,7 +90,9 @@ const REASON_OPTIONS = [
   'Other',
 ];
 
-const minimumWithdrawal = 10;
+const minimumWithdrawal = 20;
+const INSUFFICIENT_FUNDS_MSG =
+  'Lacag ku filan uguma jirto wallet-kaaga. Waxaad la bixi kartaa oo keliya inta kuugu jirta Available Balance-ka.';
 
 const FreelancerWithdraw = () => {
   const navigate = useNavigate();
