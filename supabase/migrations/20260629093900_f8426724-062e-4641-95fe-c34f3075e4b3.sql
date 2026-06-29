@@ -1,0 +1,2 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS industry TEXT;
+ALTER TABLE public.buyers ADD COLUMN IF NOT EXISTS industry TEXT;
