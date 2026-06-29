@@ -387,7 +387,7 @@ const FreelancerWithdraw = () => {
                   <Input
                     id="bank-amount"
                     type="number"
-                    placeholder="Min $10"
+                    placeholder={`Min $${minimumWithdrawal}`}
                     value={bank.amount}
                     onChange={(e) => setField('amount', e.target.value)}
                     disabled={!canWithdraw}
@@ -397,6 +397,14 @@ const FreelancerWithdraw = () => {
                     className="rounded-lg h-11"
                     required
                   />
+                  {withdrawAmount > 0 && withdrawAmount > availableBalance && (
+                    <div className="flex items-start gap-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                      <AlertTriangle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm text-red-700 dark:text-red-300">
+                        {INSUFFICIENT_FUNDS_MSG}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Receiver name */}
