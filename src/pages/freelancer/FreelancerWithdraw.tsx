@@ -90,7 +90,9 @@ const REASON_OPTIONS = [
   'Other',
 ];
 
-const minimumWithdrawal = 10;
+const minimumWithdrawal = 20;
+const INSUFFICIENT_FUNDS_MSG =
+  'Lacag ku filan uguma jirto wallet-kaaga. Waxaad la bixi kartaa oo keliya inta kuugu jirta Available Balance-ka.';
 
 const FreelancerWithdraw = () => {
   const navigate = useNavigate();
@@ -144,15 +146,28 @@ const FreelancerWithdraw = () => {
         .maybeSingle();
       if (f) {
         setFreelancerId(f.id);
-        setAvailableBalance(Number(f.total_earnings) || 0);
 
-        const { data: pending } = await supabase
+        // Match Wallet logic: completed order earnings minus completed withdrawals
+        const { data: orders } = await supabase
+          .from('orders')
+          .select('amount, status')
+          .eq('freelancer_id', f.id);
+        const { data: withdrawals } = await supabase
           .from('withdrawals')
-          .select('id')
-          .eq('freelancer_id', f.id)
-          .eq('status', 'pending')
-          .limit(1);
-        setHasPendingWithdrawal((pending?.length ?? 0) > 0);
+          .select('amount, status')
+          .eq('freelancer_id', f.id);
+
+        const completedEarnings =
+          orders?.filter((o) => o.status === 'completed')
+            .reduce((s, o) => s + Number(o.amount), 0) || 0;
+        const withdrawnAmount =
+          withdrawals?.filter((w) => w.status === 'completed')
+            .reduce((s, w) => s + Number(w.amount), 0) || 0;
+
+        setAvailableBalance(Math.max(0, completedEarnings - withdrawnAmount));
+
+        const pending = withdrawals?.filter((w) => w.status === 'pending') ?? [];
+        setHasPendingWithdrawal(pending.length > 0);
       }
       setLoading(false);
     };
@@ -201,6 +216,14 @@ const FreelancerWithdraw = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (withdrawAmount > availableBalance) {
+      toast({
+        title: 'Insufficient Funds',
+        description: INSUFFICIENT_FUNDS_MSG,
+        variant: 'destructive',
+      });
+      return;
+    }
     if (!isFormValid || !canWithdraw || !freelancerId) return;
 
     setIsSubmitting(true);
@@ -364,7 +387,7 @@ const FreelancerWithdraw = () => {
                   <Input
                     id="bank-amount"
                     type="number"
-                    placeholder="Min $10"
+                    placeholder={`Min $${minimumWithdrawal}`}
                     value={bank.amount}
                     onChange={(e) => setField('amount', e.target.value)}
                     disabled={!canWithdraw}
@@ -374,6 +397,14 @@ const FreelancerWithdraw = () => {
                     className="rounded-lg h-11"
                     required
                   />
+                  {withdrawAmount > 0 && withdrawAmount > availableBalance && (
+                    <div className="flex items-start gap-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                      <AlertTriangle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm text-red-700 dark:text-red-300">
+                        {INSUFFICIENT_FUNDS_MSG}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Receiver name */}
@@ -605,7 +636,7 @@ const FreelancerWithdraw = () => {
                   <Input
                     id="mobile-amount"
                     type="number"
-                    placeholder="Min $10"
+                    placeholder={`Min $${minimumWithdrawal}`}
                     value={mobile.amount}
                     onChange={(e) => setField('amount', e.target.value)}
                     disabled={!canWithdraw}
@@ -615,6 +646,14 @@ const FreelancerWithdraw = () => {
                     className="rounded-lg h-11"
                     required
                   />
+                  {withdrawAmount > 0 && withdrawAmount > availableBalance && (
+                    <div className="flex items-start gap-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                      <AlertTriangle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm text-red-700 dark:text-red-300">
+                        {INSUFFICIENT_FUNDS_MSG}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Receiver name */}

@@ -45,7 +45,7 @@ const FreelancerWallet = () => {
         const withdrawnAmount = withdrawals?.filter(w => w.status === 'completed').reduce((sum, w) => sum + Number(w.amount), 0) || 0;
 
         setEarnings({
-          available: completedEarnings - withdrawnAmount,
+          available: Math.max(0, completedEarnings - withdrawnAmount),
           pending: pendingEarnings,
           total: freelancer?.total_earnings || 0
         });
@@ -119,6 +119,7 @@ const FreelancerWallet = () => {
               <Button 
                 className="flex items-center space-x-2"
                 onClick={() => navigate('/freelancer/wallet/withdraw')}
+                disabled={earnings.available < 20}
               >
                 <ArrowUpRight className="w-4 h-4" />
                 <span>Withdraw</span>
