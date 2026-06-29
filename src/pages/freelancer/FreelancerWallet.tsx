@@ -45,7 +45,7 @@ const FreelancerWallet = () => {
         const withdrawnAmount = withdrawals?.filter(w => w.status === 'completed').reduce((sum, w) => sum + Number(w.amount), 0) || 0;
 
         setEarnings({
-          available: completedEarnings - withdrawnAmount,
+          available: Math.max(0, completedEarnings - withdrawnAmount),
           pending: pendingEarnings,
           total: freelancer?.total_earnings || 0
         });
