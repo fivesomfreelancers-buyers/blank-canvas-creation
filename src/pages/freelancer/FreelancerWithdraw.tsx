@@ -277,6 +277,14 @@ const FreelancerWithdraw = () => {
     <div className="min-h-screen bg-background p-4 sm:p-6">
       <div className="max-w-3xl mx-auto">
         <div className="mb-6 sm:mb-8">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/freelancer/dashboard')}
+            className="mb-4 p-0 h-auto font-normal text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </Button>
           <h1 className="text-2xl sm:text-3xl font-bold">Withdraw Earnings</h1>
           <p className="text-muted-foreground mt-2 text-sm sm:text-base">
             Request a withdrawal of your available funds

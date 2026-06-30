@@ -48,7 +48,6 @@ import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import { ThemeProvider } from "./components/ThemeProvider";
 import PresenceTracker from "./components/presence/PresenceTracker";
-import DashboardLayout from "./components/layouts/DashboardLayout";
 
 const queryClient = new QueryClient();
 
@@ -85,36 +84,32 @@ const App = () => (
               <Route path="/profile/:freelancerId" element={<FreelancerProfilePage />} />
               
               {/* Freelancer Routes */}
-              <Route element={<DashboardLayout role="freelancer" />}>
-                <Route path="/freelancer/dashboard" element={<FreelancerDashboard />} />
-                <Route path="/freelancer/gigs" element={<FreelancerGigs />} />
-                <Route path="/freelancer/orders" element={<FreelancerOrders />} />
-                <Route path="/freelancer/order/:orderId" element={<FreelancerOrderDetails />} />
-                <Route path="/freelancer/messages" element={<FreelancerMessages />} />
-                <Route path="/freelancer/deliver" element={<FreelancerDeliverWork />} />
-                <Route path="/freelancer/delivery-success/:orderId" element={<DeliverySuccess />} />
-                <Route path="/freelancer/wallet" element={<FreelancerWallet />} />
-                <Route path="/freelancer/wallet/withdraw" element={<FreelancerWithdraw />} />
-                <Route path="/freelancer/help" element={<FreelancerHelp />} />
-                <Route path="/freelancer/settings" element={<FreelancerSettings />} />
-                <Route path="/freelancer/profile" element={<FreelancerProfile />} />
-                <Route path="/freelancer/verify" element={<FreelancerVerify />} />
-              </Route>
-
+              <Route path="/freelancer/dashboard" element={<FreelancerDashboard />} />
+              <Route path="/freelancer/gigs" element={<FreelancerGigs />} />
+              <Route path="/freelancer/orders" element={<FreelancerOrders />} />
+              <Route path="/freelancer/order/:orderId" element={<FreelancerOrderDetails />} />
+              <Route path="/freelancer/messages" element={<FreelancerMessages />} />
+              <Route path="/freelancer/deliver" element={<FreelancerDeliverWork />} />
+              <Route path="/freelancer/delivery-success/:orderId" element={<DeliverySuccess />} />
+              <Route path="/freelancer/wallet" element={<FreelancerWallet />} />
+              <Route path="/freelancer/wallet/withdraw" element={<FreelancerWithdraw />} />
+              <Route path="/freelancer/help" element={<FreelancerHelp />} />
+              <Route path="/freelancer/settings" element={<FreelancerSettings />} />
+              <Route path="/freelancer/profile" element={<FreelancerProfile />} />
+              <Route path="/freelancer/verify" element={<FreelancerVerify />} />
+              
               {/* Buyer Routes */}
-              <Route element={<DashboardLayout role="buyer" />}>
-                <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
-                <Route path="/buyer/browse" element={<BuyerBrowse />} />
-                <Route path="/buyer/orders" element={<BuyerOrders />} />
-                <Route path="/buyer/messages" element={<BuyerMessages />} />
-                <Route path="/buyer/payments" element={<BuyerPayments />} />
-                <Route path="/buyer/help" element={<BuyerHelp />} />
-                <Route path="/buyer/settings" element={<BuyerSettings />} />
-                <Route path="/buyer/order/:orderId" element={<BuyerOrderDetails />} />
-                <Route path="/buyer/orders/:orderId" element={<BuyerOrderDetails />} />
-                <Route path="/buyer/order/:orderId/requirements" element={<SubmitRequirements />} />
-                <Route path="/buyer/orders/:orderId/requirements" element={<SubmitRequirements />} />
-              </Route>
+              <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
+              <Route path="/buyer/browse" element={<BuyerBrowse />} />
+              <Route path="/buyer/orders" element={<BuyerOrders />} />
+              <Route path="/buyer/messages" element={<BuyerMessages />} />
+              <Route path="/buyer/payments" element={<BuyerPayments />} />
+              <Route path="/buyer/help" element={<BuyerHelp />} />
+              <Route path="/buyer/settings" element={<BuyerSettings />} />
+              <Route path="/buyer/order/:orderId" element={<BuyerOrderDetails />} />
+              <Route path="/buyer/orders/:orderId" element={<BuyerOrderDetails />} />
+              <Route path="/buyer/order/:orderId/requirements" element={<SubmitRequirements />} />
+              <Route path="/buyer/orders/:orderId/requirements" element={<SubmitRequirements />} />
               
               {/* Admin Routes */}
               <Route path="/admin/*" element={<AdminDashboard />} />
