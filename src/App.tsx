@@ -48,6 +48,7 @@ import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import { ThemeProvider } from "./components/ThemeProvider";
 import PresenceTracker from "./components/presence/PresenceTracker";
+import DashboardLayout from "./components/layouts/DashboardLayout";
 
 const queryClient = new QueryClient();
 
