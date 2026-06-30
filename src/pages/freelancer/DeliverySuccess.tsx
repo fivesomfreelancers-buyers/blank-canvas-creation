@@ -55,12 +55,6 @@ const DeliverySuccess = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-2xl mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/freelancer/dashboard')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
-        </div>
 
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-500/10 mb-4">
