@@ -762,6 +762,7 @@ export type Database = {
       }
       order_deliveries: {
         Row: {
+          created_at: string
           delivered_at: string | null
           delivery_file_url: string | null
           delivery_link: string | null
@@ -773,6 +774,7 @@ export type Database = {
           status: Database["public"]["Enums"]["delivery_status"] | null
         }
         Insert: {
+          created_at?: string
           delivered_at?: string | null
           delivery_file_url?: string | null
           delivery_link?: string | null
@@ -784,6 +786,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["delivery_status"] | null
         }
         Update: {
+          created_at?: string
           delivered_at?: string | null
           delivery_file_url?: string | null
           delivery_link?: string | null
