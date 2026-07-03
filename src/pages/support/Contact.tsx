@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Mail, MessageSquare, Phone, Clock, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import { moderateText, recordStrike, isChatBlocked } from '@/lib/chatModeration';
 
 
 const Contact = () => {
