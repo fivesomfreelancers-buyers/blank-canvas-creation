@@ -143,6 +143,15 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
       toast({ title: 'File too large', description: 'Max 50MB. Use a link for larger files.', variant: 'destructive' });
       return;
     }
+    if (file.type.startsWith('image/')) {
+      const check = await moderateImageFile(file);
+      if (check.allowed === false) {
+        const strike = recordStrike(userId);
+        toast({ title: check.message, description: strike.warning, variant: 'destructive' });
+        if (fileRef.current) fileRef.current.value = '';
+        return;
+      }
+    }
     setUploading(true);
     const path = `${userId}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
     const { error: upErr } = await supabase.storage.from('message-attachments').upload(path, file);
