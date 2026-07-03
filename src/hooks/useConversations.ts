@@ -292,7 +292,7 @@ export function useConversations() {
     }
 
     const check = moderateText(newMessage);
-    if (!check.allowed) {
+    if (check.allowed === false) {
       const strike = recordStrike(currentUserId);
       toast.error(check.message, { description: strike.warning, duration: 6000 });
       return;
