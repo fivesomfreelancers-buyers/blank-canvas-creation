@@ -105,6 +105,21 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
     if (!disputeId || !userId) return;
     const body = text.trim();
     if (!body && !attachmentUrl) return;
+
+    if (body) {
+      const blockState = isChatBlocked(userId);
+      if (blockState.blocked) {
+        toast({ title: 'Chat suspended', description: `Try again in ${blockState.minutesLeft} minutes.`, variant: 'destructive' });
+        return;
+      }
+      const check = moderateText(body);
+      if (check.allowed === false) {
+        const strike = recordStrike(userId);
+        toast({ title: check.message, description: strike.warning, variant: 'destructive' });
+        return;
+      }
+    }
+
     setSending(true);
     const { error } = await supabase.from('dispute_messages').insert({
       dispute_id: disputeId,
