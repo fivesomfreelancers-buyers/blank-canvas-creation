@@ -284,6 +284,20 @@ export function useConversations() {
   const handleSend = useCallback(async () => {
     if (!newMessage.trim() || !selectedConversationId || !currentUserId) return;
     if (selectedKind === 'news') return; // read-only
+
+    const blockState = isChatBlocked(currentUserId);
+    if (blockState.blocked) {
+      toast.error(`Chat suspended. Try again in ${blockState.minutesLeft} minutes.`);
+      return;
+    }
+
+    const check = moderateText(newMessage);
+    if (!check.allowed) {
+      const strike = recordStrike(currentUserId);
+      toast.error(check.message, { description: strike.warning, duration: 6000 });
+      return;
+    }
+
     if (selectedKind === 'support') {
       const { error } = await (supabase as any).from('system_messages').insert({
         conversation_id: selectedConversationId,
