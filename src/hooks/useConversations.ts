@@ -322,8 +322,28 @@ export function useConversations() {
     if (!file || !currentUserId || !selectedConversationId) return;
     if (selectedKind === 'news') return;
 
+    const blockState = isChatBlocked(currentUserId);
+    if (blockState.blocked) {
+      toast.error(`Chat suspended. Try again in ${blockState.minutesLeft} minutes.`);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
     try {
       setUploadingImage(true);
+
+      // Moderate images before uploading
+      if (file.type.startsWith('image/')) {
+        const check = await moderateImageFile(file);
+        if (check.allowed === false) {
+          const strike = recordStrike(currentUserId);
+          toast.error(check.message, { description: strike.warning, duration: 6000 });
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          setUploadingImage(false);
+          return;
+        }
+      }
+
       const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase();
       const filePath = `${currentUserId}/${crypto.randomUUID()}.${fileExt}`;
       const { error: uploadError } = await supabase.storage
