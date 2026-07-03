@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import supportLogoAsset from '@/assets/fivesom-support-logo.png';
 import newsLogoAsset from '@/assets/fivesom-news-logo.png';
+import { toast } from 'sonner';
+import { moderateText, moderateImageFile, recordStrike, isChatBlocked } from '@/lib/chatModeration';
 
 export type ConversationKind = 'dm' | 'support' | 'news';
 
