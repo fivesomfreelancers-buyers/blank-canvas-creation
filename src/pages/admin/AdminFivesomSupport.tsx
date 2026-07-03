@@ -10,6 +10,7 @@ import supportLogo from '@/assets/fivesom-support-logo.png';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { moderateText, moderateImageFile } from '@/lib/chatModeration';
 
 
 interface SupportConvo {
