@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Send, Shield, Loader2, Paperclip, ScaleIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
+import { moderateText, moderateImageFile, recordStrike, isChatBlocked } from '@/lib/chatModeration';
 
 interface DisputeChatProps {
   /** Pass orderId OR disputeId. orderId will resolve to the latest dispute on that order. */
