@@ -49,6 +49,23 @@ const Contact = () => {
         return;
       }
 
+      const blockState = isChatBlocked(user.id);
+      if (blockState.blocked) {
+        toast({ title: 'Chat suspended', description: `Try again in ${blockState.minutesLeft} minutes.`, variant: 'destructive' });
+        setIsSubmitting(false);
+        return;
+      }
+      for (const part of [subject, message]) {
+        const check = moderateText(part);
+        if (check.allowed === false) {
+          const strike = recordStrike(user.id);
+          toast({ title: check.message, description: strike.warning, variant: 'destructive' });
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+
       // Get or create the user's support system conversation
       let convoId: string | null = null;
       const { data: existing } = await (supabase as any)
