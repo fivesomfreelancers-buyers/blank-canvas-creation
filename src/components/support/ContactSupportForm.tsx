@@ -29,6 +29,20 @@ const ContactSupportForm: React.FC = () => {
     if (s.length > 200) return toast.error('Subject is too long (max 200).');
     if (m.length > 4000) return toast.error('Message is too long (max 4000).');
 
+    const blockState = isChatBlocked(user.id);
+    if (blockState.blocked) {
+      return toast.error(`Chat suspended. Try again in ${blockState.minutesLeft} minutes.`);
+    }
+    for (const part of [s, m]) {
+      const check = moderateText(part);
+      if (check.allowed === false) {
+        const strike = recordStrike(user.id);
+        toast.error(check.message, { description: strike.warning, duration: 6000 });
+        return;
+      }
+    }
+
+
     try {
       setSending(true);
       // Get or create the user's support conversation
