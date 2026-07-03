@@ -116,6 +116,8 @@ const AdminFivesomSupport: React.FC = () => {
 
   const sendReply = async () => {
     if (!reply.trim() || !selected || !user) return;
+    const check = moderateText(reply);
+    if (check.allowed === false) return toast.error(check.message);
     const { error } = await (supabase as any).from('system_messages').insert({
       conversation_id: selected.id,
       sender_type: 'admin',
