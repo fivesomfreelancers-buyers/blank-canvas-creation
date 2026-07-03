@@ -8,6 +8,7 @@ import { Mail, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { moderateText, recordStrike, isChatBlocked } from '@/lib/chatModeration';
 
 const ContactSupportForm: React.FC = () => {
   const { user, userRole } = useAuth();
