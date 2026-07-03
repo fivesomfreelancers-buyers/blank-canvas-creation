@@ -8,6 +8,7 @@ import { Mail, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { moderateText, recordStrike, isChatBlocked } from '@/lib/chatModeration';
 
 const ContactSupportForm: React.FC = () => {
   const { user, userRole } = useAuth();
@@ -27,6 +28,20 @@ const ContactSupportForm: React.FC = () => {
     if (!m) return toast.error('Message cannot be empty.');
     if (s.length > 200) return toast.error('Subject is too long (max 200).');
     if (m.length > 4000) return toast.error('Message is too long (max 4000).');
+
+    const blockState = isChatBlocked(user.id);
+    if (blockState.blocked) {
+      return toast.error(`Chat suspended. Try again in ${blockState.minutesLeft} minutes.`);
+    }
+    for (const part of [s, m]) {
+      const check = moderateText(part);
+      if (check.allowed === false) {
+        const strike = recordStrike(user.id);
+        toast.error(check.message, { description: strike.warning, duration: 6000 });
+        return;
+      }
+    }
+
 
     try {
       setSending(true);

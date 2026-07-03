@@ -10,6 +10,7 @@ import supportLogo from '@/assets/fivesom-support-logo.png';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { moderateText, moderateImageFile } from '@/lib/chatModeration';
 
 
 interface SupportConvo {
@@ -115,6 +116,8 @@ const AdminFivesomSupport: React.FC = () => {
 
   const sendReply = async () => {
     if (!reply.trim() || !selected || !user) return;
+    const check = moderateText(reply);
+    if (check.allowed === false) return toast.error(check.message);
     const { error } = await (supabase as any).from('system_messages').insert({
       conversation_id: selected.id,
       sender_type: 'admin',
@@ -129,6 +132,14 @@ const AdminFivesomSupport: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file || !selected || !user) return;
     try {
+      if (file.type.startsWith('image/')) {
+        const check = await moderateImageFile(file);
+        if (check.allowed === false) {
+          toast.error(check.message);
+          if (fileRef.current) fileRef.current.value = '';
+          return;
+        }
+      }
       setUploading(true);
       const ext = (file.name.split('.').pop() || 'bin').toLowerCase();
       const path = `${user.id}/${crypto.randomUUID()}.${ext}`;

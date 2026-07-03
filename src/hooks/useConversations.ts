@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import supportLogoAsset from '@/assets/fivesom-support-logo.png';
 import newsLogoAsset from '@/assets/fivesom-news-logo.png';
+import { toast } from 'sonner';
+import { moderateText, moderateImageFile, recordStrike, isChatBlocked } from '@/lib/chatModeration';
 
 export type ConversationKind = 'dm' | 'support' | 'news';
 
@@ -282,6 +284,20 @@ export function useConversations() {
   const handleSend = useCallback(async () => {
     if (!newMessage.trim() || !selectedConversationId || !currentUserId) return;
     if (selectedKind === 'news') return; // read-only
+
+    const blockState = isChatBlocked(currentUserId);
+    if (blockState.blocked) {
+      toast.error(`Chat suspended. Try again in ${blockState.minutesLeft} minutes.`);
+      return;
+    }
+
+    const check = moderateText(newMessage);
+    if (check.allowed === false) {
+      const strike = recordStrike(currentUserId);
+      toast.error(check.message, { description: strike.warning, duration: 6000 });
+      return;
+    }
+
     if (selectedKind === 'support') {
       const { error } = await (supabase as any).from('system_messages').insert({
         conversation_id: selectedConversationId,
@@ -306,8 +322,28 @@ export function useConversations() {
     if (!file || !currentUserId || !selectedConversationId) return;
     if (selectedKind === 'news') return;
 
+    const blockState = isChatBlocked(currentUserId);
+    if (blockState.blocked) {
+      toast.error(`Chat suspended. Try again in ${blockState.minutesLeft} minutes.`);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
     try {
       setUploadingImage(true);
+
+      // Moderate images before uploading
+      if (file.type.startsWith('image/')) {
+        const check = await moderateImageFile(file);
+        if (check.allowed === false) {
+          const strike = recordStrike(currentUserId);
+          toast.error(check.message, { description: strike.warning, duration: 6000 });
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          setUploadingImage(false);
+          return;
+        }
+      }
+
       const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase();
       const filePath = `${currentUserId}/${crypto.randomUUID()}.${fileExt}`;
       const { error: uploadError } = await supabase.storage

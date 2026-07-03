@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Send, Shield, Loader2, Paperclip, ScaleIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
+import { moderateText, moderateImageFile, recordStrike, isChatBlocked } from '@/lib/chatModeration';
 
 interface DisputeChatProps {
   /** Pass orderId OR disputeId. orderId will resolve to the latest dispute on that order. */
@@ -104,6 +105,21 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
     if (!disputeId || !userId) return;
     const body = text.trim();
     if (!body && !attachmentUrl) return;
+
+    if (body) {
+      const blockState = isChatBlocked(userId);
+      if (blockState.blocked) {
+        toast({ title: 'Chat suspended', description: `Try again in ${blockState.minutesLeft} minutes.`, variant: 'destructive' });
+        return;
+      }
+      const check = moderateText(body);
+      if (check.allowed === false) {
+        const strike = recordStrike(userId);
+        toast({ title: check.message, description: strike.warning, variant: 'destructive' });
+        return;
+      }
+    }
+
     setSending(true);
     const { error } = await supabase.from('dispute_messages').insert({
       dispute_id: disputeId,
@@ -126,6 +142,15 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
     if (file.size > 50 * 1024 * 1024) {
       toast({ title: 'File too large', description: 'Max 50MB. Use a link for larger files.', variant: 'destructive' });
       return;
+    }
+    if (file.type.startsWith('image/')) {
+      const check = await moderateImageFile(file);
+      if (check.allowed === false) {
+        const strike = recordStrike(userId);
+        toast({ title: check.message, description: strike.warning, variant: 'destructive' });
+        if (fileRef.current) fileRef.current.value = '';
+        return;
+      }
     }
     setUploading(true);
     const path = `${userId}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
