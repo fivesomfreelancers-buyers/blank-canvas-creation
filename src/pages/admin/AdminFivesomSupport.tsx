@@ -132,6 +132,14 @@ const AdminFivesomSupport: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file || !selected || !user) return;
     try {
+      if (file.type.startsWith('image/')) {
+        const check = await moderateImageFile(file);
+        if (check.allowed === false) {
+          toast.error(check.message);
+          if (fileRef.current) fileRef.current.value = '';
+          return;
+        }
+      }
       setUploading(true);
       const ext = (file.name.split('.').pop() || 'bin').toLowerCase();
       const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
