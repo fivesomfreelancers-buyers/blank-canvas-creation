@@ -46,6 +46,8 @@ import SellerPayment from "./pages/SellerPayment";
 import PaymentPage from "./pages/PaymentPage";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import TermsOfService from "./pages/legal/TermsOfService";
+import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
 import { ThemeProvider } from "./components/ThemeProvider";
 import PresenceTracker from "./components/presence/PresenceTracker";
 
@@ -111,6 +113,10 @@ const App = () => (
               <Route path="/buyer/order/:orderId/requirements" element={<SubmitRequirements />} />
               <Route path="/buyer/orders/:orderId/requirements" element={<SubmitRequirements />} />
               
+              {/* Legal Routes */}
+              <Route path="/legal/terms" element={<TermsOfService />} />
+              <Route path="/legal/privacy" element={<PrivacyPolicy />} />
+
               {/* Admin Routes */}
               <Route path="/admin/*" element={<AdminDashboard />} />
               
