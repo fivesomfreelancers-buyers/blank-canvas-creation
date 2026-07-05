@@ -50,6 +50,7 @@ import TermsOfService from "./pages/legal/TermsOfService";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
 import { ThemeProvider } from "./components/ThemeProvider";
 import PresenceTracker from "./components/presence/PresenceTracker";
+import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
   <ThemeProvider>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <LanguageProvider>
         <TooltipProvider>
           <Toaster />
           <Sonner />
@@ -125,6 +127,7 @@ const App = () => (
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
+        </LanguageProvider>
       </AuthProvider>
     </QueryClientProvider>
   </ThemeProvider>
