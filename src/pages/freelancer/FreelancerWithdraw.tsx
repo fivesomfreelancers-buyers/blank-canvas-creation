@@ -314,8 +314,8 @@ const FreelancerWithdraw = () => {
               <span>${minimumWithdrawal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Withdraw fee</span>
-              <span>2% deducted from amount</span>
+              <span>Fivesom fee</span>
+              <span>15% deducted from amount</span>
             </div>
 
             {!loading && availableBalance < minimumWithdrawal && (
