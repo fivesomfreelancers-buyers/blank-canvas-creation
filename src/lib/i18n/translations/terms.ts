@@ -545,7 +545,7 @@ export const termsCopy: Record<LangCode, TermsCopy> = {
     },
     payments: {
       id: 'payments', title: '7. Règles de paiement',
-      body: 'Tous les paiements passent par un système de séquestre. Les fonds de l\'acheteur sont retenus jusqu\'à ce que le freelance termine le travail et que l\'acheteur l\'accepte. Fivesom prélève une petite commission ; le reste est crédité sur le Solde disponible du freelance. Les retraits ne sont possibles que depuis le Solde disponible, pas depuis le Total gagné.',
+      body: 'Tous les paiements passent par un système de séquestre. Les fonds de l\'acheteur sont retenus jusqu\'à ce que le freelance termine le travail et que l\'acheteur l\'accepte. Lors du retrait, Fivesom prélève une commission de 15 % et le freelance reçoit les 85 % restants. Les retraits ne sont possibles que depuis le Solde disponible, pas depuis le Total gagné.',
     },
     refunds: {
       id: 'refunds', title: '8. Politique de remboursement',
