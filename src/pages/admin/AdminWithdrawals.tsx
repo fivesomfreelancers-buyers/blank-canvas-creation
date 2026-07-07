@@ -175,7 +175,9 @@ const AdminWithdrawals = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>User</TableHead>
-                <TableHead>Amount</TableHead>
+                <TableHead>Requested</TableHead>
+                <TableHead>Fee (15%)</TableHead>
+                <TableHead>Payout</TableHead>
                 <TableHead>Method</TableHead>
                 <TableHead>Receiver</TableHead>
                 <TableHead>Status</TableHead>
@@ -188,6 +190,8 @@ const AdminWithdrawals = () => {
                 <TableRow key={w.id}>
                   <TableCell className="text-sm">{w.user_name}</TableCell>
                   <TableCell className="font-bold">${Number(w.amount).toFixed(2)}</TableCell>
+                  <TableCell className="text-primary">-${feeOf(w).toFixed(2)}</TableCell>
+                  <TableCell className="font-semibold text-green-500">${netOf(w).toFixed(2)}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className="gap-1">
                       {isBank(w) ? <Building2 className="h-3 w-3" /> : <Smartphone className="h-3 w-3" />}
