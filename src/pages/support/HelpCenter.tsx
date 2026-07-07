@@ -77,7 +77,7 @@ const HelpCenter = () => {
         },
         {
           question: "What fees does FIVESOM charge?",
-          answer: "FIVESOM takes a 20% commission from completed orders. This covers payment processing, platform maintenance, customer support, and marketing to bring you more clients."
+          answer: "Fivesom charges a 15% commission on freelancer withdrawals. When you withdraw your earnings, 15% is deducted as the Fivesom fee and you receive the remaining 85%. Buyers are not charged any extra fee."
         }
       ]
     }
