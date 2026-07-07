@@ -12,6 +12,9 @@ interface WithdrawalRow {
   id: string;
   freelancer_id: string;
   amount: number;
+  fee_percent: number | null;
+  fee_amount: number | null;
+  net_amount: number | null;
   status: string;
   method: string | null;
   bank_name: string | null;
