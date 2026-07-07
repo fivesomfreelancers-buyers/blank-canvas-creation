@@ -599,13 +599,19 @@ const FreelancerWithdraw = () => {
                 {withdrawAmount > 0 && (
                   <div className="p-4 bg-muted/40 rounded-xl space-y-1">
                     <p className="text-sm text-muted-foreground">
-                      Withdrawal fee (2%):{' '}
+                      Withdrawal amount:{' '}
                       <span className="font-medium text-foreground">
-                        ${withdrawFee.toFixed(2)}
+                        ${withdrawAmount.toFixed(2)}
+                      </span>
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Fivesom fee (15%):{' '}
+                      <span className="font-medium text-foreground">
+                        -${withdrawFee.toFixed(2)}
                       </span>
                     </p>
                     <p className="font-semibold text-green-600">
-                      You will receive: ${amountAfterFee.toFixed(2)}
+                      Final amount you receive: ${amountAfterFee.toFixed(2)}
                     </p>
                   </div>
                 )}
