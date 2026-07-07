@@ -111,12 +111,27 @@ const FreelancerWallet = () => {
             <CardTitle>Withdraw Funds</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-muted-foreground">Available for withdrawal: <span className="font-bold text-green-600">${earnings.available.toFixed(2)}</span></p>
-                <p className="text-sm text-muted-foreground mt-1">Minimum withdrawal: $20.00</p>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="space-y-1 text-sm">
+                <p className="text-muted-foreground">
+                  Available balance:{' '}
+                  <span className="font-bold text-green-600">${earnings.available.toFixed(2)}</span>
+                </p>
+                <p className="text-muted-foreground">
+                  Fivesom fee (15%):{' '}
+                  <span className="font-medium text-foreground">
+                    -${(earnings.available * 0.15).toFixed(2)}
+                  </span>
+                </p>
+                <p className="text-muted-foreground">
+                  Final withdraw amount:{' '}
+                  <span className="font-semibold text-foreground">
+                    ${(earnings.available * 0.85).toFixed(2)}
+                  </span>
+                </p>
+                <p className="text-xs text-muted-foreground pt-1">Minimum withdrawal: $20.00</p>
               </div>
-              <Button 
+              <Button
                 className="flex items-center space-x-2"
                 onClick={() => navigate('/freelancer/wallet/withdraw')}
                 disabled={earnings.available < 20}
