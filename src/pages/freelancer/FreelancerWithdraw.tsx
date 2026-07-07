@@ -181,7 +181,8 @@ const FreelancerWithdraw = () => {
   };
 
   const withdrawAmount = parseFloat(form.amount) || 0;
-  const withdrawFee = withdrawAmount * 0.02;
+  const FIVESOM_FEE_PERCENT = 15;
+  const withdrawFee = withdrawAmount * (FIVESOM_FEE_PERCENT / 100);
   const amountAfterFee = withdrawAmount - withdrawFee;
   const isAmountValid =
     withdrawAmount >= minimumWithdrawal && withdrawAmount <= availableBalance;
@@ -258,7 +259,7 @@ const FreelancerWithdraw = () => {
 
       toast({
         title: 'Withdrawal Request Submitted',
-        description: `Your request for $${withdrawAmount.toFixed(2)} has been sent to the admin for processing. You will receive $${amountAfterFee.toFixed(2)} after the 2% fee.`,
+        description: `Your request for $${withdrawAmount.toFixed(2)} has been sent to the admin for processing. You will receive $${amountAfterFee.toFixed(2)} after the 15% Fivesom fee.`,
       });
       navigate('/freelancer/wallet');
     } catch (err: any) {
@@ -313,8 +314,8 @@ const FreelancerWithdraw = () => {
               <span>${minimumWithdrawal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Withdraw fee</span>
-              <span>2% deducted from amount</span>
+              <span>Fivesom fee</span>
+              <span>15% deducted from amount</span>
             </div>
 
             {!loading && availableBalance < minimumWithdrawal && (
@@ -598,13 +599,19 @@ const FreelancerWithdraw = () => {
                 {withdrawAmount > 0 && (
                   <div className="p-4 bg-muted/40 rounded-xl space-y-1">
                     <p className="text-sm text-muted-foreground">
-                      Withdrawal fee (2%):{' '}
+                      Withdrawal amount:{' '}
                       <span className="font-medium text-foreground">
-                        ${withdrawFee.toFixed(2)}
+                        ${withdrawAmount.toFixed(2)}
+                      </span>
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Fivesom fee (15%):{' '}
+                      <span className="font-medium text-foreground">
+                        -${withdrawFee.toFixed(2)}
                       </span>
                     </p>
                     <p className="font-semibold text-green-600">
-                      You will receive: ${amountAfterFee.toFixed(2)}
+                      Final amount you receive: ${amountAfterFee.toFixed(2)}
                     </p>
                   </div>
                 )}
@@ -816,13 +823,19 @@ const FreelancerWithdraw = () => {
                 {withdrawAmount > 0 && (
                   <div className="p-4 bg-muted/40 rounded-xl space-y-1">
                     <p className="text-sm text-muted-foreground">
-                      Withdrawal fee (2%):{' '}
+                      Withdrawal amount:{' '}
                       <span className="font-medium text-foreground">
-                        ${withdrawFee.toFixed(2)}
+                        ${withdrawAmount.toFixed(2)}
+                      </span>
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Fivesom fee (15%):{' '}
+                      <span className="font-medium text-foreground">
+                        -${withdrawFee.toFixed(2)}
                       </span>
                     </p>
                     <p className="font-semibold text-green-600">
-                      You will receive: ${amountAfterFee.toFixed(2)}
+                      Final amount you receive: ${amountAfterFee.toFixed(2)}
                     </p>
                   </div>
                 )}

@@ -147,7 +147,7 @@ export const termsCopy: Record<LangCode, TermsCopy> = {
     },
     payments: {
       id: 'payments', title: '7. Payment Rules',
-      body: 'All payments go through an escrow system. Buyer funds are held until the freelancer completes the work and the buyer accepts it. Fivesom takes a small service fee and the remainder is credited to the freelancer\'s Available Balance. Withdrawals are only possible from Available Balance — not Total Earned.',
+      body: 'All payments go through an escrow system. Buyer funds are held until the freelancer completes the work and the buyer accepts it. When the freelancer withdraws their earnings, Fivesom charges a 15% commission and the remaining 85% is paid out to the freelancer. Withdrawals are only possible from Available Balance — not Total Earned.',
     },
     refunds: {
       id: 'refunds', title: '8. Refund Policy',
@@ -346,7 +346,7 @@ export const termsCopy: Record<LangCode, TermsCopy> = {
     },
     payments: {
       id: 'payments', title: '7. Xeerarka Payments',
-      body: 'Dhammaan payments waxay maraan escrow system. Lacagta buyer-ka ayaa la qabtaa ilaa uu freelancer-ku dhamaystiro shaqada oo buyer-ku ansixiyo. Fivesom waxay qaadataa boqolley yar (service fee) oo intiisa kale la siiyo freelancer-ka Available Balance-kiisa. Withdraw kaliya wuxuu ka shaqeeyaa Available Balance oo aan ahayn Total Earned.',
+      body: 'Dhammaan payments waxay maraan escrow system. Lacagta buyer-ka ayaa la qabtaa ilaa uu freelancer-ku dhamaystiro shaqada oo buyer-ku ansixiyo. Marka freelancer-ku uu lacagta kala baxo (withdrawal), Fivesom waxay ka qaadataa 15% commission oo 85%-ta hadhay waxaa la siiyaa freelancer-ka. Withdraw kaliya wuxuu ka shaqeeyaa Available Balance oo aan ahayn Total Earned.',
     },
     refunds: {
       id: 'refunds', title: '8. Refund Policy',
@@ -545,7 +545,7 @@ export const termsCopy: Record<LangCode, TermsCopy> = {
     },
     payments: {
       id: 'payments', title: '7. Règles de paiement',
-      body: 'Tous les paiements passent par un système de séquestre. Les fonds de l\'acheteur sont retenus jusqu\'à ce que le freelance termine le travail et que l\'acheteur l\'accepte. Fivesom prélève une petite commission ; le reste est crédité sur le Solde disponible du freelance. Les retraits ne sont possibles que depuis le Solde disponible, pas depuis le Total gagné.',
+      body: 'Tous les paiements passent par un système de séquestre. Les fonds de l\'acheteur sont retenus jusqu\'à ce que le freelance termine le travail et que l\'acheteur l\'accepte. Lors du retrait, Fivesom prélève une commission de 15 % et le freelance reçoit les 85 % restants. Les retraits ne sont possibles que depuis le Solde disponible, pas depuis le Total gagné.',
     },
     refunds: {
       id: 'refunds', title: '8. Politique de remboursement',
@@ -744,7 +744,7 @@ export const termsCopy: Record<LangCode, TermsCopy> = {
     },
     payments: {
       id: 'payments', title: '7. قواعد الدفع',
-      body: 'تمر جميع المدفوعات عبر نظام ضامن. تُحتجز أموال المشتري حتى يُنجز المستقل العمل ويقبله المشتري. تأخذ Fivesom عمولة خدمة صغيرة ويُودع الباقي في الرصيد المتاح للمستقل. السحوبات ممكنة فقط من الرصيد المتاح، وليس من إجمالي الأرباح.',
+      body: 'تمر جميع المدفوعات عبر نظام ضامن. تُحتجز أموال المشتري حتى يُنجز المستقل العمل ويقبله المشتري. عند سحب المستقل لأرباحه، تأخذ Fivesom عمولة قدرها 15% ويحصل المستقل على الـ 85% المتبقية. السحوبات ممكنة فقط من الرصيد المتاح، وليس من إجمالي الأرباح.',
     },
     refunds: {
       id: 'refunds', title: '8. سياسة الاسترداد',

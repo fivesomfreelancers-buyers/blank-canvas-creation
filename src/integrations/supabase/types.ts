@@ -1380,11 +1380,14 @@ export type Database = {
           city: string | null
           country: string | null
           country_code: string | null
+          fee_amount: number
+          fee_percent: number
           freelancer_id: string
           id: string
           method: string | null
           mobile_number: string | null
           mobile_provider: string | null
+          net_amount: number
           processed_at: string | null
           reason: string | null
           receiver_first_name: string | null
@@ -1401,11 +1404,14 @@ export type Database = {
           city?: string | null
           country?: string | null
           country_code?: string | null
+          fee_amount?: number
+          fee_percent?: number
           freelancer_id: string
           id?: string
           method?: string | null
           mobile_number?: string | null
           mobile_provider?: string | null
+          net_amount?: number
           processed_at?: string | null
           reason?: string | null
           receiver_first_name?: string | null
@@ -1422,11 +1428,14 @@ export type Database = {
           city?: string | null
           country?: string | null
           country_code?: string | null
+          fee_amount?: number
+          fee_percent?: number
           freelancer_id?: string
           id?: string
           method?: string | null
           mobile_number?: string | null
           mobile_provider?: string | null
+          net_amount?: number
           processed_at?: string | null
           reason?: string | null
           receiver_first_name?: string | null
@@ -1627,6 +1636,7 @@ export type Database = {
         Args: { _freelancer_id: string }
         Returns: number
       }
+      get_withdrawal_fee_percent: { Args: never; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

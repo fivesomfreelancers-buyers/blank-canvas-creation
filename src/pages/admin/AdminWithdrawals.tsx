@@ -12,6 +12,9 @@ interface WithdrawalRow {
   id: string;
   freelancer_id: string;
   amount: number;
+  fee_percent: number | null;
+  fee_amount: number | null;
+  net_amount: number | null;
   status: string;
   method: string | null;
   bank_name: string | null;
@@ -113,18 +116,28 @@ const AdminWithdrawals = () => {
 
   const pending = items.filter((i) => i.status === 'pending');
   const totalPending = pending.reduce((s, i) => s + Number(i.amount), 0);
-  const totalPaid = items
-    .filter((i) => i.status === 'completed' || (i.status as any) === 'paid' || i.status === 'approved')
-    .reduce((s, i) => s + Number(i.amount), 0);
+  const paidItems = items.filter(
+    (i) => i.status === 'completed' || (i.status as any) === 'paid' || i.status === 'approved'
+  );
+  const totalPaid = paidItems.reduce((s, i) => s + Number(i.amount), 0);
+  const totalCommission = paidItems.reduce(
+    (s, i) => s + Number(i.fee_amount ?? Number(i.amount) * 0.15),
+    0
+  );
 
   const isBank = (w: WithdrawalRow) => w.method === 'bank' || !!w.bank_name;
   const fullName = (w: WithdrawalRow) =>
     [w.receiver_first_name, w.receiver_middle_name, w.receiver_last_name]
       .filter(Boolean).join(' ').trim() || w.user_name || '—';
 
+  const feeOf = (w: WithdrawalRow) =>
+    Number(w.fee_amount ?? Number(w.amount) * ((w.fee_percent ?? 15) / 100));
+  const netOf = (w: WithdrawalRow) =>
+    Number(w.net_amount ?? Number(w.amount) - feeOf(w));
+
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card className="border-border bg-card">
           <CardContent className="pt-6">
             <p className="text-2xl font-bold text-yellow-500">{pending.length}</p>
@@ -140,7 +153,13 @@ const AdminWithdrawals = () => {
         <Card className="border-border bg-card">
           <CardContent className="pt-6">
             <p className="text-2xl font-bold text-green-500">${totalPaid.toFixed(2)}</p>
-            <p className="text-xs text-muted-foreground">Total Paid Out</p>
+            <p className="text-xs text-muted-foreground">Total Paid Out (gross)</p>
+          </CardContent>
+        </Card>
+        <Card className="border-border bg-card">
+          <CardContent className="pt-6">
+            <p className="text-2xl font-bold text-primary">${totalCommission.toFixed(2)}</p>
+            <p className="text-xs text-muted-foreground">Fivesom Commission (15%)</p>
           </CardContent>
         </Card>
       </div>
@@ -156,7 +175,9 @@ const AdminWithdrawals = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>User</TableHead>
-                <TableHead>Amount</TableHead>
+                <TableHead>Requested</TableHead>
+                <TableHead>Fee (15%)</TableHead>
+                <TableHead>Payout</TableHead>
                 <TableHead>Method</TableHead>
                 <TableHead>Receiver</TableHead>
                 <TableHead>Status</TableHead>
@@ -169,6 +190,8 @@ const AdminWithdrawals = () => {
                 <TableRow key={w.id}>
                   <TableCell className="text-sm">{w.user_name}</TableCell>
                   <TableCell className="font-bold">${Number(w.amount).toFixed(2)}</TableCell>
+                  <TableCell className="text-primary">-${feeOf(w).toFixed(2)}</TableCell>
+                  <TableCell className="font-semibold text-green-500">${netOf(w).toFixed(2)}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className="gap-1">
                       {isBank(w) ? <Building2 className="h-3 w-3" /> : <Smartphone className="h-3 w-3" />}
@@ -195,7 +218,7 @@ const AdminWithdrawals = () => {
               ))}
               {items.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                     No requests
                   </TableCell>
                 </TableRow>
@@ -221,11 +244,35 @@ const AdminWithdrawals = () => {
               </DialogHeader>
 
               <div className="space-y-6 mt-2">
-                <div className="rounded-lg border border-border bg-muted/30 p-4">
-                  <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1">Amount</p>
-                  <p className="text-3xl font-bold text-foreground">${Number(selected.amount).toFixed(2)}</p>
+                <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-2">
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
+                      Original amount (requested)
+                    </p>
+                    <p className="text-2xl font-bold text-foreground">
+                      ${Number(selected.amount).toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border/60">
+                    <div>
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                        Fivesom fee ({selected.fee_percent ?? 15}%)
+                      </p>
+                      <p className="text-lg font-semibold text-primary">
+                        -${feeOf(selected).toFixed(2)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                        Final payout to freelancer
+                      </p>
+                      <p className="text-lg font-bold text-green-500">
+                        ${netOf(selected).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
                   {selected.reason && (
-                    <p className="text-xs text-muted-foreground mt-2">
+                    <p className="text-xs text-muted-foreground pt-2 border-t border-border/60">
                       Reason: <span className="text-foreground font-medium">{selected.reason}</span>
                     </p>
                   )}
