@@ -259,7 +259,7 @@ const FreelancerWithdraw = () => {
 
       toast({
         title: 'Withdrawal Request Submitted',
-        description: `Your request for $${withdrawAmount.toFixed(2)} has been sent to the admin for processing. You will receive $${amountAfterFee.toFixed(2)} after the 2% fee.`,
+        description: `Your request for $${withdrawAmount.toFixed(2)} has been sent to the admin for processing. You will receive $${amountAfterFee.toFixed(2)} after the 15% Fivesom fee.`,
       });
       navigate('/freelancer/wallet');
     } catch (err: any) {
