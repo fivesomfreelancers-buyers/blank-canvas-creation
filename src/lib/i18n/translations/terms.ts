@@ -346,7 +346,7 @@ export const termsCopy: Record<LangCode, TermsCopy> = {
     },
     payments: {
       id: 'payments', title: '7. Xeerarka Payments',
-      body: 'Dhammaan payments waxay maraan escrow system. Lacagta buyer-ka ayaa la qabtaa ilaa uu freelancer-ku dhamaystiro shaqada oo buyer-ku ansixiyo. Fivesom waxay qaadataa boqolley yar (service fee) oo intiisa kale la siiyo freelancer-ka Available Balance-kiisa. Withdraw kaliya wuxuu ka shaqeeyaa Available Balance oo aan ahayn Total Earned.',
+      body: 'Dhammaan payments waxay maraan escrow system. Lacagta buyer-ka ayaa la qabtaa ilaa uu freelancer-ku dhamaystiro shaqada oo buyer-ku ansixiyo. Marka freelancer-ku uu lacagta kala baxo (withdrawal), Fivesom waxay ka qaadataa 15% commission oo 85%-ta hadhay waxaa la siiyaa freelancer-ka. Withdraw kaliya wuxuu ka shaqeeyaa Available Balance oo aan ahayn Total Earned.',
     },
     refunds: {
       id: 'refunds', title: '8. Refund Policy',
