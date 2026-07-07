@@ -1378,7 +1378,7 @@ const SECTIONS: Section[] = [
           { q: 'Sidee lacag u helaa freelancer ahaan?', a: 'Marka macmiilku oggolaado delivery-gaaga, lacagta waxay ka soo guurtaa escrow una guurtaa wallet-kaaga FIVESOM. Markaas waad ka saari kartaa hababka maxalliga ah.' },
           { q: 'Sidee order u cancel gareeyaa?', a: 'Fur order-ka, riix Cancel oo dooro sabab. Refund-ka wuxuu ku xidhan yahay xaaladda order-ka.' },
           { q: 'Sidee profile-ka u upgrade gareeyaa?', a: 'Tag profile dashboard-ka, riix Edit Profile. Ku dar xirfado, luqado, portfolio, oo codso xaqiijin.' },
-          { q: 'Immisa fee ayuu FIVESOM qaadaa?', a: 'Platform fee yar oo cad ayaa la muujiyaa hortii checkout. Fee waa ka hooseeyaa platforms caalami.' },
+          { q: 'Immisa fee ayuu FIVESOM qaadaa?', a: 'Fivesom waxay ka qaadataa freelancer-ka 15% commission marka uu lacagta kala baxo (withdrawal). Freelancer-ku wuxuu helayaa 85%. Buyer-ka wax fee dheeraad ah lagama qaadayo.' },
           { q: 'Maxaa dhacaya haddii freelancer-ku libaaxo?', a: 'Fur dispute. Lacagta escrow ayaa ku sii jirta oo refund la heli karo.' },
           { q: 'Ma u shaqayn karaa labadaba buyer iyo freelancer?', a: 'Haa. Waad isku bedeli kartaa dejinta akoonka.' },
         ],
