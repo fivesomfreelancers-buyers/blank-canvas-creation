@@ -240,11 +240,35 @@ const AdminWithdrawals = () => {
               </DialogHeader>
 
               <div className="space-y-6 mt-2">
-                <div className="rounded-lg border border-border bg-muted/30 p-4">
-                  <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1">Amount</p>
-                  <p className="text-3xl font-bold text-foreground">${Number(selected.amount).toFixed(2)}</p>
+                <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-2">
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
+                      Original amount (requested)
+                    </p>
+                    <p className="text-2xl font-bold text-foreground">
+                      ${Number(selected.amount).toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border/60">
+                    <div>
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                        Fivesom fee ({selected.fee_percent ?? 15}%)
+                      </p>
+                      <p className="text-lg font-semibold text-primary">
+                        -${feeOf(selected).toFixed(2)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                        Final payout to freelancer
+                      </p>
+                      <p className="text-lg font-bold text-green-500">
+                        ${netOf(selected).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
                   {selected.reason && (
-                    <p className="text-xs text-muted-foreground mt-2">
+                    <p className="text-xs text-muted-foreground pt-2 border-t border-border/60">
                       Reason: <span className="text-foreground font-medium">{selected.reason}</span>
                     </p>
                   )}
