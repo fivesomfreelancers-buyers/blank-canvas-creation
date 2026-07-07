@@ -181,7 +181,8 @@ const FreelancerWithdraw = () => {
   };
 
   const withdrawAmount = parseFloat(form.amount) || 0;
-  const withdrawFee = withdrawAmount * 0.02;
+  const FIVESOM_FEE_PERCENT = 15;
+  const withdrawFee = withdrawAmount * (FIVESOM_FEE_PERCENT / 100);
   const amountAfterFee = withdrawAmount - withdrawFee;
   const isAmountValid =
     withdrawAmount >= minimumWithdrawal && withdrawAmount <= availableBalance;
