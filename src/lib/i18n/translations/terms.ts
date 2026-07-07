@@ -147,7 +147,7 @@ export const termsCopy: Record<LangCode, TermsCopy> = {
     },
     payments: {
       id: 'payments', title: '7. Payment Rules',
-      body: 'All payments go through an escrow system. Buyer funds are held until the freelancer completes the work and the buyer accepts it. Fivesom takes a small service fee and the remainder is credited to the freelancer\'s Available Balance. Withdrawals are only possible from Available Balance — not Total Earned.',
+      body: 'All payments go through an escrow system. Buyer funds are held until the freelancer completes the work and the buyer accepts it. When the freelancer withdraws their earnings, Fivesom charges a 15% commission and the remaining 85% is paid out to the freelancer. Withdrawals are only possible from Available Balance — not Total Earned.',
     },
     refunds: {
       id: 'refunds', title: '8. Refund Policy',
