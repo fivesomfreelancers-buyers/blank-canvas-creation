@@ -116,18 +116,28 @@ const AdminWithdrawals = () => {
 
   const pending = items.filter((i) => i.status === 'pending');
   const totalPending = pending.reduce((s, i) => s + Number(i.amount), 0);
-  const totalPaid = items
-    .filter((i) => i.status === 'completed' || (i.status as any) === 'paid' || i.status === 'approved')
-    .reduce((s, i) => s + Number(i.amount), 0);
+  const paidItems = items.filter(
+    (i) => i.status === 'completed' || (i.status as any) === 'paid' || i.status === 'approved'
+  );
+  const totalPaid = paidItems.reduce((s, i) => s + Number(i.amount), 0);
+  const totalCommission = paidItems.reduce(
+    (s, i) => s + Number(i.fee_amount ?? Number(i.amount) * 0.15),
+    0
+  );
 
   const isBank = (w: WithdrawalRow) => w.method === 'bank' || !!w.bank_name;
   const fullName = (w: WithdrawalRow) =>
     [w.receiver_first_name, w.receiver_middle_name, w.receiver_last_name]
       .filter(Boolean).join(' ').trim() || w.user_name || '—';
 
+  const feeOf = (w: WithdrawalRow) =>
+    Number(w.fee_amount ?? Number(w.amount) * ((w.fee_percent ?? 15) / 100));
+  const netOf = (w: WithdrawalRow) =>
+    Number(w.net_amount ?? Number(w.amount) - feeOf(w));
+
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card className="border-border bg-card">
           <CardContent className="pt-6">
             <p className="text-2xl font-bold text-yellow-500">{pending.length}</p>
@@ -143,7 +153,13 @@ const AdminWithdrawals = () => {
         <Card className="border-border bg-card">
           <CardContent className="pt-6">
             <p className="text-2xl font-bold text-green-500">${totalPaid.toFixed(2)}</p>
-            <p className="text-xs text-muted-foreground">Total Paid Out</p>
+            <p className="text-xs text-muted-foreground">Total Paid Out (gross)</p>
+          </CardContent>
+        </Card>
+        <Card className="border-border bg-card">
+          <CardContent className="pt-6">
+            <p className="text-2xl font-bold text-primary">${totalCommission.toFixed(2)}</p>
+            <p className="text-xs text-muted-foreground">Fivesom Commission (15%)</p>
           </CardContent>
         </Card>
       </div>
