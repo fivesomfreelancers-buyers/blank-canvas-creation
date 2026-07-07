@@ -1363,7 +1363,7 @@ const SECTIONS: Section[] = [
           { q: 'How do I get paid as a freelancer?', a: 'After the buyer accepts your delivery, funds are released from escrow to your FIVESOM wallet. From there you can withdraw via supported local payment methods (mobile money, etc.).' },
           { q: 'How do I cancel an order?', a: 'Open the order, click Cancel and choose a reason. Refund handling depends on the order status — pending orders are refunded automatically, active orders may go through dispute review.' },
           { q: 'How do I upgrade my profile?', a: 'Visit your profile dashboard and click Edit Profile. Add more skills, languages, portfolio samples, and apply for verification to unlock the blue tick.' },
-          { q: 'How much does FIVESOM charge?', a: 'A small platform fee is shown clearly before checkout and at withdrawal time. Fees are lower than international platforms.' },
+          { q: 'How much does FIVESOM charge?', a: 'Fivesom charges freelancers a 15% commission on withdrawals. When a freelancer withdraws their earnings, 15% is deducted as the Fivesom fee and they receive the remaining 85%. Buyers are not charged an extra platform fee.' },
           { q: 'What happens if a freelancer disappears?', a: 'Open a dispute from the order page. Funds remain in escrow and can be fully refunded after admin review.' },
           { q: 'Can I work as both buyer and freelancer?', a: 'Yes. You can switch between Buyer and Freelancer modes from your account settings.' },
         ],
