@@ -98,13 +98,18 @@ export function SomAdCreative({ ad, className }: { ad: SomAd; className?: string
   );
 }
 
+const PLACEMENT_ASPECT: Record<SomAdPlacement, string> = {
+  dashboard_banner: '1200 / 160',
+  gig_price: '600 / 120',
+};
+
 export default function SomAdSlot({ placement, viewerRole, className, children }: Props) {
   const { ad, loading } = useSomAd(placement, viewerRole);
 
   if (loading || !ad) return <>{children ?? null}</>;
 
   return (
-    <div className={cn('relative w-full', className)}>
+    <div className={cn('relative w-full', className)} style={{ aspectRatio: PLACEMENT_ASPECT[placement] }}>
       <SomAdCreative ad={ad} />
     </div>
   );
