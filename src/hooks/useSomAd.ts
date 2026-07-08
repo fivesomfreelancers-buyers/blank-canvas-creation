@@ -68,7 +68,7 @@ export function useSomAd(placement: SomAdPlacement, viewerRole?: 'buyer' | 'free
 
       const media_url = await resolveMediaUrl(chosen.media_path);
       if (cancelled) return;
-      setAd({ ...chosen, media_url });
+      setAd({ ...(chosen as any), media_url } as SomAd);
       setLoading(false);
     };
 
