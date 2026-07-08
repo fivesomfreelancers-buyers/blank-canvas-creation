@@ -198,20 +198,22 @@ const BuyerDashboard = () => {
       case 'dashboard':
         return (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 sm:p-6 rounded-lg">
-              <div className="flex items-center gap-4">
-                <Avatar className="h-14 w-14 border-2 border-white/50">
-                  <AvatarImage src={profile?.profile_image_url || undefined} />
-                  <AvatarFallback className="bg-card/20 text-white text-lg">{initials}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <h1 className="text-xl sm:text-2xl font-bold mb-1">Welcome back, {profile?.full_name || 'Buyer'}! 👋</h1>
-                  <p className="text-purple-100 text-sm sm:text-base">
-                    {profile?.email}{profile?.location ? ` · ${profile.location}` : ''}
-                  </p>
+            <SomAdSlot placement="dashboard_banner" viewerRole="buyer" className="rounded-lg overflow-hidden" >
+              <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 sm:p-6 rounded-lg">
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-14 w-14 border-2 border-white/50">
+                    <AvatarImage src={profile?.profile_image_url || undefined} />
+                    <AvatarFallback className="bg-card/20 text-white text-lg">{initials}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h1 className="text-xl sm:text-2xl font-bold mb-1">Welcome back, {profile?.full_name || 'Buyer'}! 👋</h1>
+                    <p className="text-purple-100 text-sm sm:text-base">
+                      {profile?.email}{profile?.location ? ` · ${profile.location}` : ''}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </SomAdSlot>
 
             {activeDisputes.length > 0 && (
               <section className="space-y-4 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
