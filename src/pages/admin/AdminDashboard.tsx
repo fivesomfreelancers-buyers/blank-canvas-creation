@@ -35,6 +35,7 @@ import AdminFivesomSupport from './AdminFivesomSupport';
 import AdminFivesomNews from './AdminFivesomNews';
 import AdminVip from './AdminVip';
 import AdminBlueTick from './AdminBlueTick';
+import AdminSomAdz from './AdminSomAdz';
 import { useAdminBadges, type AdminBadgeKey } from '@/hooks/useAdminBadges';
 import { useTheme } from '@/components/ThemeProvider';
 
