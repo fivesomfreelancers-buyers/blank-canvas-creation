@@ -16,6 +16,7 @@ import BlueTickBadge from '@/components/BlueTickBadge';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import ReportDialog from '@/components/ReportDialog';
 import SEO from '@/components/SEO';
+import SomAdSlot from '@/components/ads/SomAdSlot';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
