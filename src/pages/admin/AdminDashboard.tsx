@@ -35,6 +35,7 @@ import AdminFivesomSupport from './AdminFivesomSupport';
 import AdminFivesomNews from './AdminFivesomNews';
 import AdminVip from './AdminVip';
 import AdminBlueTick from './AdminBlueTick';
+import AdminSomAdz from './AdminSomAdz';
 import { useAdminBadges, type AdminBadgeKey } from '@/hooks/useAdminBadges';
 import { useTheme } from '@/components/ThemeProvider';
 
@@ -58,6 +59,7 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
   { label: 'Fivesom Channels', items: [
     { key: 'fivesom_support', label: 'Fivesom Support', icon: Headphones },
     { key: 'fivesom_news', label: 'Fivesom News', icon: Megaphone },
+    { key: 'somadz', label: 'SomAdz', icon: Sparkles },
   ]},
   { label: 'Trust & Safety', items: [
     { key: 'disputes', label: 'Disputes', icon: Scale },
@@ -106,6 +108,7 @@ const AdminDashboardInner = () => {
       case 'support': return <AdminSupport />;
       case 'fivesom_support': return <AdminFivesomSupport />;
       case 'fivesom_news': return <AdminFivesomNews />;
+      case 'somadz': return <AdminSomAdz />;
       case 'security': return <AdminSecurity />;
       case 'categories': return <AdminCategories />;
       case 'notifications': return <AdminNotifications />;

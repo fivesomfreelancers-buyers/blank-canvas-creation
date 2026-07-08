@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import SomAdSlot from '@/components/ads/SomAdSlot';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 import fivesomLogo from '@/assets/fivesom-logo.png';
@@ -324,10 +325,12 @@ const FreelancerDashboard = () => {
       case 'dashboard':
         return (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-4 sm:p-6 rounded-lg">
-              <h1 className="text-xl sm:text-2xl font-bold mb-2 inline-flex items-center gap-2">Welcome back, {userProfile?.full_name?.split(' ')[0] || 'Freelancer'}{isVerified && <VerifiedBadge size="lg" />}! 👋</h1>
-              <p className="text-cyan-100 text-sm sm:text-base">Ready to take on new challenges today?</p>
-            </div>
+            <SomAdSlot placement="dashboard_banner" viewerRole="freelancer" className="rounded-lg overflow-hidden">
+              <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-4 sm:p-6 rounded-lg">
+                <h1 className="text-xl sm:text-2xl font-bold mb-2 inline-flex items-center gap-2">Welcome back, {userProfile?.full_name?.split(' ')[0] || 'Freelancer'}{isVerified && <VerifiedBadge size="lg" />}! 👋</h1>
+                <p className="text-cyan-100 text-sm sm:text-base">Ready to take on new challenges today?</p>
+              </div>
+            </SomAdSlot>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               <Card>
