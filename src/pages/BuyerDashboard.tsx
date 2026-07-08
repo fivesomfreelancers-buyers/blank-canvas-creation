@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import SomAdSlot from '@/components/ads/SomAdSlot';
 import { Link, useNavigate } from 'react-router-dom';
 import fivesomLogo from '@/assets/fivesom-logo.png';
 import { 
