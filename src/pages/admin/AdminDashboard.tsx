@@ -59,6 +59,7 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
   { label: 'Fivesom Channels', items: [
     { key: 'fivesom_support', label: 'Fivesom Support', icon: Headphones },
     { key: 'fivesom_news', label: 'Fivesom News', icon: Megaphone },
+    { key: 'somadz', label: 'SomAdz', icon: Sparkles },
   ]},
   { label: 'Trust & Safety', items: [
     { key: 'disputes', label: 'Disputes', icon: Scale },
