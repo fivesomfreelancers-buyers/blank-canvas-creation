@@ -108,6 +108,7 @@ const AdminDashboardInner = () => {
       case 'support': return <AdminSupport />;
       case 'fivesom_support': return <AdminFivesomSupport />;
       case 'fivesom_news': return <AdminFivesomNews />;
+      case 'somadz': return <AdminSomAdz />;
       case 'security': return <AdminSecurity />;
       case 'categories': return <AdminCategories />;
       case 'notifications': return <AdminNotifications />;
