@@ -374,6 +374,7 @@ const GigDetails = () => {
           {/* Right Column */}
           <div className="space-y-6">
             {/* Package Selection */}
+            <SomAdSlot placement="gig_price" viewerRole={null} />
             {packages.length > 0 ? (
               <Card className={vipCardClass} style={vipCardStyle}>
                 <CardHeader className="pb-3">
