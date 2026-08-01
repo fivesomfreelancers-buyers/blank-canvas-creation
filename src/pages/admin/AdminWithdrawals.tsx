@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { fetchAdminProfile, fetchAdminProfiles, fetchAllAdminProfiles, findAdminProfileByEmail, displayName } from '@/lib/adminUsers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -75,15 +76,11 @@ const AdminWithdrawals = () => {
           .select('user_id')
           .eq('id', w.freelancer_id)
           .maybeSingle();
-        let name = 'Unknown';
+        let name = 'Fivesom User';
         let email = '';
         if (f?.user_id) {
-          const { data: p } = await supabase
-            .from('profiles')
-            .select('full_name, email')
-            .eq('id', f.user_id)
-            .maybeSingle();
-          name = p?.full_name || p?.email || 'Unknown';
+          const p = await fetchAdminProfile(f.user_id);
+          name = displayName(p);
           email = p?.email || '';
         }
         return { ...w, user_name: name, user_email: email } as WithdrawalRow;

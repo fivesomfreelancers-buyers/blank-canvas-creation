@@ -236,7 +236,7 @@ export default function AdminSomAdz() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">SomAdz</h2>
+          <h2 className="text-2xl font-bold">Fivesom Ads</h2>
           <p className="text-sm text-muted-foreground">Maamul xayeysiisyada Dashboard Banner iyo Gigs Price Section.</p>
         </div>
         <Button onClick={openNew}><Plus className="h-4 w-4 mr-2" /> New Ad</Button>

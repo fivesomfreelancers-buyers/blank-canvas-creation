@@ -42,17 +42,17 @@ const AdminEscrow = () => {
           supabase.from('profiles').select('full_name').eq('id', o.buyer_id).maybeSingle(),
           supabase.from('freelancers').select('user_id').eq('id', o.freelancer_id).maybeSingle(),
         ]);
-        let sellerName = 'Unknown';
+        let sellerName = 'Fivesom User';
         if (freelancerRes.data?.user_id) {
           const { data: sp } = await supabase.from('profiles').select('full_name').eq('id', freelancerRes.data.user_id).maybeSingle();
-          sellerName = sp?.full_name || 'Unknown';
+          sellerName = sp?.full_name || 'Fivesom User';
         }
         let gigTitle = '';
         if (o.gig_id) {
           const { data: g } = await supabase.from('gigs').select('title').eq('id', o.gig_id).maybeSingle();
           gigTitle = g?.title || '';
         }
-        return { ...o, buyer_name: buyerRes.data?.full_name || 'Unknown', seller_name: sellerName, gig_title: gigTitle };
+        return { ...o, buyer_name: buyerRes.data?.full_name || 'Fivesom User', seller_name: sellerName, gig_title: gigTitle };
       })
     );
 

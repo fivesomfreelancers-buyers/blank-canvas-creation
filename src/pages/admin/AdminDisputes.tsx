@@ -47,12 +47,12 @@ const AdminDisputes = () => {
           supabase.from('profiles').select('full_name').eq('id', d.buyer_id).maybeSingle(),
           supabase.from('orders').select('amount, freelancer_id, gig_id').eq('id', d.order_id).maybeSingle(),
         ]);
-        let sellerName = 'Unknown';
+        let sellerName = 'Fivesom User';
         if (d.freelancer_id) {
           const { data: f } = await supabase.from('freelancers').select('user_id').eq('id', d.freelancer_id).maybeSingle();
           if (f?.user_id) {
             const { data: sp } = await supabase.from('profiles').select('full_name').eq('id', f.user_id).maybeSingle();
-            sellerName = sp?.full_name || 'Unknown';
+            sellerName = sp?.full_name || 'Fivesom User';
           }
         }
         let gigTitle = '';
@@ -62,7 +62,7 @@ const AdminDisputes = () => {
         }
         return {
           ...d,
-          buyer_name: buyerRes.data?.full_name || 'Unknown',
+          buyer_name: buyerRes.data?.full_name || 'Fivesom User',
           seller_name: sellerName,
           amount: orderRes.data?.amount || 0,
           gig_title: gigTitle,

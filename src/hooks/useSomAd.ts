@@ -34,8 +34,12 @@ async function resolveMediaUrl(path: string): Promise<string> {
   return data.signedUrl;
 }
 
-export function useSomAd(placement: SomAdPlacement, viewerRole?: 'buyer' | 'freelancer' | null) {
-  const [ad, setAd] = useState<SomAd | null>(null);
+/**
+ * Fivesom Ads — returns every active ad for a placement (audience filtered),
+ * so the slot can rotate between them.
+ */
+export function useSomAds(placement: SomAdPlacement, viewerRole?: 'buyer' | 'freelancer' | null) {
+  const [ads, setAds] = useState<SomAd[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -59,23 +63,18 @@ export function useSomAd(placement: SomAdPlacement, viewerRole?: 'buyer' | 'free
         return false;
       });
 
-      const chosen = filtered[0];
-      if (!chosen) {
-        setAd(null);
-        setLoading(false);
-        return;
-      }
-
-      const media_url = await resolveMediaUrl(chosen.media_path);
+      const resolved = await Promise.all(
+        filtered.map(async (row: any) => ({ ...row, media_url: await resolveMediaUrl(row.media_path) } as SomAd)),
+      );
       if (cancelled) return;
-      setAd({ ...(chosen as any), media_url } as SomAd);
+      setAds(resolved.filter((a) => !!a.media_url));
       setLoading(false);
     };
 
     load();
 
     const channel = supabase
-      .channel(`somadz-${placement}`)
+      .channel(`fivesom-ads-${placement}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'somadz_ads' },
@@ -89,5 +88,11 @@ export function useSomAd(placement: SomAdPlacement, viewerRole?: 'buyer' | 'free
     };
   }, [placement, viewerRole]);
 
-  return { ad, loading };
+  return { ads, loading };
+}
+
+/** Backwards-compatible single-ad hook. */
+export function useSomAd(placement: SomAdPlacement, viewerRole?: 'buyer' | 'freelancer' | null) {
+  const { ads, loading } = useSomAds(placement, viewerRole);
+  return { ad: ads[0] ?? null, loading };
 }

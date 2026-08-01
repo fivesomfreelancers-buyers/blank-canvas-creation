@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { fetchAdminProfile, fetchAdminProfiles, fetchAllAdminProfiles, findAdminProfileByEmail, displayName } from '@/lib/adminUsers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,14 +16,19 @@ const AdminSecurity = () => {
     setLoading(true);
     const [r, p] = await Promise.all([
       supabase.from('user_roles').select('*'),
-      supabase.from('profiles').select('id, full_name, email, role, created_at, last_seen').order('created_at', { ascending: false }).limit(20),
+      fetchAllAdminProfiles(),
     ]);
-    const enriched = await Promise.all((r.data || []).map(async (x: any) => {
-      const { data: prof } = await supabase.from('profiles').select('full_name, email').eq('id', x.user_id).maybeSingle();
-      return { ...x, name: prof?.full_name || prof?.email || x.user_id.slice(0, 8) };
-    }));
+    const allProfiles = (p || []) as any[];
+    const enriched = (r.data || []).map((x: any) => {
+      const prof = allProfiles.find((q: any) => q.id === x.user_id);
+      return { ...x, name: displayName(prof, x.user_id.slice(0, 8)) };
+    });
     setRoles(enriched);
-    setRecent(p.data || []);
+    setRecent(
+      [...allProfiles]
+        .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
+        .slice(0, 20)
+    );
     setLoading(false);
   };
 
