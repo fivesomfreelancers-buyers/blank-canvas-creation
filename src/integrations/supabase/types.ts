@@ -1530,6 +1530,60 @@ export type Database = {
       }
     }
     Views: {
+      admin_profiles: {
+        Row: {
+          bio: string | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string | null
+          industry: string | null
+          languages: string[] | null
+          last_seen: string | null
+          location: string | null
+          member_since: string | null
+          professional_title: string | null
+          profile_image_url: string | null
+          role: Database["public"]["Enums"]["app_role"] | null
+          updated_at: string | null
+          username: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string | null
+          industry?: string | null
+          languages?: string[] | null
+          last_seen?: string | null
+          location?: string | null
+          member_since?: string | null
+          professional_title?: string | null
+          profile_image_url?: string | null
+          role?: Database["public"]["Enums"]["app_role"] | null
+          updated_at?: string | null
+          username?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string | null
+          industry?: string | null
+          languages?: string[] | null
+          last_seen?: string | null
+          location?: string | null
+          member_since?: string | null
+          professional_title?: string | null
+          profile_image_url?: string | null
+          role?: Database["public"]["Enums"]["app_role"] | null
+          updated_at?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
       public_freelancers: {
         Row: {
           bio: string | null
