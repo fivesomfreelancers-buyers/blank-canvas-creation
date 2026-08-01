@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { fetchAdminProfile, fetchAdminProfiles, fetchAllAdminProfiles, findAdminProfileByEmail, displayName } from '@/lib/adminUsers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,7 +39,7 @@ const AdminBlueTick: React.FC = () => {
     const flIds = Array.from(new Set((apps || []).map((r: any) => r.freelancer_id))) as string[];
 
     const [{ data: profiles }, { data: freelancers }] = await Promise.all([
-      ids.length ? supabase.from('profiles').select('id, full_name, email, profile_image_url, last_seen').in('id', ids) : Promise.resolve({ data: [] as any[] }),
+      ids.length ? fetchAdminProfiles(ids).then((m) => ({ data: Array.from(m.values()) as any[] })) : Promise.resolve({ data: [] as any[] }),
       flIds.length ? supabase.from('freelancers').select('id, rating, is_verified, has_blue_tick, completed_orders').in('id', flIds) : Promise.resolve({ data: [] as any[] }),
     ]);
 
@@ -60,7 +61,7 @@ const AdminBlueTick: React.FC = () => {
       .eq('has_blue_tick', true);
     if (active && active.length) {
       const uids = active.map((a: any) => a.user_id);
-      const { data: aprof } = await supabase.from('profiles').select('id, full_name, email, profile_image_url').in('id', uids);
+      const aprof = Array.from((await fetchAdminProfiles(uids)).values());
       setActiveTicks(active.map((a: any) => ({ ...a, profile: (aprof || []).find((p: any) => p.id === a.user_id) })));
     } else setActiveTicks([]);
 

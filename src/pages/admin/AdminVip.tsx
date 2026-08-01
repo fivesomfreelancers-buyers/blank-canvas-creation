@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { fetchAdminProfile, fetchAdminProfiles, fetchAllAdminProfiles, findAdminProfileByEmail, displayName } from '@/lib/adminUsers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -52,7 +53,7 @@ const AdminVip: React.FC = () => {
     let vipGigCounts: Record<string, number> = {};
     if (ids.length) {
       const [{ data: p }, { data: fl }] = await Promise.all([
-        supabase.from('profiles').select('id, full_name, email, profile_image_url').in('id', ids),
+        fetchAdminProfiles(ids).then((m) => ({ data: Array.from(m.values()) as any[] })),
         supabase.from('freelancers').select('id, user_id').in('user_id', ids),
       ]);
       profiles = p || [];
@@ -127,7 +128,7 @@ const AdminVip: React.FC = () => {
   const grantToEmail = async () => {
     if (!grantEmail.trim()) return;
     setBusy('grant');
-    const { data: p } = await supabase.from('profiles').select('id').eq('email', grantEmail.trim()).maybeSingle();
+    const p = await findAdminProfileByEmail(grantEmail.trim());
     if (!p) { toast.error('No user with that email'); setBusy(null); return; }
     const { error } = await (supabase as any).rpc('admin_set_vip', { _user_id: p.id, _tier: grantTier });
     if (error) toast.error(error.message);

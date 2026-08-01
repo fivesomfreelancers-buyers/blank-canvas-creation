@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Flag, Loader2, ExternalLink, Send, LifeBuoy } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { fetchAdminProfile, fetchAdminProfiles, fetchAllAdminProfiles, findAdminProfileByEmail, displayName } from '@/lib/adminUsers';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -104,9 +105,9 @@ const AdminReports: React.FC = () => {
 
     const ids = Array.from(new Set(list.flatMap(r => [r.reporter_id, r.reported_user_id]).filter(Boolean))) as string[];
     if (ids.length) {
-      const { data: profs } = await supabase.from('profiles').select('id, full_name, email').in('id', ids);
+      const profs = Array.from((await fetchAdminProfiles(ids)).values());
       const map: Record<string, any> = {};
-      (profs || []).forEach((p: any) => { map[p.id] = p; });
+      profs.forEach((p: any) => { map[p.id] = p; });
       setProfiles(map);
     }
     setLoading(false);

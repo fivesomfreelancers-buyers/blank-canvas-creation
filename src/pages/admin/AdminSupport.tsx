@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { fetchAdminProfile, fetchAdminProfiles, fetchAllAdminProfiles, findAdminProfileByEmail, displayName } from '@/lib/adminUsers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -28,8 +29,8 @@ const AdminSupport = () => {
       (data || []).forEach((d: any) => all.push({ ...d, _table: t }));
     }
     const enriched = await Promise.all(all.map(async (t) => {
-      const { data: p } = await supabase.from('profiles').select('full_name, email').eq('id', t.user_id).maybeSingle();
-      return { ...t, user_name: p?.full_name || p?.email || 'Unknown' };
+      const p = await fetchAdminProfile(t.user_id);
+      return { ...t, user_name: displayName(p) };
     }));
     enriched.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     setTickets(enriched);

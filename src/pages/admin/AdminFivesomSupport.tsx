@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { fetchAdminProfile, fetchAdminProfiles, fetchAllAdminProfiles, findAdminProfileByEmail, displayName } from '@/lib/adminUsers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,11 +56,10 @@ const AdminFivesomSupport: React.FC = () => {
     const list = (data || []) as SupportConvo[];
     if (list.length) {
       const ids = list.map(c => c.user_id);
-      const { data: profs } = await supabase.from('profiles').select('id, full_name, email, profile_image_url').in('id', ids);
-      const pm = new Map((profs || []).map((p: any) => [p.id, p]));
+      const pm = await fetchAdminProfiles(ids);
       list.forEach(c => {
         const p: any = pm.get(c.user_id);
-        c.user_name = p?.full_name || p?.email || 'Unknown';
+        c.user_name = displayName(p);
         c.user_email = p?.email;
         c.user_image = p?.profile_image_url || null;
       });

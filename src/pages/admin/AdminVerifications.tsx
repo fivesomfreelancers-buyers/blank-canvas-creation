@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { fetchAdminProfile, fetchAdminProfiles, fetchAllAdminProfiles, findAdminProfileByEmail, displayName } from '@/lib/adminUsers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -37,7 +38,7 @@ const AdminVerifications = () => {
 
     const enriched = await Promise.all((data || []).map(async (d: any) => {
       const [profileRes, freelancerRes] = await Promise.all([
-        supabase.from('profiles').select('full_name, email, profile_image_url, location').eq('id', d.user_id).maybeSingle(),
+        fetchAdminProfile(d.user_id).then((p) => ({ data: p })),
         supabase.from('freelancers').select('id, bio, skills, professional_title, years_experience, education_level, software_tools, rating').eq('user_id', d.user_id).maybeSingle(),
       ]);
       let portfolio: any[] = [];

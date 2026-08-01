@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { fetchAdminProfile, fetchAdminProfiles, fetchAllAdminProfiles, findAdminProfileByEmail, displayName } from '@/lib/adminUsers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -42,12 +43,8 @@ const AdminUsers = () => {
 
     const withProfiles = await Promise.all(
       (data || []).map(async (f) => {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('full_name, email, profile_image_url, location, created_at')
-          .eq('id', f.user_id)
-          .maybeSingle();
-        return { ...f, profile: profile || { full_name: 'Unknown', email: '', profile_image_url: null, location: null, created_at: null } };
+        const profile = await fetchAdminProfile(f.user_id);
+        return { ...f, profile: (profile as any) || { full_name: 'Fivesom User', email: '', profile_image_url: null, location: null, created_at: null } };
       })
     );
 
