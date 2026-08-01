@@ -98,7 +98,7 @@ export function useConversations() {
         const convoIds = convosData.map(c => c.id);
 
         const [profilesRes, messagesRes, freelancersRes] = await Promise.all([
-          (supabase as any).from('public_profiles').select('id, full_name, profile_image_url').in('id', partnerIds),
+          (supabase as any).from('public_profiles').select('id, full_name, username, profile_image_url').in('id', partnerIds),
           supabase.from('messages').select('*').in('conversation_id', convoIds).order('created_at', { ascending: false }),
           (supabase as any).from('freelancers').select('user_id, is_verified').in('user_id', partnerIds),
         ]);
@@ -120,7 +120,7 @@ export function useConversations() {
           return {
             conversationId: convo.id,
             partnerId,
-            partnerName: profile?.full_name || 'Unknown User',
+            partnerName: profile?.full_name?.trim() || profile?.username?.trim() || 'Fivesom User',
             partnerImage: profile?.profile_image_url || null,
             partnerVerified: verifiedMap.get(partnerId) === true,
             lastMessage: msgInfo?.last?.message || 'No messages yet',
