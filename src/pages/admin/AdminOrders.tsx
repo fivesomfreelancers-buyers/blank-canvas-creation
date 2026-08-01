@@ -34,10 +34,10 @@ const AdminOrders = () => {
             ? supabase.from('gigs').select('title').eq('id', o.gig_id).maybeSingle()
             : Promise.resolve({ data: null }),
         ]);
-        let sn = 'Unknown';
+        let sn = 'Fivesom User';
         if (f.data?.user_id) {
           const { data: sp } = await supabase.from('profiles').select('full_name').eq('id', f.data.user_id).maybeSingle();
-          sn = sp?.full_name || 'Unknown';
+          sn = sp?.full_name || 'Fivesom User';
         }
         return { ...o, buyer_name: b.data?.full_name, seller_name: sn, gig_title: g.data?.title };
       })

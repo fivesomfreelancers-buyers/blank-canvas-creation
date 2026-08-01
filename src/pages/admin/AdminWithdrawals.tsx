@@ -76,7 +76,7 @@ const AdminWithdrawals = () => {
           .select('user_id')
           .eq('id', w.freelancer_id)
           .maybeSingle();
-        let name = 'Unknown';
+        let name = 'Fivesom User';
         let email = '';
         if (f?.user_id) {
           const p = await fetchAdminProfile(f.user_id);
