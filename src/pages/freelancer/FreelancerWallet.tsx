@@ -14,40 +14,46 @@ const FreelancerWallet = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
     const fetchWalletData = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        // Get freelancer data
         const { data: freelancer } = await supabase
           .from('freelancers')
           .select('id, total_earnings')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
 
-        // Get orders for earnings calculation
+        // Available balance is maintained by the backend (escrow release on order completion).
+        const { data: wallet } = await supabase
+          .from('wallets')
+          .select('balance')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        // Pending earnings = money still in escrow (order paid, not yet accepted).
         const { data: orders } = await supabase
           .from('orders')
           .select('amount, status')
           .eq('freelancer_id', freelancer?.id || '');
 
-        // Get withdrawals
         const { data: withdrawals } = await supabase
           .from('withdrawals')
           .select('*')
           .eq('freelancer_id', freelancer?.id || '')
           .order('requested_at', { ascending: false });
 
-        // Calculate earnings
-        const completedEarnings = orders?.filter(o => o.status === 'completed').reduce((sum, o) => sum + Number(o.amount), 0) || 0;
-        const pendingEarnings = orders?.filter(o => o.status === 'in_progress' || o.status === 'delivered').reduce((sum, o) => sum + Number(o.amount), 0) || 0;
-        const withdrawnAmount = withdrawals?.filter(w => w.status === 'completed').reduce((sum, w) => sum + Number(w.amount), 0) || 0;
+        const pendingEarnings = orders
+          ?.filter(o => o.status === 'pending' || o.status === 'in_progress' || o.status === 'delivered')
+          .reduce((sum, o) => sum + Number(o.amount), 0) || 0;
 
         setEarnings({
-          available: Math.max(0, completedEarnings - withdrawnAmount),
+          available: Math.max(0, Number(wallet?.balance || 0)),
           pending: pendingEarnings,
-          total: freelancer?.total_earnings || 0
+          total: Number(freelancer?.total_earnings || 0),
         });
 
         setTransactions(withdrawals || []);
@@ -59,6 +65,22 @@ const FreelancerWallet = () => {
     };
 
     fetchWalletData();
+
+    const setupRealtime = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      channel = supabase
+        .channel('wallet-updates')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'wallets', filter: `user_id=eq.${user.id}` }, fetchWalletData)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, fetchWalletData)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'withdrawals' }, fetchWalletData)
+        .subscribe();
+    };
+    setupRealtime();
+
+    return () => {
+      if (channel) supabase.removeChannel(channel);
+    };
   }, []);
 
   return (
@@ -89,7 +111,7 @@ const FreelancerWallet = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-orange-600">${earnings.pending.toFixed(2)}</div>
-              <p className="text-xs text-muted-foreground">From pending orders</p>
+              <p className="text-xs text-muted-foreground">In escrow until the buyer accepts</p>
             </CardContent>
           </Card>
 
@@ -162,12 +184,16 @@ const FreelancerWallet = () => {
                         <ArrowUpRight className="w-5 h-5 text-blue-600" />
                       </div>
                       <div>
-                        <p className="font-medium">Withdrawal to {transaction.bank_name}</p>
+                        <p className="font-medium">Withdrawal to {transaction.bank_name || transaction.mobile_provider || 'account'}</p>
                         <p className="text-sm text-muted-foreground">{new Date(transaction.requested_at).toLocaleDateString()}</p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-blue-600">-${Number(transaction.amount).toFixed(2)}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Fee (15%): -${Number(transaction.fee_amount ?? Number(transaction.amount) * 0.15).toFixed(2)} · Net: $
+                        {Number(transaction.net_amount ?? Number(transaction.amount) * 0.85).toFixed(2)}
+                      </p>
                       <Badge variant={transaction.status === 'completed' ? 'default' : 'secondary'}>
                         {transaction.status}
                       </Badge>
