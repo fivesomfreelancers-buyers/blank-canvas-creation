@@ -17,6 +17,7 @@ import BuyerRegister from "./pages/BuyerRegister";
 import FreelancerRegister from "./pages/FreelancerRegister";
 import AuthCallback from "./pages/AuthCallback";
 import RoleSelection from "./pages/RoleSelection";
+import UpgradeRole from "./pages/UpgradeRole";
 import CompleteProfile from "./pages/CompleteProfile";
 import CreateGig from "./pages/CreateGig";
 import FreelancerDashboard from "./pages/FreelancerDashboard";
@@ -78,6 +79,8 @@ const App = () => (
               <Route path="/register/freelancer" element={<FreelancerRegister />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/select-role" element={<RoleSelection />} />
+              <Route path="/become-buyer" element={<UpgradeRole role="buyer" />} />
+              <Route path="/become-freelancer" element={<UpgradeRole role="freelancer" />} />
               <Route path="/complete-profile/:role" element={<CompleteProfile />} />
               <Route path="/seller/payment" element={<SellerPayment />} />
               <Route path="/payment" element={<PaymentPage />} />

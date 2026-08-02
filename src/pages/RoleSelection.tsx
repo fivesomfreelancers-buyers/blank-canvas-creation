@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { upgradeToRole } from '@/lib/roleUpgrade';
 
 const RoleSelection = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<'freelancer' | 'buyer' | null>(null);
-  const { user, userRole, isLoading: authLoading } = useAuth();
+  const { user, userRole, isLoading: authLoading, refreshRole } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -18,7 +19,7 @@ const RoleSelection = () => {
       navigate('/login');
       return;
     }
-    if (!authLoading && user && userRole) {
+    if (!authLoading && user && (userRole === 'freelancer' || userRole === 'buyer')) {
       navigate(userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard');
     }
   }, [user, userRole, authLoading, navigate]);
@@ -29,23 +30,8 @@ const RoleSelection = () => {
     setIsLoading(true);
 
     try {
-      // Insert role into user_roles
-      const { error: roleError } = await supabase.from('user_roles').insert({
-        user_id: user.id,
-        role: role,
-      } as any);
-
-      if (roleError) throw roleError;
-
-      // Update profile with role
-      await supabase.from('profiles').update({ role } as any).eq('id', user.id);
-
-      // Create freelancer or buyer record
-      if (role === 'freelancer') {
-        await supabase.from('freelancers').insert({ user_id: user.id } as any);
-      } else {
-        await supabase.from('buyers').insert({ user_id: user.id } as any);
-      }
+      await upgradeToRole(user.id, role);
+      await refreshRole();
 
       toast({ title: 'Role Selected!', description: `You joined as a ${role}.` });
       navigate(`/complete-profile/${role}`);
