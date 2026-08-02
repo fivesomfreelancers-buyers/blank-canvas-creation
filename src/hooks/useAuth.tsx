@@ -1,24 +1,37 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { ensureNormalUserRole } from '@/lib/roleUpgrade';
 
-type UserRole = 'freelancer' | 'buyer' | null;
+type UserRole = 'freelancer' | 'buyer' | 'user' | null;
 
 const toUserRole = (role: unknown): UserRole => {
-  return role === 'freelancer' || role === 'buyer' ? role : null;
+  return role === 'freelancer' || role === 'buyer' || role === 'user' ? role : null;
+};
+
+// A user can hold several role rows; the strongest one wins.
+const pickRole = (roles: unknown[]): UserRole => {
+  const normalized = roles.map(toUserRole).filter(Boolean) as Exclude<UserRole, null>[];
+  if (normalized.includes('freelancer')) return 'freelancer';
+  if (normalized.includes('buyer')) return 'buyer';
+  if (normalized.includes('user')) return 'user';
+  return null;
 };
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   userRole: UserRole;
+  isNormalUser: boolean;
   isLoading: boolean;
+  refreshRole: () => Promise<void>;
   signUp: (email: string, password: string, fullName: string, role: 'freelancer' | 'buyer', location?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
