@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Palette, Video, Monitor, PenTool, Smartphone, Brush, Code, Globe } from 'lucide-react';
+import { Palette, Video, Clapperboard, Monitor, PenTool, Smartphone, Brush, Code, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const FeaturedCategories = () => {
@@ -20,6 +20,14 @@ const FeaturedCategories = () => {
       description: 'Professional video editing services',
       subcategories: ['YouTube Editing', 'Social Media', 'Commercial Video'],
       gradient: 'from-purple-400 to-indigo-500'
+    },
+    {
+      id: 'motion-graphics',
+      title: 'Motion Graphics',
+      icon: Clapperboard,
+      description: 'Logo animation, explainers & animated ads',
+      subcategories: ['Logo Animation', 'Explainer Videos', 'Lottie Animation'],
+      gradient: 'from-violet-400 to-purple-600'
     },
     {
       id: 'web-design',
