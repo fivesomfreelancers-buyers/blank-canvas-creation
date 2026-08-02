@@ -98,10 +98,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { data, error } = await (supabase as any)
         .from('user_roles')
         .select('role')
-        .eq('user_id', userId)
-        .maybeSingle();
+        .eq('user_id', userId);
 
-      const roleFromTable = toUserRole(data?.role);
+      const roleFromTable = pickRole((data || []).map((r: any) => r.role));
       if (!error && roleFromTable) {
         setUserRole(roleFromTable);
         return;
@@ -109,7 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       const { data: userRes } = await supabase.auth.getUser();
       const roleFromMetadata = toUserRole(userRes.user?.user_metadata?.role);
-      if (userRes.user?.id === userId && roleFromMetadata) {
+      if (userRes.user?.id === userId && roleFromMetadata && roleFromMetadata !== 'user') {
         await (supabase as any).from('user_roles').upsert(
           { user_id: userId, role: roleFromMetadata },
           { onConflict: 'user_id,role' }
@@ -123,12 +122,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      setUserRole(null);
+      // No role at all → this is a brand new account: make it a normal user.
+      await ensureNormalUserRole(userId);
+      setUserRole('user');
     } catch (error) {
       console.error('Error fetching user role:', error);
       setUserRole(null);
     }
   };
+
+  const refreshRole = async () => {
+    const { data } = await supabase.auth.getUser();
+    if (data.user) await fetchUserRole(data.user.id);
+  };
+
+
 
   const signUp = async (
     email: string, 
