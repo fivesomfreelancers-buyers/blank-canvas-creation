@@ -215,11 +215,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       user,
       session,
       userRole,
+      isNormalUser: !!user && userRole === 'user',
       isLoading,
+      refreshRole,
       signUp,
       signIn,
       signOut
     }}>
+
       {children}
     </AuthContext.Provider>
   );
