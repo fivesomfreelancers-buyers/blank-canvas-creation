@@ -27,7 +27,7 @@ const Register = () => {
     if (!authLoading && user) {
       if (userRole === 'freelancer') navigate('/freelancer/dashboard');
       else if (userRole === 'buyer') navigate('/buyer/dashboard');
-      else navigate('/select-role');
+      else navigate('/');
     }
   }, [user, userRole, authLoading, navigate, emailLoading, googleLoading]);
 
@@ -59,7 +59,7 @@ const Register = () => {
     }
 
     setEmailLoading(true);
-    const redirectUrl = `${window.location.origin}/select-role`;
+    const redirectUrl = `${window.location.origin}/`;
     const { data, error } = await supabase.auth.signUp({
       email: email.trim(),
       password,
@@ -76,8 +76,8 @@ const Register = () => {
     }
 
     if (data.session) {
-      toast({ title: 'Account created!', description: 'Now choose how you want to use FIVESOM.' });
-      navigate('/select-role');
+      toast({ title: 'Account created!', description: 'Welcome to FIVESOM — start exploring services.' });
+      navigate('/');
     } else {
       toast({
         title: 'Check your email',

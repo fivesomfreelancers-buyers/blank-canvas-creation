@@ -33,6 +33,23 @@ export const CATEGORIES: CategoryDef[] = [
     ],
   },
   {
+    slug: 'motion-graphics',
+    name: 'Motion Graphics',
+    subcategories: [
+      { slug: 'logo-animation', name: 'Logo Animation' },
+      { slug: 'intro-videos', name: 'Intro Videos' },
+      { slug: 'outro-videos', name: 'Outro Videos' },
+      { slug: 'explainer-videos', name: 'Explainer Videos' },
+      { slug: 'animated-ads', name: 'Animated Ads' },
+      { slug: 'social-media-motion', name: 'Social Media Motion Graphics' },
+      { slug: 'typography-animation', name: 'Typography Animation' },
+      { slug: 'character-animation', name: 'Character Animation' },
+      { slug: '2d-motion-design', name: '2D Motion Design' },
+      { slug: 'ui-animation', name: 'UI Animation' },
+      { slug: 'lottie-animation', name: 'Lottie Animation' },
+    ],
+  },
+  {
     slug: 'web-design',
     name: 'Web Design',
     subcategories: [
