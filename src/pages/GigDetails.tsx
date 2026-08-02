@@ -19,6 +19,7 @@ import SEO from '@/components/SEO';
 import SomAdSlot from '@/components/ads/SomAdSlot';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { NEED_BUYER_MESSAGE } from '@/lib/roleUpgrade';
 import { toast } from '@/hooks/use-toast';
 import { getVipTheme, resolveVipTier } from '@/lib/vipTheme';
 import { useTheme } from '@/components/ThemeProvider';
@@ -26,7 +27,7 @@ import { useTheme } from '@/components/ThemeProvider';
 const GigDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, userRole } = useAuth();
   const { theme: mode } = useTheme();
   const [gig, setGig] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -155,6 +156,16 @@ const GigDetails = () => {
   };
 
   const handleOrder = (pkg?: any) => {
+    if (!user) {
+      toast({ title: 'Sign in required', description: 'Please sign in to order this service.' });
+      navigate('/login');
+      return;
+    }
+    if (userRole === 'user') {
+      toast({ title: 'Buyer Dashboard', description: NEED_BUYER_MESSAGE });
+      navigate('/become-buyer');
+      return;
+    }
     const orderPkg = pkg || packages.find(p => p.package_type === selectedPackage) || { name: 'Standard', price: gig.base_price, delivery_time: `${gig.delivery_time_days} days`, revisions: '2', features: [] };
     navigate('/payment', {
       state: {
