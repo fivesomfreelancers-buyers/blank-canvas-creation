@@ -34,8 +34,8 @@ const Login = () => {
       } else if (userRole === 'buyer') {
         navigate('/buyer/dashboard');
       } else {
-        // User logged in but no role yet
-        navigate('/select-role');
+        // Normal user — free to browse the marketplace
+        navigate('/');
       }
     }
   }, [user, userRole, authLoading, navigate, emailLoading, googleLoading]);
@@ -83,7 +83,7 @@ const Login = () => {
 
     if (resolvedRole === 'freelancer') navigate('/freelancer/dashboard');
     else if (resolvedRole === 'buyer') navigate('/buyer/dashboard');
-    else navigate('/select-role');
+    else navigate('/');
   };
 
   const handleEmailLogin = async (e: React.FormEvent) => {

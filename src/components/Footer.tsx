@@ -67,6 +67,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2">
               {[
                 { name: 'Logo Design', slug: 'logo-design' },
+                { name: 'Motion Graphics', slug: 'motion-graphics' },
                 { name: 'Video Editing', slug: 'video-editing' },
                 { name: 'Web Design', slug: 'web-design' },
                 { name: 'Content Writing', slug: 'content-writing' },

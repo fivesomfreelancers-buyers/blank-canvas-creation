@@ -147,24 +147,18 @@ const FreelancerWithdraw = () => {
       if (f) {
         setFreelancerId(f.id);
 
-        // Match Wallet logic: completed order earnings minus completed withdrawals
-        const { data: orders } = await supabase
-          .from('orders')
-          .select('amount, status')
-          .eq('freelancer_id', f.id);
+        // Available balance is maintained by the backend on the wallet row.
+        const { data: wallet } = await supabase
+          .from('wallets')
+          .select('balance')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        setAvailableBalance(Math.max(0, Number(wallet?.balance || 0)));
+
         const { data: withdrawals } = await supabase
           .from('withdrawals')
           .select('amount, status')
           .eq('freelancer_id', f.id);
-
-        const completedEarnings =
-          orders?.filter((o) => o.status === 'completed')
-            .reduce((s, o) => s + Number(o.amount), 0) || 0;
-        const withdrawnAmount =
-          withdrawals?.filter((w) => w.status === 'completed')
-            .reduce((s, w) => s + Number(w.amount), 0) || 0;
-
-        setAvailableBalance(Math.max(0, completedEarnings - withdrawnAmount));
 
         const pending = withdrawals?.filter((w) => w.status === 'pending') ?? [];
         setHasPendingWithdrawal(pending.length > 0);

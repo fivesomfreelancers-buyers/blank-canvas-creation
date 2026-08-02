@@ -51,6 +51,7 @@ const Navbar = () => {
     fetchProfile();
   }, [user]);
 
+  const isNormal = userRole === 'user';
   const dashboardPath = userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard';
   const profilePath = userRole === 'freelancer' ? '/freelancer/profile' : '/buyer/settings';
   const settingsPath = userRole === 'freelancer' ? '/freelancer/settings' : '/buyer/settings';
@@ -88,6 +89,7 @@ const Navbar = () => {
 
             {user ? (
               <>
+                {!isNormal && (
                 <Link
                   to={messagesPath}
                   aria-label="Messages"
@@ -100,6 +102,7 @@ const Navbar = () => {
                     </span>
                   )}
                 </Link>
+                )}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center space-x-2 focus:outline-none relative">
@@ -119,21 +122,40 @@ const Navbar = () => {
                 <DropdownMenuContent align="end" className="w-56">
                   <div className="px-3 py-2">
                     <p className="text-sm font-medium text-foreground">{profile?.full_name || user.email}</p>
-                    <p className="text-xs text-muted-foreground capitalize">{userRole || 'User'}</p>
+                    <p className="text-xs text-muted-foreground capitalize">{isNormal ? 'Member' : (userRole || 'User')}</p>
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => navigate(dashboardPath)}>
-                    <LayoutDashboard className="mr-2 h-4 w-4" />
-                    Dashboard
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate(profilePath)}>
-                    <User className="mr-2 h-4 w-4" />
-                    My Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate(settingsPath)}>
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
-                  </DropdownMenuItem>
+                  {isNormal ? (
+                    <>
+                      <DropdownMenuItem onClick={() => navigate('/explore')}>
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        Explore Services
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigate('/become-buyer')}>
+                        <User className="mr-2 h-4 w-4" />
+                        Become a Buyer
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigate('/become-freelancer')}>
+                        <Settings className="mr-2 h-4 w-4" />
+                        Become a Freelancer
+                      </DropdownMenuItem>
+                    </>
+                  ) : (
+                    <>
+                      <DropdownMenuItem onClick={() => navigate(dashboardPath)}>
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        Dashboard
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigate(profilePath)}>
+                        <User className="mr-2 h-4 w-4" />
+                        My Profile
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigate(settingsPath)}>
+                        <Settings className="mr-2 h-4 w-4" />
+                        Settings
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
                     <LogOut className="mr-2 h-4 w-4" />

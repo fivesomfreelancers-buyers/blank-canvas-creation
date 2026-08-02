@@ -57,7 +57,7 @@ const HeroSection = () => {
             Popular searches:
           </p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-            {['Logo Design', 'Video Editing', 'Web Design', 'Content Writing', 'App UI Design', 'Graphic Design', 'App Development', 'Web Development'].map(term => 
+            {['Logo Design', 'Motion Graphics', 'Video Editing', 'Web Design', 'Content Writing', 'App UI Design', 'Graphic Design', 'App Development', 'Web Development'].map(term => 
               <Link
                 key={term}
                 to={`/explore?q=${encodeURIComponent(term)}`}

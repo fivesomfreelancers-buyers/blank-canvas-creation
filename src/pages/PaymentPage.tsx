@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import Navbar from '@/components/Navbar';
 import { useTheme } from '@/components/ThemeProvider';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { NEED_BUYER_MESSAGE } from '@/lib/roleUpgrade';
 import { supabase } from '@/integrations/supabase/client';
 
 import zaadLogo from '@/assets/zaad-logo.png';
@@ -97,7 +98,7 @@ const PaymentPage = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, userRole } = useAuth();
   const isDarkMode = theme === 'dark';
 
   const [paymentType, setPaymentType] = useState<'card' | 'mobile'>('card');
@@ -111,6 +112,13 @@ const PaymentPage = () => {
     cvv: '',
     cardholderName: '',
   });
+
+  useEffect(() => {
+    if (userRole === 'user') {
+      toast({ title: 'Buyer Dashboard', description: NEED_BUYER_MESSAGE });
+      navigate('/become-buyer', { replace: true });
+    }
+  }, [userRole, navigate, toast]);
 
   const state = location.state as PaymentPageState;
 

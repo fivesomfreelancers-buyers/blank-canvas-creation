@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { ensureNormalUserRole } from '@/lib/roleUpgrade';
+
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -54,10 +56,12 @@ const AuthCallback = () => {
           return;
         }
 
-        // New user without role — go to role selection
+        // No buyer/freelancer role yet → stay a normal user and browse freely.
         setStatus('Setting up your account...');
-        toast({ title: 'Welcome!', description: 'Please choose how you want to use FIVSOM.' });
-        navigate('/select-role');
+        await ensureNormalUserRole(user.id);
+        toast({ title: 'Welcome to FIVESOM!', description: 'Explore services freely. You can become a buyer or freelancer anytime.' });
+        navigate('/', { replace: true });
+
       } catch (err) {
         console.error('Auth callback error:', err);
         toast({ title: 'Error', description: 'Something went wrong. Please try again.', variant: 'destructive' });

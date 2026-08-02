@@ -1,24 +1,37 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { ensureNormalUserRole } from '@/lib/roleUpgrade';
 
-type UserRole = 'freelancer' | 'buyer' | null;
+type UserRole = 'freelancer' | 'buyer' | 'user' | null;
 
 const toUserRole = (role: unknown): UserRole => {
-  return role === 'freelancer' || role === 'buyer' ? role : null;
+  return role === 'freelancer' || role === 'buyer' || role === 'user' ? role : null;
+};
+
+// A user can hold several role rows; the strongest one wins.
+const pickRole = (roles: unknown[]): UserRole => {
+  const normalized = roles.map(toUserRole).filter(Boolean) as Exclude<UserRole, null>[];
+  if (normalized.includes('freelancer')) return 'freelancer';
+  if (normalized.includes('buyer')) return 'buyer';
+  if (normalized.includes('user')) return 'user';
+  return null;
 };
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   userRole: UserRole;
+  isNormalUser: boolean;
   isLoading: boolean;
+  refreshRole: () => Promise<void>;
   signUp: (email: string, password: string, fullName: string, role: 'freelancer' | 'buyer', location?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -85,10 +98,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { data, error } = await (supabase as any)
         .from('user_roles')
         .select('role')
-        .eq('user_id', userId)
-        .maybeSingle();
+        .eq('user_id', userId);
 
-      const roleFromTable = toUserRole(data?.role);
+      const roleFromTable = pickRole((data || []).map((r: any) => r.role));
       if (!error && roleFromTable) {
         setUserRole(roleFromTable);
         return;
@@ -96,7 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       const { data: userRes } = await supabase.auth.getUser();
       const roleFromMetadata = toUserRole(userRes.user?.user_metadata?.role);
-      if (userRes.user?.id === userId && roleFromMetadata) {
+      if (userRes.user?.id === userId && roleFromMetadata && roleFromMetadata !== 'user') {
         await (supabase as any).from('user_roles').upsert(
           { user_id: userId, role: roleFromMetadata },
           { onConflict: 'user_id,role' }
@@ -110,12 +122,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      setUserRole(null);
+      // No role at all → this is a brand new account: make it a normal user.
+      await ensureNormalUserRole(userId);
+      setUserRole('user');
     } catch (error) {
       console.error('Error fetching user role:', error);
       setUserRole(null);
     }
   };
+
+  const refreshRole = async () => {
+    const { data } = await supabase.auth.getUser();
+    if (data.user) await fetchUserRole(data.user.id);
+  };
+
+
 
   const signUp = async (
     email: string, 
@@ -194,11 +215,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       user,
       session,
       userRole,
+      isNormalUser: !!user && userRole === 'user',
       isLoading,
+      refreshRole,
       signUp,
       signIn,
       signOut
     }}>
+
       {children}
     </AuthContext.Provider>
   );
