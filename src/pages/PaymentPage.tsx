@@ -459,20 +459,23 @@ const PaymentPage = () => {
               </Card>
             )}
 
-            {/* Submit Button */}
-            <Button onClick={handlePayment} className="w-full" size="lg" disabled={isProcessing || (paymentType === 'mobile' && !isMobileFormValid)}>
-              {isProcessing ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <Wallet className="w-4 h-4 mr-2" />
-                  {paymentType === 'card' ? `Pay $${totalAmount} with Stripe` : `Submit Payment Proof ($${totalAmount})`}
-                </>
-              )}
-            </Button>
+            {/* Submit Button — mobile money only (card has its own Continue button) */}
+            {paymentType === 'mobile' && (
+              <Button onClick={handlePayment} className="w-full" size="lg" disabled={isProcessing || !isMobileFormValid}>
+                {isProcessing ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <Wallet className="w-4 h-4 mr-2" />
+                    {`Submit Payment Proof ($${totalAmount})`}
+                  </>
+                )}
+              </Button>
+            )}
+
 
             <p className="text-xs text-muted-foreground text-center">
               By proceeding, you agree to our Terms of Service and Privacy Policy.
