@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { loadStripe, Stripe } from '@stripe/stripe-js';
-import { AddressElement, Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { loadStripe, Stripe, StripeCardElement } from '@stripe/stripe-js';
+import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
 import { Button } from '@/components/ui/button';
 import { Loader2, Lock, CreditCard } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,8 +21,14 @@ const cssVar = (name: string, fallback: string) => {
   return v ? `hsl(${v})` : fallback;
 };
 
-const CardFields: React.FC<{ amount: number; onDone: (orderId: string) => void; intentId: string }> = ({
+const CardFields: React.FC<{
+  amount: number;
+  clientSecret: string;
+  onDone: (orderId: string) => void;
+  intentId: string;
+}> = ({
   amount,
+  clientSecret,
   onDone,
   intentId,
 }) => {
@@ -30,10 +36,16 @@ const CardFields: React.FC<{ amount: number; onDone: (orderId: string) => void; 
   const elements = useElements();
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
-  const [paymentElementReady, setPaymentElementReady] = useState(false);
-  const [paymentElementError, setPaymentElementError] = useState(false);
+  const [cardElementReady, setCardElementReady] = useState(false);
+  const [cardComplete, setCardComplete] = useState(false);
+  const [cardError, setCardError] = useState<string | null>(null);
   const [cardholderName, setCardholderName] = useState('');
+  const [addressLine, setAddressLine] = useState('');
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
+  const [postalCode, setPostalCode] = useState('');
   const submitLock = useRef(false);
+  const cardElementRef = useRef<StripeCardElement | null>(null);
 
   const friendlyPaymentError = (error: unknown) => {
     const stripeError = error as { code?: string; decline_code?: string; message?: string };
@@ -48,8 +60,9 @@ const CardFields: React.FC<{ amount: number; onDone: (orderId: string) => void; 
       : 'Payment could not be completed. Please check your card details and try again.';
   };
 
-  const pay = async () => {
-    if (!stripe || !elements || !paymentElementReady || submitLock.current) return;
+  const pay = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!stripe || !elements || !cardElementReady || !cardComplete || submitLock.current) return;
     if (!cardholderName.trim()) {
       toast({ title: 'Cardholder name required', description: 'Enter the name shown on the card.', variant: 'destructive' });
       return;
@@ -57,17 +70,26 @@ const CardFields: React.FC<{ amount: number; onDone: (orderId: string) => void; 
     submitLock.current = true;
     setSubmitting(true);
     try {
-      const validation = await elements.submit();
-      if (validation.error) throw validation.error;
+      // Use the mounted CardElement directly. This avoids confirmPayment being
+      // called against an Elements collection whose PaymentElement was remounted.
+      const mountedCard = cardElementRef.current ?? elements.getElement(CardElement);
+      if (!mountedCard) {
+        throw new Error('Card form is still loading. Please wait a moment and try again.');
+      }
 
-      const { error, paymentIntent } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          payment_method_data: {
-            billing_details: { name: cardholderName.trim() },
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: mountedCard,
+          billing_details: {
+            name: cardholderName.trim(),
+            address: {
+              line1: addressLine.trim() || undefined,
+              city: city.trim() || undefined,
+              country: country.trim().toUpperCase() || undefined,
+              postal_code: postalCode.trim() || undefined,
+            },
           },
         },
-        redirect: 'if_required',
       });
       if (error) throw error;
       if (paymentIntent?.status !== 'succeeded') {
@@ -91,7 +113,7 @@ const CardFields: React.FC<{ amount: number; onDone: (orderId: string) => void; 
   };
 
   return (
-    <div className="space-y-5">
+    <form className="space-y-5" onSubmit={pay}>
       <div className="space-y-2">
         <Label htmlFor="cardholder-name">Cardholder Name</Label>
         <Input
@@ -103,33 +125,73 @@ const CardFields: React.FC<{ amount: number; onDone: (orderId: string) => void; 
           disabled={submitting}
         />
       </div>
-      <PaymentElement
-        onReady={() => {
-          setPaymentElementReady(true);
-          setPaymentElementError(false);
-        }}
-        onLoadError={() => {
-          setPaymentElementReady(false);
-          setPaymentElementError(true);
-        }}
-        options={{
-          layout: { type: 'tabs', defaultCollapsed: false },
-          fields: { billingDetails: { name: 'never', email: 'never', address: 'never' } },
-          terms: { card: 'never' },
-        }}
-      />
-      {paymentElementError && (
-        <p className="text-sm text-destructive" role="alert">
-          Card form could not load. Check your connection, refresh this page, and try again.
-        </p>
-      )}
       <div className="space-y-2">
+        <Label>Card Number, Expiry Date &amp; CVC</Label>
+        <div className="rounded-md border border-input bg-background px-3 py-3">
+          <CardElement
+            onReady={(element) => {
+              cardElementRef.current = element;
+              setCardElementReady(true);
+            }}
+            onChange={(event) => {
+              setCardComplete(event.complete);
+              setCardError(event.error?.message ?? null);
+            }}
+            options={{
+              hidePostalCode: true,
+              disableLink: true,
+              style: {
+                base: {
+                  color: cssVar('--foreground', '#0f172a'),
+                  iconColor: cssVar('--muted-foreground', '#64748b'),
+                  fontFamily: 'inherit',
+                  fontSize: '16px',
+                  '::placeholder': { color: cssVar('--muted-foreground', '#64748b') },
+                },
+                invalid: { color: cssVar('--destructive', '#ef4444') },
+              },
+            }}
+          />
+        </div>
+        {cardError && <p className="text-sm text-destructive" role="alert">{cardError}</p>}
+      </div>
+      <div className="space-y-3">
         <Label>Billing Address</Label>
-        <AddressElement options={{ mode: 'billing', fields: { phone: 'never' } }} />
+        <Input
+          autoComplete="address-line1"
+          value={addressLine}
+          onChange={(event) => setAddressLine(event.target.value)}
+          placeholder="Street address (optional)"
+          disabled={submitting}
+        />
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <Input
+            autoComplete="address-level2"
+            value={city}
+            onChange={(event) => setCity(event.target.value)}
+            placeholder="City (optional)"
+            disabled={submitting}
+          />
+          <Input
+            autoComplete="country"
+            value={country}
+            onChange={(event) => setCountry(event.target.value.slice(0, 2))}
+            placeholder="Country code"
+            aria-label="Two-letter country code"
+            disabled={submitting}
+          />
+          <Input
+            autoComplete="postal-code"
+            value={postalCode}
+            onChange={(event) => setPostalCode(event.target.value)}
+            placeholder="ZIP / Postal"
+            disabled={submitting}
+          />
+        </div>
       </div>
       <Button
-        onClick={pay}
-        disabled={submitting || !stripe || !elements || !paymentElementReady}
+        type="submit"
+        disabled={submitting || !stripe || !elements || !cardElementReady || !cardComplete}
         className="w-full h-12 text-base font-semibold"
       >
         {submitting ? (
@@ -146,7 +208,7 @@ const CardFields: React.FC<{ amount: number; onDone: (orderId: string) => void; 
         <Lock className="w-3 h-3" /> Xogta card-kaaga waxaa lagu sireeyaa 256-bit encryption. Fivesom weligeed ma kaydiso
         lambarka card-kaaga.
       </p>
-    </div>
+    </form>
   );
 };
 
@@ -222,6 +284,7 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
       <Elements stripe={stripePromise} options={options}>
         <CardFields
           amount={amount}
+          clientSecret={clientSecret}
           intentId={intentId}
           onDone={(orderId) => navigate(`/buyer/payment-success?order_id=${encodeURIComponent(orderId)}`, { replace: true })}
         />
