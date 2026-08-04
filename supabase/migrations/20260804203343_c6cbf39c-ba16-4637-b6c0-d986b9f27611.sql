@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.profiles_protect_email() FROM anon, authenticated, PUBLIC;
