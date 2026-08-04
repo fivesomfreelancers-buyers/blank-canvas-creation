@@ -326,43 +326,30 @@ const PaymentPage = () => {
               </Button>
             </div>
 
-            {/* Card Payment Form */}
+            {/* Card Payment — Stripe Checkout */}
             {paymentType === 'card' && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2"><CreditCard className="w-5 h-5" />Card Payment</CardTitle>
-                  <p className="text-sm text-muted-foreground">Secure automatic payment</p>
+                  <p className="text-sm text-muted-foreground">Secure checkout powered by Stripe (Live)</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex gap-2 mb-4">
+                  <div className="flex gap-2">
                     <img src="https://img.icons8.com/color/48/visa.png" alt="Visa" className="h-8" />
                     <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard" className="h-8" />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cardNumber">Card Number</Label>
-                    <Input id="cardNumber" placeholder="1234 5678 9012 3456" value={cardDetails.cardNumber} onChange={(e) => handleCardInput('cardNumber', e.target.value.replace(/\D/g, '').slice(0, 16))} maxLength={16} />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="expiry">Expiry Date</Label>
-                      <Input id="expiry" placeholder="MM/YY" value={cardDetails.expiry} onChange={(e) => handleCardInput('expiry', e.target.value)} maxLength={5} />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="cvv">CVV</Label>
-                      <Input id="cvv" placeholder="123" type="password" value={cardDetails.cvv} onChange={(e) => handleCardInput('cvv', e.target.value.replace(/\D/g, '').slice(0, 4))} maxLength={4} />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cardholderName">Cardholder Name</Label>
-                    <Input id="cardholderName" placeholder="John Doe" value={cardDetails.cardholderName} onChange={(e) => handleCardInput('cardholderName', e.target.value)} />
-                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Marka aad gujiso badhanka hoose, waxaa lagu geynayaa bogga sugan ee Stripe Checkout halkaas
+                    oo aad ku gelin karto xogta card-kaaga. Fivesom weligeed ma kaydiso xogta card-kaaga.
+                  </p>
                   <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg text-sm text-green-700 dark:text-green-300">
                     <Shield className="w-4 h-4" />
-                    <span>Payment processed automatically & securely</span>
+                    <span>PCI-compliant live payments handled by Stripe</span>
                   </div>
                 </CardContent>
               </Card>
             )}
+
 
             {/* Mobile Money Payment Form */}
             {paymentType === 'mobile' && (
