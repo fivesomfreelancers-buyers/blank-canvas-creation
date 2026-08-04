@@ -32,6 +32,7 @@ interface PaymentPageState {
   };
   selectedPackage: {
     name: string;
+    packageType?: string;
     price: number;
     delivery: string;
     revisions: string;
