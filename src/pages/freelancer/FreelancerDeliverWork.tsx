@@ -104,6 +104,11 @@ const FreelancerDeliverWork = () => {
       toast({ title: "Error", description: "Please upload a file or paste a delivery link.", variant: "destructive" });
       return;
     }
+    const safeDeliveryLink = deliveryLink.trim() ? safeExternalUrl(deliveryLink) : null;
+    if (deliveryLink.trim() && !safeDeliveryLink) {
+      toast({ title: "Invalid link", description: "Delivery link must be a valid http(s) URL.", variant: "destructive" });
+      return;
+    }
 
     setIsSubmitting(true);
     try {
