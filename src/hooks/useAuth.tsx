@@ -101,14 +101,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (!data) {
         // Profile doesn't exist - create it (trigger should handle this, but as fallback)
-        const meta = authUser.user_metadata || {};
+        const meta: any = authUser.user_metadata || {};
         await (supabase as any).from('profiles').insert({
           id: authUser.id,
           full_name: meta.full_name || meta.name || '',
           email: authUser.email || '',
           location: meta.location || null,
+          profile_image_url: meta.avatar_url || meta.picture || null,
+          role: 'user',
         });
       }
+
     } catch (err) {
       console.error('ensureProfileExists error:', err);
     }
