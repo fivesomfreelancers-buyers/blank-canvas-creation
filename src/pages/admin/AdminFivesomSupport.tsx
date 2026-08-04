@@ -177,8 +177,8 @@ const AdminFivesomSupport: React.FC = () => {
   if (loading) return <div className="flex justify-center py-16"><Loader2 className="animate-spin h-8 w-8" /></div>;
 
   return (
-    <div className="space-y-2">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-2rem)]">
+    <div className="h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-full">
       <Card className="border-border bg-card flex flex-col min-h-0">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2"><img src={supportLogo} alt="Fivesom Support" className="h-6 w-6 object-contain" /> Fivesom Support · {convos.length}</CardTitle>

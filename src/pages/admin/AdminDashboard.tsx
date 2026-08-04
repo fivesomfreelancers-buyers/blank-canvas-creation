@@ -255,7 +255,7 @@ const AdminDashboardInner = () => {
             </div>
           </header>
           <main className={`flex-1 min-h-0 relative z-[1] ${
-            activeTab === 'fivesom_support' || activeTab === 'fivesom_news' || activeTab === 'chats'
+            activeTab === 'fivesom_support'
               ? 'p-3 overflow-hidden'
               : 'p-6 overflow-y-auto'
           }`}>
