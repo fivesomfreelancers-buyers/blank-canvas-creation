@@ -146,7 +146,7 @@ const AdminDashboardInner = () => {
 
   return (
     <SidebarProvider>
-      <div className={`admin-vip min-h-screen flex w-full relative overflow-hidden ${isDark ? 'text-slate-100' : 'text-slate-800'}`}
+      <div className={`admin-vip h-screen flex w-full relative overflow-hidden ${isDark ? 'text-slate-100' : 'text-slate-800'}`}
            style={{ background: shellBg }}>
         {/* Decorative grid + orbs */}
         <div aria-hidden className={`pointer-events-none absolute inset-0 ${isDark ? 'opacity-[0.06]' : 'opacity-[0.04]'}`}
