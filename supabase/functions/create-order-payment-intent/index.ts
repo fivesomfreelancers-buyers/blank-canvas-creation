@@ -99,7 +99,6 @@ serve(async (req) => {
       customer: customerId,
       payment_method_types: ["card"],
       description: `Fivesom — ${gig.title} (${pkg.name} package)`,
-      statement_descriptor_suffix: "FIVESOM",
       metadata: { order_id: order.id, gig_id: gig.id, buyer_id: user.id },
     });
 
