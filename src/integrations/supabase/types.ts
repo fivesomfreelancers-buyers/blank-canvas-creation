@@ -441,6 +441,11 @@ export type Database = {
           rating: number | null
           skills: string[] | null
           software_tools: Json | null
+          stripe_account_id: string | null
+          stripe_charges_enabled: boolean
+          stripe_details_submitted: boolean
+          stripe_onboarded_at: string | null
+          stripe_payouts_enabled: boolean
           total_earnings: number | null
           user_id: string
           verification_removal_reason: string | null
@@ -469,6 +474,11 @@ export type Database = {
           rating?: number | null
           skills?: string[] | null
           software_tools?: Json | null
+          stripe_account_id?: string | null
+          stripe_charges_enabled?: boolean
+          stripe_details_submitted?: boolean
+          stripe_onboarded_at?: string | null
+          stripe_payouts_enabled?: boolean
           total_earnings?: number | null
           user_id: string
           verification_removal_reason?: string | null
@@ -497,6 +507,11 @@ export type Database = {
           rating?: number | null
           skills?: string[] | null
           software_tools?: Json | null
+          stripe_account_id?: string | null
+          stripe_charges_enabled?: boolean
+          stripe_details_submitted?: boolean
+          stripe_onboarded_at?: string | null
+          stripe_payouts_enabled?: boolean
           total_earnings?: number | null
           user_id?: string
           verification_removal_reason?: string | null
