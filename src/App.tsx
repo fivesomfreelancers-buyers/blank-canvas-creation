@@ -103,6 +103,7 @@ const App = () => (
               <Route path="/freelancer/delivery-success/:orderId" element={<DeliverySuccess />} />
               <Route path="/freelancer/wallet" element={<FreelancerWallet />} />
               <Route path="/freelancer/wallet/withdraw" element={<FreelancerWithdraw />} />
+              <Route path="/freelancer/payouts" element={<FreelancerPayouts />} />
               <Route path="/freelancer/help" element={<FreelancerHelp />} />
               <Route path="/freelancer/settings" element={<FreelancerSettings />} />
               <Route path="/freelancer/profile" element={<FreelancerProfile />} />
