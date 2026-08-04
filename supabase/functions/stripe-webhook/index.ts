@@ -38,40 +38,36 @@ serve(async (req) => {
         if (session.payment_status === "paid") {
           const paymentIntentId =
             typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id ?? null;
-          await admin
-            .from("orders")
-            .update({ payment_status: "paid", stripe_payment_intent_id: paymentIntentId })
-            .eq("stripe_session_id", session.id);
+          // Orders exist only once the payment succeeded — create it here if needed.
+          await ensurePaidOrder({
+            admin,
+            meta: (session.metadata ?? {}) as Record<string, string>,
+            paymentIntentId,
+            sessionId: session.id,
+          });
         }
         break;
       }
       case "checkout.session.expired":
       case "checkout.session.async_payment_failed": {
-        const session = event.data.object as Stripe.Checkout.Session;
-        await admin
-          .from("orders")
-          .update({ payment_status: "failed" })
-          .eq("stripe_session_id", session.id)
-          .neq("payment_status", "paid");
+        // Nothing to do: no order is created for unpaid checkouts.
         break;
       }
       case "payment_intent.succeeded": {
         const intent = event.data.object as Stripe.PaymentIntent;
-        await admin
-          .from("orders")
-          .update({ payment_status: "paid", stripe_payment_intent_id: intent.id })
-          .eq("stripe_payment_intent_id", intent.id);
+        await ensurePaidOrder({
+          admin,
+          meta: (intent.metadata ?? {}) as Record<string, string>,
+          paymentIntentId: intent.id,
+          sessionId: null,
+        });
         break;
       }
       case "payment_intent.payment_failed": {
-        const intent = event.data.object as Stripe.PaymentIntent;
-        await admin
-          .from("orders")
-          .update({ payment_status: "failed" })
-          .eq("stripe_payment_intent_id", intent.id)
-          .neq("payment_status", "paid");
+        // Nothing to do: no order is created for failed payments.
         break;
       }
+
 
       case "account.updated": {
         const account = event.data.object as Stripe.Account;
