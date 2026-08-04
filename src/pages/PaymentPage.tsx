@@ -159,11 +159,6 @@ const PaymentPage = () => {
     }
   };
 
-  const handleCardInput = (field: string, value: string) => {
-    setCardDetails(prev => ({ ...prev, [field]: value }));
-  };
-
-  const isCardFormValid = cardDetails.cardNumber.length >= 16 && cardDetails.expiry.length >= 4 && cardDetails.cvv.length >= 3 && cardDetails.cardholderName.length > 0;
   const isMobileFormValid = selectedMobileMethod && paymentProof;
 
   const handlePayment = async () => {
@@ -173,10 +168,6 @@ const PaymentPage = () => {
       return;
     }
 
-    if (paymentType === 'card' && !isCardFormValid) {
-      toast({ title: "Invalid Card Details", description: "Please fill in all card details correctly.", variant: "destructive" });
-      return;
-    }
     if (paymentType === 'mobile' && !isMobileFormValid) {
       toast({ title: "Missing Payment Proof", description: "Please select a payment method and upload your payment screenshot.", variant: "destructive" });
       return;
@@ -184,9 +175,20 @@ const PaymentPage = () => {
 
     setIsProcessing(true);
     try {
-      // Upload payment proof if mobile
+      if (paymentType === 'card') {
+        // Live Stripe Checkout — order + price are created server-side
+        const { data, error } = await supabase.functions.invoke('create-order-checkout', {
+          body: { gigId: gig.id, packageType: selectedPackage.packageType || 'basic' },
+        });
+        if (error) throw error;
+        if (!data?.url) throw new Error('Checkout session could not be created');
+        window.location.href = data.url;
+        return;
+      }
+
+      // Mobile money — manual proof upload flow
       let paymentProofUrl: string | null = null;
-      if (paymentType === 'mobile' && paymentProof) {
+      if (paymentProof) {
         const proofPath = `payment-proofs/${user.id}/${Date.now()}-${paymentProof.name}`;
         const { error: uploadErr } = await supabase.storage
           .from('order-requirements')
@@ -199,7 +201,6 @@ const PaymentPage = () => {
         }
       }
 
-      // Get freelancer_id from gig
       const { data: gigData } = await supabase
         .from('gigs')
         .select('freelancer_id')
@@ -208,7 +209,6 @@ const PaymentPage = () => {
 
       if (!gigData) throw new Error('Gig not found');
 
-      // Create order in Supabase
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
         .insert({
@@ -217,8 +217,8 @@ const PaymentPage = () => {
           gig_id: gig.id,
           amount: totalAmount,
           status: 'pending' as const,
-          payment_method: paymentType === 'card' ? 'card' : selectedMobileMethod,
-          payment_status: paymentType === 'card' ? 'paid' : 'pending_verification',
+          payment_method: selectedMobileMethod,
+          payment_status: 'pending_verification',
           package_name: selectedPackage.name,
           payment_proof_url: paymentProofUrl,
         } as any)
@@ -228,19 +228,19 @@ const PaymentPage = () => {
       if (orderError) throw orderError;
 
       toast({
-        title: paymentType === 'card' ? "Payment Successful! 🎉" : "Payment Submitted for Verification",
+        title: "Payment Submitted for Verification",
         description: "Now submit your project requirements so the freelancer can start working.",
       });
 
-      // Redirect to requirements submission page
-      navigate(`/buyer/order/${orderData.id}/requirements`);
+      navigate(`/buyer/order/${orderData.id}/requirements`, { replace: true });
     } catch (error) {
       console.error('Payment error:', error);
-      toast({ title: "Payment Failed", description: "There was an error processing your payment. Please try again.", variant: "destructive" });
+      toast({ title: "Payment Failed", description: (error as Error).message || "There was an error processing your payment. Please try again.", variant: "destructive" });
     } finally {
       setIsProcessing(false);
     }
   };
+
 
   const freelancerInitials = gig.freelancer.name.split(' ').map(n => n[0]).join('').toUpperCase();
 
