@@ -907,6 +907,7 @@ export type Database = {
           payment_method: string | null
           payment_proof_url: string | null
           payment_status: string | null
+          payout_mode: string
           requirements: string | null
           status: Database["public"]["Enums"]["order_status"] | null
           stripe_payment_intent_id: string | null
@@ -924,6 +925,7 @@ export type Database = {
           payment_method?: string | null
           payment_proof_url?: string | null
           payment_status?: string | null
+          payout_mode?: string
           requirements?: string | null
           status?: Database["public"]["Enums"]["order_status"] | null
           stripe_payment_intent_id?: string | null
@@ -941,6 +943,7 @@ export type Database = {
           payment_method?: string | null
           payment_proof_url?: string | null
           payment_status?: string | null
+          payout_mode?: string
           requirements?: string | null
           status?: Database["public"]["Enums"]["order_status"] | null
           stripe_payment_intent_id?: string | null
