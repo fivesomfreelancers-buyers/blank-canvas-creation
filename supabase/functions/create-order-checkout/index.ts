@@ -9,6 +9,7 @@ const corsHeaders = {
 };
 
 const SERVICE_FEE_USD = 1;
+const PLATFORM_FEE_PERCENT = 15;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -62,8 +63,22 @@ serve(async (req) => {
     if (pkgErr) throw pkgErr;
     if (!pkg) throw new Error("Package not found for this gig");
 
-    const totalUsd = Number(pkg.price) + SERVICE_FEE_USD;
+    const { data: seller, error: sellerErr } = await admin
+      .from("freelancers")
+      .select("id, stripe_account_id, stripe_payouts_enabled, stripe_charges_enabled")
+      .eq("id", gig.freelancer_id)
+      .maybeSingle();
+    if (sellerErr) throw sellerErr;
+
+    const packageUsd = Number(pkg.price);
+    const totalUsd = packageUsd + SERVICE_FEE_USD;
     if (!(totalUsd > 0)) throw new Error("Invalid package price");
+
+    // Direct Stripe Connect payout only when the seller finished onboarding.
+    const useConnect = Boolean(
+      seller?.stripe_account_id && seller.stripe_payouts_enabled && seller.stripe_charges_enabled,
+    );
+    const payoutMode = useConnect ? "stripe_connect" : "wallet";
 
     const { data: order, error: orderErr } = await admin
       .from("orders")
@@ -76,6 +91,7 @@ serve(async (req) => {
         payment_method: "stripe",
         payment_status: "pending",
         package_name: pkg.name,
+        payout_mode: payoutMode,
       })
       .select("id")
       .single();
@@ -89,7 +105,12 @@ serve(async (req) => {
     const customerId = customers.data[0]?.id;
 
     const origin = req.headers.get("origin") ?? "";
-    const session = await stripe.checkout.sessions.create({
+    const totalCents = Math.round(totalUsd * 100);
+    // Platform keeps the buyer service fee + 15% commission on the package price.
+    const applicationFeeCents =
+      Math.round(SERVICE_FEE_USD * 100) + Math.round((packageUsd * PLATFORM_FEE_PERCENT) / 100 * 100);
+
+    const sessionParams: Stripe.Checkout.SessionCreateParams = {
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
       mode: "payment",
@@ -97,7 +118,7 @@ serve(async (req) => {
         {
           price_data: {
             currency: "usd",
-            unit_amount: Math.round(totalUsd * 100),
+            unit_amount: totalCents,
             product_data: {
               name: `${gig.title} — ${pkg.name} package`,
               description: `Fivesom order (includes $${SERVICE_FEE_USD} buyer service fee)`,
@@ -106,10 +127,27 @@ serve(async (req) => {
           quantity: 1,
         },
       ],
-      metadata: { order_id: order.id, gig_id: gig.id, buyer_id: user.id },
+      metadata: {
+        order_id: order.id,
+        gig_id: gig.id,
+        buyer_id: user.id,
+        payout_mode: payoutMode,
+      },
       success_url: `${origin}/buyer/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/gig/${gig.id}`,
-    });
+    };
+
+    if (useConnect) {
+      // Destination charge: Fivesom is the merchant of record, funds land on the seller's
+      // connected account minus the platform application fee.
+      sessionParams.payment_intent_data = {
+        application_fee_amount: Math.min(applicationFeeCents, totalCents - 1),
+        transfer_data: { destination: seller!.stripe_account_id as string },
+        metadata: { order_id: order.id },
+      };
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionParams);
 
     await admin
       .from("orders")
