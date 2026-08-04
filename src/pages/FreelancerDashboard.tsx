@@ -135,16 +135,14 @@ const FreelancerDashboard = () => {
         .eq('id', user.id)
         .maybeSingle();
       
-      if (profileData) {
-        setUserProfile(profileData);
-      } else {
-        // Fallback to user_metadata
-        setUserProfile({
-          full_name: user.user_metadata?.full_name || 'Freelancer',
-          email: user.email || '',
-          profile_image_url: null
-        });
-      }
+      const meta: any = user.user_metadata || {};
+      const metaAvatar = meta.avatar_url || meta.picture || null;
+      const metaName = meta.full_name || meta.name || null;
+      setUserProfile({
+        full_name: profileData?.full_name?.trim() || metaName || 'Freelancer',
+        email: profileData?.email || user.email || '',
+        profile_image_url: profileData?.profile_image_url || metaAvatar,
+      });
 
       const { data: freelancer } = await (supabase as any)
         .from('freelancers')

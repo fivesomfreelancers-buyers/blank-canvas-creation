@@ -37,15 +37,11 @@ const Navbar = () => {
         .eq('id', user.id)
         .maybeSingle();
       
-      if (data) {
-        setProfile(data);
-      } else {
-        // Fallback to user_metadata when profile row doesn't exist yet
-        setProfile({
-          full_name: user.user_metadata?.full_name || user.email || 'User',
-          profile_image_url: null
-        });
-      }
+      const meta: any = user.user_metadata || {};
+      setProfile({
+        full_name: data?.full_name?.trim() || meta.full_name || meta.name || user.email || 'User',
+        profile_image_url: data?.profile_image_url || meta.avatar_url || meta.picture || null,
+      });
       if (error) console.error('Navbar profile fetch error:', error);
     };
     fetchProfile();
