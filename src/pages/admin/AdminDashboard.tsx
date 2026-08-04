@@ -146,7 +146,7 @@ const AdminDashboardInner = () => {
 
   return (
     <SidebarProvider>
-      <div className={`admin-vip h-screen flex w-full relative overflow-hidden ${isDark ? 'text-slate-100' : 'text-slate-800'}`}
+      <div className={`admin-vip fixed inset-0 flex w-full overflow-hidden ${isDark ? 'text-slate-100' : 'text-slate-800'}`}
            style={{ background: shellBg }}>
         {/* Decorative grid + orbs */}
         <div aria-hidden className={`pointer-events-none absolute inset-0 ${isDark ? 'opacity-[0.06]' : 'opacity-[0.04]'}`}
@@ -229,9 +229,9 @@ const AdminDashboardInner = () => {
           </SidebarContent>
         </Sidebar>
 
-        <SidebarInset className="bg-transparent h-screen flex flex-col overflow-hidden">
+        <SidebarInset className="bg-transparent h-full min-h-0 flex flex-col overflow-hidden">
           {/* Fixed header — never scrolls, on every admin page */}
-          <header className="h-16 shrink-0 flex items-center justify-between px-6 border-b z-30 shadow-sm"
+          <header className="sticky top-0 h-16 shrink-0 flex items-center justify-between px-6 border-b z-30 shadow-sm"
                   style={{ background: headerBg, borderColor: headerBorder }}>
             <div className="flex items-center gap-3">
               <SidebarTrigger className={triggerText} />
