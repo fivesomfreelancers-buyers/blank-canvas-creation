@@ -131,7 +131,7 @@ const FreelancerDashboard = () => {
       // Fetch profile
       const { data: profileData } = await supabase
         .from('profiles')
-        .select('full_name, email, profile_image_url')
+        .select('full_name, profile_image_url')
         .eq('id', user.id)
         .maybeSingle();
       
@@ -140,7 +140,7 @@ const FreelancerDashboard = () => {
       const metaName = meta.full_name || meta.name || null;
       setUserProfile({
         full_name: profileData?.full_name?.trim() || metaName || 'Freelancer',
-        email: profileData?.email || user.email || '',
+        email: user.email || '',
         profile_image_url: profileData?.profile_image_url || metaAvatar,
       });
 

@@ -35,7 +35,7 @@ const FreelancerSettings = () => {
 
       const { data: profileData } = await supabase
         .from('profiles')
-        .select('full_name, email, location')
+        .select('full_name, location')
         .eq('id', user.id)
         .single();
 
@@ -48,7 +48,7 @@ const FreelancerSettings = () => {
       if (profileData) {
         setProfile({
           fullName: profileData.full_name || '',
-          email: profileData.email || '',
+          email: user.email || '',
           bio: freelancerData?.bio || '',
           location: profileData.location || ''
         });

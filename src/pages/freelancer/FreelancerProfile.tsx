@@ -34,7 +34,7 @@ const FreelancerProfile = () => {
 
       const { data: profileData } = await supabase
         .from('profiles')
-        .select('*')
+        .select('id, full_name, username, profile_image_url, bio, professional_title, location, skills, languages, industry, member_since, last_seen, created_at, role')
         .eq('id', user.id)
         .maybeSingle();
 
