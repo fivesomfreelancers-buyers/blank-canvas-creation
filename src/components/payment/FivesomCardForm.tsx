@@ -183,9 +183,15 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
       });
       if (cancelled) return;
       if (err || !data?.clientSecret || !data?.publishableKey || !data?.orderId) {
-        setError('Lacag bixinta lama diyaarin karin. Fadlan isku day mar kale.');
+        const reason = data?.error || err?.message;
+        setError(
+          reason
+            ? `Lacag bixinta lama diyaarin karin: ${reason}`
+            : 'Lacag bixinta lama diyaarin karin. Fadlan isku day mar kale.',
+        );
         return;
       }
+
       setStripePromise(loadStripe(data.publishableKey));
       setClientSecret(data.clientSecret);
     };
