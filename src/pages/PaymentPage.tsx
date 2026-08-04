@@ -32,6 +32,7 @@ interface PaymentPageState {
   };
   selectedPackage: {
     name: string;
+    packageType?: string;
     price: number;
     delivery: string;
     revisions: string;
@@ -106,12 +107,7 @@ const PaymentPage = () => {
   const [selectedCurrencyIndex, setSelectedCurrencyIndex] = useState<number>(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
-  const [cardDetails, setCardDetails] = useState({
-    cardNumber: '',
-    expiry: '',
-    cvv: '',
-    cardholderName: '',
-  });
+
 
   useEffect(() => {
     if (userRole === 'user') {
@@ -158,11 +154,6 @@ const PaymentPage = () => {
     }
   };
 
-  const handleCardInput = (field: string, value: string) => {
-    setCardDetails(prev => ({ ...prev, [field]: value }));
-  };
-
-  const isCardFormValid = cardDetails.cardNumber.length >= 16 && cardDetails.expiry.length >= 4 && cardDetails.cvv.length >= 3 && cardDetails.cardholderName.length > 0;
   const isMobileFormValid = selectedMobileMethod && paymentProof;
 
   const handlePayment = async () => {
@@ -172,10 +163,6 @@ const PaymentPage = () => {
       return;
     }
 
-    if (paymentType === 'card' && !isCardFormValid) {
-      toast({ title: "Invalid Card Details", description: "Please fill in all card details correctly.", variant: "destructive" });
-      return;
-    }
     if (paymentType === 'mobile' && !isMobileFormValid) {
       toast({ title: "Missing Payment Proof", description: "Please select a payment method and upload your payment screenshot.", variant: "destructive" });
       return;
@@ -183,9 +170,20 @@ const PaymentPage = () => {
 
     setIsProcessing(true);
     try {
-      // Upload payment proof if mobile
+      if (paymentType === 'card') {
+        // Live Stripe Checkout — order + price are created server-side
+        const { data, error } = await supabase.functions.invoke('create-order-checkout', {
+          body: { gigId: gig.id, packageType: selectedPackage.packageType || 'basic' },
+        });
+        if (error) throw error;
+        if (!data?.url) throw new Error('Checkout session could not be created');
+        window.location.href = data.url;
+        return;
+      }
+
+      // Mobile money — manual proof upload flow
       let paymentProofUrl: string | null = null;
-      if (paymentType === 'mobile' && paymentProof) {
+      if (paymentProof) {
         const proofPath = `payment-proofs/${user.id}/${Date.now()}-${paymentProof.name}`;
         const { error: uploadErr } = await supabase.storage
           .from('order-requirements')
@@ -198,7 +196,6 @@ const PaymentPage = () => {
         }
       }
 
-      // Get freelancer_id from gig
       const { data: gigData } = await supabase
         .from('gigs')
         .select('freelancer_id')
@@ -207,7 +204,6 @@ const PaymentPage = () => {
 
       if (!gigData) throw new Error('Gig not found');
 
-      // Create order in Supabase
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
         .insert({
@@ -216,8 +212,8 @@ const PaymentPage = () => {
           gig_id: gig.id,
           amount: totalAmount,
           status: 'pending' as const,
-          payment_method: paymentType === 'card' ? 'card' : selectedMobileMethod,
-          payment_status: paymentType === 'card' ? 'paid' : 'pending_verification',
+          payment_method: selectedMobileMethod,
+          payment_status: 'pending_verification',
           package_name: selectedPackage.name,
           payment_proof_url: paymentProofUrl,
         } as any)
@@ -227,19 +223,19 @@ const PaymentPage = () => {
       if (orderError) throw orderError;
 
       toast({
-        title: paymentType === 'card' ? "Payment Successful! 🎉" : "Payment Submitted for Verification",
+        title: "Payment Submitted for Verification",
         description: "Now submit your project requirements so the freelancer can start working.",
       });
 
-      // Redirect to requirements submission page
-      navigate(`/buyer/order/${orderData.id}/requirements`);
+      navigate(`/buyer/order/${orderData.id}/requirements`, { replace: true });
     } catch (error) {
       console.error('Payment error:', error);
-      toast({ title: "Payment Failed", description: "There was an error processing your payment. Please try again.", variant: "destructive" });
+      toast({ title: "Payment Failed", description: (error as Error).message || "There was an error processing your payment. Please try again.", variant: "destructive" });
     } finally {
       setIsProcessing(false);
     }
   };
+
 
   const freelancerInitials = gig.freelancer.name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -325,43 +321,30 @@ const PaymentPage = () => {
               </Button>
             </div>
 
-            {/* Card Payment Form */}
+            {/* Card Payment — Stripe Checkout */}
             {paymentType === 'card' && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2"><CreditCard className="w-5 h-5" />Card Payment</CardTitle>
-                  <p className="text-sm text-muted-foreground">Secure automatic payment</p>
+                  <p className="text-sm text-muted-foreground">Secure checkout powered by Stripe (Live)</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex gap-2 mb-4">
+                  <div className="flex gap-2">
                     <img src="https://img.icons8.com/color/48/visa.png" alt="Visa" className="h-8" />
                     <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard" className="h-8" />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cardNumber">Card Number</Label>
-                    <Input id="cardNumber" placeholder="1234 5678 9012 3456" value={cardDetails.cardNumber} onChange={(e) => handleCardInput('cardNumber', e.target.value.replace(/\D/g, '').slice(0, 16))} maxLength={16} />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="expiry">Expiry Date</Label>
-                      <Input id="expiry" placeholder="MM/YY" value={cardDetails.expiry} onChange={(e) => handleCardInput('expiry', e.target.value)} maxLength={5} />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="cvv">CVV</Label>
-                      <Input id="cvv" placeholder="123" type="password" value={cardDetails.cvv} onChange={(e) => handleCardInput('cvv', e.target.value.replace(/\D/g, '').slice(0, 4))} maxLength={4} />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cardholderName">Cardholder Name</Label>
-                    <Input id="cardholderName" placeholder="John Doe" value={cardDetails.cardholderName} onChange={(e) => handleCardInput('cardholderName', e.target.value)} />
-                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Marka aad gujiso badhanka hoose, waxaa lagu geynayaa bogga sugan ee Stripe Checkout halkaas
+                    oo aad ku gelin karto xogta card-kaaga. Fivesom weligeed ma kaydiso xogta card-kaaga.
+                  </p>
                   <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg text-sm text-green-700 dark:text-green-300">
                     <Shield className="w-4 h-4" />
-                    <span>Payment processed automatically & securely</span>
+                    <span>PCI-compliant live payments handled by Stripe</span>
                   </div>
                 </CardContent>
               </Card>
             )}
+
 
             {/* Mobile Money Payment Form */}
             {paymentType === 'mobile' && (
@@ -472,7 +455,7 @@ const PaymentPage = () => {
             )}
 
             {/* Submit Button */}
-            <Button onClick={handlePayment} className="w-full" size="lg" disabled={isProcessing || (paymentType === 'card' ? !isCardFormValid : !isMobileFormValid)}>
+            <Button onClick={handlePayment} className="w-full" size="lg" disabled={isProcessing || (paymentType === 'mobile' && !isMobileFormValid)}>
               {isProcessing ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
@@ -481,7 +464,7 @@ const PaymentPage = () => {
               ) : (
                 <>
                   <Wallet className="w-4 h-4 mr-2" />
-                  {paymentType === 'card' ? `Pay $${totalAmount}` : `Submit Payment Proof ($${totalAmount})`}
+                  {paymentType === 'card' ? `Pay $${totalAmount} with Stripe` : `Submit Payment Proof ($${totalAmount})`}
                 </>
               )}
             </Button>

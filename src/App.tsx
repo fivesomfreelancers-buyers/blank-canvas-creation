@@ -43,6 +43,7 @@ import BuyerHelp from "./pages/buyer/BuyerHelp";
 import BuyerSettings from "./pages/buyer/BuyerSettings";
 import BuyerOrderDetails from "./pages/buyer/BuyerOrderDetails";
 import SubmitRequirements from "./pages/buyer/SubmitRequirements";
+import PaymentSuccess from "./pages/buyer/PaymentSuccess";
 import SellerPayment from "./pages/SellerPayment";
 import PaymentPage from "./pages/PaymentPage";
 import NotFound from "./pages/NotFound";
@@ -84,6 +85,7 @@ const App = () => (
               <Route path="/complete-profile/:role" element={<CompleteProfile />} />
               <Route path="/seller/payment" element={<SellerPayment />} />
               <Route path="/payment" element={<PaymentPage />} />
+              <Route path="/buyer/payment-success" element={<PaymentSuccess />} />
               <Route path="/create-gig" element={<CreateGig />} />
               <Route path="/edit-gig/:gigId" element={<CreateGig />} />
               
