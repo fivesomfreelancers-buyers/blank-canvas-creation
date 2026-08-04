@@ -55,6 +55,7 @@ serve(async (req) => {
       .maybeSingle();
     if (gigErr) throw gigErr;
     if (!gig) throw new Error("Gig not found");
+    if (gig.status !== "active") throw new Error("This gig is not currently available");
 
     const { data: pkg, error: pkgErr } = await admin
       .from("gig_packages")
@@ -84,7 +85,9 @@ serve(async (req) => {
       .single();
     if (orderErr) throw orderErr;
 
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
+    if (!stripeKey) throw new Error("Stripe payments are not configured");
+    const stripe = new Stripe(stripeKey, {
       apiVersion: "2025-08-27.basil",
     });
 
