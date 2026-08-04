@@ -218,7 +218,7 @@ const FreelancerProfilePage = () => {
             ...(profileData.location && profileData.location !== 'Not specified'
               ? { address: { '@type': 'PostalAddress', addressLocality: profileData.location } }
               : {}),
-            ...(profileData.knowsLanguages ? {} : {}),
+            ...(profileData.languages?.length ? { knowsLanguage: profileData.languages } : {}),
             url: `/profile/${freelancerId}`,
             ...(profileData.totalReviews > 0
               ? {
