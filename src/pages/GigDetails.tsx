@@ -166,11 +166,11 @@ const GigDetails = () => {
       navigate('/become-buyer');
       return;
     }
-    const orderPkg = pkg || packages.find(p => p.package_type === selectedPackage) || { name: 'Standard', price: gig.base_price, delivery_time: `${gig.delivery_time_days} days`, revisions: '2', features: [] };
+    const orderPkg = pkg || packages.find(p => p.package_type === selectedPackage) || { name: 'Standard', price: gig.base_price, delivery_time: `${gig.delivery_time_days} days`, revisions: '2', features: [], package_type: selectedPackage };
     navigate('/payment', {
       state: {
         gig: { id: gig.id, title: gig.title, freelancer: { name: gig.freelancerName, avatar: gig.freelancerName?.[0] || 'F', profileImage: gig.freelancerImageUrl || '' } },
-        selectedPackage: { name: orderPkg.name, price: orderPkg.price, delivery: orderPkg.delivery_time || `${gig.delivery_time_days} days`, revisions: orderPkg.revisions || '2', features: orderPkg.features || [] }
+        selectedPackage: { name: orderPkg.name, packageType: (orderPkg as any).package_type || selectedPackage, price: orderPkg.price, delivery: orderPkg.delivery_time || `${gig.delivery_time_days} days`, revisions: orderPkg.revisions || '2', features: orderPkg.features || [] }
       }
     });
   };
