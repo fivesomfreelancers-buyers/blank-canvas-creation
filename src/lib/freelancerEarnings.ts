@@ -8,33 +8,8 @@ import { supabase } from '@/integrations/supabase/client';
  * NOT granted to client roles, so `select('*')` on `freelancers` is rejected by PostgREST.
  * Always use this list instead of `*`.
  */
-export const FREELANCER_PUBLIC_COLUMNS = [
-  'id',
-  'user_id',
-  'bio',
-  'skills',
-  'rating',
-  'completed_orders',
-  'is_verified',
-  'created_at',
-  'ranking_score',
-  'is_featured',
-  'verified_at',
-  'years_experience',
-  'education_level',
-  'software_tools',
-  'professional_title',
-  'verification_removed_at',
-  'verification_removal_reason',
-  'verification_removed_by',
-  'vip_tier',
-  'vip_started_at',
-  'vip_expires_at',
-  'has_blue_tick',
-  'blue_tick_granted_at',
-  'blue_tick_removed_at',
-  'blue_tick_removed_reason',
-].join(', ');
+export const FREELANCER_PUBLIC_COLUMNS =
+  'id, user_id, bio, skills, rating, completed_orders, is_verified, created_at, ranking_score, is_featured, verified_at, years_experience, education_level, software_tools, professional_title, verification_removed_at, verification_removal_reason, verification_removed_by, vip_tier, vip_started_at, vip_expires_at, has_blue_tick, blue_tick_granted_at, blue_tick_removed_at, blue_tick_removed_reason' as const;
 
 interface EarningsRow {
   id: string;
