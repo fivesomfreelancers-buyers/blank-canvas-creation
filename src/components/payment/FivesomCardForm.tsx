@@ -40,10 +40,6 @@ const CardFields: React.FC<{
   const [cardComplete, setCardComplete] = useState(false);
   const [cardError, setCardError] = useState<string | null>(null);
   const [cardholderName, setCardholderName] = useState('');
-  const [addressLine, setAddressLine] = useState('');
-  const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
-  const [postalCode, setPostalCode] = useState('');
   const submitLock = useRef(false);
   const cardElementRef = useRef<StripeCardElement | null>(null);
 
@@ -82,12 +78,6 @@ const CardFields: React.FC<{
           card: mountedCard,
           billing_details: {
             name: cardholderName.trim(),
-            address: {
-              line1: addressLine.trim() || undefined,
-              city: city.trim() || undefined,
-              country: country.trim().toUpperCase() || undefined,
-              postal_code: postalCode.trim() || undefined,
-            },
           },
         },
       });
@@ -154,40 +144,6 @@ const CardFields: React.FC<{
           />
         </div>
         {cardError && <p className="text-sm text-destructive" role="alert">{cardError}</p>}
-      </div>
-      <div className="space-y-3">
-        <Label>Billing Address</Label>
-        <Input
-          autoComplete="address-line1"
-          value={addressLine}
-          onChange={(event) => setAddressLine(event.target.value)}
-          placeholder="Street address (optional)"
-          disabled={submitting}
-        />
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <Input
-            autoComplete="address-level2"
-            value={city}
-            onChange={(event) => setCity(event.target.value)}
-            placeholder="City (optional)"
-            disabled={submitting}
-          />
-          <Input
-            autoComplete="country"
-            value={country}
-            onChange={(event) => setCountry(event.target.value.slice(0, 2))}
-            placeholder="Country code"
-            aria-label="Two-letter country code"
-            disabled={submitting}
-          />
-          <Input
-            autoComplete="postal-code"
-            value={postalCode}
-            onChange={(event) => setPostalCode(event.target.value)}
-            placeholder="ZIP / Postal"
-            disabled={submitting}
-          />
-        </div>
       </div>
       <Button
         type="submit"
