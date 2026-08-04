@@ -61,7 +61,7 @@ serve(async (req) => {
           : session.payment_intent?.id ?? null;
     }
 
-    const query = admin.from("orders").select("id, buyer_id, payment_status");
+    const query = admin.from("orders").select("id, buyer_id, freelancer_id, payment_status");
     const { data: order, error: orderErr } = paymentIntentId
       ? await query.eq("stripe_payment_intent_id", paymentIntentId).maybeSingle()
       : await query.eq("stripe_session_id", sessionId).maybeSingle();
@@ -72,9 +72,30 @@ serve(async (req) => {
     if (paid && order.payment_status !== "paid") {
       const { error: updateErr } = await admin
         .from("orders")
-        .update({ payment_status: "paid", stripe_payment_intent_id: resolvedIntentId })
+        .update({
+          payment_status: "paid",
+          status: "pending",
+          stripe_payment_intent_id: resolvedIntentId,
+        })
         .eq("id", order.id);
       if (updateErr) throw updateErr;
+
+      const { data: freelancer } = await admin
+        .from("freelancers")
+        .select("user_id")
+        .eq("id", order.freelancer_id)
+        .maybeSingle();
+
+      if (freelancer?.user_id) {
+        const { error: notificationErr } = await admin.from("notifications").insert({
+          user_id: freelancer.user_id,
+          type: "order",
+          title: "New paid order",
+          message: "You received a new paid order. The funds are secured in Fivesom Escrow.",
+          link: `/freelancer/order/${order.id}`,
+        });
+        if (notificationErr) console.error("Payment notification error:", notificationErr);
+      }
     }
 
     return new Response(JSON.stringify({ paid, orderId: order.id }), {

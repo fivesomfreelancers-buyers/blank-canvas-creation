@@ -1,12 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
-import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { AddressElement, Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { Button } from '@/components/ui/button';
 import { Loader2, Lock, CreditCard } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@/components/ThemeProvider';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface Props {
   gigId: string;
@@ -28,16 +30,45 @@ const CardFields: React.FC<{ amount: number; onDone: (orderId: string) => void; 
   const elements = useElements();
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
+  const [paymentElementReady, setPaymentElementReady] = useState(false);
+  const [cardholderName, setCardholderName] = useState('');
+  const submitLock = useRef(false);
+
+  const friendlyPaymentError = (error: unknown) => {
+    const stripeError = error as { code?: string; decline_code?: string; message?: string };
+    if (stripeError.decline_code === 'insufficient_funds') return 'Insufficient funds. Please use another card.';
+    if (stripeError.code === 'card_declined' || stripeError.decline_code) return 'Card declined. Please use another card.';
+    if (stripeError.code === 'invalid_number' || stripeError.code === 'incorrect_number') return 'Invalid card number.';
+    if (stripeError.code === 'invalid_expiry_month' || stripeError.code === 'invalid_expiry_year') return 'Invalid card expiry date.';
+    if (stripeError.code === 'invalid_cvc' || stripeError.code === 'incorrect_cvc') return 'Invalid security code (CVC).';
+    if (stripeError.code === 'api_connection_error') return 'Network error. Check your connection and try again.';
+    return stripeError.message?.includes('network')
+      ? 'Network error. Check your connection and try again.'
+      : 'Payment could not be completed. Please check your card details and try again.';
+  };
 
   const pay = async () => {
-    if (!stripe || !elements) return;
+    if (!stripe || !elements || !paymentElementReady || submitLock.current) return;
+    if (!cardholderName.trim()) {
+      toast({ title: 'Cardholder name required', description: 'Enter the name shown on the card.', variant: 'destructive' });
+      return;
+    }
+    submitLock.current = true;
     setSubmitting(true);
     try {
+      const validation = await elements.submit();
+      if (validation.error) throw validation.error;
+
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
+        confirmParams: {
+          payment_method_data: {
+            billing_details: { name: cardholderName.trim() },
+          },
+        },
         redirect: 'if_required',
       });
-      if (error) throw new Error(error.message || 'Lacag bixinta way guuldareysatay');
+      if (error) throw error;
       if (paymentIntent?.status !== 'succeeded') {
         throw new Error('Lacag bixinta lama xaqiijin. Fadlan isku day mar kale.');
       }
@@ -49,31 +80,53 @@ const CardFields: React.FC<{ amount: number; onDone: (orderId: string) => void; 
     } catch (e) {
       toast({
         title: 'Payment Failed',
-        description: (e as Error).message,
+        description: friendlyPaymentError(e),
         variant: 'destructive',
       });
     } finally {
+      submitLock.current = false;
       setSubmitting(false);
     }
   };
 
   return (
     <div className="space-y-5">
+      <div className="space-y-2">
+        <Label htmlFor="cardholder-name">Cardholder Name</Label>
+        <Input
+          id="cardholder-name"
+          autoComplete="cc-name"
+          value={cardholderName}
+          onChange={(event) => setCardholderName(event.target.value)}
+          placeholder="Name shown on card"
+          disabled={submitting}
+        />
+      </div>
       <PaymentElement
+        onReady={() => setPaymentElementReady(true)}
+        onLoadError={() => setPaymentElementReady(false)}
         options={{
-          layout: 'tabs',
-          fields: { billingDetails: { address: { country: 'auto', postalCode: 'auto' } } },
+          layout: { type: 'tabs', defaultCollapsed: false },
+          fields: { billingDetails: { name: 'never', email: 'never', address: 'never' } },
           terms: { card: 'never' },
         }}
       />
-      <Button onClick={pay} disabled={submitting || !stripe} className="w-full h-12 text-base font-semibold">
+      <div className="space-y-2">
+        <Label>Billing Address</Label>
+        <AddressElement options={{ mode: 'billing', fields: { phone: 'never' } }} />
+      </div>
+      <Button
+        onClick={pay}
+        disabled={submitting || !stripe || !elements || !paymentElementReady}
+        className="w-full h-12 text-base font-semibold"
+      >
         {submitting ? (
           <>
             <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Processing…
           </>
         ) : (
           <>
-            <Lock className="w-4 h-4 mr-2" /> Pay ${amount} — Fivesom Secure
+            <Lock className="w-4 h-4 mr-2" /> Pay ${amount.toFixed(2)} — Fivesom Secure
           </>
         )}
       </Button>
@@ -99,7 +152,7 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
         body: { gigId, packageType },
       });
       if (cancelled) return;
-      if (err || !data?.clientSecret || !data?.publishableKey) {
+      if (err || !data?.clientSecret || !data?.publishableKey || !data?.orderId) {
         setError('Lacag bixinta lama diyaarin karin. Fadlan isku day mar kale.');
         return;
       }
@@ -116,6 +169,7 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
     if (!clientSecret) return null;
     return {
       clientSecret,
+      loader: 'always' as const,
       appearance: {
         theme: (theme === 'dark' ? 'night' : 'stripe') as 'night' | 'stripe',
         variables: {
@@ -123,7 +177,7 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
           colorBackground: cssVar('--card', theme === 'dark' ? '#111827' : '#ffffff'),
           colorText: cssVar('--foreground', theme === 'dark' ? '#f9fafb' : '#0f172a'),
           colorDanger: cssVar('--destructive', '#ef4444'),
-          borderRadius: '10px',
+          borderRadius: '8px',
           fontFamily: 'inherit',
           spacingUnit: '4px',
         },
