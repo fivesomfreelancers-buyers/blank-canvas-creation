@@ -217,7 +217,7 @@ const GigDetails = () => {
                 '@type': 'Person',
                 name: gig.freelancerName,
                 ...(gig.freelancerImageUrl ? { image: gig.freelancerImageUrl } : {}),
-                ...(gig.freelancerId ? { url: `/freelancer/${gig.freelancerId}` } : {}),
+                ...(gig.freelancerId ? { url: `/profile/${gig.freelancerId}` } : {}),
               },
             } : {}),
             ...(gig.rating ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: gig.rating, reviewCount: gig.reviewCount || 1 } } : {}),
