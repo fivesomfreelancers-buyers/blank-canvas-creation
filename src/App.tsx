@@ -82,7 +82,10 @@ const App = () => (
               <Route path="/register" element={<Register />} />
               <Route path="/register/buyer" element={<BuyerRegister />} />
               <Route path="/register/freelancer" element={<FreelancerRegister />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
+
               <Route path="/select-role" element={<RoleSelection />} />
               <Route path="/become-buyer" element={<UpgradeRole role="buyer" />} />
               <Route path="/become-freelancer" element={<UpgradeRole role="freelancer" />} />
