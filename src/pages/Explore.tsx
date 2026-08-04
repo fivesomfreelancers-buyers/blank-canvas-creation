@@ -160,6 +160,14 @@ const Explore = () => {
         title="Explore Freelance Services & Gigs | FIVESOM"
         description="Browse thousands of gigs from verified Somali freelancers. Find design, development, writing, video, marketing services and more on FIVESOM."
         canonical="/explore"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: 'Explore Freelance Services & Gigs',
+          description: 'Browse gigs from verified Somali freelancers on FIVESOM.',
+          url: '/explore',
+          isPartOf: { '@type': 'WebSite', name: 'FIVESOM', url: '/' },
+        }}
       />
       <Navbar />
       
