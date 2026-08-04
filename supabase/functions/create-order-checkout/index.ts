@@ -115,9 +115,11 @@ serve(async (req) => {
         },
       ],
       metadata: {
-        order_id: order.id,
         gig_id: gig.id,
         buyer_id: user.id,
+        freelancer_id: gig.freelancer_id,
+        package_name: pkg.name,
+        amount_usd: String(totalUsd),
         payout_mode: payoutMode,
       },
       success_url: `${origin}/buyer/payment-success?session_id={CHECKOUT_SESSION_ID}`,
@@ -130,18 +132,20 @@ serve(async (req) => {
       sessionParams.payment_intent_data = {
         application_fee_amount: Math.min(applicationFeeCents, totalCents - 1),
         transfer_data: { destination: seller!.stripe_account_id as string },
-        metadata: { order_id: order.id },
+        metadata: {
+          gig_id: gig.id,
+          buyer_id: user.id,
+          freelancer_id: gig.freelancer_id,
+          package_name: pkg.name,
+          amount_usd: String(totalUsd),
+          payout_mode: payoutMode,
+        },
       };
     }
 
     const session = await stripe.checkout.sessions.create(sessionParams);
 
-    await admin
-      .from("orders")
-      .update({ stripe_session_id: session.id })
-      .eq("id", order.id);
-
-    return new Response(JSON.stringify({ url: session.url, orderId: order.id }), {
+    return new Response(JSON.stringify({ url: session.url }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
