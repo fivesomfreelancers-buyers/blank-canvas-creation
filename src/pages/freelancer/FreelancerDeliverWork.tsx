@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Upload, FileText, Image, Video, X, CheckCircle, Clock, Link2, Plus, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { safeExternalUrl } from '@/lib/safeUrl';
 
 
 const FreelancerDeliverWork = () => {
@@ -131,7 +132,7 @@ const FreelancerDeliverWork = () => {
           order_id: selectedOrder,
           delivery_message: deliveryMessage.trim(),
           delivery_file_url: deliveryFileUrl,
-          delivery_link: deliveryLink.trim() || null,
+          delivery_link: safeDeliveryLink,
           status: 'submitted' as const,
         } as any);
 

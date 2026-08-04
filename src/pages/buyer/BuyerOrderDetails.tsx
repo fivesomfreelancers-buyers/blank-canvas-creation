@@ -81,12 +81,13 @@ const BuyerOrderDetails = () => {
     if (!orderId) return;
     setIsProcessing(true);
     try {
-      await supabase.from('orders').update({ status: 'completed' as const }).eq('id', orderId);
-      setOrder((prev: any) => ({ ...prev, status: 'completed' }));
+      const { error } = await (supabase as any).rpc('accept_order_delivery', { _order_id: orderId });
+      if (error) throw error;
+      setOrder((prev: any) => ({ ...prev, status: 'completed', payment_status: 'released' }));
       setShowFeedbackModal(true);
       toast({ title: "Delivery Accepted! 🎉", description: "Payment has been released to the freelancer." });
-    } catch (error) {
-      toast({ title: "Error", description: "Failed to accept delivery.", variant: "destructive" });
+    } catch (error: any) {
+      toast({ title: "Error", description: error?.message || "Failed to accept delivery.", variant: "destructive" });
     } finally {
       setIsProcessing(false);
     }

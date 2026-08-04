@@ -9,6 +9,7 @@ import { Upload, FileText, Image, Video, X, Plus, Link2, CheckCircle, Clock, Ale
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft } from 'lucide-react';
+import { safeExternalUrl } from '@/lib/safeUrl';
 
 const SubmitRequirements = () => {
   const { orderId } = useParams();
@@ -73,7 +74,17 @@ const SubmitRequirements = () => {
 
     setIsSubmitting(true);
     try {
-      const validLinks = externalLinks.filter(l => l.trim().length > 0);
+      const rawLinks = externalLinks.filter(l => l.trim().length > 0);
+      const validLinks: string[] = [];
+      for (const l of rawLinks) {
+        const safe = safeExternalUrl(l);
+        if (!safe) {
+          toast({ title: "Invalid link", description: `"${l}" is not a valid http(s) link. Please fix or remove it.`, variant: "destructive" });
+          setIsSubmitting(false);
+          return;
+        }
+        validLinks.push(safe);
+      }
 
       // Create order requirements record
       const { data: reqData, error: reqError } = await supabase
