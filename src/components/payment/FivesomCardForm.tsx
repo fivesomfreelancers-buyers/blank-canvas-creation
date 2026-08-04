@@ -117,11 +117,12 @@ const CardFields: React.FC<{
       </div>
       <div className="space-y-2">
         <Label>Card Number, Expiry Date &amp; CVC</Label>
-        <div className="rounded-md border border-input bg-background px-3 py-3">
+        <div className="rounded-md border border-input bg-background px-3 py-3 min-h-[46px]">
           <CardElement
             onReady={(element) => {
               cardElementRef.current = element;
               setCardElementReady(true);
+              element.focus();
             }}
             onChange={(event) => {
               setCardComplete(event.complete);
@@ -129,20 +130,21 @@ const CardFields: React.FC<{
             }}
             options={{
               hidePostalCode: true,
-
               style: {
                 base: {
                   color: cssVar('--foreground', '#0f172a'),
                   iconColor: cssVar('--muted-foreground', '#64748b'),
                   fontFamily: 'inherit',
                   fontSize: '16px',
-                  '::placeholder': { color: cssVar('--muted-foreground', '#64748b') },
+                  lineHeight: '24px',
+                  '::placeholder': { color: cssVar('--muted-foreground', '#94a3b8') },
                 },
                 invalid: { color: cssVar('--destructive', '#ef4444') },
               },
             }}
           />
         </div>
+
         {cardError && <p className="text-sm text-destructive" role="alert">{cardError}</p>}
       </div>
       <Button
