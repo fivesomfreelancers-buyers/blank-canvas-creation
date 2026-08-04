@@ -203,10 +203,11 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
     };
   }, [gigId, packageType]);
 
-  const options = useMemo(() => {
-    if (!clientSecret) return null;
-    return {
-      clientSecret,
+  // NOTE: no `clientSecret` here on purpose. With CardElement the secret is passed
+  // straight to confirmCardPayment; passing it to Elements makes the whole form
+  // fail to mount whenever the intent cannot be read by the publishable key.
+  const options = useMemo(
+    () => ({
       appearance: {
         theme: (theme === 'dark' ? 'night' : 'stripe') as 'night' | 'stripe',
         variables: {
@@ -219,15 +220,16 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
           spacingUnit: '4px',
         },
       },
-    };
-  }, [clientSecret, theme]);
-
+    }),
+    [theme],
+  );
 
   if (error) {
     return <p className="text-sm text-destructive">{error}</p>;
   }
 
-  if (!clientSecret || !stripePromise || !options) {
+  if (!clientSecret || !stripePromise) {
+
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground py-6">
         <Loader2 className="w-4 h-4 animate-spin" /> Diyaarinta foomka lacag bixinta…
