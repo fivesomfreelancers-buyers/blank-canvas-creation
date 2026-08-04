@@ -473,7 +473,7 @@ const PaymentPage = () => {
             )}
 
             {/* Submit Button */}
-            <Button onClick={handlePayment} className="w-full" size="lg" disabled={isProcessing || (paymentType === 'card' ? !isCardFormValid : !isMobileFormValid)}>
+            <Button onClick={handlePayment} className="w-full" size="lg" disabled={isProcessing || (paymentType === 'mobile' && !isMobileFormValid)}>
               {isProcessing ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
