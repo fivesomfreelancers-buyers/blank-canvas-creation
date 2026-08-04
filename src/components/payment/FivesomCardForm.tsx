@@ -40,10 +40,6 @@ const CardFields: React.FC<{
   const [cardComplete, setCardComplete] = useState(false);
   const [cardError, setCardError] = useState<string | null>(null);
   const [cardholderName, setCardholderName] = useState('');
-  const [addressLine, setAddressLine] = useState('');
-  const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
-  const [postalCode, setPostalCode] = useState('');
   const submitLock = useRef(false);
   const cardElementRef = useRef<StripeCardElement | null>(null);
 
@@ -82,12 +78,6 @@ const CardFields: React.FC<{
           card: mountedCard,
           billing_details: {
             name: cardholderName.trim(),
-            address: {
-              line1: addressLine.trim() || undefined,
-              city: city.trim() || undefined,
-              country: country.trim().toUpperCase() || undefined,
-              postal_code: postalCode.trim() || undefined,
-            },
           },
         },
       });
