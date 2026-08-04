@@ -13,6 +13,9 @@ import Vip from "./pages/Vip";
 import VipCheckout from "./pages/VipCheckout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+
 import BuyerRegister from "./pages/BuyerRegister";
 import FreelancerRegister from "./pages/FreelancerRegister";
 import AuthCallback from "./pages/AuthCallback";
