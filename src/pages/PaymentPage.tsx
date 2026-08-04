@@ -482,7 +482,7 @@ const PaymentPage = () => {
               ) : (
                 <>
                   <Wallet className="w-4 h-4 mr-2" />
-                  {paymentType === 'card' ? `Pay $${totalAmount}` : `Submit Payment Proof ($${totalAmount})`}
+                  {paymentType === 'card' ? `Pay $${totalAmount} with Stripe` : `Submit Payment Proof ($${totalAmount})`}
                 </>
               )}
             </Button>
