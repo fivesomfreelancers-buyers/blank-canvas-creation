@@ -9,6 +9,7 @@ import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import { Textarea } from '@/components/ui/textarea';
 import { Star, MapPin, Calendar, MessageSquare, CheckCircle, Globe, GraduationCap, Briefcase, Wrench } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import SEO from '@/components/SEO';
 import FreelancerFAQDisplay from '@/components/faq/FreelancerFAQDisplay';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import VipBadge from '@/components/VipBadge';
