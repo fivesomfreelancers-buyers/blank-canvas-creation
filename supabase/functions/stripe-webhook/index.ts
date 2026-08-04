@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { ensurePaidOrder } from "../_shared/order-from-payment.ts";
 
 // Stripe webhooks are called by Stripe (no user JWT) — verify_jwt is false for this function.
 serve(async (req) => {
