@@ -134,7 +134,16 @@ const BuyerDashboard = () => {
       .select('full_name, username, email, profile_image_url, location, bio')
       .eq('id', user.id)
       .maybeSingle();
-    if (data) setProfile(data);
+
+    const meta: any = user.user_metadata || {};
+    const metaAvatar = meta.avatar_url || meta.picture || null;
+    const metaName = meta.full_name || meta.name || null;
+    setProfile({
+      ...(data as any),
+      full_name: (data as any)?.full_name?.trim() || metaName || null,
+      email: (data as any)?.email || user.email || null,
+      profile_image_url: (data as any)?.profile_image_url || metaAvatar,
+    } as any);
 
     // Update last_seen
     await supabase.from('profiles').update({ last_seen: new Date().toISOString() }).eq('id', user.id);
