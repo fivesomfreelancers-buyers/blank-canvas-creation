@@ -151,9 +151,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUserRole('user');
     } catch (error) {
       console.error('Error fetching user role:', error);
-      setUserRole(null);
+      // A signed-in user must never end up "unrecognized" because of a
+      // transient network/RLS hiccup — fall back to normal-user access.
+      setUserRole('user');
     }
   };
+
 
   const refreshRole = async () => {
     const { data } = await supabase.auth.getUser();
