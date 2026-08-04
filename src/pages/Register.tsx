@@ -104,7 +104,7 @@ const Register = () => {
           <div className="bg-card/80 backdrop-blur-lg rounded-2xl p-6 sm:p-8 shadow-xl border border-border">
             <div className="space-y-6">
               <div className="text-center">
-                <h2 className="text-xl font-semibold text-foreground mb-2">Create Your Account</h2>
+                <h1 className="text-xl font-semibold text-foreground mb-2">Create Your Account</h1>
                 <p className="text-sm text-muted-foreground">Sign up with email or Google to continue</p>
               </div>
 
