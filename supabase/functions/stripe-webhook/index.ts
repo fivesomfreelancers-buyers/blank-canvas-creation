@@ -55,6 +55,24 @@ serve(async (req) => {
           .neq("payment_status", "paid");
         break;
       }
+      case "payment_intent.succeeded": {
+        const intent = event.data.object as Stripe.PaymentIntent;
+        await admin
+          .from("orders")
+          .update({ payment_status: "paid", stripe_payment_intent_id: intent.id })
+          .eq("stripe_payment_intent_id", intent.id);
+        break;
+      }
+      case "payment_intent.payment_failed": {
+        const intent = event.data.object as Stripe.PaymentIntent;
+        await admin
+          .from("orders")
+          .update({ payment_status: "failed" })
+          .eq("stripe_payment_intent_id", intent.id)
+          .neq("payment_status", "paid");
+        break;
+      }
+
       case "account.updated": {
         const account = event.data.object as Stripe.Account;
         await admin
