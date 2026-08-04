@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import BlueTickApply from '@/components/freelancer/BlueTickApply';
+import { FREELANCER_PUBLIC_COLUMNS } from '@/lib/freelancerEarnings';
 import {
   CATEGORIES, SOFTWARE_CATALOG, EXPERIENCE_OPTIONS, EDUCATION_OPTIONS, softwareLogo, SoftwareDef,
 } from '@/lib/verificationCatalog';
@@ -73,7 +74,7 @@ const FreelancerVerify: React.FC = () => {
 
       const [{ data: profile }, { data: freelancer }, { data: vDoc }] = await Promise.all([
         supabase.from('profiles').select('*').eq('id', user.id).maybeSingle(),
-        supabase.from('freelancers').select('*').eq('user_id', user.id).maybeSingle(),
+        supabase.from('freelancers').select(FREELANCER_PUBLIC_COLUMNS).eq('user_id', user.id).maybeSingle(),
         supabase.from('verification_documents').select('status').eq('user_id', user.id)
           .order('submitted_at', { ascending: false }).limit(1).maybeSingle(),
       ]);

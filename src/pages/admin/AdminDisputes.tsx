@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Scale, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import DisputeChat from '@/components/dispute/DisputeChat';
+import { fetchTotalEarnings } from '@/lib/freelancerEarnings';
 
 interface Dispute {
   id: string;
@@ -91,7 +92,8 @@ const AdminDisputes = () => {
       toast.success('Dispute resolved — Buyer refunded');
     } else {
       await supabase.from('orders').update({ status: 'completed', payment_status: 'released' }).eq('id', dispute.order_id);
-      const { data: f } = await supabase.from('freelancers').select('user_id, completed_orders, total_earnings, ranking_score').eq('id', dispute.freelancer_id).maybeSingle();
+      const { data: f } = await supabase.from('freelancers').select('user_id, completed_orders, ranking_score').eq('id', dispute.freelancer_id).maybeSingle();
+      const priorEarnings = await fetchTotalEarnings(dispute.freelancer_id);
       if (f?.user_id) {
         const { data: wallet } = await supabase.from('wallets').select('id, balance').eq('user_id', f.user_id).maybeSingle();
         if (wallet) {
@@ -99,7 +101,7 @@ const AdminDisputes = () => {
         }
         await supabase.from('freelancers').update({
           completed_orders: (f.completed_orders || 0) + 1,
-          total_earnings: Number(f.total_earnings || 0) + Number(dispute.amount || 0),
+          total_earnings: priorEarnings + Number(dispute.amount || 0),
           ranking_score: Number(f.ranking_score || 0) + 10,
         }).eq('id', dispute.freelancer_id);
       }

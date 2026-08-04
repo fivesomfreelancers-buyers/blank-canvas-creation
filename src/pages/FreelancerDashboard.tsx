@@ -148,7 +148,7 @@ const FreelancerDashboard = () => {
 
       const { data: freelancer } = await (supabase as any)
         .from('freelancers')
-        .select('is_verified, verified_at, total_earnings, completed_orders, id, verification_removed_at, verification_removal_reason')
+        .select('is_verified, verified_at, completed_orders, id, verification_removed_at, verification_removal_reason')
         .eq('user_id', user.id)
         .single();
       

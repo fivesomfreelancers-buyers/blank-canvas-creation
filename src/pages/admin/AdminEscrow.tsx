@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { DollarSign, ArrowUpRight, ArrowDownRight, Search, Filter } from 'lucide-react';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { fetchTotalEarnings } from '@/lib/freelancerEarnings';
 
 interface EscrowOrder {
   id: string;
@@ -76,7 +77,8 @@ const AdminEscrow = () => {
       .eq('id', order.id);
     if (orderErr) { toast.error('Failed to release'); return; }
 
-    const { data: freelancer } = await supabase.from('freelancers').select('user_id, completed_orders, total_earnings, ranking_score').eq('id', order.freelancer_id).maybeSingle();
+    const { data: freelancer } = await supabase.from('freelancers').select('user_id, completed_orders, ranking_score').eq('id', order.freelancer_id).maybeSingle();
+    const priorEarnings = await fetchTotalEarnings(order.freelancer_id);
     if (freelancer?.user_id) {
       const { data: wallet } = await supabase.from('wallets').select('id, balance').eq('user_id', freelancer.user_id).maybeSingle();
       if (wallet) {
@@ -84,7 +86,7 @@ const AdminEscrow = () => {
       }
       await supabase.from('freelancers').update({
         completed_orders: (freelancer.completed_orders || 0) + 1,
-        total_earnings: Number(freelancer.total_earnings || 0) + Number(order.amount),
+        total_earnings: priorEarnings + Number(order.amount),
         ranking_score: Number(freelancer.ranking_score || 0) + 10,
       }).eq('id', order.freelancer_id);
     }

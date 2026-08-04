@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { Trophy, Star, Medal, Crown, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
+import { fetchFreelancerEarnings } from '@/lib/freelancerEarnings';
 
 interface RankedFreelancer {
   id: string;
@@ -29,16 +30,19 @@ const AdminRanking = () => {
   const fetchRanking = async () => {
     const { data, error } = await supabase
       .from('freelancers')
-      .select('id, user_id, rating, completed_orders, ranking_score, is_featured, is_verified, total_earnings')
+      .select('id, user_id, rating, completed_orders, ranking_score, is_featured, is_verified')
       .order('ranking_score', { ascending: false })
       .limit(50);
 
     if (error) { console.error(error); setLoading(false); return; }
 
+    // Earnings are not readable from the table directly (financial column); admins read them via RPC.
+    const earnings = await fetchFreelancerEarnings((data || []).map((f: any) => f.id));
+
     const withNames = await Promise.all(
       (data || []).map(async (f) => {
         const p = await fetchAdminProfile(f.user_id);
-        return { ...f, name: displayName(p), email: p?.email || '' };
+        return { ...f, total_earnings: earnings.get(f.id) ?? 0, name: displayName(p), email: p?.email || '' };
       })
     );
 

@@ -11,6 +11,7 @@ import FreelancerFAQManager from '@/components/faq/FreelancerFAQManager';
 import { supabase } from '@/integrations/supabase/client';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import PortfolioManager from '@/components/profile/PortfolioManager';
+import { FREELANCER_PUBLIC_COLUMNS } from '@/lib/freelancerEarnings';
 
 const FreelancerProfile = () => {
   const [profile, setProfile] = useState<any>(null);
@@ -39,7 +40,7 @@ const FreelancerProfile = () => {
 
       const { data: freelancer } = await supabase
         .from('freelancers')
-        .select('*')
+        .select(FREELANCER_PUBLIC_COLUMNS)
         .eq('user_id', user.id)
         .maybeSingle();
 

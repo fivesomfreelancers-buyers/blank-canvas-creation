@@ -10,6 +10,7 @@ import { CheckCircle, Star, XCircle, Search, Shield, Ban, Trophy, Users } from '
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
+import { fetchFreelancerEarnings } from '@/lib/freelancerEarnings';
 
 interface FreelancerUser {
   id: string;
@@ -37,14 +38,17 @@ const AdminUsers = () => {
   const fetchFreelancers = async () => {
     const { data, error } = await (supabase as any)
       .from('freelancers')
-      .select('id, user_id, rating, completed_orders, is_verified, is_featured, ranking_score, bio, total_earnings');
+      .select('id, user_id, rating, completed_orders, is_verified, is_featured, ranking_score, bio');
 
     if (error) { console.error(error); return; }
+
+    // Earnings are not readable from the table directly (financial column); admins read them via RPC.
+    const earnings = await fetchFreelancerEarnings((data || []).map((f: any) => f.id));
 
     const withProfiles = await Promise.all(
       (data || []).map(async (f) => {
         const profile = await fetchAdminProfile(f.user_id);
-        return { ...f, profile: (profile as any) || { full_name: 'Fivesom User', email: '', profile_image_url: null, location: null, created_at: null } };
+        return { ...f, total_earnings: earnings.get(f.id) ?? 0, profile: (profile as any) || { full_name: 'Fivesom User', email: '', profile_image_url: null, location: null, created_at: null } };
       })
     );
 

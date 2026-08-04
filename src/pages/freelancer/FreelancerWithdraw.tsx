@@ -141,7 +141,7 @@ const FreelancerWithdraw = () => {
       if (!user) return;
       const { data: f } = await supabase
         .from('freelancers')
-        .select('id, total_earnings')
+        .select('id')
         .eq('user_id', user.id)
         .maybeSingle();
       if (f) {
