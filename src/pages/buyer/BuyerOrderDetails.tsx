@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import FeedbackModal from '@/components/feedback/FeedbackModal';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import DisputeChat from '@/components/dispute/DisputeChat';
+import { openSafeUrl } from '@/lib/safeUrl';
 
 const BuyerOrderDetails = () => {
   const { orderId } = useParams();
@@ -292,7 +293,7 @@ const BuyerOrderDetails = () => {
                       {delivery.delivery_link && (
                         <div>
                           {order.status === 'completed' ? (
-                            <Button size="sm" variant="outline" onClick={() => window.open(delivery.delivery_link, '_blank')}>
+                            <Button size="sm" variant="outline" onClick={() => openSafeUrl(delivery.delivery_link)}>
                               <ExternalLink className="w-4 h-4 mr-2" />
                               Open Link
                             </Button>

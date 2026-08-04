@@ -8,6 +8,7 @@ import { Clock, MessageSquare, Package, Download, FileText, Image, Video, Link2,
 import { supabase } from '@/integrations/supabase/client';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import DisputeChat from '@/components/dispute/DisputeChat';
+import { safeExternalUrl } from '@/lib/safeUrl';
 
 const FreelancerOrderDetails = () => {
   const { orderId } = useParams();
@@ -232,10 +233,10 @@ const FreelancerOrderDetails = () => {
                           External Links
                         </h4>
                         <div className="flex flex-wrap gap-2">
-                          {requirements.external_links.map((link: string, idx: number) => (
+                          {requirements.external_links.map((link: string, idx: number) => safeExternalUrl(link) && (
                             <a
                               key={idx}
-                              href={link}
+                              href={safeExternalUrl(link)!}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-xs font-medium"
