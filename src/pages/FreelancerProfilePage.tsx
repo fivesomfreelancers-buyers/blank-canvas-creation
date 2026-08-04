@@ -191,8 +191,46 @@ const FreelancerProfilePage = () => {
   const vipTier = resolveVipTier(profileData.vip_tier, profileData.vip_expires_at);
   const vipTheme = getVipTheme(vipTier, mode);
 
+  const seoTitle = `${profileData.name}${profileData.professional_title ? ` — ${profileData.professional_title}` : ''} | FIVESOM`.slice(0, 60);
+  const seoDescription = (
+    profileData.bio?.trim() ||
+    `${profileData.name} is a freelancer on FIVESOM${profileData.professional_title ? ` offering ${profileData.professional_title} services` : ''}. View gigs, reviews and portfolio.`
+  ).toString().slice(0, 160);
+
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={seoTitle}
+        description={seoDescription}
+        canonical={`/profile/${freelancerId}`}
+        type="profile"
+        image={profileData.imageUrl || undefined}
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'ProfilePage',
+          mainEntity: {
+            '@type': 'Person',
+            name: profileData.name,
+            ...(profileData.professional_title ? { jobTitle: profileData.professional_title } : {}),
+            ...(profileData.imageUrl ? { image: profileData.imageUrl } : {}),
+            ...(profileData.bio ? { description: profileData.bio } : {}),
+            ...(profileData.location && profileData.location !== 'Not specified'
+              ? { address: { '@type': 'PostalAddress', addressLocality: profileData.location } }
+              : {}),
+            ...(profileData.knowsLanguages ? {} : {}),
+            url: `/profile/${freelancerId}`,
+            ...(profileData.totalReviews > 0
+              ? {
+                  aggregateRating: {
+                    '@type': 'AggregateRating',
+                    ratingValue: Number(profileData.avgRating || 0).toFixed(1),
+                    reviewCount: profileData.totalReviews,
+                  },
+                }
+              : {}),
+          },
+        }}
+      />
       <Navbar />
       <div className="max-w-6xl mx-auto px-4 py-8 pt-24">
         {/* Profile Header */}
