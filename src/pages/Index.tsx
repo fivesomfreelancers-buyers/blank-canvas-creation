@@ -14,8 +14,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
       <SEO
-        title="FIVESOM — Somali Freelance Marketplace for Buyers & Sellers"
-        description="Hire verified Somali freelancers or sell your skills on FIVESOM. Secure escrow, USSD payments, and trusted talent across design, development, writing and more."
+        title="FIVESOM — Somali Freelance Marketplace"
+        description="Hire verified Somali freelancers or sell your skills on FIVESOM. Secure escrow, USSD payments and trusted talent for design, dev and writing."
         canonical="/"
       />
       <Navbar />

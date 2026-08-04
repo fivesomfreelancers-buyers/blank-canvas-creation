@@ -211,6 +211,15 @@ const GigDetails = () => {
               priceCurrency: 'USD',
               availability: 'https://schema.org/InStock',
             },
+            ...(gig.freelancerName ? {
+              brand: { '@type': 'Brand', name: gig.freelancerName },
+              provider: {
+                '@type': 'Person',
+                name: gig.freelancerName,
+                ...(gig.freelancerImageUrl ? { image: gig.freelancerImageUrl } : {}),
+                ...(gig.freelancerId ? { url: `/profile/${gig.freelancerId}` } : {}),
+              },
+            } : {}),
             ...(gig.rating ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: gig.rating, reviewCount: gig.reviewCount || 1 } } : {}),
           },
           ...(faqs && faqs.length > 0 ? [{

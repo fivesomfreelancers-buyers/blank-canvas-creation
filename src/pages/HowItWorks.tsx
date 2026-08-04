@@ -58,9 +58,20 @@ const HowItWorks = () => {
         }}
       />
       <Navbar />
-      
+
+      <header className="pt-24 pb-4 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+            How FIVESOM Works
+          </h1>
+          <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+            Ordering, secure escrow payments, deliveries and dispute resolution — explained step by step.
+          </p>
+        </div>
+      </header>
+
       {/* Use the updated HowItWorksSection component */}
-      <div className="pt-20">
+      <div>
         <HowItWorksSection />
       </div>
 

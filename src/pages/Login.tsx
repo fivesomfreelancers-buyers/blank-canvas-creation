@@ -138,7 +138,7 @@ const Login = () => {
           <div className="bg-card/80 backdrop-blur-lg rounded-2xl p-6 sm:p-8 shadow-xl border border-border">
             <div className="space-y-6">
               <div className="text-center">
-                <h2 className="text-xl font-semibold text-foreground mb-2">Sign In</h2>
+                <h1 className="text-xl font-semibold text-foreground mb-2">Sign In</h1>
                 <p className="text-sm text-muted-foreground">Use Google or email and password to continue</p>
               </div>
 
