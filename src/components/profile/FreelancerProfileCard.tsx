@@ -10,6 +10,7 @@ import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
 import { supabase } from '@/integrations/supabase/client';
 import { getVipTheme, resolveVipTier } from '@/lib/vipTheme';
 import { useTheme } from '@/components/ThemeProvider';
+import { FREELANCER_PUBLIC_COLUMNS } from '@/lib/freelancerEarnings';
 
 interface Props {
   /** Pass either freelancerId (freelancers.id) or userId — the component resolves both. */
@@ -32,10 +33,10 @@ const FreelancerProfileCard: React.FC<Props> = ({ freelancerId, userId, hidePort
       setLoading(true);
       let freelancer: any = null;
       if (freelancerId) {
-        const { data: f } = await supabase.from('freelancers').select('*').eq('id', freelancerId).maybeSingle();
+        const { data: f } = await supabase.from('freelancers').select(FREELANCER_PUBLIC_COLUMNS).eq('id', freelancerId).maybeSingle();
         freelancer = f;
       } else if (userId) {
-        const { data: f } = await supabase.from('freelancers').select('*').eq('user_id', userId).maybeSingle();
+        const { data: f } = await supabase.from('freelancers').select(FREELANCER_PUBLIC_COLUMNS).eq('user_id', userId).maybeSingle();
         freelancer = f;
       }
       if (!freelancer) { if (!cancelled) { setData(null); setLoading(false); } return; }

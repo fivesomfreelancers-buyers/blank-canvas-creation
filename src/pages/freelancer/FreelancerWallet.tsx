@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, TrendingUp, Clock, ArrowUpRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { fetchTotalEarnings } from '@/lib/freelancerEarnings';
 
 const FreelancerWallet = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const FreelancerWallet = () => {
 
         const { data: freelancer } = await supabase
           .from('freelancers')
-          .select('id, total_earnings')
+          .select('id')
           .eq('user_id', user.id)
           .maybeSingle();
 
@@ -53,7 +54,7 @@ const FreelancerWallet = () => {
         setEarnings({
           available: Math.max(0, Number(wallet?.balance || 0)),
           pending: pendingEarnings,
-          total: Number(freelancer?.total_earnings || 0),
+          total: await fetchTotalEarnings(freelancer?.id),
         });
 
         setTransactions(withdrawals || []);
