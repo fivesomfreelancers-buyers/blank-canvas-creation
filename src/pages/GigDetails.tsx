@@ -211,7 +211,15 @@ const GigDetails = () => {
               priceCurrency: 'USD',
               availability: 'https://schema.org/InStock',
             },
-            ...(gig.rating ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: gig.rating, reviewCount: gig.reviewCount || 1 } } : {}),
+            ...(gig.freelancerName ? {
+              brand: { '@type': 'Brand', name: gig.freelancerName },
+              provider: {
+                '@type': 'Person',
+                name: gig.freelancerName,
+                ...(gig.freelancerImageUrl ? { image: gig.freelancerImageUrl } : {}),
+                ...(gig.freelancerId ? { url: `/freelancer/${gig.freelancerId}` } : {}),
+              },
+            } : {}),
           },
           ...(faqs && faqs.length > 0 ? [{
             '@context': 'https://schema.org',
