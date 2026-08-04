@@ -1693,6 +1693,7 @@ export type Database = {
       }
     }
     Functions: {
+      accept_order_delivery: { Args: { _order_id: string }; Returns: undefined }
       admin_delete_orders: { Args: { _ids: string[] }; Returns: number }
       admin_get_profiles: {
         Args: { _ids: string[] }
@@ -1740,6 +1741,7 @@ export type Database = {
         Args: { _attachment_url: string; _audience: string; _body: string }
         Returns: number
       }
+      content_is_disallowed: { Args: { _text: string }; Returns: boolean }
       expire_vip_memberships: { Args: never; Returns: number }
       freelancer_privileged_snapshot: { Args: { _id: string }; Returns: Json }
       get_freelancer_earnings: {

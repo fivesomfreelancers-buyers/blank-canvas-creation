@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CheckCircle2, ArrowLeft, FileText, Link2, Calendar, Loader2, Package } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { formatDistanceToNow, format } from 'date-fns';
+import { safeExternalUrl } from '@/lib/safeUrl';
 
 const DeliverySuccess = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -141,11 +142,11 @@ const DeliverySuccess = () => {
             )}
 
             {/* Link */}
-            {delivery?.delivery_link && (
+            {safeExternalUrl(delivery?.delivery_link) && (
               <div>
                 <p className="text-xs text-muted-foreground mb-2">Delivery Link</p>
                 <a
-                  href={delivery.delivery_link}
+                  href={safeExternalUrl(delivery.delivery_link)!}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 bg-muted rounded-lg hover:bg-muted/70 transition-colors"

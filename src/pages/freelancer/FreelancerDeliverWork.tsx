@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Upload, FileText, Image, Video, X, CheckCircle, Clock, Link2, Plus, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { safeExternalUrl } from '@/lib/safeUrl';
 
 
 const FreelancerDeliverWork = () => {
@@ -103,6 +104,11 @@ const FreelancerDeliverWork = () => {
       toast({ title: "Error", description: "Please upload a file or paste a delivery link.", variant: "destructive" });
       return;
     }
+    const safeDeliveryLink = deliveryLink.trim() ? safeExternalUrl(deliveryLink) : null;
+    if (deliveryLink.trim() && !safeDeliveryLink) {
+      toast({ title: "Invalid link", description: "Delivery link must be a valid http(s) URL.", variant: "destructive" });
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -131,7 +137,7 @@ const FreelancerDeliverWork = () => {
           order_id: selectedOrder,
           delivery_message: deliveryMessage.trim(),
           delivery_file_url: deliveryFileUrl,
-          delivery_link: deliveryLink.trim() || null,
+          delivery_link: safeDeliveryLink,
           status: 'submitted' as const,
         } as any);
 

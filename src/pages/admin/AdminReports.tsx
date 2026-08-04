@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchAdminProfile, fetchAdminProfiles, fetchAllAdminProfiles, findAdminProfileByEmail, displayName } from '@/lib/adminUsers';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { safeExternalUrl } from '@/lib/safeUrl';
 
 interface Report {
   id: string;
@@ -186,7 +187,7 @@ const AdminReports: React.FC = () => {
                       <p className="text-xs text-muted-foreground mt-1">{new Date(r.created_at).toLocaleString()}</p>
                     </div>
                     {r.context_url && (
-                      <a href={r.context_url} target="_blank" rel="noreferrer" className="text-xs text-blue-400 hover:underline flex items-center gap-1">
+                      <a href={safeExternalUrl(r.context_url) ?? '#'} target="_blank" rel="noreferrer" className="text-xs text-blue-400 hover:underline flex items-center gap-1">
                         <ExternalLink className="w-3 h-3" /> Context
                       </a>
                     )}

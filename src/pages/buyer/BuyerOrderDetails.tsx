@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import FeedbackModal from '@/components/feedback/FeedbackModal';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import DisputeChat from '@/components/dispute/DisputeChat';
+import { openSafeUrl } from '@/lib/safeUrl';
 
 const BuyerOrderDetails = () => {
   const { orderId } = useParams();
@@ -80,12 +81,13 @@ const BuyerOrderDetails = () => {
     if (!orderId) return;
     setIsProcessing(true);
     try {
-      await supabase.from('orders').update({ status: 'completed' as const }).eq('id', orderId);
-      setOrder((prev: any) => ({ ...prev, status: 'completed' }));
+      const { error } = await (supabase as any).rpc('accept_order_delivery', { _order_id: orderId });
+      if (error) throw error;
+      setOrder((prev: any) => ({ ...prev, status: 'completed', payment_status: 'released' }));
       setShowFeedbackModal(true);
       toast({ title: "Delivery Accepted! 🎉", description: "Payment has been released to the freelancer." });
-    } catch (error) {
-      toast({ title: "Error", description: "Failed to accept delivery.", variant: "destructive" });
+    } catch (error: any) {
+      toast({ title: "Error", description: error?.message || "Failed to accept delivery.", variant: "destructive" });
     } finally {
       setIsProcessing(false);
     }
@@ -292,7 +294,7 @@ const BuyerOrderDetails = () => {
                       {delivery.delivery_link && (
                         <div>
                           {order.status === 'completed' ? (
-                            <Button size="sm" variant="outline" onClick={() => window.open(delivery.delivery_link, '_blank')}>
+                            <Button size="sm" variant="outline" onClick={() => openSafeUrl(delivery.delivery_link)}>
                               <ExternalLink className="w-4 h-4 mr-2" />
                               Open Link
                             </Button>

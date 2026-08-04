@@ -11,6 +11,7 @@ import { Search, Package, Eye, FileText, Link2, RefreshCw, Image as ImageIcon, T
 import { Checkbox } from '@/components/ui/checkbox';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import { toast } from 'sonner';
+import { safeExternalUrl } from '@/lib/safeUrl';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState<any[]>([]);
@@ -238,8 +239,8 @@ const AdminOrders = () => {
                         )}
                         {requirements.external_links?.length > 0 && (
                           <div className="flex flex-wrap gap-2">
-                            {requirements.external_links.map((l: string, i: number) => (
-                              <a key={i} href={l} target="_blank" rel="noreferrer" className="text-xs px-2 py-1 rounded bg-primary text-primary-foreground inline-flex items-center gap-1">
+                            {requirements.external_links.map((l: string, i: number) => safeExternalUrl(l) && (
+                              <a key={i} href={safeExternalUrl(l)!} target="_blank" rel="noreferrer" className="text-xs px-2 py-1 rounded bg-primary text-primary-foreground inline-flex items-center gap-1">
                                 <Link2 className="h-3 w-3" /> Link {i + 1}
                               </a>
                             ))}
@@ -280,8 +281,8 @@ const AdminOrders = () => {
                               <div className="text-sm whitespace-pre-wrap bg-muted/30 rounded p-2">{d.delivery_message}</div>
                             )}
                             {d.delivery_file_url && <AttachmentPreview url={d.delivery_file_url} />}
-                            {d.delivery_link && (
-                              <a href={d.delivery_link} target="_blank" rel="noreferrer"
+                            {safeExternalUrl(d.delivery_link) && (
+                              <a href={safeExternalUrl(d.delivery_link)!} target="_blank" rel="noreferrer"
                                  className="text-xs text-primary inline-flex items-center gap-1 underline">
                                 <Link2 className="h-3 w-3" /> {d.delivery_link}
                               </a>
