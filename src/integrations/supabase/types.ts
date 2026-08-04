@@ -1693,6 +1693,7 @@ export type Database = {
       }
     }
     Functions: {
+      admin_delete_orders: { Args: { _ids: string[] }; Returns: number }
       admin_get_profiles: {
         Args: { _ids: string[] }
         Returns: {
