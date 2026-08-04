@@ -189,6 +189,13 @@ const Login = () => {
                   </div>
                 </div>
 
+                <div className="text-right">
+                  <Link to="/forgot-password" className="text-sm text-primary hover:text-primary/80 font-medium">
+                    Forgot password?
+                  </Link>
+                </div>
+
+
                 <Button type="submit" className="w-full h-12 font-semibold" disabled={emailLoading || googleLoading}>
                   {emailLoading ? (
                     <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
