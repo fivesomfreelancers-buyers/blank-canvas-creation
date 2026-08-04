@@ -321,22 +321,24 @@ const PaymentPage = () => {
               </Button>
             </div>
 
-            {/* Card Payment — Stripe Checkout */}
+            {/* Card Payment — inline Stripe Elements form */}
             {paymentType === 'card' && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2"><CreditCard className="w-5 h-5" />Card Payment</CardTitle>
-                  <p className="text-sm text-muted-foreground">Secure checkout powered by Stripe (Live)</p>
+                  <p className="text-sm text-muted-foreground">Secure card payment powered by Stripe (Live)</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex gap-2">
                     <img src="https://img.icons8.com/color/48/visa.png" alt="Visa" className="h-8" />
                     <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard" className="h-8" />
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    Marka aad gujiso badhanka hoose, waxaa lagu geynayaa bogga sugan ee Stripe Checkout halkaas
-                    oo aad ku gelin karto xogta card-kaaga. Fivesom weligeed ma kaydiso xogta card-kaaga.
-                  </p>
+                  <StripeCardForm
+                    gigId={gig.id}
+                    packageType={selectedPackage.packageType || 'basic'}
+                    totalAmount={totalAmount}
+                    onSuccess={(orderId) => navigate(`/buyer/order/${orderId}/requirements`, { replace: true })}
+                  />
                   <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg text-sm text-green-700 dark:text-green-300">
                     <Shield className="w-4 h-4" />
                     <span>PCI-compliant live payments handled by Stripe</span>
@@ -344,6 +346,7 @@ const PaymentPage = () => {
                 </CardContent>
               </Card>
             )}
+
 
 
             {/* Mobile Money Payment Form */}
