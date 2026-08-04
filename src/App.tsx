@@ -30,6 +30,7 @@ import DeliverySuccess from "./pages/freelancer/DeliverySuccess";
 import FreelancerOrderDetails from "./pages/freelancer/FreelancerOrderDetails";
 import FreelancerWallet from "./pages/freelancer/FreelancerWallet";
 import FreelancerWithdraw from "./pages/freelancer/FreelancerWithdraw";
+import FreelancerPayouts from "./pages/freelancer/FreelancerPayouts";
 import FreelancerHelp from "./pages/freelancer/FreelancerHelp";
 import FreelancerSettings from "./pages/freelancer/FreelancerSettings";
 import FreelancerProfile from "./pages/freelancer/FreelancerProfile";
