@@ -107,12 +107,7 @@ const PaymentPage = () => {
   const [selectedCurrencyIndex, setSelectedCurrencyIndex] = useState<number>(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
-  const [cardDetails, setCardDetails] = useState({
-    cardNumber: '',
-    expiry: '',
-    cvv: '',
-    cardholderName: '',
-  });
+
 
   useEffect(() => {
     if (userRole === 'user') {
