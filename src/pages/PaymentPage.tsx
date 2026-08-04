@@ -14,6 +14,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { NEED_BUYER_MESSAGE } from '@/lib/roleUpgrade';
 import { supabase } from '@/integrations/supabase/client';
+import StripeCardForm from '@/components/payment/StripeCardForm';
+
 
 import zaadLogo from '@/assets/zaad-logo.png';
 import evcLogo from '@/assets/evc-logo.png';
