@@ -220,6 +220,7 @@ const GigDetails = () => {
                 ...(gig.freelancerId ? { url: `/freelancer/${gig.freelancerId}` } : {}),
               },
             } : {}),
+            ...(gig.rating ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: gig.rating, reviewCount: gig.reviewCount || 1 } } : {}),
           },
           ...(faqs && faqs.length > 0 ? [{
             '@context': 'https://schema.org',
