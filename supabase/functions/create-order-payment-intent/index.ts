@@ -80,22 +80,9 @@ serve(async (req) => {
     );
     const payoutMode = useConnect ? "stripe_connect" : "wallet";
 
-    const { data: order, error: orderErr } = await admin
-      .from("orders")
-      .insert({
-        buyer_id: user.id,
-        freelancer_id: gig.freelancer_id,
-        gig_id: gig.id,
-        amount: totalUsd,
-        status: "pending",
-        payment_method: "stripe",
-        payment_status: "pending",
-        package_name: pkg.name,
-        payout_mode: payoutMode,
-      })
-      .select("id")
-      .single();
-    if (orderErr) throw orderErr;
+    // NOTE: no order row is created here. The order is inserted only after Stripe
+    // confirms the payment (see verify-order-payment / stripe-webhook).
+
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
