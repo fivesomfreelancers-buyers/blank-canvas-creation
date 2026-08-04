@@ -211,7 +211,7 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
         <CardFields
           amount={amount}
           intentId={intentId}
-          onDone={(orderId) => navigate(`/buyer/order/${orderId}/requirements`, { replace: true })}
+          onDone={(orderId) => navigate(`/buyer/payment-success?order_id=${encodeURIComponent(orderId)}`, { replace: true })}
         />
       </Elements>
     </div>

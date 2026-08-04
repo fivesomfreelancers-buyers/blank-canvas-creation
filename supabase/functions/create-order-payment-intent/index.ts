@@ -56,7 +56,6 @@ serve(async (req) => {
     if (gigErr) throw gigErr;
     if (!gig) throw new Error("Gig not found");
     if (gig.status !== "active") throw new Error("This gig is not currently available");
-    if (gig.freelancer_id === user.id) throw new Error("You cannot purchase your own gig");
 
     const { data: pkg, error: pkgErr } = await admin
       .from("gig_packages")

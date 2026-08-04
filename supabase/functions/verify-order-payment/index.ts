@@ -70,15 +70,24 @@ serve(async (req) => {
     if (order.buyer_id !== user.id) throw new Error("Not authorized for this order");
 
     if (paid && order.payment_status !== "paid") {
-      const { error: updateErr } = await admin
+      const { data: updatedOrders, error: updateErr } = await admin
         .from("orders")
         .update({
           payment_status: "paid",
           status: "pending",
           stripe_payment_intent_id: resolvedIntentId,
         })
-        .eq("id", order.id);
+        .eq("id", order.id)
+        .neq("payment_status", "paid")
+        .select("id");
       if (updateErr) throw updateErr;
+
+      if (!updatedOrders?.length) {
+        return new Response(JSON.stringify({ paid: true, orderId: order.id }), {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
 
       const { data: freelancer } = await admin
         .from("freelancers")

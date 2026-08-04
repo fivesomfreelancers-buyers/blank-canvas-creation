@@ -32,6 +32,7 @@ const FreelancerOrders = () => {
         .from('orders')
         .select('*, gigs(title)')
         .eq('freelancer_id', freelancer.id)
+        .in('payment_status', ['paid', 'pending_verification'])
         .order('created_at', { ascending: false });
 
       if (error) throw error;
