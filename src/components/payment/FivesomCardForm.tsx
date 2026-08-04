@@ -129,7 +129,7 @@ const CardFields: React.FC<{
             }}
             options={{
               hidePostalCode: true,
-              disableLink: true,
+
               style: {
                 base: {
                   color: cssVar('--foreground', '#0f172a'),
@@ -183,9 +183,15 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
       });
       if (cancelled) return;
       if (err || !data?.clientSecret || !data?.publishableKey || !data?.orderId) {
-        setError('Lacag bixinta lama diyaarin karin. Fadlan isku day mar kale.');
+        const reason = data?.error || err?.message;
+        setError(
+          reason
+            ? `Lacag bixinta lama diyaarin karin: ${reason}`
+            : 'Lacag bixinta lama diyaarin karin. Fadlan isku day mar kale.',
+        );
         return;
       }
+
       setStripePromise(loadStripe(data.publishableKey));
       setClientSecret(data.clientSecret);
     };
@@ -199,7 +205,6 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
     if (!clientSecret) return null;
     return {
       clientSecret,
-      loader: 'always' as const,
       appearance: {
         theme: (theme === 'dark' ? 'night' : 'stripe') as 'night' | 'stripe',
         variables: {
@@ -212,10 +217,9 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
           spacingUnit: '4px',
         },
       },
-      // Card only — Link and external wallets are intentionally not offered.
-      wallets: { applePay: 'never' as const, googlePay: 'never' as const },
     };
   }, [clientSecret, theme]);
+
 
   if (error) {
     return <p className="text-sm text-destructive">{error}</p>;

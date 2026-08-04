@@ -96,15 +96,25 @@ serve(async (req) => {
         .maybeSingle();
 
       if (freelancer?.user_id) {
-        const { error: notificationErr } = await admin.from("notifications").insert({
-          user_id: freelancer.user_id,
-          type: "order",
-          title: "New paid order",
-          message: "You received a new paid order. The funds are secured in Fivesom Escrow.",
-          link: `/freelancer/order/${order.id}`,
-        });
-        if (notificationErr) console.error("Payment notification error:", notificationErr);
+        // Notify the freelancer through their Fivesom Support conversation.
+        const { data: convo } = await admin
+          .from("system_conversations")
+          .select("id")
+          .eq("user_id", freelancer.user_id)
+          .eq("type", "support")
+          .maybeSingle();
+
+        if (convo?.id) {
+          const { error: notificationErr } = await admin.from("system_messages").insert({
+            conversation_id: convo.id,
+            sender_type: "system",
+            body:
+              "🎉 Order cusub oo la bixiyay ayaad heshay!\n\nLacagta waxay ku jirtaa Fivesom Escrow. Fadlan eeg Orders Received si aad shaqada u bilowdo.",
+          });
+          if (notificationErr) console.error("Payment notification error:", notificationErr);
+        }
       }
+
     }
 
     return new Response(JSON.stringify({ paid, orderId: order.id }), {
