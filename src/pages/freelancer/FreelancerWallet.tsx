@@ -162,8 +162,17 @@ const FreelancerWallet = () => {
                 <span>Withdraw</span>
               </Button>
             </div>
+            <div className="mt-4 pt-4 border-t flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <p className="text-sm text-muted-foreground">
+                Rabta lacagta si toos ah? Ku xir akoonkaaga Stripe oo hel payouts automatic ah.
+              </p>
+              <Button variant="outline" onClick={() => navigate('/freelancer/payouts')}>
+                Stripe Payouts
+              </Button>
+            </div>
           </CardContent>
         </Card>
+
 
         {/* Transaction History */}
         <Card>
