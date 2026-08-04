@@ -61,7 +61,7 @@ serve(async (req) => {
           : session.payment_intent?.id ?? null;
     }
 
-    const query = admin.from("orders").select("id, buyer_id, freelancer_id, payment_status");
+    const query = admin.from("orders").select("id, buyer_id, payment_status");
     const { data: order, error: orderErr } = paymentIntentId
       ? await query.eq("stripe_payment_intent_id", paymentIntentId).maybeSingle()
       : await query.eq("stripe_session_id", sessionId).maybeSingle();
@@ -70,51 +70,11 @@ serve(async (req) => {
     if (order.buyer_id !== user.id) throw new Error("Not authorized for this order");
 
     if (paid && order.payment_status !== "paid") {
-      const { data: updatedOrders, error: updateErr } = await admin
+      const { error: updateErr } = await admin
         .from("orders")
-        .update({
-          payment_status: "paid",
-          status: "pending",
-          stripe_payment_intent_id: resolvedIntentId,
-        })
-        .eq("id", order.id)
-        .neq("payment_status", "paid")
-        .select("id");
+        .update({ payment_status: "paid", stripe_payment_intent_id: resolvedIntentId })
+        .eq("id", order.id);
       if (updateErr) throw updateErr;
-
-      if (!updatedOrders?.length) {
-        return new Response(JSON.stringify({ paid: true, orderId: order.id }), {
-          status: 200,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
-      const { data: freelancer } = await admin
-        .from("freelancers")
-        .select("user_id")
-        .eq("id", order.freelancer_id)
-        .maybeSingle();
-
-      if (freelancer?.user_id) {
-        // Notify the freelancer through their Fivesom Support conversation.
-        const { data: convo } = await admin
-          .from("system_conversations")
-          .select("id")
-          .eq("user_id", freelancer.user_id)
-          .eq("type", "support")
-          .maybeSingle();
-
-        if (convo?.id) {
-          const { error: notificationErr } = await admin.from("system_messages").insert({
-            conversation_id: convo.id,
-            sender_type: "system",
-            body:
-              "🎉 Order cusub oo la bixiyay ayaad heshay!\n\nLacagta waxay ku jirtaa Fivesom Escrow. Fadlan eeg Orders Received si aad shaqada u bilowdo.",
-          });
-          if (notificationErr) console.error("Payment notification error:", notificationErr);
-        }
-      }
-
     }
 
     return new Response(JSON.stringify({ paid, orderId: order.id }), {

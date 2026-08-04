@@ -10,14 +10,12 @@ const PaymentSuccess = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const sessionId = params.get('session_id');
-  const confirmedOrderId = params.get('order_id');
-  const [status, setStatus] = useState<'checking' | 'paid' | 'failed'>(confirmedOrderId ? 'paid' : 'checking');
-  const [orderId, setOrderId] = useState<string | null>(confirmedOrderId);
+  const [status, setStatus] = useState<'checking' | 'paid' | 'failed'>('checking');
+  const [orderId, setOrderId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     const verify = async () => {
-      if (confirmedOrderId) return;
       if (!sessionId) {
         setStatus('failed');
         return;
@@ -37,7 +35,7 @@ const PaymentSuccess = () => {
     return () => {
       cancelled = true;
     };
-  }, [sessionId, confirmedOrderId]);
+  }, [sessionId]);
 
   return (
     <div className="min-h-screen bg-background">

@@ -40,22 +40,6 @@ serve(async (req) => {
 
     const publishableKey = Deno.env.get("STRIPE_PUBLISHABLE_KEY") ?? "";
     if (!publishableKey) throw new Error("STRIPE_PUBLISHABLE_KEY is not configured");
-    if (!publishableKey.startsWith("pk_")) {
-      throw new Error("STRIPE_PUBLISHABLE_KEY is invalid (must start with pk_)");
-    }
-    const secretKeyPeek = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
-    const pubLive = publishableKey.startsWith("pk_live_");
-    const secLive = secretKeyPeek.startsWith("sk_live_");
-    if (secretKeyPeek && pubLive !== secLive) {
-      throw new Error(
-        "Stripe key mode mismatch: publishable key is " +
-          (pubLive ? "LIVE" : "TEST") +
-          " but secret key is " +
-          (secLive ? "LIVE" : "TEST") +
-          ". Both must be from the same Stripe mode.",
-      );
-    }
-
 
     const admin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
@@ -71,7 +55,6 @@ serve(async (req) => {
       .maybeSingle();
     if (gigErr) throw gigErr;
     if (!gig) throw new Error("Gig not found");
-    if (gig.status !== "active") throw new Error("This gig is not currently available");
 
     const { data: pkg, error: pkgErr } = await admin
       .from("gig_packages")
@@ -101,9 +84,7 @@ serve(async (req) => {
       .single();
     if (orderErr) throw orderErr;
 
-    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
-    if (!stripeKey) throw new Error("Stripe payments are not configured");
-    const stripe = new Stripe(stripeKey, {
+    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
     });
 
