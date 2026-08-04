@@ -1741,6 +1741,15 @@ export type Database = {
         Returns: number
       }
       expire_vip_memberships: { Args: never; Returns: number }
+      freelancer_privileged_snapshot: { Args: { _id: string }; Returns: Json }
+      get_freelancer_earnings: {
+        Args: { _ids?: string[] }
+        Returns: {
+          id: string
+          total_earnings: number
+          user_id: string
+        }[]
+      }
       get_freelancer_gig_limit: {
         Args: { _freelancer_id: string }
         Returns: number
