@@ -146,7 +146,7 @@ const AdminDashboardInner = () => {
 
   return (
     <SidebarProvider>
-      <div className={`admin-vip min-h-screen flex w-full relative overflow-hidden ${isDark ? 'text-slate-100' : 'text-slate-800'}`}
+      <div className={`admin-vip h-screen flex w-full relative overflow-hidden ${isDark ? 'text-slate-100' : 'text-slate-800'}`}
            style={{ background: shellBg }}>
         {/* Decorative grid + orbs */}
         <div aria-hidden className={`pointer-events-none absolute inset-0 ${isDark ? 'opacity-[0.06]' : 'opacity-[0.04]'}`}
@@ -229,41 +229,40 @@ const AdminDashboardInner = () => {
           </SidebarContent>
         </Sidebar>
 
-        <SidebarInset className="bg-transparent">
-          {activeTab !== 'fivesom_support' && (
-            <header className="h-16 flex items-center justify-between px-6 border-b sticky top-0 z-30 shadow-sm"
-                    style={{ background: headerBg, borderColor: headerBorder }}>
-              <div className="flex items-center gap-3">
-                <SidebarTrigger className={triggerText} />
-                <div>
-                  <h1 className="text-lg font-bold capitalize bg-clip-text text-transparent"
-                      style={{ backgroundImage: titleGradient }}>{activeTab}</h1>
-                  <p className={`text-[11px] ${mutedText}`}>Real-time platform monitoring</p>
-                </div>
+        <SidebarInset className="bg-transparent h-screen flex flex-col overflow-hidden">
+          {/* Fixed header — never scrolls, on every admin page */}
+          <header className="h-16 shrink-0 flex items-center justify-between px-6 border-b z-30 shadow-sm"
+                  style={{ background: headerBg, borderColor: headerBorder }}>
+            <div className="flex items-center gap-3">
+              <SidebarTrigger className={triggerText} />
+              <div>
+                <h1 className="text-lg font-bold capitalize bg-clip-text text-transparent"
+                    style={{ backgroundImage: titleGradient }}>{activeTab.replace(/_/g, ' ')}</h1>
+                <p className={`text-[11px] ${mutedText}`}>Real-time platform monitoring</p>
               </div>
-              <div className="flex items-center gap-3">
-                <Badge variant="outline"
-                       className={`border-0 px-2.5 py-1 text-[11px] ${isDark ? 'text-emerald-300' : 'text-emerald-700'}`}
-                       style={{ background: isDark ? 'rgba(16,185,129,0.12)' : 'rgba(16,185,129,0.10)', boxShadow: 'inset 0 0 0 1px rgba(16,185,129,0.35)' }}>
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 mr-1.5 inline-block animate-pulse" style={{ boxShadow: '0 0 8px #10b981' }} />
-                  Live
-                </Badge>
-                <div className="h-9 w-9 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg"
-                     style={{ background: 'linear-gradient(135deg,#007BFF,#00CCFF)', boxShadow: '0 0 14px rgba(0,163,255,0.5)' }}>
-                  A
-                </div>
-              </div>
-            </header>
-          )}
-          {activeTab === 'fivesom_support' && (
-            <div className="sticky top-2 left-2 z-30 w-fit">
-              <SidebarTrigger className={`${triggerText} ml-2 mt-2`} />
             </div>
-          )}
-          <main className={`flex-1 ${activeTab === 'fivesom_support' ? 'p-3 pt-0' : 'p-6'} overflow-auto relative z-[1]`}>
+            <div className="flex items-center gap-3">
+              <Badge variant="outline"
+                     className={`border-0 px-2.5 py-1 text-[11px] ${isDark ? 'text-emerald-300' : 'text-emerald-700'}`}
+                     style={{ background: isDark ? 'rgba(16,185,129,0.12)' : 'rgba(16,185,129,0.10)', boxShadow: 'inset 0 0 0 1px rgba(16,185,129,0.35)' }}>
+                <span className="h-2 w-2 rounded-full bg-emerald-400 mr-1.5 inline-block animate-pulse" style={{ boxShadow: '0 0 8px #10b981' }} />
+                Live
+              </Badge>
+              <div className="h-9 w-9 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg"
+                   style={{ background: 'linear-gradient(135deg,#007BFF,#00CCFF)', boxShadow: '0 0 14px rgba(0,163,255,0.5)' }}>
+                A
+              </div>
+            </div>
+          </header>
+          <main className={`flex-1 min-h-0 relative z-[1] ${
+            activeTab === 'fivesom_support'
+              ? 'p-3 overflow-hidden'
+              : 'p-6 overflow-y-auto'
+          }`}>
             {renderContent()}
           </main>
         </SidebarInset>
+
       </div>
     </SidebarProvider>
   );

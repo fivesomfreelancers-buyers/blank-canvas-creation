@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { ensurePaidOrder } from "../_shared/order-from-payment.ts";
 
 // Stripe webhooks are called by Stripe (no user JWT) — verify_jwt is false for this function.
 serve(async (req) => {
@@ -38,40 +39,36 @@ serve(async (req) => {
         if (session.payment_status === "paid") {
           const paymentIntentId =
             typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id ?? null;
-          await admin
-            .from("orders")
-            .update({ payment_status: "paid", stripe_payment_intent_id: paymentIntentId })
-            .eq("stripe_session_id", session.id);
+          // Orders exist only once the payment succeeded — create it here if needed.
+          await ensurePaidOrder({
+            admin,
+            meta: (session.metadata ?? {}) as Record<string, string>,
+            paymentIntentId,
+            sessionId: session.id,
+          });
         }
         break;
       }
       case "checkout.session.expired":
       case "checkout.session.async_payment_failed": {
-        const session = event.data.object as Stripe.Checkout.Session;
-        await admin
-          .from("orders")
-          .update({ payment_status: "failed" })
-          .eq("stripe_session_id", session.id)
-          .neq("payment_status", "paid");
+        // Nothing to do: no order is created for unpaid checkouts.
         break;
       }
       case "payment_intent.succeeded": {
         const intent = event.data.object as Stripe.PaymentIntent;
-        await admin
-          .from("orders")
-          .update({ payment_status: "paid", stripe_payment_intent_id: intent.id })
-          .eq("stripe_payment_intent_id", intent.id);
+        await ensurePaidOrder({
+          admin,
+          meta: (intent.metadata ?? {}) as Record<string, string>,
+          paymentIntentId: intent.id,
+          sessionId: null,
+        });
         break;
       }
       case "payment_intent.payment_failed": {
-        const intent = event.data.object as Stripe.PaymentIntent;
-        await admin
-          .from("orders")
-          .update({ payment_status: "failed" })
-          .eq("stripe_payment_intent_id", intent.id)
-          .neq("payment_status", "paid");
+        // Nothing to do: no order is created for failed payments.
         break;
       }
+
 
       case "account.updated": {
         const account = event.data.object as Stripe.Account;

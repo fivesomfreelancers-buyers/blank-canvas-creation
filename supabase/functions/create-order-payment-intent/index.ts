@@ -80,22 +80,9 @@ serve(async (req) => {
     );
     const payoutMode = useConnect ? "stripe_connect" : "wallet";
 
-    const { data: order, error: orderErr } = await admin
-      .from("orders")
-      .insert({
-        buyer_id: user.id,
-        freelancer_id: gig.freelancer_id,
-        gig_id: gig.id,
-        amount: totalUsd,
-        status: "pending",
-        payment_method: "stripe",
-        payment_status: "pending",
-        package_name: pkg.name,
-        payout_mode: payoutMode,
-      })
-      .select("id")
-      .single();
-    if (orderErr) throw orderErr;
+    // NOTE: no order row is created here. The order is inserted only after Stripe
+    // confirms the payment (see verify-order-payment / stripe-webhook).
+
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
@@ -122,9 +109,11 @@ serve(async (req) => {
       description: `${gig.title} — ${pkg.name} package (incl. $${SERVICE_FEE_USD} buyer service fee)`,
       payment_method_types: ["card"],
       metadata: {
-        order_id: order.id,
         gig_id: gig.id,
         buyer_id: user.id,
+        freelancer_id: gig.freelancer_id,
+        package_name: pkg.name,
+        amount_usd: String(totalUsd),
         payout_mode: payoutMode,
       },
     };
@@ -141,13 +130,12 @@ serve(async (req) => {
 
     const intent = await stripe.paymentIntents.create(intentParams);
 
-    await admin
-      .from("orders")
-      .update({ stripe_payment_intent_id: intent.id })
-      .eq("id", order.id);
-
     return new Response(
-      JSON.stringify({ clientSecret: intent.client_secret, orderId: order.id, amount: totalUsd }),
+      JSON.stringify({
+        clientSecret: intent.client_secret,
+        paymentIntentId: intent.id,
+        amount: totalUsd,
+      }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {

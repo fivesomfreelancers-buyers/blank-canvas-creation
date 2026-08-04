@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { ensurePaidOrder } from "../_shared/order-from-payment.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -45,17 +46,9 @@ serve(async (req) => {
       { auth: { persistSession: false } },
     );
 
-    const orderQuery = admin.from("orders").select("id, buyer_id, payment_status");
-    const { data: order, error: orderErr } = await (sessionId
-      ? orderQuery.eq("stripe_session_id", sessionId)
-      : orderQuery.eq("stripe_payment_intent_id", paymentIntentId)
-    ).maybeSingle();
-    if (orderErr) throw orderErr;
-    if (!order) throw new Error("Order not found for this payment");
-    if (order.buyer_id !== user.id) throw new Error("Not authorized for this order");
-
     let paid = false;
     let resolvedIntentId: string | null = paymentIntentId || null;
+    let metadata: Record<string, string> = {};
 
     if (sessionId) {
       const session = await stripe.checkout.sessions.retrieve(sessionId);
@@ -64,20 +57,34 @@ serve(async (req) => {
         typeof session.payment_intent === "string"
           ? session.payment_intent
           : session.payment_intent?.id ?? null;
+      metadata = (session.metadata ?? {}) as Record<string, string>;
     } else {
       const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
       paid = intent.status === "succeeded" || intent.status === "processing";
+      metadata = (intent.metadata ?? {}) as Record<string, string>;
     }
 
-    if (paid && order.payment_status !== "paid") {
-      const { error: updateErr } = await admin
-        .from("orders")
-        .update({ payment_status: "paid", stripe_payment_intent_id: resolvedIntentId })
-        .eq("id", order.id);
-      if (updateErr) throw updateErr;
+    if (!paid) {
+      // No payment, no order. Nothing is written to the database.
+      return new Response(JSON.stringify({ paid: false, orderId: null }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    return new Response(JSON.stringify({ paid, orderId: order.id }), {
+    // The buyer in the payment metadata must be the caller.
+    if (metadata.buyer_id && metadata.buyer_id !== user.id) {
+      throw new Error("Not authorized for this payment");
+    }
+
+    const orderId = await ensurePaidOrder({
+      admin,
+      meta: metadata,
+      paymentIntentId: resolvedIntentId,
+      sessionId: sessionId || null,
+    });
+
+    return new Response(JSON.stringify({ paid: true, orderId }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

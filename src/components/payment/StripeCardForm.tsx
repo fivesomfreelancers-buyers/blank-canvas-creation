@@ -83,14 +83,19 @@ const CardFormInner: React.FC<StripeCardFormProps> = ({ gigId, packageType, tota
       }
 
       if (result.paymentIntent?.status === 'succeeded' || result.paymentIntent?.status === 'processing') {
-        // Server-side confirmation so the order is marked paid even if the webhook is delayed.
-        await supabase.functions.invoke('verify-order-payment', {
+        // The order row is created server-side ONLY after Stripe confirms the payment.
+        const { data: verified, error: verifyError } = await supabase.functions.invoke('verify-order-payment', {
           body: { paymentIntentId: result.paymentIntent.id },
         });
+        if (verifyError || !verified?.paid || !verified?.orderId) {
+          setCardError('Payment could not be confirmed. Please contact support.');
+          return;
+        }
         toast({ title: 'Payment successful', description: 'Now submit your project requirements.' });
-        onSuccess(data.orderId);
+        onSuccess(verified.orderId as string);
         return;
       }
+
 
       setCardError('Payment was not completed. Please try again.');
     } catch (err) {
