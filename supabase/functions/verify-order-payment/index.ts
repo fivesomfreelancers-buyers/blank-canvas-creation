@@ -28,8 +28,9 @@ serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const sessionId = typeof body.sessionId === "string" ? body.sessionId : "";
-    if (!sessionId) {
-      return new Response(JSON.stringify({ error: "sessionId is required" }), {
+    const paymentIntentId = typeof body.paymentIntentId === "string" ? body.paymentIntentId : "";
+    if (!sessionId && !paymentIntentId) {
+      return new Response(JSON.stringify({ error: "sessionId or paymentIntentId is required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -38,32 +39,40 @@ serve(async (req) => {
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
     });
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-
     const admin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
       { auth: { persistSession: false } },
     );
 
-    const { data: order, error: orderErr } = await admin
-      .from("orders")
-      .select("id, buyer_id, payment_status")
-      .eq("stripe_session_id", sessionId)
-      .maybeSingle();
+    const orderQuery = admin.from("orders").select("id, buyer_id, payment_status");
+    const { data: order, error: orderErr } = await (sessionId
+      ? orderQuery.eq("stripe_session_id", sessionId)
+      : orderQuery.eq("stripe_payment_intent_id", paymentIntentId)
+    ).maybeSingle();
     if (orderErr) throw orderErr;
-    if (!order) throw new Error("Order not found for this session");
+    if (!order) throw new Error("Order not found for this payment");
     if (order.buyer_id !== user.id) throw new Error("Not authorized for this order");
 
-    const paid = session.payment_status === "paid";
-    if (paid && order.payment_status !== "paid") {
-      const paymentIntentId =
+    let paid = false;
+    let resolvedIntentId: string | null = paymentIntentId || null;
+
+    if (sessionId) {
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      paid = session.payment_status === "paid";
+      resolvedIntentId =
         typeof session.payment_intent === "string"
           ? session.payment_intent
           : session.payment_intent?.id ?? null;
+    } else {
+      const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      paid = intent.status === "succeeded" || intent.status === "processing";
+    }
+
+    if (paid && order.payment_status !== "paid") {
       const { error: updateErr } = await admin
         .from("orders")
-        .update({ payment_status: "paid", stripe_payment_intent_id: paymentIntentId })
+        .update({ payment_status: "paid", stripe_payment_intent_id: resolvedIntentId })
         .eq("id", order.id);
       if (updateErr) throw updateErr;
     }
