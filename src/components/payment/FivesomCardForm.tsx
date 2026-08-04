@@ -31,6 +31,7 @@ const CardFields: React.FC<{ amount: number; onDone: (orderId: string) => void; 
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [paymentElementReady, setPaymentElementReady] = useState(false);
+  const [paymentElementError, setPaymentElementError] = useState(false);
   const [cardholderName, setCardholderName] = useState('');
   const submitLock = useRef(false);
 
@@ -103,14 +104,25 @@ const CardFields: React.FC<{ amount: number; onDone: (orderId: string) => void; 
         />
       </div>
       <PaymentElement
-        onReady={() => setPaymentElementReady(true)}
-        onLoadError={() => setPaymentElementReady(false)}
+        onReady={() => {
+          setPaymentElementReady(true);
+          setPaymentElementError(false);
+        }}
+        onLoadError={() => {
+          setPaymentElementReady(false);
+          setPaymentElementError(true);
+        }}
         options={{
           layout: { type: 'tabs', defaultCollapsed: false },
           fields: { billingDetails: { name: 'never', email: 'never', address: 'never' } },
           terms: { card: 'never' },
         }}
       />
+      {paymentElementError && (
+        <p className="text-sm text-destructive" role="alert">
+          Card form could not load. Check your connection, refresh this page, and try again.
+        </p>
+      )}
       <div className="space-y-2">
         <Label>Billing Address</Label>
         <AddressElement options={{ mode: 'billing', fields: { phone: 'never' } }} />
