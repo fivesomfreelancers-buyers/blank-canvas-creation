@@ -40,35 +40,56 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let bootstrappedFor: string | null = null;
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          setTimeout(() => {
-            ensureProfileExists(session.user);
-            fetchUserRole(session.user.id);
-          }, 0);
-        } else {
+
+        if (event === 'SIGNED_OUT' || !session?.user) {
+          bootstrappedFor = null;
           setUserRole(null);
+          setIsLoading(false);
+          return;
         }
+
+        // Token refreshes must never re-run bootstrap or clear the role —
+        // that is what made sessions look like they "dropped" randomly.
+        if (event === 'TOKEN_REFRESHED' && bootstrappedFor === session.user.id) {
+          return;
+        }
+
+        if (bootstrappedFor === session.user.id && event !== 'USER_UPDATED') {
+          return;
+        }
+
+        bootstrappedFor = session.user.id;
+        const authUser = session.user;
+        setTimeout(() => {
+          ensureProfileExists(authUser);
+          fetchUserRole(authUser.id);
+        }, 0);
       }
     );
 
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        await ensureProfileExists(session.user);
-        await fetchUserRole(session.user.id);
-      }
-      setIsLoading(false);
-    });
+    supabase.auth.getSession()
+      .then(async ({ data: { session } }) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+
+        if (session?.user && bootstrappedFor !== session.user.id) {
+          bootstrappedFor = session.user.id;
+          await ensureProfileExists(session.user);
+          await fetchUserRole(session.user.id);
+        }
+      })
+      .catch((err) => console.error('getSession error:', err))
+      .finally(() => setIsLoading(false));
 
     return () => subscription.unsubscribe();
   }, []);
+
 
   const ensureProfileExists = async (authUser: User) => {
     try {
@@ -80,14 +101,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (!data) {
         // Profile doesn't exist - create it (trigger should handle this, but as fallback)
-        const meta = authUser.user_metadata || {};
+        const meta: any = authUser.user_metadata || {};
         await (supabase as any).from('profiles').insert({
           id: authUser.id,
           full_name: meta.full_name || meta.name || '',
           email: authUser.email || '',
           location: meta.location || null,
+          profile_image_url: meta.avatar_url || meta.picture || null,
+          role: 'user',
         });
       }
+
     } catch (err) {
       console.error('ensureProfileExists error:', err);
     }
@@ -127,9 +151,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUserRole('user');
     } catch (error) {
       console.error('Error fetching user role:', error);
-      setUserRole(null);
+      // A signed-in user must never end up "unrecognized" because of a
+      // transient network/RLS hiccup — fall back to normal-user access.
+      setUserRole('user');
     }
   };
+
 
   const refreshRole = async () => {
     const { data } = await supabase.auth.getUser();

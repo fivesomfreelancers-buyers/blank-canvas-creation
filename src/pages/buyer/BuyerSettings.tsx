@@ -47,14 +47,14 @@ const BuyerSettings = ({ onProfileUpdated }: BuyerSettingsProps) => {
     const fetchProfile = async () => {
       const { data } = await supabase
         .from('profiles')
-        .select('full_name, username, email, location, bio, profile_image_url')
+        .select('full_name, username, location, bio, profile_image_url')
         .eq('id', user.id)
         .maybeSingle();
       if (data) {
         setProfile({
           full_name: data.full_name || '',
           username: data.username || '',
-          email: data.email || user.email || '',
+          email: user.email || '',
           location: data.location || '',
           bio: data.bio || '',
           profile_image_url: data.profile_image_url || '',

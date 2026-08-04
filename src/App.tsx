@@ -13,6 +13,9 @@ import Vip from "./pages/Vip";
 import VipCheckout from "./pages/VipCheckout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+
 import BuyerRegister from "./pages/BuyerRegister";
 import FreelancerRegister from "./pages/FreelancerRegister";
 import AuthCallback from "./pages/AuthCallback";
@@ -79,7 +82,10 @@ const App = () => (
               <Route path="/register" element={<Register />} />
               <Route path="/register/buyer" element={<BuyerRegister />} />
               <Route path="/register/freelancer" element={<FreelancerRegister />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
+
               <Route path="/select-role" element={<RoleSelection />} />
               <Route path="/become-buyer" element={<UpgradeRole role="buyer" />} />
               <Route path="/become-freelancer" element={<UpgradeRole role="freelancer" />} />

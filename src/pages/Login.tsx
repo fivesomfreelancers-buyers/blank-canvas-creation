@@ -61,13 +61,24 @@ const Login = () => {
   };
 
   const routeAfterLogin = async (userId: string) => {
-    const { data: roleRow } = await (supabase as any)
+    // A user can hold several role rows — never use maybeSingle() here.
+    const { data: roleRows } = await (supabase as any)
       .from('user_roles')
       .select('role')
-      .eq('user_id', userId)
-      .maybeSingle();
+      .eq('user_id', userId);
 
-    let resolvedRole = normalizeRole(roleRow?.role);
+    const roles: string[] = (roleRows || []).map((r: any) => r.role);
+
+    if (roles.includes('admin') || roles.includes('super_admin')) {
+      navigate('/admin', { replace: true });
+      return;
+    }
+
+    let resolvedRole = roles.includes('freelancer')
+      ? 'freelancer'
+      : roles.includes('buyer')
+        ? 'buyer'
+        : null;
 
     if (!resolvedRole) {
       const { data: userRes } = await supabase.auth.getUser();
@@ -81,10 +92,11 @@ const Login = () => {
       }
     }
 
-    if (resolvedRole === 'freelancer') navigate('/freelancer/dashboard');
-    else if (resolvedRole === 'buyer') navigate('/buyer/dashboard');
-    else navigate('/');
+    if (resolvedRole === 'freelancer') navigate('/freelancer/dashboard', { replace: true });
+    else if (resolvedRole === 'buyer') navigate('/buyer/dashboard', { replace: true });
+    else navigate('/', { replace: true });
   };
+
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -176,6 +188,13 @@ const Login = () => {
                     />
                   </div>
                 </div>
+
+                <div className="text-right">
+                  <Link to="/forgot-password" className="text-sm text-primary hover:text-primary/80 font-medium">
+                    Forgot password?
+                  </Link>
+                </div>
+
 
                 <Button type="submit" className="w-full h-12 font-semibold" disabled={emailLoading || googleLoading}>
                   {emailLoading ? (

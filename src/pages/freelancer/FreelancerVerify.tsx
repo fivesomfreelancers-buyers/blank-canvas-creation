@@ -73,7 +73,7 @@ const FreelancerVerify: React.FC = () => {
       setUserId(user.id);
 
       const [{ data: profile }, { data: freelancer }, { data: vDoc }] = await Promise.all([
-        supabase.from('profiles').select('*').eq('id', user.id).maybeSingle(),
+        supabase.from('profiles').select('id, full_name, username, profile_image_url, bio, professional_title, location, skills, languages, industry, member_since, last_seen, created_at, role').eq('id', user.id).maybeSingle(),
         supabase.from('freelancers').select(FREELANCER_PUBLIC_COLUMNS).eq('user_id', user.id).maybeSingle(),
         supabase.from('verification_documents').select('status').eq('user_id', user.id)
           .order('submitted_at', { ascending: false }).limit(1).maybeSingle(),

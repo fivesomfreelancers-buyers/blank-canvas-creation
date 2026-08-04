@@ -131,7 +131,7 @@ const BuyerDashboard = () => {
     if (!user) return;
     const { data } = await supabase
       .from('profiles')
-      .select('full_name, username, email, profile_image_url, location, bio')
+      .select('full_name, username, profile_image_url, location, bio')
       .eq('id', user.id)
       .maybeSingle();
 
@@ -141,7 +141,7 @@ const BuyerDashboard = () => {
     setProfile({
       ...(data as any),
       full_name: (data as any)?.full_name?.trim() || metaName || null,
-      email: (data as any)?.email || user.email || null,
+      email: user.email || null,
       profile_image_url: (data as any)?.profile_image_url || metaAvatar,
     } as any);
 
