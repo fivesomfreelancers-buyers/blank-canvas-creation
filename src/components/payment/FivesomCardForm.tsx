@@ -129,7 +129,7 @@ const CardFields: React.FC<{
             }}
             options={{
               hidePostalCode: true,
-              disableLink: true,
+
               style: {
                 base: {
                   color: cssVar('--foreground', '#0f172a'),
