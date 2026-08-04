@@ -83,6 +83,10 @@ const CardFormInner: React.FC<StripeCardFormProps> = ({ gigId, packageType, tota
       }
 
       if (result.paymentIntent?.status === 'succeeded' || result.paymentIntent?.status === 'processing') {
+        // Server-side confirmation so the order is marked paid even if the webhook is delayed.
+        await supabase.functions.invoke('verify-order-payment', {
+          body: { paymentIntentId: result.paymentIntent.id },
+        });
         toast({ title: 'Payment successful', description: 'Now submit your project requirements.' });
         onSuccess(data.orderId);
         return;
