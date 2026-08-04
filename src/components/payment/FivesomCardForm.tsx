@@ -117,11 +117,12 @@ const CardFields: React.FC<{
       </div>
       <div className="space-y-2">
         <Label>Card Number, Expiry Date &amp; CVC</Label>
-        <div className="rounded-md border border-input bg-background px-3 py-3">
+        <div className="rounded-md border border-input bg-background px-3 py-3 min-h-[46px]">
           <CardElement
             onReady={(element) => {
               cardElementRef.current = element;
               setCardElementReady(true);
+              element.focus();
             }}
             onChange={(event) => {
               setCardComplete(event.complete);
@@ -129,20 +130,21 @@ const CardFields: React.FC<{
             }}
             options={{
               hidePostalCode: true,
-
               style: {
                 base: {
                   color: cssVar('--foreground', '#0f172a'),
                   iconColor: cssVar('--muted-foreground', '#64748b'),
                   fontFamily: 'inherit',
                   fontSize: '16px',
-                  '::placeholder': { color: cssVar('--muted-foreground', '#64748b') },
+                  lineHeight: '24px',
+                  '::placeholder': { color: cssVar('--muted-foreground', '#94a3b8') },
                 },
                 invalid: { color: cssVar('--destructive', '#ef4444') },
               },
             }}
           />
         </div>
+
         {cardError && <p className="text-sm text-destructive" role="alert">{cardError}</p>}
       </div>
       <Button
@@ -201,10 +203,11 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
     };
   }, [gigId, packageType]);
 
-  const options = useMemo(() => {
-    if (!clientSecret) return null;
-    return {
-      clientSecret,
+  // NOTE: no `clientSecret` here on purpose. With CardElement the secret is passed
+  // straight to confirmCardPayment; passing it to Elements makes the whole form
+  // fail to mount whenever the intent cannot be read by the publishable key.
+  const options = useMemo(
+    () => ({
       appearance: {
         theme: (theme === 'dark' ? 'night' : 'stripe') as 'night' | 'stripe',
         variables: {
@@ -217,15 +220,16 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
           spacingUnit: '4px',
         },
       },
-    };
-  }, [clientSecret, theme]);
-
+    }),
+    [theme],
+  );
 
   if (error) {
     return <p className="text-sm text-destructive">{error}</p>;
   }
 
-  if (!clientSecret || !stripePromise || !options) {
+  if (!clientSecret || !stripePromise) {
+
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground py-6">
         <Loader2 className="w-4 h-4 animate-spin" /> Diyaarinta foomka lacag bixinta…

@@ -40,6 +40,22 @@ serve(async (req) => {
 
     const publishableKey = Deno.env.get("STRIPE_PUBLISHABLE_KEY") ?? "";
     if (!publishableKey) throw new Error("STRIPE_PUBLISHABLE_KEY is not configured");
+    if (!publishableKey.startsWith("pk_")) {
+      throw new Error("STRIPE_PUBLISHABLE_KEY is invalid (must start with pk_)");
+    }
+    const secretKeyPeek = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
+    const pubLive = publishableKey.startsWith("pk_live_");
+    const secLive = secretKeyPeek.startsWith("sk_live_");
+    if (secretKeyPeek && pubLive !== secLive) {
+      throw new Error(
+        "Stripe key mode mismatch: publishable key is " +
+          (pubLive ? "LIVE" : "TEST") +
+          " but secret key is " +
+          (secLive ? "LIVE" : "TEST") +
+          ". Both must be from the same Stripe mode.",
+      );
+    }
+
 
     const admin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
