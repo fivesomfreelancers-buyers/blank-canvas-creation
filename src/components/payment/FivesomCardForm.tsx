@@ -199,7 +199,6 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
     if (!clientSecret) return null;
     return {
       clientSecret,
-      loader: 'always' as const,
       appearance: {
         theme: (theme === 'dark' ? 'night' : 'stripe') as 'night' | 'stripe',
         variables: {
@@ -212,10 +211,9 @@ const FivesomCardForm: React.FC<Props> = ({ gigId, packageType, amount }) => {
           spacingUnit: '4px',
         },
       },
-      // Card only — Link and external wallets are intentionally not offered.
-      wallets: { applePay: 'never' as const, googlePay: 'never' as const },
     };
   }, [clientSecret, theme]);
+
 
   if (error) {
     return <p className="text-sm text-destructive">{error}</p>;
