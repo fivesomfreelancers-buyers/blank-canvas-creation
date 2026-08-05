@@ -173,7 +173,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     location?: string
   ) => {
     try {
+      // Signup flooding guard (shared with the standalone register screens).
+      const wait = authCooldownRemaining('signup', email);
+      if (wait > 0) {
+        return { error: new Error(cooldownMessage(wait)) };
+      }
+      recordAuthFailure('signup', email);
+
       const redirectUrl = `${window.location.origin}/`;
+      
+
       
       const { data, error } = await supabase.auth.signUp({
         email,
