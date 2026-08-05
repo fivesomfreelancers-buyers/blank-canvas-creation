@@ -327,6 +327,72 @@ export type Database = {
           },
         ]
       }
+      Fivesom_ad: {
+        Row: {
+          audience: string
+          created_at: string
+          created_by: string | null
+          cta_color: string
+          cta_position: string
+          cta_size: string
+          cta_style: string
+          cta_text: string | null
+          cta_url: string | null
+          focal_x: number
+          focal_y: number
+          id: string
+          is_active: boolean
+          media_path: string
+          media_type: string
+          placement: string
+          title: string
+          updated_at: string
+          zoom: number
+        }
+        Insert: {
+          audience?: string
+          created_at?: string
+          created_by?: string | null
+          cta_color?: string
+          cta_position?: string
+          cta_size?: string
+          cta_style?: string
+          cta_text?: string | null
+          cta_url?: string | null
+          focal_x?: number
+          focal_y?: number
+          id?: string
+          is_active?: boolean
+          media_path: string
+          media_type: string
+          placement: string
+          title: string
+          updated_at?: string
+          zoom?: number
+        }
+        Update: {
+          audience?: string
+          created_at?: string
+          created_by?: string | null
+          cta_color?: string
+          cta_position?: string
+          cta_size?: string
+          cta_style?: string
+          cta_text?: string | null
+          cta_url?: string | null
+          focal_x?: number
+          focal_y?: number
+          id?: string
+          is_active?: boolean
+          media_path?: string
+          media_type?: string
+          placement?: string
+          title?: string
+          updated_at?: string
+          zoom?: number
+        }
+        Relationships: []
+      }
       freelancer_faqs: {
         Row: {
           answer: string
@@ -1061,72 +1127,6 @@ export type Database = {
           skills?: string[] | null
           updated_at?: string | null
           username?: string | null
-        }
-        Relationships: []
-      }
-      somadz_ads: {
-        Row: {
-          audience: string
-          created_at: string
-          created_by: string | null
-          cta_color: string
-          cta_position: string
-          cta_size: string
-          cta_style: string
-          cta_text: string | null
-          cta_url: string | null
-          focal_x: number
-          focal_y: number
-          id: string
-          is_active: boolean
-          media_path: string
-          media_type: string
-          placement: string
-          title: string
-          updated_at: string
-          zoom: number
-        }
-        Insert: {
-          audience?: string
-          created_at?: string
-          created_by?: string | null
-          cta_color?: string
-          cta_position?: string
-          cta_size?: string
-          cta_style?: string
-          cta_text?: string | null
-          cta_url?: string | null
-          focal_x?: number
-          focal_y?: number
-          id?: string
-          is_active?: boolean
-          media_path: string
-          media_type: string
-          placement: string
-          title: string
-          updated_at?: string
-          zoom?: number
-        }
-        Update: {
-          audience?: string
-          created_at?: string
-          created_by?: string | null
-          cta_color?: string
-          cta_position?: string
-          cta_size?: string
-          cta_style?: string
-          cta_text?: string | null
-          cta_url?: string | null
-          focal_x?: number
-          focal_y?: number
-          id?: string
-          is_active?: boolean
-          media_path?: string
-          media_type?: string
-          placement?: string
-          title?: string
-          updated_at?: string
-          zoom?: number
         }
         Relationships: []
       }
