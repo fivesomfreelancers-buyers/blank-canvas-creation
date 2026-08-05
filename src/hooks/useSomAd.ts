@@ -48,7 +48,7 @@ export function useSomAds(placement: SomAdPlacement, viewerRole?: 'buyer' | 'fre
     const load = async () => {
       setLoading(true);
       const { data } = await supabase
-        .from('somadz_ads')
+        .from('Fivesom_ad')
         .select('*')
         .eq('placement', placement)
         .eq('is_active', true)
@@ -77,7 +77,7 @@ export function useSomAds(placement: SomAdPlacement, viewerRole?: 'buyer' | 'fre
       .channel(`fivesom-ads-${placement}`)
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'somadz_ads' },
+        { event: '*', schema: 'public', table: 'Fivesom_ad' },
         () => load(),
       )
       .subscribe();
