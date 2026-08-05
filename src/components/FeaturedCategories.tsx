@@ -1,9 +1,61 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Palette, Video, Clapperboard, Monitor, PenTool, Smartphone, Brush, Code, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+
+interface CategoryStat { sellers: number; rating: number }
+
+/** Real seller counts: exact up to 99, then bucketed as 100+, 200+, ... */
+const formatSellers = (n: number) => (n < 100 ? String(n) : `${Math.floor(n / 100) * 100}+`);
 
 const FeaturedCategories = () => {
+  const [stats, setStats] = useState<Record<string, CategoryStat>>({});
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data: gigs } = await supabase
+          .from('gigs')
+          .select('id, category_slug, freelancer_id')
+          .eq('status', 'active');
+        const { data: reviews } = await (supabase as any)
+          .from('public_gig_reviews')
+          .select('gig_id, rating');
+
+        const gigCategory = new Map<string, string>();
+        const sellersByCat = new Map<string, Set<string>>();
+        (gigs || []).forEach((g: any) => {
+          const slug = g.category_slug || '';
+          if (!slug) return;
+          gigCategory.set(g.id, slug);
+          if (!sellersByCat.has(slug)) sellersByCat.set(slug, new Set());
+          if (g.freelancer_id) sellersByCat.get(slug)!.add(g.freelancer_id);
+        });
+
+        const ratingByCat = new Map<string, { sum: number; count: number }>();
+        (reviews || []).forEach((r: any) => {
+          const slug = gigCategory.get(r.gig_id);
+          if (!slug) return;
+          const cur = ratingByCat.get(slug) || { sum: 0, count: 0 };
+          cur.sum += Number(r.rating) || 0;
+          cur.count += 1;
+          ratingByCat.set(slug, cur);
+        });
+
+        const next: Record<string, CategoryStat> = {};
+        sellersByCat.forEach((set, slug) => {
+          const r = ratingByCat.get(slug);
+          next[slug] = { sellers: set.size, rating: r && r.count ? r.sum / r.count : 0 };
+        });
+        setStats(next);
+      } catch (err) {
+        console.error('Failed to load category stats', err);
+      }
+    })();
+  }, []);
+
+
   const categories = [
     {
       id: 'logo-design',
