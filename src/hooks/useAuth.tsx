@@ -2,6 +2,8 @@ import { useState, useEffect, createContext, useContext, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { ensureNormalUserRole } from '@/lib/roleUpgrade';
+import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
+
 
 type UserRole = 'freelancer' | 'buyer' | 'user' | null;
 
