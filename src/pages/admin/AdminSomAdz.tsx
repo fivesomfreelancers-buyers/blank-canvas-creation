@@ -87,7 +87,7 @@ export default function AdminSomAdz() {
   const load = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from('somadz_ads')
+      .from('Fivesom_ad')
       .select('*')
       .order('created_at', { ascending: false });
     if (error) toast({ title: 'Failed to load ads', description: error.message, variant: 'destructive' });
@@ -99,7 +99,7 @@ export default function AdminSomAdz() {
     load();
     const channel = supabase
       .channel('admin-somadz')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'somadz_ads' }, () => load())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'Fivesom_ad' }, () => load())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, []);
@@ -184,11 +184,11 @@ export default function AdminSomAdz() {
     };
     let err;
     if (form.id) {
-      ({ error: err } = await supabase.from('somadz_ads').update(payload).eq('id', form.id));
+      ({ error: err } = await supabase.from('Fivesom_ad').update(payload).eq('id', form.id));
     } else {
       const { data: u } = await supabase.auth.getUser();
       payload.created_by = u.user?.id;
-      ({ error: err } = await supabase.from('somadz_ads').insert(payload));
+      ({ error: err } = await supabase.from('Fivesom_ad').insert(payload));
     }
     setSaving(false);
     if (err) { toast({ title: 'Save failed', description: err.message, variant: 'destructive' }); return; }
@@ -198,7 +198,7 @@ export default function AdminSomAdz() {
   };
 
   const toggleActive = async (row: any) => {
-    const { error } = await supabase.from('somadz_ads').update({ is_active: !row.is_active }).eq('id', row.id);
+    const { error } = await supabase.from('Fivesom_ad').update({ is_active: !row.is_active }).eq('id', row.id);
     if (error) toast({ title: 'Failed', description: error.message, variant: 'destructive' });
     else load();
   };
@@ -206,7 +206,7 @@ export default function AdminSomAdz() {
   const remove = async (row: any) => {
     if (!confirm('Xayeysiiskan si buuxda ma ka tirtiraysaa?')) return;
     await supabase.storage.from('somadz-media').remove([row.media_path]);
-    const { error } = await supabase.from('somadz_ads').delete().eq('id', row.id);
+    const { error } = await supabase.from('Fivesom_ad').delete().eq('id', row.id);
     if (error) toast({ title: 'Failed', description: error.message, variant: 'destructive' });
     else { toast({ title: 'Ad removed' }); load(); }
   };
