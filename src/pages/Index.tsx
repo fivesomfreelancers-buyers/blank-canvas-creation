@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import HeroSection from '../components/HeroSection';
 import FeaturedCategories from '../components/FeaturedCategories';
@@ -8,7 +7,7 @@ import HowItWorksSection from '../components/HowItWorksSection';
 import InteractiveTutorial from '../components/InteractiveTutorial';
 import { Footer } from '../components/Footer';
 import SEO from '../components/SEO';
-import platformPreview from '../assets/platform-preview-collage.jpg';
+
 
 const Index = () => {
   return (
