@@ -329,6 +329,18 @@ export function useConversations() {
       return;
     }
 
+    // Storage rejects oversized uploads — fail with a clear, actionable message.
+    const MAX_ATTACHMENT_BYTES = 50 * 1024 * 1024;
+    if (file.size > MAX_ATTACHMENT_BYTES) {
+      toast.error('File too large (max 50MB)', {
+        description: 'Upload smaller files, or share large files with a Google Drive / Dropbox link.',
+        duration: 6000,
+      });
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
+
     try {
       setUploadingImage(true);
 
