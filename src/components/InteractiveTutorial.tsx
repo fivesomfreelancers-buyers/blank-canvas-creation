@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { User, PlusCircle, Wallet, Maximize } from 'lucide-react';
+import verifyAccountVideo from '@/assets/verify-account-tutorial.mp4.asset.json';
+import createGigVideo from '@/assets/create-gig-tutorial.mp4.asset.json';
+import withdrawVideo from '@/assets/withdraw-tutorial.mp4.asset.json';
+
 
 interface TutorialOption {
   id: string;
