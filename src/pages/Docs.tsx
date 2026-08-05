@@ -1425,7 +1425,194 @@ const SECTIONS: Section[] = [
       },
     },
   },
+  {
+    id: 'mobile-money', icon: Smartphone,
+    t: {
+      en: {
+        title: '19. Mobile Money & Local Payments',
+        subtitle: 'How Somali payment methods work on FIVESOM.',
+        description: [
+          'FIVESOM supports the payment methods people actually use in Somalia. Buyers can pay with a card through our secure Stripe checkout, or use local mobile money by following the USSD instructions shown at checkout.',
+          'For mobile money, the platform shows the exact merchant number and amount. You dial the USSD code from your phone, confirm the transfer, and then upload the confirmation so support can match the payment to your order. Once confirmed, the money enters escrow exactly like a card payment.',
+        ],
+        steps: [
+          { title: 'Choose a payment method', body: 'At checkout, pick card payment or local mobile money.' },
+          { title: 'Follow the USSD prompt', body: 'Tap the number to dial and confirm the transfer on your phone.' },
+          { title: 'Submit your confirmation', body: 'Upload or paste the transaction reference so it can be verified.' },
+          { title: 'Order starts in escrow', body: 'Once verified, funds are held in escrow and the order becomes active.' },
+        ],
+        bullets: [
+          'Card payments are processed instantly through Stripe.',
+          'Mobile money payments are verified by the FIVESOM team before the order becomes active.',
+          'Never send money outside the platform — off-platform payments are not protected by escrow.',
+          'Freelancers withdraw earnings to their preferred local method, minus the 15% Fivesom commission.',
+        ],
+        tip: 'Always keep your mobile money confirmation message until the order is completed.',
+      },
+      so: {
+        title: '19. Mobile Money & Lacag-bixinta Maxalliga',
+        subtitle: 'Sida hababka lacag-bixinta Soomaaliyeed ay u shaqeeyaan FIVESOM.',
+        description: [
+          'FIVESOM waxay taageertaa hababka lacag-bixinta dadku dhab ahaan isticmaalaan Soomaaliya. Macmiilku wuxuu ku bixin karaa kaarka Stripe checkout-ka ammaan ah, ama wuxuu isticmaali karaa mobile money isagoo raacaya tilmaamaha USSD ee checkout-ka lagu tuso.',
+          'Mobile money, madasha waxay tusaysaa nambarka merchant-ka iyo qadarka saxda ah. Waxaad ka garaacdaa USSD-ga taleefankaaga, xaqiijisaa wareejinta, ka dibna waxaad soo gudbisaa xaqiijinta si taageeradu ula xidhiidhiso order-kaaga. Marka la xaqiijiyo, lacagta waxay gashaa escrow sida kaarka oo kale.',
+        ],
+        steps: [
+          { title: 'Dooro habka lacag-bixinta', body: 'Checkout-ka, dooro kaar ama mobile money maxalli ah.' },
+          { title: 'Raac USSD-ga', body: 'Riix nambarka si aad garaacdo oo xaqiiji wareejinta.' },
+          { title: 'Soo gudbi xaqiijinta', body: 'Soo geli reference-ka macaamilka si loo hubiyo.' },
+          { title: 'Order-ku wuxuu galo escrow', body: 'Marka la hubiyo, lacagta escrow ku jirta oo order-ku firfircoonaadaa.' },
+        ],
+        bullets: [
+          'Kaarka wuxuu isla markiiba ku maraya Stripe.',
+          'Mobile money waxaa xaqiijiya kooxda FIVESOM ka hor inta order-ku firfircoonaan.',
+          'Waligaa lacag ha dirin banaanka madasha — lacagta dibedda escrow ma ilaaliyo.',
+          'Freelancer-ku wuxuu lacagta la baxaa habka maxalliga, ka dib 15% commission Fivesom.',
+        ],
+        tip: 'Fariinta xaqiijinta mobile money ilaali ilaa order-ku dhammaado.',
+      },
+      ar: {
+        title: '19. المحفظة الإلكترونية والمدفوعات المحلية',
+        subtitle: 'كيف تعمل طرق الدفع المحلية على FIVESOM.',
+        description: [
+          'يدعم FIVESOM الدفع بالبطاقة عبر Stripe وكذلك المحافظ المحلية عبر رموز USSD الظاهرة عند الدفع.',
+          'بعد إتمام التحويل، ترفع إثبات الدفع ليتم التحقق منه، ثم تُحفظ الأموال في الضمان مثل الدفع بالبطاقة.',
+        ],
+        steps: [
+          { title: 'اختر طريقة الدفع', body: 'بطاقة أو محفظة محلية.' },
+          { title: 'اتبع رمز USSD', body: 'أكمل التحويل من هاتفك.' },
+          { title: 'أرسل الإثبات', body: 'ارفع رقم العملية للتحقق.' },
+          { title: 'يبدأ الطلب', body: 'تُحفظ الأموال في الضمان.' },
+        ],
+        bullets: [
+          'الدفع بالبطاقة فوري عبر Stripe.',
+          'يتم التحقق من المدفوعات المحلية من قبل الفريق.',
+          'لا تدفع خارج المنصة.',
+          'عمولة Fivesom 15% عند السحب.',
+        ],
+        tip: 'احتفظ برسالة التأكيد حتى إتمام الطلب.',
+      },
+      fr: {
+        title: '19. Mobile Money et paiements locaux',
+        subtitle: 'Comment fonctionnent les paiements locaux sur FIVESOM.',
+        description: [
+          'FIVESOM accepte les cartes via Stripe et les paiements mobile money via les codes USSD affichés au paiement.',
+          'Après le transfert, vous envoyez la preuve pour vérification, puis les fonds sont placés en séquestre.',
+        ],
+        steps: [
+          { title: 'Choisir le mode', body: 'Carte ou mobile money.' },
+          { title: 'Suivre le code USSD', body: 'Confirmez le transfert sur votre téléphone.' },
+          { title: 'Envoyer la preuve', body: 'Ajoutez la référence de transaction.' },
+          { title: 'Commande active', body: 'Les fonds passent en séquestre.' },
+        ],
+        bullets: [
+          'Paiements par carte instantanés via Stripe.',
+          'Paiements locaux vérifiés par l\'équipe.',
+          'Ne payez jamais hors plateforme.',
+          'Commission Fivesom de 15% au retrait.',
+        ],
+        tip: 'Conservez votre message de confirmation jusqu\'à la fin de la commande.',
+      },
+    },
+  },
+  {
+    id: 'growth', icon: TrendingUp,
+    t: {
+      en: {
+        title: '20. Growing Your Business on FIVESOM',
+        subtitle: 'Practical habits that turn a new profile into a steady income.',
+        description: [
+          'Success on FIVESOM comes from consistency, not luck. Freelancers who reply quickly, deliver on time and communicate clearly are ranked higher, appear more often in search, and receive more repeat orders.',
+          'Treat your gigs as products: refine the title, use clear cover images, price your packages realistically at the start, and improve them once you collect reviews. Every completed order strengthens your reputation score.',
+        ],
+        steps: [
+          { title: 'Publish several focused gigs', body: 'Instead of one broad gig, create a few specific ones so buyers find exactly what they need.' },
+          { title: 'Respond fast', body: 'Fast replies improve your ranking and win more orders.' },
+          { title: 'Deliver before the deadline', body: 'On-time delivery is the strongest ranking signal on the platform.' },
+          { title: 'Ask for honest reviews', body: 'After acceptance, politely invite the buyer to leave a rating.' },
+          { title: 'Get verified', body: 'The blue tick and verified seller badge visibly increase buyer trust.' },
+          { title: 'Reinvest and expand', body: 'Add new packages, raise prices as your rating grows, and consider Fivesom Ads for visibility.' },
+        ],
+        bullets: [
+          'Complete your profile 100% — photo, bio, skills, languages, portfolio.',
+          'Never cancel orders unnecessarily; cancellations hurt your ranking.',
+          'Keep all communication inside FIVESOM so support can protect you.',
+          'A 4.5+ rating with 10 orders opens the door to the blue tick.',
+        ],
+        tip: 'One excellent delivery per week beats ten rushed ones — reputation compounds.',
+      },
+      so: {
+        title: '20. Sida Ganacsigaaga FIVESOM Loo Kobciyo',
+        subtitle: 'Habdhaqanno wax ku ool ah oo profile cusub uga dhigaya dakhli joogto ah.',
+        description: [
+          'Guusha FIVESOM waxay ka timaadaa joogtaynta, ee ma aha nasiib. Freelancer-rada dhakhso u jawaabaan, waqtiga geeyaan, oo si cad wada hadlaan waxay heer sare gaaraan, si badan raadinta ka soo baxaan, oo waxay helaan order badan oo soo noqnoqda.',
+          'U qaado gigyadaada sida badeeco: hagaaji title-ka, isticmaal sawiro cad, qiimee packages-kaaga si dhab ah bilowga, ka dibna kor u qaad marka reviews aad hesho. Order kasta la dhammaystiray wuxuu xoojiyaa sumcaddaada.',
+        ],
+        steps: [
+          { title: 'Samee gigyo badan oo diiradda saaran', body: 'Halkii aad hal gig ballaadhan sameyso, samee dhowr oo gaar ah.' },
+          { title: 'Dhakhso u jawaab', body: 'Jawaab degdeg ah waxay kor u qaadaysaa heerkaaga.' },
+          { title: 'Geey wakhtiga ka hor', body: 'Waqti-ku-geyn waa calaamadda ugu xooggan heerka.' },
+          { title: 'Codso review daacad ah', body: 'Ka dib oggolaanshaha, si edeb leh ka codso macmiilka qiimayn.' },
+          { title: 'Hel xaqiijin', body: 'Blue tick iyo verified seller waxay kordhiyaan kalsoonida macmiilka.' },
+          { title: 'Balaadhi', body: 'Ku dar packages cusub, kor u qaad qiimaha marka rating-kaagu koro, oo tixgeli Fivesom Ads.' },
+        ],
+        bullets: [
+          'Dhammaystir profile-kaaga 100% — sawir, bio, xirfado, luqado, portfolio.',
+          'Ha cancel garayn order bilaa sabab; cancel-ku wuxuu dhaawacaa heerkaaga.',
+          'Wada hadalka oo dhan ku dhex hay FIVESOM si taageeradu ku ilaaliso.',
+          'Rating 4.5+ iyo 10 order waxay furaan albaabka blue tick-ga.',
+        ],
+        tip: 'Hal delivery aad u fiican toddobaadkii way ka fiican tahay toban degdeg ah.',
+      },
+      ar: {
+        title: '20. تنمية عملك على FIVESOM',
+        subtitle: 'عادات عملية تحوّل ملفك الجديد إلى دخل ثابت.',
+        description: [
+          'النجاح يعتمد على الاستمرارية: الردّ السريع، التسليم في الوقت، والتواصل الواضح يرفع ترتيبك.',
+          'اعتبر خدماتك منتجات: عنوان واضح، صور جيدة، أسعار واقعية، وتحسين مستمر بعد التقييمات.',
+        ],
+        steps: [
+          { title: 'أنشئ خدمات محددة', body: 'عدة خدمات دقيقة أفضل من خدمة عامة.' },
+          { title: 'ردّ بسرعة', body: 'الردّ السريع يرفع الترتيب.' },
+          { title: 'سلّم قبل الموعد', body: 'أقوى إشارة للترتيب.' },
+          { title: 'اطلب تقييمًا', body: 'بعد القبول اطلب تقييمًا بلطف.' },
+          { title: 'وثّق حسابك', body: 'العلامة الزرقاء تزيد الثقة.' },
+          { title: 'وسّع نشاطك', body: 'أضف حزمًا جديدة وفكر في Fivesom Ads.' },
+        ],
+        bullets: [
+          'أكمل ملفك 100%.',
+          'تجنّب الإلغاء غير الضروري.',
+          'أبقِ التواصل داخل المنصة.',
+          'تقييم 4.5+ مع 10 طلبات يفتح باب التوثيق.',
+        ],
+        tip: 'تسليم ممتاز واحد أفضل من عشرة متعجلة.',
+      },
+      fr: {
+        title: '20. Développer votre activité sur FIVESOM',
+        subtitle: 'Des habitudes concrètes pour transformer un nouveau profil en revenu régulier.',
+        description: [
+          'La réussite vient de la régularité : réponses rapides, livraisons à l\'heure et communication claire améliorent votre classement.',
+          'Traitez vos gigs comme des produits : titre clair, visuels soignés, prix réalistes, puis améliorations après les avis.',
+        ],
+        steps: [
+          { title: 'Créez plusieurs gigs ciblés', body: 'Plusieurs services précis valent mieux qu\'un service vague.' },
+          { title: 'Répondez vite', body: 'La rapidité améliore le classement.' },
+          { title: 'Livrez avant l\'échéance', body: 'Le signal de classement le plus fort.' },
+          { title: 'Demandez un avis', body: 'Après acceptation, invitez poliment l\'acheteur.' },
+          { title: 'Faites-vous vérifier', body: 'Le badge vérifié renforce la confiance.' },
+          { title: 'Développez', body: 'Ajoutez des offres et envisagez Fivesom Ads.' },
+        ],
+        bullets: [
+          'Complétez votre profil à 100%.',
+          'Évitez les annulations inutiles.',
+          'Gardez les échanges sur la plateforme.',
+          'Une note de 4.5+ avec 10 commandes ouvre le badge bleu.',
+        ],
+        tip: 'Une excellente livraison vaut mieux que dix précipitées.',
+      },
+    },
+  },
 ];
+
 
 const UI_LABELS: Record<Lang, { onPage: string; tableOfContents: string; faqHeading: string; backToTop: string; steps: string; highlights: string; tip: string; faqInside: string }> = {
   en: { onPage: 'On this page', tableOfContents: 'Documentation', faqHeading: 'Common Questions', backToTop: 'Back to top', steps: 'Steps', highlights: 'Highlights', tip: 'Pro tip', faqInside: 'FAQ' },
