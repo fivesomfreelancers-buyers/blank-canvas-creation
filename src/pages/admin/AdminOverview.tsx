@@ -85,7 +85,7 @@ const AdminOverview = () => {
   const PIE_COLORS = ['hsl(var(--primary))', 'hsl(var(--destructive))', 'hsl(142, 76%, 36%)', 'hsl(48, 96%, 53%)', 'hsl(var(--muted-foreground))'];
 
   const statCards = [
-    { title: 'Total Revenue', value: `$${stats.totalRevenue.toFixed(2)}`, icon: DollarSign, trend: '+12%', up: true, desc: 'All time' },
+    { title: 'Total Revenue', value: `$${stats.totalRevenue.toFixed(2)}`, icon: DollarSign, trend: '', up: true, desc: 'All time' },
     { title: 'Monthly Revenue', value: `$${stats.monthlyRevenue.toFixed(2)}`, icon: TrendingUp, trend: '', up: true, desc: 'This month' },
     { title: 'Weekly Revenue', value: `$${stats.weeklyRevenue.toFixed(2)}`, icon: TrendingUp, trend: '', up: true, desc: 'Last 7 days' },
     { title: 'Escrow Funds', value: `$${stats.escrowFunds.toFixed(2)}`, icon: DollarSign, trend: '', up: true, desc: 'Secured' },
