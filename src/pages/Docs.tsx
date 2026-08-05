@@ -4,7 +4,7 @@ import {
   Info, Workflow, UserPlus, IdCard, ShieldCheck, Briefcase, ShoppingCart,
   MessageSquare, Wallet, ListChecks, Star, Lock, Users, Scale, Trophy,
   BadgeCheck, LifeBuoy, HelpCircle, Globe, ArrowRight, Menu, X, CheckCircle2,
-  Lightbulb, Smartphone, TrendingUp
+  Lightbulb, Smartphone
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
