@@ -54,7 +54,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import TermsOfService from "./pages/legal/TermsOfService";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
 import { ThemeProvider } from "./components/ThemeProvider";
-import PresenceTracker from "./components/presence/PresenceTracker";
+import PresenceProvider from "./components/presence/PresenceProvider";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 const queryClient = new QueryClient();
@@ -64,11 +64,11 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <LanguageProvider>
+        <PresenceProvider>
         <TooltipProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <PresenceTracker />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/explore" element={<Explore />} />
@@ -138,6 +138,7 @@ const App = () => (
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
+        </PresenceProvider>
         </LanguageProvider>
       </AuthProvider>
     </QueryClientProvider>
