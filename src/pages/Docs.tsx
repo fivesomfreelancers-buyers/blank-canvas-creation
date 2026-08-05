@@ -222,7 +222,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'account', icon: UserPlus, image: imgAccount, cta: { label: { en: 'Create Account', so: 'Sameey Akoon', ar: 'إنشاء حساب', fr: 'Créer un compte' }, to: '/register' },
+    id: 'account', icon: UserPlus, video: accountVid.url, cta: { label: { en: 'Create Account', so: 'Sameey Akoon', ar: 'إنشاء حساب', fr: 'Créer un compte' }, to: '/register' },
     t: {
       en: {
         title: '3. Account Creation Guide',
@@ -453,7 +453,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'gig', icon: Briefcase, image: imgGig, cta: { label: { en: 'Create a Gig', so: 'Samee Gig', ar: 'إنشاء خدمة', fr: 'Créer un gig' }, to: '/create-gig' },
+    id: 'gig', icon: Briefcase, video: gigVid.url, cta: { label: { en: 'Create a Gig', so: 'Samee Gig', ar: 'إنشاء خدمة', fr: 'Créer un gig' }, to: '/create-gig' },
     t: {
       en: {
         title: '6. Creating a Service (Gig)',
@@ -534,7 +534,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'ordering', icon: ShoppingCart, image: imgOrdering, cta: { label: { en: 'Browse Services', so: 'Eeg Adeegyada', ar: 'تصفح', fr: 'Parcourir' }, to: '/explore' },
+    id: 'ordering', icon: ShoppingCart, video: orderingVid.url, cta: { label: { en: 'Browse Services', so: 'Eeg Adeegyada', ar: 'تصفح', fr: 'Parcourir' }, to: '/explore' },
     t: {
       en: {
         title: '7. Ordering Services',
@@ -615,7 +615,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'messaging', icon: MessageSquare, image: imgMessaging, cta: { label: { en: 'Open Messages', so: 'Fur Fariimaha', ar: 'الرسائل', fr: 'Messages' }, to: '/buyer/messages' },
+    id: 'messaging', icon: MessageSquare, video: messagingVid.url, cta: { label: { en: 'Open Messages', so: 'Fur Fariimaha', ar: 'الرسائل', fr: 'Messages' }, to: '/buyer/messages' },
     t: {
       en: {
         title: '8. Messaging & Communication',
@@ -761,7 +761,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'orders', icon: ListChecks, image: imgOrders, cta: { label: { en: 'My Orders', so: 'Orders-keyga', ar: 'طلباتي', fr: 'Mes commandes' }, to: '/buyer/orders' },
+    id: 'orders', icon: ListChecks, video: ordersVid.url, cta: { label: { en: 'My Orders', so: 'Orders-keyga', ar: 'طلباتي', fr: 'Mes commandes' }, to: '/buyer/orders' },
     t: {
       en: {
         title: '10. Order Management',
@@ -1069,7 +1069,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'dispute', icon: Scale, image: imgDispute,
+    id: 'dispute', icon: Scale, video: disputeVid.url,
     t: {
       en: {
         title: '14. Dispute Resolution',
