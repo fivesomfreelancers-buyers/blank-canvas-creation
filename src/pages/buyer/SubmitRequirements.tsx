@@ -27,7 +27,7 @@ const SubmitRequirements = () => {
       const newFiles = Array.from(files);
       const totalSize = [...uploadedFiles, ...newFiles].reduce((sum, f) => sum + f.size, 0);
       if (totalSize > 50 * 1024 * 1024) {
-        toast({ title: "Files too large", description: "Total file size must be under 50MB", variant: "destructive" });
+        toast({ title: "Files too large (max 50MB)", description: "Total file size must be under 50MB. For bigger files, share a Google Drive or Dropbox link instead.", variant: "destructive" });
         return;
       }
       setUploadedFiles(prev => [...prev, ...newFiles]);

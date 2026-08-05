@@ -65,7 +65,7 @@ const FreelancerDeliverWork = () => {
       const newFiles = Array.from(files);
       const totalSize = [...uploadedFiles, ...newFiles].reduce((sum, f) => sum + f.size, 0);
       if (totalSize > 50 * 1024 * 1024) {
-        toast({ title: "Files too large", description: "Total file size must be under 50MB. Use an external link for large files.", variant: "destructive" });
+        toast({ title: "Files too large (max 50MB)", description: "Total file size must be under 50MB. For bigger files, paste a Google Drive or Dropbox link in the delivery link field.", variant: "destructive" });
         return;
       }
       setUploadedFiles(prev => [...prev, ...newFiles]);
