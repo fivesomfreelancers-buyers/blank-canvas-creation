@@ -2,6 +2,8 @@ import { useState, useEffect, createContext, useContext, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { ensureNormalUserRole } from '@/lib/roleUpgrade';
+import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
+
 
 type UserRole = 'freelancer' | 'buyer' | 'user' | null;
 
@@ -173,7 +175,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     location?: string
   ) => {
     try {
+      // Signup flooding guard (shared with the standalone register screens).
+      const wait = authCooldownRemaining('signup', email);
+      if (wait > 0) {
+        return { error: new Error(cooldownMessage(wait)) };
+      }
+      recordAuthFailure('signup', email);
+
       const redirectUrl = `${window.location.origin}/`;
+      
+
       
       const { data, error } = await supabase.auth.signUp({
         email,

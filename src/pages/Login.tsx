@@ -9,6 +9,8 @@ import { useAuth } from '@/hooks/useAuth';
 import Navbar from '@/components/Navbar';
 import logo from '@/assets/logo.png';
 import { supabase } from '@/integrations/supabase/client';
+import { authCooldownRemaining, clearAuthFailures, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
+
 
 
 const Login = () => {
@@ -105,6 +107,13 @@ const Login = () => {
       return;
     }
 
+    // Brute-force guard: escalating cooldown after repeated failures.
+    const wait = authCooldownRemaining('login', email);
+    if (wait > 0) {
+      toast({ title: 'Too many attempts', description: cooldownMessage(wait), variant: 'destructive' });
+      return;
+    }
+
     setEmailLoading(true);
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email.trim(),
@@ -112,19 +121,24 @@ const Login = () => {
     });
 
     if (error || !data.user) {
+      const cooldown = recordAuthFailure('login', email);
       toast({
         title: 'Login Failed',
-        description: error?.message || 'Could not authenticate. Please try again.',
+        description: cooldown > 0
+          ? cooldownMessage(cooldown)
+          : error?.message || 'Could not authenticate. Please try again.',
         variant: 'destructive',
       });
       setEmailLoading(false);
       return;
     }
 
+    clearAuthFailures('login', email);
     toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
     await routeAfterLogin(data.user.id);
     setEmailLoading(false);
   };
+
 
   return (
     <>
