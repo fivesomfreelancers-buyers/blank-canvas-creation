@@ -1130,6 +1130,27 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          bucket: string
+          created_at: string
+          id: string
+          subject: string
+        }
+        Insert: {
+          bucket: string
+          created_at?: string
+          id?: string
+          subject: string
+        }
+        Update: {
+          bucket?: string
+          created_at?: string
+          id?: string
+          subject?: string
+        }
+        Relationships: []
+      }
       subcategories: {
         Row: {
           category_id: string
@@ -1740,6 +1761,15 @@ export type Database = {
       broadcast_news: {
         Args: { _attachment_url: string; _audience: string; _body: string }
         Returns: number
+      }
+      check_rate_limit: {
+        Args: {
+          _bucket: string
+          _limit: number
+          _subject?: string
+          _window_seconds: number
+        }
+        Returns: Json
       }
       expire_vip_memberships: { Args: never; Returns: number }
       freelancer_privileged_snapshot: { Args: { _id: string }; Returns: Json }
