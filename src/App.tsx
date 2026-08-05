@@ -48,7 +48,6 @@ import BuyerSettings from "./pages/buyer/BuyerSettings";
 import BuyerOrderDetails from "./pages/buyer/BuyerOrderDetails";
 import SubmitRequirements from "./pages/buyer/SubmitRequirements";
 import PaymentSuccess from "./pages/buyer/PaymentSuccess";
-import SellerPayment from "./pages/SellerPayment";
 import PaymentPage from "./pages/PaymentPage";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -90,7 +89,6 @@ const App = () => (
               <Route path="/become-buyer" element={<UpgradeRole role="buyer" />} />
               <Route path="/become-freelancer" element={<UpgradeRole role="freelancer" />} />
               <Route path="/complete-profile/:role" element={<CompleteProfile />} />
-              <Route path="/seller/payment" element={<SellerPayment />} />
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/buyer/payment-success" element={<PaymentSuccess />} />
               <Route path="/create-gig" element={<CreateGig />} />
