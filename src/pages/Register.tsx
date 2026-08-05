@@ -9,6 +9,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/Navbar';
 import logo from '@/assets/logo.png';
+import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
+
 
 
 const Register = () => {
