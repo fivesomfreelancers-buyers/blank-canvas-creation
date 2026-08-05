@@ -4,7 +4,7 @@ import {
   Info, Workflow, UserPlus, IdCard, ShieldCheck, Briefcase, ShoppingCart,
   MessageSquare, Wallet, ListChecks, Star, Lock, Users, Scale, Trophy,
   BadgeCheck, LifeBuoy, HelpCircle, Globe, ArrowRight, Menu, X, CheckCircle2,
-  Lightbulb
+  Lightbulb, Smartphone, TrendingUp
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
@@ -14,21 +14,27 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Card, CardContent } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
-// Section illustrations — externally hosted (provided by product team)
+// Section media — CDN-hosted assets provided by the product team
+import howWorksImg from '@/assets/docs/how-works.png.asset.json';
+import escrowImg from '@/assets/docs/escrow.png.asset.json';
+import reviewsImg from '@/assets/docs/reviews.png.asset.json';
+import securityImg from '@/assets/docs/security.png.asset.json';
+import accountVid from '@/assets/docs/account.mp4.asset.json';
+import gigVid from '@/assets/docs/gig.mp4.asset.json';
+import orderingVid from '@/assets/docs/ordering.mp4.asset.json';
+import messagingVid from '@/assets/docs/messaging.mp4.asset.json';
+import ordersVid from '@/assets/docs/orders.mp4.asset.json';
+import disputeVid from '@/assets/docs/dispute.mp4.asset.json';
+
+// Legacy illustrations kept for the sections that still use a static image
 const imgIntro = 'https://i.postimg.cc/Vknzq7BP/5f01f0f6-0e76-4d74-9fd2-ac233c98db20.png';
-const imgHow = 'https://i.postimg.cc/Gt61YY4M/204834bf-2944-40fe-b91f-afe90d96dbe7.png';
-const imgAccount = 'https://i.postimg.cc/Vknzq7BP/5f01f0f6-0e76-4d74-9fd2-ac233c98db20.png';
+const imgHow = howWorksImg.url;
 const imgProfile = 'https://i.postimg.cc/Hncqpx6y/ed0c0e61-3d22-4378-b0e8-3414ae132229.png';
-const imgEscrow = 'https://i.postimg.cc/9QhQn5fG/b15e8b8e-153d-4e73-9600-e6e64441f789.png';
-const imgGig = 'https://i.postimg.cc/RhtvgXxz/7af94512-11d8-4983-81d6-98062b182e0c.png';
-const imgOrdering = 'https://i.postimg.cc/7Z9wt5dy/af9f3307-a7b0-42e6-b0ba-bedcdecc41a0.png';
-const imgMessaging = 'https://i.postimg.cc/76FkJ0Gs/d52ffc3a-86a0-490d-8630-70c6abbfb022.png';
+const imgEscrow = escrowImg.url;
 const imgPayment = 'https://i.postimg.cc/rwf2CvRT/da785612-fdaf-48dc-965e-f65d99595f0b.png';
-const imgOrders = 'https://i.postimg.cc/sxYtB8Cq/0b6f1e23-26be-490c-ac27-969dd2df278e.png';
-const imgReviews = 'https://i.postimg.cc/vZHpB3qJ/27117911-cd37-458a-9e64-8c23984f6ffe.png';
-const imgSecurity = 'https://i.postimg.cc/cCSzNmtj/73d8a821-438d-418e-b917-80d527cc23db.png';
+const imgReviews = reviewsImg.url;
+const imgSecurity = securityImg.url;
 const imgCommunity = 'https://i.postimg.cc/gJ9SvDsc/7670fe7c-0f93-4bfa-84b3-9bb46b490cb8.png';
-const imgDispute = 'https://i.postimg.cc/qvSjTL9X/8a66f60f-8be8-4e85-a7b8-893826311b55.png';
 const imgLevels = 'https://i.postimg.cc/BZpp6srD/45985dc0-518d-4116-97f8-d43617873de8.png';
 const imgTick = 'https://i.postimg.cc/BZpp6srD/45985dc0-518d-4116-97f8-d43617873de8.png';
 const imgSupport = 'https://i.postimg.cc/C5xjDB31/815b9ecb-15c1-4440-adec-e473f3335032.png';
@@ -49,10 +55,14 @@ interface SectionContent {
 interface Section {
   id: string;
   icon: React.ElementType;
-  image: string;
+  /** Static illustration. Omitted for text-only sections. */
+  image?: string;
+  /** Tutorial video (MP4). Takes priority over `image` when present. */
+  video?: string;
   cta?: { label: Record<Lang, string>; to: string };
   t: Record<Lang, SectionContent>;
 }
+
 
 const SECTIONS: Section[] = [
   {
