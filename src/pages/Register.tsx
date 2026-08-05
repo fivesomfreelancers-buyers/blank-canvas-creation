@@ -60,8 +60,17 @@ const Register = () => {
       return;
     }
 
+    // Signup flooding guard — limits how fast one browser can mint accounts.
+    const wait = authCooldownRemaining('signup', email);
+    if (wait > 0) {
+      toast({ title: 'Please slow down', description: cooldownMessage(wait), variant: 'destructive' });
+      return;
+    }
+    recordAuthFailure('signup', email);
+
     setEmailLoading(true);
     const redirectUrl = `${window.location.origin}/`;
+
     const { data, error } = await supabase.auth.signUp({
       email: email.trim(),
       password,
