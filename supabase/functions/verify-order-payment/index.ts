@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { consumeRateLimit, tooManyRequests } from "../_shared/rate-limit.ts";
 import { ensurePaidOrder } from "../_shared/order-from-payment.ts";
 
 const corsHeaders = {
@@ -45,6 +46,10 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
       { auth: { persistSession: false } },
     );
+
+    // Throttle: per-user cap on this endpoint.
+    const rl = await consumeRateLimit(admin, "fn:verify-payment", user.id, 30, 300);
+    if (!rl.allowed) return tooManyRequests(rl.retryAfter, corsHeaders);
 
     let paid = false;
     let resolvedIntentId: string | null = paymentIntentId || null;

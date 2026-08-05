@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+import { consumeRateLimit, tooManyRequests } from "../_shared/rate-limit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -45,6 +46,10 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
       { auth: { persistSession: false } },
     );
+
+    // Throttle: per-user cap on this endpoint.
+    const rl = await consumeRateLimit(admin, "fn:payment-intent", user.id, 15, 600);
+    if (!rl.allowed) return tooManyRequests(rl.retryAfter, corsHeaders);
 
     // Price and gig data are resolved server-side — never trusted from the client.
     const { data: gig, error: gigErr } = await admin
