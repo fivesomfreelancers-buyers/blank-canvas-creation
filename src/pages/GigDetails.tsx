@@ -250,23 +250,23 @@ const GigDetails = () => {
                     <vipTheme.Icon className="w-3.5 h-3.5" /> {vipTheme.label}
                   </div>
                 )}
-                <h1 className={`text-2xl font-bold mb-2 ${vipTheme ? 'bg-clip-text text-transparent' : ''}`}
+                <h1 className={`text-xl sm:text-2xl font-bold mb-2 break-words ${vipTheme ? 'bg-clip-text text-transparent' : ''}`}
                     style={vipTheme ? { backgroundImage: vipTheme.textGradient } : undefined}>{gig.title}</h1>
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="relative">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                  <div className="flex flex-wrap items-center gap-2 min-w-0">
+                    <div className="relative shrink-0">
                       <Avatar className="w-8 h-8" style={vipTheme ? { boxShadow: vipTheme.ring } : undefined}>
                         <AvatarImage src={gig.freelancerImageUrl || ''} />
                         <AvatarFallback className="bg-primary text-primary-foreground text-sm">{initials}</AvatarFallback>
                       </Avatar>
                       <span className="absolute -bottom-0.5 -right-0.5"><OnlineIndicator userId={gig.freelancerUserId} dotOnly /></span>
                     </div>
-                    <span className="font-medium inline-flex items-center gap-1.5">
+                    <span className="font-medium inline-flex flex-wrap items-center gap-1.5 min-w-0 break-words">
                       {gig.freelancerName}
                       {gig.hasBlueTick && <BlueTickBadge size="sm" />}
                       {gig.isVerified && !gig.hasBlueTick && <VerifiedBadge size="sm" />}
                       {vipTheme && (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold"
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold shrink-0"
                               style={{ background: vipTheme.gradient, color: '#0B0E14' }}>
                           <vipTheme.Icon className="w-2.5 h-2.5" /> {vipTheme.shortLabel}
                         </span>
@@ -275,7 +275,7 @@ const GigDetails = () => {
                     <OnlineIndicator userId={gig.freelancerUserId} />
                   </div>
                   {gig.totalReviews > 0 && (
-                    <div className="flex items-center">
+                    <div className="flex items-center shrink-0">
                       <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
                       <span className="font-medium">{gig.rating.toFixed(1)}</span>
                       <span className="text-muted-foreground ml-1">({gig.totalReviews})</span>
@@ -286,9 +286,9 @@ const GigDetails = () => {
                 {gig.tags && gig.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-3">
                     {gig.tags.map((tag: string, idx: number) => (
-                      <Badge key={idx} variant="secondary" className="flex items-center gap-1">
-                        <Tag className="w-3 h-3" />
-                        {tag}
+                      <Badge key={idx} variant="secondary" className="flex items-center gap-1 max-w-full">
+                        <Tag className="w-3 h-3 shrink-0" />
+                        <span className="truncate">{tag}</span>
                       </Badge>
                     ))}
                   </div>
@@ -296,12 +296,15 @@ const GigDetails = () => {
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="description">
-                  <TabsList>
-                    <TabsTrigger value="description">Description</TabsTrigger>
-                    <TabsTrigger value="requirements">Requirements</TabsTrigger>
-                    <TabsTrigger value="reviews">Reviews ({gig.totalReviews})</TabsTrigger>
-                    <TabsTrigger value="about">About Seller</TabsTrigger>
-                  </TabsList>
+                  <div className="-mx-2 px-2 overflow-x-auto no-scrollbar">
+                    <TabsList className="w-max min-w-full justify-start">
+                      <TabsTrigger value="description">Description</TabsTrigger>
+                      <TabsTrigger value="requirements">Requirements</TabsTrigger>
+                      <TabsTrigger value="reviews">Reviews ({gig.totalReviews})</TabsTrigger>
+                      <TabsTrigger value="about">About Seller</TabsTrigger>
+                    </TabsList>
+                  </div>
+
                   <TabsContent value="description" className="mt-4">
                     <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">{gig.description}</p>
                   </TabsContent>
