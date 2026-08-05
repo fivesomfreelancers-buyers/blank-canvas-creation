@@ -1428,7 +1428,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'mobile-money', icon: Smartphone,
+    id: 'mobile-money', icon: Smartphone, video: withdrawMoneyVid.url,
     t: {
       en: {
         title: '19. Mobile Money & Local Payments',
