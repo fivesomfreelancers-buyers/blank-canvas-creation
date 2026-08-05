@@ -62,20 +62,31 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // The admin console is the highest-value target — throttle guesses hard.
+    const wait = authCooldownRemaining('admin-login', email);
+    if (wait > 0) {
+      toast.error(cooldownMessage(wait));
+      return;
+    }
+
     setLoginLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error || !data.user) {
-        toast.error(error?.message || 'Login failed');
+        const cooldown = recordAuthFailure('admin-login', email);
+        toast.error(cooldown > 0 ? cooldownMessage(cooldown) : error?.message || 'Login failed');
         setLoginLoading(false);
         return;
       }
       const ok = await checkAdminRole(data.user.id);
       if (!ok) {
+        recordAuthFailure('admin-login', email);
         toast.error('Access denied. This account is not an admin.');
         await supabase.auth.signOut();
         setIsAdmin(false);
       } else {
+        clearAuthFailures('admin-login', email);
         toast.success('Welcome, Admin!');
         setIsAdmin(true);
       }
@@ -84,6 +95,7 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
     }
     setLoginLoading(false);
   };
+
 
   const handleSignOut = async () => {
     await signOut();
