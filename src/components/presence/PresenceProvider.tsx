@@ -15,33 +15,40 @@ const PresenceContext = createContext<PresenceCtx>({
 
 export const usePresenceContext = () => useContext(PresenceContext);
 
-const CHANNEL = 'presence:global';
+const TOPIC = 'presence:global';
 const HEARTBEAT_MS = 45_000;
 
 /**
  * Global presence:
- * - Joins a single Realtime presence channel so every client knows, in real time,
- *   who currently has the site open (works across tabs, survives navigation).
- * - Signed-in users `track()` themselves; anonymous visitors only read the state.
- * - A DB heartbeat keeps `profiles.last_seen` fresh as a fallback for clients that
- *   are not subscribed yet (SSR-less first paint, cached lists, admin views).
- * - Reconnects automatically: Realtime retries the socket, and re-tracks on
- *   SUBSCRIBED, on tab focus, and on `online` network events.
+ * - One Realtime presence channel tells every client, in real time, who has the
+ *   site open (works across tabs and survives client-side navigation).
+ * - Signed-in users `track()` themselves; anonymous visitors only read state.
+ * - Subscribes only after auth has resolved and the Realtime socket has the auth
+ *   token, which avoids the duplicate `phx_join` that makes the server close the
+ *   channel (that was the cause of the random Online/Offline flicker).
+ * - Self-healing: any CLOSED / CHANNEL_ERROR / TIMED_OUT status, tab focus, or
+ *   network `online` event triggers a rejoin with backoff.
+ * - `profiles.last_seen` heartbeat is kept as a fallback signal.
  */
 export const PresenceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useAuth();
+  const { user, session, isLoading } = useAuth();
   const userId = user?.id ?? null;
   const [onlineIds, setOnlineIds] = useState<Set<string>>(new Set());
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const anonKeyRef = useRef(`anon-${Math.random().toString(36).slice(2)}`);
 
-  // ---- Realtime presence channel ----
   useEffect(() => {
-    const channel = supabase.channel(CHANNEL, {
-      config: { presence: { key: userId ?? `anon-${Math.random().toString(36).slice(2)}` } },
-    });
-    channelRef.current = channel;
+    if (isLoading) return; // wait until we know whether there is a session
+
+    let disposed = false;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    let rejoinTimer: ReturnType<typeof setTimeout> | null = null;
+    let keepAlive: ReturnType<typeof setInterval> | null = null;
+    let attempt = 0;
+
+    const presenceKey = userId ?? anonKeyRef.current;
 
     const syncState = () => {
+      if (!channel) return;
       const state = channel.presenceState<{ user_id?: string }>();
       const ids = new Set<string>();
       Object.entries(state).forEach(([key, metas]) => {
@@ -53,42 +60,110 @@ export const PresenceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setOnlineIds(ids);
     };
 
-    const track = () => {
-      if (!userId) return;
-      channel.track({ user_id: userId, online_at: new Date().toISOString() }).catch(() => {});
+    const track = async () => {
+      if (!userId || !channel || channel.state !== 'joined') return;
+      try {
+        await channel.track({ user_id: userId, online_at: new Date().toISOString() });
+      } catch {
+        /* rejoin logic will recover */
+      }
     };
 
-    channel
-      .on('presence', { event: 'sync' }, syncState)
-      .on('presence', { event: 'join' }, syncState)
-      .on('presence', { event: 'leave' }, syncState)
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') track();
-      });
-
-    const onFocus = () => {
-      if (document.visibilityState === 'visible') track();
+    const scheduleRejoin = () => {
+      if (disposed || rejoinTimer) return;
+      const delay = Math.min(1000 * 2 ** attempt, 15_000);
+      attempt += 1;
+      rejoinTimer = setTimeout(() => {
+        rejoinTimer = null;
+        join();
+      }, delay);
     };
-    const onNetOnline = () => track();
 
-    document.addEventListener('visibilitychange', onFocus);
-    window.addEventListener('focus', onFocus);
-    window.addEventListener('online', onNetOnline);
+    const join = async () => {
+      if (disposed) return;
+      if (channel) {
+        const stale = channel;
+        channel = null;
+        try {
+          await supabase.removeChannel(stale);
+        } catch {
+          /* ignore */
+        }
+      }
 
-    // Keep the presence meta fresh so a stale socket is replaced rather than dropped.
-    const keepAlive = setInterval(track, HEARTBEAT_MS);
+      // Make sure the socket carries the current JWT *before* joining, so the
+      // client never has to re-join the same topic with a new token.
+      try {
+        await (supabase.realtime as any).setAuth?.();
+      } catch {
+        /* anon key is used when there is no session */
+      }
+      if (disposed) return;
+
+      const ch = supabase.channel(TOPIC, { config: { presence: { key: presenceKey } } });
+      channel = ch;
+
+      ch.on('presence', { event: 'sync' }, syncState)
+        .on('presence', { event: 'join' }, syncState)
+        .on('presence', { event: 'leave' }, syncState)
+        .subscribe((status) => {
+          if (disposed || channel !== ch) return;
+          if (status === 'SUBSCRIBED') {
+            attempt = 0;
+            void track();
+          } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+            scheduleRejoin();
+          }
+        });
+    };
+
+    const ensureAlive = () => {
+      if (disposed) return;
+      if (!channel || channel.state !== 'joined') scheduleRejoin();
+      else void track();
+    };
+
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') ensureAlive();
+    };
+
+    void join();
+
+    // Refresh our presence meta periodically and repair a dead channel.
+    keepAlive = setInterval(ensureAlive, HEARTBEAT_MS);
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('focus', ensureAlive);
+    window.addEventListener('online', ensureAlive);
 
     return () => {
-      clearInterval(keepAlive);
-      document.removeEventListener('visibilitychange', onFocus);
-      window.removeEventListener('focus', onFocus);
-      window.removeEventListener('online', onNetOnline);
-      supabase.removeChannel(channel);
-      channelRef.current = null;
+      disposed = true;
+      if (keepAlive) clearInterval(keepAlive);
+      if (rejoinTimer) clearTimeout(rejoinTimer);
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('focus', ensureAlive);
+      window.removeEventListener('online', ensureAlive);
+      if (channel) {
+        const ch = channel;
+        channel = null;
+        void (async () => {
+          try {
+            await ch.untrack();
+          } catch {
+            /* ignore */
+          }
+          try {
+            await supabase.removeChannel(ch);
+          } catch {
+            /* ignore */
+          }
+        })();
+      }
+      setOnlineIds(new Set());
     };
-  }, [userId]);
+    // Re-create the channel when the signed-in identity changes (login/logout).
+  }, [userId, isLoading, !!session]);
 
-  // ---- DB heartbeat (fallback signal) ----
+  // ---- DB heartbeat (fallback signal for clients not yet subscribed) ----
   useEffect(() => {
     if (!userId) return;
     let cancelled = false;
@@ -106,10 +181,10 @@ export const PresenceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       }
     };
 
-    ping();
+    void ping();
     // Runs regardless of tab visibility: an open background tab still means "on the site".
     const interval = setInterval(ping, HEARTBEAT_MS);
-    const onNetOnline = () => ping();
+    const onNetOnline = () => void ping();
     window.addEventListener('online', onNetOnline);
 
     return () => {
