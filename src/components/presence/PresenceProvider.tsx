@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
 interface PresenceCtx {
-  /** User ids currently connected to the site via Realtime presence. */
+  /** User ids currently considered connected to the site. */
   onlineIds: Set<string>;
   isOnline: (userId: string | null | undefined) => boolean;
 }
@@ -16,22 +16,52 @@ const PresenceContext = createContext<PresenceCtx>({
 export const usePresenceContext = () => useContext(PresenceContext);
 
 const TOPIC = 'presence:global';
-const HEARTBEAT_MS = 45_000;
+const KEEPALIVE_MS = 20_000;
+const DB_HEARTBEAT_MS = 45_000;
+/**
+ * Sticky window after a presence "leave". Browsers throttle timers in background
+ * tabs, which can drop the Realtime socket for a few seconds even though the user
+ * never left the site. Peers keep showing Online during this grace period, so the
+ * status never flickers. Explicit sign-out / tab close is broadcast and bypasses it.
+ */
+const LEAVE_GRACE_MS = 60_000;
+const OFFLINE_EVENT = 'presence-offline';
+
+/** Timer that keeps firing in throttled/background tabs (Workers aren't throttled). */
+const createTicker = (onTick: () => void, intervalMs: number) => {
+  try {
+    const src = `let i=null;onmessage=e=>{if(e.data&&e.data.start){clearInterval(i);i=setInterval(()=>postMessage('tick'),e.data.start)}else{clearInterval(i)}}`;
+    const url = URL.createObjectURL(new Blob([src], { type: 'application/javascript' }));
+    const w = new Worker(url);
+    w.onmessage = () => onTick();
+    w.postMessage({ start: intervalMs });
+    return () => {
+      w.postMessage({ stop: true });
+      w.terminate();
+      URL.revokeObjectURL(url);
+    };
+  } catch {
+    const id = setInterval(onTick, intervalMs);
+    return () => clearInterval(id);
+  }
+};
 
 /**
- * Global presence:
- * - One Realtime presence channel tells every client, in real time, who has the
- *   site open (works across tabs and survives client-side navigation).
- * - Signed-in users `track()` themselves; anonymous visitors only read state.
- * - Subscribes only after auth has resolved and the Realtime socket has the auth
- *   token, which avoids the duplicate `phx_join` that makes the server close the
- *   channel (that was the cause of the random Online/Offline flicker).
- * - Self-healing: any CLOSED / CHANNEL_ERROR / TIMED_OUT status, tab focus, or
- *   network `online` event triggers a rejoin with backoff.
- * - `profiles.last_seen` heartbeat is kept as a fallback signal.
+ * Global presence system.
+ * - One Realtime presence channel: every client knows in real time who has the site open.
+ * - Subscribes only after auth resolved, with the JWT already on the socket, so the
+ *   channel is never re-joined with a new token (that duplicate join was closing the
+ *   channel and causing random Online/Offline switching).
+ * - Self-healing: CLOSED / CHANNEL_ERROR / TIMED_OUT, focus, visibility and network
+ *   `online` events trigger a backoff rejoin; a Worker ticker keeps this running in
+ *   background/minimized tabs.
+ * - Sticky grace prevents flicker; explicit sign-out and tab close broadcast an
+ *   immediate offline signal.
+ * - `profiles.last_seen` heartbeat remains as a fallback for clients that have not
+ *   joined the channel yet.
  */
 export const PresenceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, session, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
   const userId = user?.id ?? null;
   const [onlineIds, setOnlineIds] = useState<Set<string>>(new Set());
   const anonKeyRef = useRef(`anon-${Math.random().toString(36).slice(2)}`);
@@ -42,22 +72,65 @@ export const PresenceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     let disposed = false;
     let channel: ReturnType<typeof supabase.channel> | null = null;
     let rejoinTimer: ReturnType<typeof setTimeout> | null = null;
-    let keepAlive: ReturnType<typeof setInterval> | null = null;
     let attempt = 0;
 
     const presenceKey = userId ?? anonKeyRef.current;
+    /** id -> timestamp when it disappeared from presence state (grace tracking). */
+    const leftAt = new Map<string, number>();
+    const signedOff = new Set<string>();
 
-    const syncState = () => {
-      if (!channel) return;
-      const state = channel.presenceState<{ user_id?: string }>();
+    const publish = () => {
+      const now = Date.now();
       const ids = new Set<string>();
-      Object.entries(state).forEach(([key, metas]) => {
-        (metas as Array<{ user_id?: string }>).forEach((m) => {
-          const id = m.user_id || key;
-          if (id && !id.startsWith('anon-')) ids.add(id);
+      if (channel) {
+        const state = channel.presenceState<{ user_id?: string }>();
+        Object.entries(state).forEach(([key, metas]) => {
+          (metas as Array<{ user_id?: string }>).forEach((m) => {
+            const id = m.user_id || key;
+            if (id && !id.startsWith('anon-')) ids.add(id);
+          });
         });
+      }
+      ids.forEach((id) => {
+        leftAt.delete(id);
+        signedOff.delete(id);
       });
-      setOnlineIds(ids);
+      // Keep recently-dropped users Online for the grace window.
+      leftAt.forEach((ts, id) => {
+        if (signedOff.has(id)) return;
+        if (now - ts <= LEAVE_GRACE_MS) ids.add(id);
+        else leftAt.delete(id);
+      });
+      // Our own session is authoritative for ourselves while we are mounted.
+      if (userId) ids.add(userId);
+      setOnlineIds((prev) => {
+        if (prev.size === ids.size && [...ids].every((i) => prev.has(i))) return prev;
+        return ids;
+      });
+    };
+
+    const onLeave = (payload: any) => {
+      const now = Date.now();
+      Object.entries(payload?.leftPresences ? { x: payload.leftPresences } : payload?.leaves || {}).forEach(
+        ([key, metas]: [string, any]) => {
+          (Array.isArray(metas) ? metas : metas?.metas || []).forEach((m: any) => {
+            const id = m?.user_id || key;
+            if (id && !id.startsWith('anon-')) leftAt.set(id, now);
+          });
+        }
+      );
+      // Fallback: anything that vanished from state gets a grace timestamp.
+      if (channel) {
+        const present = new Set<string>();
+        const state = channel.presenceState<{ user_id?: string }>();
+        Object.entries(state).forEach(([key, metas]) =>
+          (metas as Array<{ user_id?: string }>).forEach((m) => present.add(m.user_id || key))
+        );
+        onlineIds.forEach((id) => {
+          if (!present.has(id) && !leftAt.has(id)) leftAt.set(id, now);
+        });
+      }
+      publish();
     };
 
     const track = async () => {
@@ -65,17 +138,17 @@ export const PresenceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       try {
         await channel.track({ user_id: userId, online_at: new Date().toISOString() });
       } catch {
-        /* rejoin logic will recover */
+        /* rejoin logic recovers */
       }
     };
 
     const scheduleRejoin = () => {
       if (disposed || rejoinTimer) return;
-      const delay = Math.min(1000 * 2 ** attempt, 15_000);
+      const delay = Math.min(1000 * 2 ** attempt, 10_000);
       attempt += 1;
       rejoinTimer = setTimeout(() => {
         rejoinTimer = null;
-        join();
+        void join();
       }, delay);
     };
 
@@ -91,8 +164,7 @@ export const PresenceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         }
       }
 
-      // Make sure the socket carries the current JWT *before* joining, so the
-      // client never has to re-join the same topic with a new token.
+      // Put the current JWT on the socket *before* joining the topic.
       try {
         await (supabase.realtime as any).setAuth?.();
       } catch {
@@ -103,9 +175,21 @@ export const PresenceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const ch = supabase.channel(TOPIC, { config: { presence: { key: presenceKey } } });
       channel = ch;
 
-      ch.on('presence', { event: 'sync' }, syncState)
-        .on('presence', { event: 'join' }, syncState)
-        .on('presence', { event: 'leave' }, syncState)
+      ch.on('presence', { event: 'sync' }, publish)
+        .on('presence', { event: 'join' }, publish)
+        .on('presence', { event: 'leave' }, onLeave)
+        .on('broadcast', { event: OFFLINE_EVENT }, ({ payload }: any) => {
+          const id = payload?.user_id;
+          if (!id) return;
+          signedOff.add(id);
+          leftAt.delete(id);
+          setOnlineIds((prev) => {
+            if (!prev.has(id)) return prev;
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+          });
+        })
         .subscribe((status) => {
           if (disposed || channel !== ch) return;
           if (status === 'SUBSCRIBED') {
@@ -121,27 +205,42 @@ export const PresenceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (disposed) return;
       if (!channel || channel.state !== 'joined') scheduleRejoin();
       else void track();
+      publish(); // prune expired grace entries
+    };
+
+    const announceOffline = () => {
+      if (!userId || !channel) return;
+      try {
+        void channel.send({ type: 'broadcast', event: OFFLINE_EVENT, payload: { user_id: userId } });
+      } catch {
+        /* best effort */
+      }
     };
 
     const onVisible = () => {
       if (document.visibilityState === 'visible') ensureAlive();
     };
+    const onPageHide = () => announceOffline();
 
     void join();
 
-    // Refresh our presence meta periodically and repair a dead channel.
-    keepAlive = setInterval(ensureAlive, HEARTBEAT_MS);
+    const stopTicker = createTicker(ensureAlive, KEEPALIVE_MS);
     document.addEventListener('visibilitychange', onVisible);
     window.addEventListener('focus', ensureAlive);
     window.addEventListener('online', ensureAlive);
+    window.addEventListener('pagehide', onPageHide);
+    window.addEventListener('beforeunload', onPageHide);
 
     return () => {
       disposed = true;
-      if (keepAlive) clearInterval(keepAlive);
+      stopTicker();
       if (rejoinTimer) clearTimeout(rejoinTimer);
       document.removeEventListener('visibilitychange', onVisible);
       window.removeEventListener('focus', ensureAlive);
       window.removeEventListener('online', ensureAlive);
+      window.removeEventListener('pagehide', onPageHide);
+      window.removeEventListener('beforeunload', onPageHide);
+      announceOffline(); // logout / identity change => peers drop us instantly
       if (channel) {
         const ch = channel;
         channel = null;
@@ -161,9 +260,9 @@ export const PresenceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setOnlineIds(new Set());
     };
     // Re-create the channel when the signed-in identity changes (login/logout).
-  }, [userId, isLoading, !!session]);
+  }, [userId, isLoading]);
 
-  // ---- DB heartbeat (fallback signal for clients not yet subscribed) ----
+  // ---- DB heartbeat (fallback signal for clients not subscribed yet) ----
   useEffect(() => {
     if (!userId) return;
     let cancelled = false;
@@ -182,14 +281,14 @@ export const PresenceProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
 
     void ping();
-    // Runs regardless of tab visibility: an open background tab still means "on the site".
-    const interval = setInterval(ping, HEARTBEAT_MS);
+    // Worker ticker: keeps running even when the tab is in the background.
+    const stop = createTicker(() => void ping(), DB_HEARTBEAT_MS);
     const onNetOnline = () => void ping();
     window.addEventListener('online', onNetOnline);
 
     return () => {
       cancelled = true;
-      clearInterval(interval);
+      stop();
       window.removeEventListener('online', onNetOnline);
     };
   }, [userId]);
