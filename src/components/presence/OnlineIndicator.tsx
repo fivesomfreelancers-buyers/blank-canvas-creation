@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { usePresenceContext } from './PresenceProvider';
 
 interface Props {
   userId: string | null | undefined;
@@ -10,7 +11,12 @@ interface Props {
   className?: string;
 }
 
-const ONLINE_WINDOW_MS = 2 * 60 * 1000; // <=2 min => online
+/**
+ * Grace window for the DB fallback. The heartbeat runs every 45s, so 5 minutes
+ * leaves plenty of slack for slow networks / temporary disconnects — a user who
+ * is still on the site never flickers to Offline.
+ */
+const ONLINE_WINDOW_MS = 5 * 60 * 1000;
 
 const formatLastSeen = (iso: string) => {
   const diffMs = Date.now() - new Date(iso).getTime();
@@ -24,6 +30,7 @@ const formatLastSeen = (iso: string) => {
 };
 
 const OnlineIndicator: React.FC<Props> = ({ userId, lastSeen, dotOnly, className }) => {
+  const { isOnline: isLive } = usePresenceContext();
   const [seen, setSeen] = useState<string | null>(lastSeen ?? null);
   const [, setTick] = useState(0);
 
@@ -51,12 +58,14 @@ const OnlineIndicator: React.FC<Props> = ({ userId, lastSeen, dotOnly, className
     return () => clearInterval(t);
   }, []);
 
-  const isOnline = !!seen && (Date.now() - new Date(seen).getTime() <= ONLINE_WINDOW_MS);
+  // Realtime presence is authoritative; last_seen is the fallback.
+  const isOnline =
+    isLive(userId) || (!!seen && Date.now() - new Date(seen).getTime() <= ONLINE_WINDOW_MS);
 
   if (dotOnly) {
     return (
       <span
-        title={seen ? formatLastSeen(seen) : 'Offline'}
+        title={isOnline ? 'Online' : seen ? formatLastSeen(seen) : 'Offline'}
         className={`inline-block w-2.5 h-2.5 rounded-full ring-2 ring-background ${isOnline ? 'bg-green-500' : 'bg-muted-foreground/40'} ${className || ''}`}
       />
     );
