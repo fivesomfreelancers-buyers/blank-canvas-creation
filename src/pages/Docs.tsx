@@ -1629,17 +1629,30 @@ const Docs: React.FC = () => {
                       ))}
                     </div>
 
-                    {/* Section image — appears as user scrolls into the section */}
-                    <figure className="rounded-2xl overflow-hidden border border-border mb-8 bg-muted shadow-sm">
-                      <img
-                        src={s.image}
-                        alt={t.title}
-                        loading="lazy"
-                        width={1280}
-                        height={720}
-                        className="w-full h-auto object-cover"
-                      />
-                    </figure>
+                    {/* Section media — tutorial video, illustration, or nothing */}
+                    {s.video ? (
+                      <figure className="rounded-2xl overflow-hidden border border-border mb-8 bg-black shadow-sm">
+                        <video
+                          src={s.video}
+                          controls
+                          playsInline
+                          preload="metadata"
+                          className="w-full h-auto max-h-[70vh] bg-black"
+                        />
+                      </figure>
+                    ) : s.image ? (
+                      <figure className="rounded-2xl overflow-hidden border border-border mb-8 bg-muted shadow-sm">
+                        <img
+                          src={s.image}
+                          alt={t.title}
+                          loading="lazy"
+                          width={1280}
+                          height={720}
+                          className="w-full h-auto object-cover"
+                        />
+                      </figure>
+                    ) : null}
+
 
                     {/* Steps cards grid */}
                     {t.steps.length > 0 && (
