@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import logo from '@/assets/logo.png';
+import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -18,6 +19,13 @@ const ForgotPassword = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
+
+    // Throttle reset-link requests so the endpoint can't be used to spam inboxes.
+    const wait = authCooldownRemaining('reset', email);
+    if (wait > 0) {
+      toast({ title: 'Please slow down', description: cooldownMessage(wait), variant: 'destructive' });
+      return;
+    }
 
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
@@ -30,12 +38,16 @@ const ForgotPassword = () => {
       return;
     }
 
+    // Every successful send counts toward the cooldown as well.
+    recordAuthFailure('reset', email);
+
     setSent(true);
     toast({
       title: 'Check your email',
       description: 'We sent you a link to reset your password.',
     });
   };
+
 
   return (
     <>
