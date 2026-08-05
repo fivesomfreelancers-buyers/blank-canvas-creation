@@ -1,157 +1,203 @@
 // Fivesom Chat Moderation
-// - Somali/English/Arabic profanity filter with leet-speak normalization
-// - NSFW keyword filter for text
-// - NSFW image classification (nsfwjs, lazy-loaded)
-// - Per-user strike tracking via localStorage
+// Goal: block ONLY real abuse (profanity, hate speech, threats, explicit sexual
+// content) while letting every normal Somali / English / Arabic / French
+// conversation through.
+//
+// Design rules:
+// - Whole-word matching only (plus known suffixes). No substring matching, so
+//   "class" never trips "ass" and "this hit" never trips "shit".
+// - Leet-speak normalization happens *inside* a token, never across tokens, so
+//   spaces are preserved and words are not glued together.
+// - Multi-word insults are matched as explicit phrases.
+// - Ambiguous everyday words (was, sug, kac, gus, sex, damn, hoe, escort…) are
+//   NOT banned on their own; only unambiguous abusive forms are listed.
 
 export type ModerationResult =
   | { allowed: true }
   | { allowed: false; reason: 'nsfw' | 'profanity'; message: string };
 
-// ---------- Normalization ----------
+const PROFANITY_MESSAGE =
+  'Your message contains language that is not allowed on Fivesom. Please edit your message and try again.';
+const NSFW_MESSAGE =
+  'This content violates Fivesom Community Guidelines. Nude or sexually explicit content is not allowed.';
+
+// ---------- Normalization (per token) ----------
 const LEET_MAP: Record<string, string> = {
   '0': 'o', '1': 'i', '!': 'i', '|': 'i',
   '3': 'e', '4': 'a', '@': 'a',
   '5': 's', '$': 's', '7': 't',
-  '8': 'b', '9': 'g',
-  '+': 't', '*': '', '.': '', ',': '',
-  '_': '', '-': '', ' ': '',
+  '8': 'b', '9': 'g', '+': 't',
 };
 
-function normalize(text: string): string {
-  const lower = text.toLowerCase();
+/** Normalize a single word: lowercase, leet -> letters, drop separators, collapse repeats. */
+function normalizeToken(token: string): string {
   let out = '';
-  for (const ch of lower) out += LEET_MAP[ch] ?? ch;
-  // Collapse repeated letters (sharrrmuto -> sharmuto)
+  for (const ch of token.toLowerCase()) out += LEET_MAP[ch] ?? ch;
+  out = out.replace(/[^a-z\u0600-\u06ff]/g, '');
+  // sharrrmuto -> sharrmuto -> handled below by repeat collapse
   out = out.replace(/(.)\1{2,}/g, '$1$1');
-  return out.replace(/[^a-z\u0600-\u06ff]/g, '');
+  return out;
 }
 
-// ---------- Word lists ----------
-// Somali profanity / sexual / insults (comprehensive)
-const SOMALI_BAD: string[] = [
-  'hoyada', 'hooyada', 'hoyadaa', 'hooyadaa', 'hoyadeen', 'hooyadeen',
-  'aabaha', 'aabahaa', 'aabo waas',
-  'was', 'waas', 'waasay', 'waasaa', 'wasay', 'kuwaso', 'kuwas', 'kawas',
-  'siil', 'siilka', 'siilkeeda', 'siilkaaga', 'siilo',
-  'guus', 'guuska', 'guuskaaga',
-  'kintir', 'kintirka',
-  'naaso', 'naasaha',
-  'sug', 'suga', 'sugaa',
-  'dhilo', 'dhillo', 'dhiloyahay', 'dhilooyin', 'dhilooyinka',
-  'sharmuto', 'sharmuuto', 'sharmuutada', 'sharmuutooyin',
-  'qhaba', 'qaba siil', 'qabsii',
-  'garac', 'garaca', 'garacyahay',
-  'naayaa', 'naaya', 'nayaa',
-  'doqon', 'doqonyahay', 'doqonimo',
-  'eey', 'eydii', 'ey yahay',
-  'dameer', 'dameeryahay', 'dameeryahow',
-  'bahal', 'bahalyahay',
-  'gus', 'guska',
-  'futo', 'futada', 'futadaada',
-  'kac', 'kacsan', 'kacsi',
-  'orgi', 'orgiga',
-  'nijaas', 'nijaasyahay',
-  'xayawaan', 'xayawaanyahay',
-  'sakaraat',
-  'khaniis', 'khaniisyahay', 'khanis',
-  'lawaasay', 'iskuwaas', 'iswaas',
-  'jinni',
-  'gaal', 'gaalyahay',
-  'shaydaan', 'shaydaanyahay',
-  'islaan xun', 'ninka xun',
-  'qashin', 'qashinyahay',
-  'nacas', 'nacasyahay', 'nacasnimo',
-  'waalan', 'waalyahay',
-  'foolxun',
-  'ceebley',
-  'buuq',
-  'godob',
-  'af xumo',
+/** Split text into normalized tokens, keeping word boundaries intact. */
+function tokenize(text: string): string[] {
+  return text
+    .split(/[^\p{L}\p{N}@!|$+*]+/u)
+    .map(normalizeToken)
+    .filter(Boolean);
+}
+
+// Suffixes that can be attached to a banned root without changing its meaning.
+const SUFFIXES = [
+  '', 's', 'es', 'ing', 'ed', 'er', 'ers', 'y', 'ies',
+  // Somali determiners / vocatives
+  'ka', 'ga', 'ta', 'da', 'aha', 'aa', 'ayaa', 'yahay', 'yahow', 'yaha',
+  'kaaga', 'kaada', 'kiisa', 'keeda', 'keena', 'kooda', 'deeda', 'daada',
+  'nimo', 'yo', 'yin', 'yinka', 'ooyin', 'ooyinka',
 ];
 
-// English profanity + sexual
-const ENGLISH_BAD: string[] = [
-  'fuck', 'fucking', 'fucker', 'motherfucker', 'mf', 'stfu',
-  'shit', 'bullshit', 'bitch', 'bitches', 'asshole', 'ass',
-  'dick', 'dickhead', 'cock', 'cocksucker', 'pussy', 'cunt',
-  'whore', 'slut', 'slag', 'hoe', 'hooker',
-  'nigger', 'nigga', 'faggot', 'fag', 'retard', 'retarded',
-  'bastard', 'damn', 'dammit', 'goddamn',
-  'porn', 'porno', 'pornography', 'xxx', 'nsfw',
-  'nude', 'nudes', 'naked', 'sex', 'sexy', 'sexting',
-  'penis', 'vagina', 'boobs', 'tits', 'titties', 'nipple',
-  'blowjob', 'handjob', 'anal', 'orgasm', 'cum', 'jizz',
-  'masturbate', 'masturbation', 'fetish', 'horny',
-  'rape', 'rapist', 'molest', 'pedo', 'pedophile',
-  'kill you', 'killyou', 'i will kill', 'iwillkill',
+// ---------- Banned roots (whole word or root+suffix) ----------
+// English: unambiguous profanity, slurs and explicit sexual terms only.
+const ENGLISH_BAD_ROOTS = [
+  'fuck', 'fucker', 'motherfucker', 'fuk', 'fck',
+  'shit', 'bullshit', 'bitch', 'asshole', 'arsehole', 'dickhead',
+  'cock', 'cocksucker', 'pussy', 'cunt', 'twat', 'wanker',
+  'whore', 'slut', 'hooker',
+  'nigger', 'nigga', 'faggot', 'faggy', 'retard',
+  'bastard', 'stfu',
 ];
 
-// Arabic profanity
-const ARABIC_BAD: string[] = [
-  'كس', 'كسمك', 'كسختك', 'كسامك',
-  'زب', 'زبي', 'زبك',
+const ENGLISH_NSFW_ROOTS = [
+  'porn', 'porno', 'pornography', 'pornhub', 'xxx',
+  'nude', 'nudity', 'sexting', 'sexchat', 'cybersex',
+  'blowjob', 'handjob', 'rimjob', 'creampie',
+  'orgasm', 'masturbate', 'masturbation', 'horny', 'boner',
+  'onlyfans', 'camgirl', 'camsex',
+  'rape', 'rapist', 'molest', 'molester', 'pedophile', 'paedophile', 'pedo',
+];
+
+// Somali: only clearly abusive / sexual words. Everyday words such as
+// "was(ay)" alone, "sug", "kac", "gus", "qashin", "buuq", "godob", "gaal"
+// are intentionally excluded because they appear in normal conversation.
+const SOMALI_BAD_ROOTS = [
+  'hooyada', 'hoyada', 'hooyadaa', 'hoyadaa', 'hooyadeen',
+  'waasay', 'wasay', 'waastay', 'kuwaso', 'kuwas', 'iswaas', 'iskuwaas', 'lawaasay',
+  'siil', 'siilka', 'siilo', 'kintir',
+  'guuska', 'guuskaaga', 'gusaaga',
+  'dhilo', 'dhillo', 'dhiloyahay',
+  'sharmuto', 'sharmuuto', 'sharmuutada',
+  'garac', 'naayaa', 'naaya', 'nayaa',
+  'doqon', 'nacas', 'dameer', 'bahal', 'xayawaan', 'orgi',
+  'futada', 'futo', 'kacsan', 'kacsi',
+  'nijaas', 'khaniis', 'khanis',
+  'shaydaan', 'foolxun', 'qashinyahay', 'waalan',
+];
+
+// Arabic: matched on raw text (word-ish boundaries, Arabic has no leet issues).
+const ARABIC_BAD = [
+  'كسمك', 'كسختك', 'كسامك',
   'شرموطة', 'شرموط', 'قحبة', 'قحبه',
   'عرص', 'عرصات',
-  'خول', 'خولات',
   'منيك', 'منيوك', 'منياك',
-  'طيز', 'طيزك',
-  'نيك', 'نياك',
-  'كافر', 'ملحد',
-  'حمار', 'كلب', 'كلبة',
+  'طيزك', 'نياك',
+  'كلبة', 'يا كلب',
 ];
 
-const NSFW_KEYWORDS = [
-  ...ENGLISH_BAD.filter(w => /porn|nude|naked|sex|xxx|nsfw|penis|vagina|boobs|tits|nipple|blowjob|handjob|anal|orgasm|masturbate|fetish|horny|rape|pedo/.test(w)),
-  'onlyfans', 'camgirl', 'escort', 'sexchat',
+// French: unambiguous insults only.
+const FRENCH_BAD_ROOTS = [
+  'putain', 'pute', 'salope', 'connard', 'connasse', 'enculer', 'encule',
+  'enfoire', 'batard', 'nique', 'niquer', 'merde',
 ];
 
-const ALL_BAD_NORMALIZED = new Set(
-  [...SOMALI_BAD, ...ENGLISH_BAD].map(w => normalize(w)).filter(Boolean)
-);
+// Multi-word phrases (matched against the normalized token stream).
+const BAD_PHRASES: Array<{ words: string[]; nsfw?: boolean }> = [
+  { words: ['aabo', 'waas'] },
+  { words: ['qaba', 'siil'] },
+  { words: ['ey', 'yahay'] },
+  { words: ['islaan', 'xun'] },
+  { words: ['kill', 'you'] },
+  { words: ['i', 'will', 'kill', 'you'] },
+  { words: ['send', 'nudes'], nsfw: true },
+  { words: ['naked', 'photo'], nsfw: true },
+  { words: ['naked', 'pic'], nsfw: true },
+  { words: ['naked', 'picture'], nsfw: true },
+  { words: ['sexual', 'favor'], nsfw: true },
+  { words: ['sexual', 'favour'], nsfw: true },
+];
 
-const ARABIC_BAD_SET = new Set(ARABIC_BAD.map(w => w.trim()));
+function buildRootSet(roots: string[]): Set<string> {
+  const set = new Set<string>();
+  for (const root of roots) {
+    const n = normalizeToken(root);
+    if (n.length >= 3) set.add(n);
+  }
+  return set;
+}
+
+const PROFANITY_ROOTS = buildRootSet([
+  ...ENGLISH_BAD_ROOTS,
+  ...SOMALI_BAD_ROOTS,
+  ...FRENCH_BAD_ROOTS,
+]);
+const NSFW_ROOTS = buildRootSet(ENGLISH_NSFW_ROOTS);
+
+/** True when a token is the root itself or root + an allowed suffix. */
+function matchesRoot(token: string, roots: Set<string>): boolean {
+  if (roots.has(token)) return true;
+  for (const suffix of SUFFIXES) {
+    if (!suffix) continue;
+    if (token.length <= suffix.length) continue;
+    if (!token.endsWith(suffix)) continue;
+    const stem = token.slice(0, token.length - suffix.length);
+    if (stem.length >= 4 && roots.has(stem)) return true;
+  }
+  return false;
+}
+
+function hasPhrase(tokens: string[]): { hit: boolean; nsfw: boolean } {
+  for (const phrase of BAD_PHRASES) {
+    const words = phrase.words.map(normalizeToken);
+    for (let i = 0; i + words.length <= tokens.length; i++) {
+      if (words.every((w, j) => tokens[i + j] === w)) {
+        return { hit: true, nsfw: !!phrase.nsfw };
+      }
+    }
+  }
+  return { hit: false, nsfw: false };
+}
 
 // ---------- Text check ----------
 export function moderateText(text: string): ModerationResult {
-  const trimmed = text.trim();
+  const trimmed = (text ?? '').trim();
   if (!trimmed) return { allowed: true };
 
-  // Arabic direct substring check (no leet normalization needed)
-  for (const w of ARABIC_BAD_SET) {
-    if (trimmed.includes(w)) {
-      return {
-        allowed: false,
-        reason: 'profanity',
-        message: 'Your message contains language that is not allowed on Fivesom. Please edit your message and try again.',
-      };
+  // Arabic: substring check but bounded by non-Arabic characters.
+  for (const w of ARABIC_BAD) {
+    const escaped = w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+    const re = new RegExp(`(^|[^\\u0600-\\u06ff])${escaped}([^\\u0600-\\u06ff]|$)`, 'u');
+    if (re.test(trimmed)) {
+      return { allowed: false, reason: 'profanity', message: PROFANITY_MESSAGE };
     }
   }
 
-  const norm = normalize(trimmed);
+  const tokens = tokenize(trimmed);
 
-  // NSFW keywords (stronger message)
-  for (const kw of NSFW_KEYWORDS) {
-    const n = normalize(kw);
-    if (n && norm.includes(n)) {
-      return {
-        allowed: false,
-        reason: 'nsfw',
-        message: 'This content violates Fivesom Community Guidelines. Nude or sexually explicit content is not allowed.',
-      };
+  for (const token of tokens) {
+    if (matchesRoot(token, NSFW_ROOTS)) {
+      return { allowed: false, reason: 'nsfw', message: NSFW_MESSAGE };
+    }
+  }
+  for (const token of tokens) {
+    if (matchesRoot(token, PROFANITY_ROOTS)) {
+      return { allowed: false, reason: 'profanity', message: PROFANITY_MESSAGE };
     }
   }
 
-  // Profanity: split into tokens AND substring check
-  for (const bad of ALL_BAD_NORMALIZED) {
-    if (bad.length < 3) continue;
-    if (norm.includes(bad)) {
-      return {
-        allowed: false,
-        reason: 'profanity',
-        message: 'Your message contains language that is not allowed on Fivesom. Please edit your message and try again.',
-      };
-    }
+  const phrase = hasPhrase(tokens);
+  if (phrase.hit) {
+    return phrase.nsfw
+      ? { allowed: false, reason: 'nsfw', message: NSFW_MESSAGE }
+      : { allowed: false, reason: 'profanity', message: PROFANITY_MESSAGE };
   }
 
   return { allowed: true };
@@ -179,7 +225,7 @@ async function loadNsfwModel() {
 
 export async function moderateImageFile(file: File): Promise<ModerationResult> {
   // Filename keyword pre-check
-  const nameCheck = moderateText(file.name);
+  const nameCheck = moderateText(file.name.replace(/[._-]+/g, ' '));
   if (!nameCheck.allowed) return nameCheck;
 
   if (!file.type.startsWith('image/')) return { allowed: true };
@@ -199,12 +245,8 @@ export async function moderateImageFile(file: File): Promise<ModerationResult> {
     const hentai = scoreOf('Hentai');
     const sexy = scoreOf('Sexy');
 
-    if (porn > 0.5 || hentai > 0.5 || sexy > 0.7) {
-      return {
-        allowed: false,
-        reason: 'nsfw',
-        message: 'This content violates Fivesom Community Guidelines. Nude or sexually explicit content is not allowed.',
-      };
+    if (porn > 0.7 || hentai > 0.7 || sexy > 0.85) {
+      return { allowed: false, reason: 'nsfw', message: NSFW_MESSAGE };
     }
     return { allowed: true };
   } catch (e) {
