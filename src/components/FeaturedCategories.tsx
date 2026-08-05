@@ -214,21 +214,22 @@ const FeaturedCategories = () => {
                       <div className="grid grid-cols-2 gap-4 text-center">
                         <div>
                           <div className="text-2xl font-bold mb-1 text-primary">
-                            500+
+                            {formatSellers(stats[category.id]?.sellers ?? 0)}
                           </div>
-                          <p className="text-sm text-white/70">
+                          <p className="text-sm text-muted-foreground">
                             Expert Freelancers
                           </p>
                         </div>
                         <div>
                           <div className="text-2xl font-bold mb-1 text-primary">
-                            4.9★
+                            {(stats[category.id]?.rating ?? 0).toFixed(1)}★
                           </div>
                           <p className="text-sm text-muted-foreground">
                           Average Rating
                         </p>
                       </div>
                     </div>
+
                   </div>
                 </div>
               </div>
