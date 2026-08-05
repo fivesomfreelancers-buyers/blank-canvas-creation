@@ -1527,7 +1527,7 @@ const SECTIONS: Section[] = [
           'Accepting the delivery is the moment the escrow is released: the payment moves to the freelancer\'s wallet and the download links unlock for the buyer. Right after acceptance the buyer is asked to leave a 1–5 star rating and a short comment, which becomes part of the freelancer\'s public reputation.',
         ],
         steps: [
-          { title: 'Open the delivered order', question: 'Where do I find it?', body: 'Go to My Orders and open the order marked "Delivered".' },
+          { title: 'Open the delivered order', body: 'Go to My Orders and open the order marked "Delivered".' },
           { title: 'Review the delivery', body: 'Read the delivery message and preview the files or links before deciding.' },
           { title: 'Accept the delivery', body: 'Click "Accept Delivery". This releases the escrow payment to the freelancer and unlocks your downloads.' },
           { title: 'Or request a revision', body: 'If something is missing, use "Request Revision" and describe exactly what should change.' },
@@ -1550,7 +1550,7 @@ const SECTIONS: Section[] = [
           'Aqbalidda delivery-ga waa waqtiga lacagta escrow-ga laga sii daayo: lacagta waxay gashaa wallet-ka freelancer-ka oo download-yada buyer-ka furmaan. Isla markiiba ka dib waxaa buyer-ka laga codsanayaa qiimayn 1–5 xidig iyo faallo gaaban, taasoo qayb ka noqonaysa sumcadda freelancer-ka.',
         ],
         steps: [
-          { title: 'Fur order-ka la keenay', question: 'Xagee ka helaa?', body: 'Aad My Orders oo fur order-ka calaamadaysan "Delivered".' },
+          { title: 'Fur order-ka la keenay', body: 'Aad My Orders oo fur order-ka calaamadaysan "Delivered".' },
           { title: 'Eeg delivery-ga', body: 'Akhri fariinta delivery-ga oo eeg faylalka ama links-ka ka hor inta aadan go\'aansan.' },
           { title: 'Aqbal delivery-ga', body: 'Riix "Accept Delivery". Tani waxay lacagta escrow-ga u sii daysaa freelancer-ka oo download-yadaada furaysaa.' },
           { title: 'Ama codso revision', body: 'Haddii wax maqan yihiin, isticmaal "Request Revision" oo si cad sharax waxa la beddelayo.' },
