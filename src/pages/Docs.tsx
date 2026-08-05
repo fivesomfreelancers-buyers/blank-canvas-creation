@@ -25,6 +25,8 @@ import orderingVid from '@/assets/docs/ordering.mp4.asset.json';
 import messagingVid from '@/assets/docs/messaging.mp4.asset.json';
 import ordersVid from '@/assets/docs/orders.mp4.asset.json';
 import disputeVid from '@/assets/docs/dispute.mp4.asset.json';
+import withdrawMoneyVid from '@/assets/docs/withdraw-money.mp4.asset.json';
+import buyerAcceptVid from '@/assets/docs/buyer-accept.mp4.asset.json';
 
 // Legacy illustrations kept for the sections that still use a static image
 const imgIntro = 'https://i.postimg.cc/Vknzq7BP/5f01f0f6-0e76-4d74-9fd2-ac233c98db20.png';
