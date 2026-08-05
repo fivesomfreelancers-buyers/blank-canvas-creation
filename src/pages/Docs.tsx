@@ -4,7 +4,7 @@ import {
   Info, Workflow, UserPlus, IdCard, ShieldCheck, Briefcase, ShoppingCart,
   MessageSquare, Wallet, ListChecks, Star, Lock, Users, Scale, Trophy,
   BadgeCheck, LifeBuoy, HelpCircle, Globe, ArrowRight, Menu, X, CheckCircle2,
-  Lightbulb, Smartphone, TrendingUp
+  Lightbulb, Smartphone
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
@@ -25,6 +25,8 @@ import orderingVid from '@/assets/docs/ordering.mp4.asset.json';
 import messagingVid from '@/assets/docs/messaging.mp4.asset.json';
 import ordersVid from '@/assets/docs/orders.mp4.asset.json';
 import disputeVid from '@/assets/docs/dispute.mp4.asset.json';
+import withdrawMoneyVid from '@/assets/docs/withdraw-money.mp4.asset.json';
+import buyerAcceptVid from '@/assets/docs/buyer-accept.mp4.asset.json';
 
 // Legacy illustrations kept for the sections that still use a static image
 const imgIntro = 'https://i.postimg.cc/Vknzq7BP/5f01f0f6-0e76-4d74-9fd2-ac233c98db20.png';
@@ -1426,7 +1428,7 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'mobile-money', icon: Smartphone,
+    id: 'mobile-money', icon: Smartphone, video: withdrawMoneyVid.url,
     t: {
       en: {
         title: '19. Mobile Money & Local Payments',
@@ -1515,102 +1517,103 @@ const SECTIONS: Section[] = [
     },
   },
   {
-    id: 'growth', icon: TrendingUp,
+    id: 'buyer-accept', icon: Star, video: buyerAcceptVid.url,
     t: {
       en: {
-        title: '20. Growing Your Business on FIVESOM',
-        subtitle: 'Practical habits that turn a new profile into a steady income.',
+        title: '20. Buyer Acceptance, Ratings & Payment Release',
+        subtitle: 'How a buyer accepts the delivery, leaves a star rating, and releases the payment.',
         description: [
-          'Success on FIVESOM comes from consistency, not luck. Freelancers who reply quickly, deliver on time and communicate clearly are ranked higher, appear more often in search, and receive more repeat orders.',
-          'Treat your gigs as products: refine the title, use clear cover images, price your packages realistically at the start, and improve them once you collect reviews. Every completed order strengthens your reputation score.',
+          'When the freelancer submits the work, the order moves to "Delivered" and the buyer receives a notification. The buyer opens the order details page, previews the delivered files or links, and decides whether to accept the delivery or request a revision.',
+          'Accepting the delivery is the moment the escrow is released: the payment moves to the freelancer\'s wallet and the download links unlock for the buyer. Right after acceptance the buyer is asked to leave a 1–5 star rating and a short comment, which becomes part of the freelancer\'s public reputation.',
         ],
         steps: [
-          { title: 'Publish several focused gigs', body: 'Instead of one broad gig, create a few specific ones so buyers find exactly what they need.' },
-          { title: 'Respond fast', body: 'Fast replies improve your ranking and win more orders.' },
-          { title: 'Deliver before the deadline', body: 'On-time delivery is the strongest ranking signal on the platform.' },
-          { title: 'Ask for honest reviews', body: 'After acceptance, politely invite the buyer to leave a rating.' },
-          { title: 'Get verified', body: 'The blue tick and verified seller badge visibly increase buyer trust.' },
-          { title: 'Reinvest and expand', body: 'Add new packages, raise prices as your rating grows, and consider Fivesom Ads for visibility.' },
+          { title: 'Open the delivered order', body: 'Go to My Orders and open the order marked "Delivered".' },
+          { title: 'Review the delivery', body: 'Read the delivery message and preview the files or links before deciding.' },
+          { title: 'Accept the delivery', body: 'Click "Accept Delivery". This releases the escrow payment to the freelancer and unlocks your downloads.' },
+          { title: 'Or request a revision', body: 'If something is missing, use "Request Revision" and describe exactly what should change.' },
+          { title: 'Leave a star rating', body: 'Give 1–5 stars and write a short honest comment about the work and communication.' },
+          { title: 'Order completed', body: 'The order status becomes "Completed" and your review appears on the freelancer\'s gig.' },
         ],
         bullets: [
-          'Complete your profile 100% — photo, bio, skills, languages, portfolio.',
-          'Never cancel orders unnecessarily; cancellations hurt your ranking.',
-          'Keep all communication inside FIVESOM so support can protect you.',
-          'A 4.5+ rating with 10 orders opens the door to the blue tick.',
+          'Downloads and delivery links unlock only after you accept the delivery.',
+          'Payment is released from escrow at the moment of acceptance — never before.',
+          'If the work is genuinely wrong you can open a dispute instead of accepting.',
+          'Only buyers with a completed order can leave a rating, so reviews stay real.',
         ],
-        tip: 'One excellent delivery per week beats ten rushed ones — reputation compounds.',
+        tip: 'Always preview the delivery carefully before accepting — acceptance releases the payment immediately.',
       },
       so: {
-        title: '20. Sida Ganacsigaaga FIVESOM Loo Kobciyo',
-        subtitle: 'Habdhaqanno wax ku ool ah oo profile cusub uga dhigaya dakhli joogto ah.',
+        title: '20. Aqbalidda Buyer-ka, Xidigaha & Sii-deynta Lacagta',
+        subtitle: 'Sida buyer-ku u aqbalo delivery-ga, u siiyo xidigo, oo lacagta loo sii daayo.',
         description: [
-          'Guusha FIVESOM waxay ka timaadaa joogtaynta, ee ma aha nasiib. Freelancer-rada dhakhso u jawaabaan, waqtiga geeyaan, oo si cad wada hadlaan waxay heer sare gaaraan, si badan raadinta ka soo baxaan, oo waxay helaan order badan oo soo noqnoqda.',
-          'U qaado gigyadaada sida badeeco: hagaaji title-ka, isticmaal sawiro cad, qiimee packages-kaaga si dhab ah bilowga, ka dibna kor u qaad marka reviews aad hesho. Order kasta la dhammaystiray wuxuu xoojiyaa sumcaddaada.',
+          'Marka freelancer-ku shaqada soo gudbiyo, order-ku wuxuu noqdaa "Delivered" oo buyer-ku ogeysiis hela. Buyer-ku wuxuu furaa bogga order details, wuxuu eegaa faylalka ama links-ka la keenay, ka dibna wuxuu doortaa inuu aqbalo ama revision codsado.',
+          'Aqbalidda delivery-ga waa waqtiga lacagta escrow-ga laga sii daayo: lacagta waxay gashaa wallet-ka freelancer-ka oo download-yada buyer-ka furmaan. Isla markiiba ka dib waxaa buyer-ka laga codsanayaa qiimayn 1–5 xidig iyo faallo gaaban, taasoo qayb ka noqonaysa sumcadda freelancer-ka.',
         ],
         steps: [
-          { title: 'Samee gigyo badan oo diiradda saaran', body: 'Halkii aad hal gig ballaadhan sameyso, samee dhowr oo gaar ah.' },
-          { title: 'Dhakhso u jawaab', body: 'Jawaab degdeg ah waxay kor u qaadaysaa heerkaaga.' },
-          { title: 'Geey wakhtiga ka hor', body: 'Waqti-ku-geyn waa calaamadda ugu xooggan heerka.' },
-          { title: 'Codso review daacad ah', body: 'Ka dib oggolaanshaha, si edeb leh ka codso macmiilka qiimayn.' },
-          { title: 'Hel xaqiijin', body: 'Blue tick iyo verified seller waxay kordhiyaan kalsoonida macmiilka.' },
-          { title: 'Balaadhi', body: 'Ku dar packages cusub, kor u qaad qiimaha marka rating-kaagu koro, oo tixgeli Fivesom Ads.' },
+          { title: 'Fur order-ka la keenay', body: 'Aad My Orders oo fur order-ka calaamadaysan "Delivered".' },
+          { title: 'Eeg delivery-ga', body: 'Akhri fariinta delivery-ga oo eeg faylalka ama links-ka ka hor inta aadan go\'aansan.' },
+          { title: 'Aqbal delivery-ga', body: 'Riix "Accept Delivery". Tani waxay lacagta escrow-ga u sii daysaa freelancer-ka oo download-yadaada furaysaa.' },
+          { title: 'Ama codso revision', body: 'Haddii wax maqan yihiin, isticmaal "Request Revision" oo si cad sharax waxa la beddelayo.' },
+          { title: 'Sii xidigo qiimayn', body: 'Sii 1–5 xidig oo qor faallo daacad ah oo ku saabsan shaqada iyo wada hadalka.' },
+          { title: 'Order-ku wuu dhammaaday', body: 'Xaaladda order-ku waxay noqonaysaa "Completed" oo review-gaagu wuxuu ka muuqdaa gig-ga freelancer-ka.' },
         ],
         bullets: [
-          'Dhammaystir profile-kaaga 100% — sawir, bio, xirfado, luqado, portfolio.',
-          'Ha cancel garayn order bilaa sabab; cancel-ku wuxuu dhaawacaa heerkaaga.',
-          'Wada hadalka oo dhan ku dhex hay FIVESOM si taageeradu ku ilaaliso.',
-          'Rating 4.5+ iyo 10 order waxay furaan albaabka blue tick-ga.',
+          'Download-yada iyo links-ka waxay furmaan kaliya ka dib marka aad aqbasho delivery-ga.',
+          'Lacagta escrow waxaa laga sii daayaa marka aqbalidda dhacdo — waligeed ka hor maaha.',
+          'Haddii shaqada dhab ahaan qaldan tahay waad furi kartaa dispute halkii aad aqbasho.',
+          'Kaliya buyer-ka leh order dhammaystiran wuxuu qiimayn siin karaa, sidaas darteed reviews-ku waa dhab.',
         ],
-        tip: 'Hal delivery aad u fiican toddobaadkii way ka fiican tahay toban degdeg ah.',
+        tip: 'Had iyo jeer si feejigan eeg delivery-ga ka hor aqbalidda — aqbalidda isla markiiba lacagta way sii daysaa.',
       },
       ar: {
-        title: '20. تنمية عملك على FIVESOM',
-        subtitle: 'عادات عملية تحوّل ملفك الجديد إلى دخل ثابت.',
+        title: '20. قبول المشتري والتقييم وتحرير الدفع',
+        subtitle: 'كيف يقبل المشتري التسليم ويمنح النجوم ويُحرَّر المبلغ.',
         description: [
-          'النجاح يعتمد على الاستمرارية: الردّ السريع، التسليم في الوقت، والتواصل الواضح يرفع ترتيبك.',
-          'اعتبر خدماتك منتجات: عنوان واضح، صور جيدة، أسعار واقعية، وتحسين مستمر بعد التقييمات.',
+          'عند تسليم العمل تتحول الحالة إلى "تم التسليم" ويستعرض المشتري الملفات أو الروابط قبل القرار.',
+          'قبول التسليم يحرّر المبلغ من الضمان إلى محفظة المستقل، ثم يُطلب من المشتري تقييم من 1 إلى 5 نجوم مع تعليق قصير.',
         ],
         steps: [
-          { title: 'أنشئ خدمات محددة', body: 'عدة خدمات دقيقة أفضل من خدمة عامة.' },
-          { title: 'ردّ بسرعة', body: 'الردّ السريع يرفع الترتيب.' },
-          { title: 'سلّم قبل الموعد', body: 'أقوى إشارة للترتيب.' },
-          { title: 'اطلب تقييمًا', body: 'بعد القبول اطلب تقييمًا بلطف.' },
-          { title: 'وثّق حسابك', body: 'العلامة الزرقاء تزيد الثقة.' },
-          { title: 'وسّع نشاطك', body: 'أضف حزمًا جديدة وفكر في Fivesom Ads.' },
+          { title: 'افتح الطلب المُسلَّم', body: 'من طلباتي افتح الطلب بحالة "تم التسليم".' },
+          { title: 'راجع التسليم', body: 'اقرأ الرسالة واستعرض الملفات.' },
+          { title: 'اقبل التسليم', body: 'زر Accept Delivery يحرّر المبلغ ويفتح التحميل.' },
+          { title: 'أو اطلب تعديلًا', body: 'اشرح بدقة ما يجب تغييره.' },
+          { title: 'اترك تقييمًا', body: 'من 1 إلى 5 نجوم مع تعليق صادق.' },
+          { title: 'اكتمل الطلب', body: 'تصبح الحالة "مكتمل" ويظهر تقييمك.' },
         ],
         bullets: [
-          'أكمل ملفك 100%.',
-          'تجنّب الإلغاء غير الضروري.',
-          'أبقِ التواصل داخل المنصة.',
-          'تقييم 4.5+ مع 10 طلبات يفتح باب التوثيق.',
+          'لا تُفتح التحميلات إلا بعد القبول.',
+          'يُحرَّر المبلغ لحظة القبول فقط.',
+          'يمكنك فتح نزاع بدلًا من القبول.',
+          'التقييم متاح فقط لمن أكمل طلبًا.',
         ],
-        tip: 'تسليم ممتاز واحد أفضل من عشرة متعجلة.',
+        tip: 'راجع التسليم جيدًا قبل القبول لأن القبول يحرّر المبلغ فورًا.',
       },
       fr: {
-        title: '20. Développer votre activité sur FIVESOM',
-        subtitle: 'Des habitudes concrètes pour transformer un nouveau profil en revenu régulier.',
+        title: '20. Acceptation de l\'acheteur, notes et libération du paiement',
+        subtitle: 'Comment l\'acheteur accepte la livraison, laisse des étoiles et libère le paiement.',
         description: [
-          'La réussite vient de la régularité : réponses rapides, livraisons à l\'heure et communication claire améliorent votre classement.',
-          'Traitez vos gigs comme des produits : titre clair, visuels soignés, prix réalistes, puis améliorations après les avis.',
+          'Dès la livraison, la commande passe en « Livrée » et l\'acheteur consulte les fichiers ou liens avant de décider.',
+          'Accepter la livraison libère les fonds du séquestre vers le portefeuille du freelance, puis l\'acheteur laisse une note de 1 à 5 étoiles avec un court commentaire.',
         ],
         steps: [
-          { title: 'Créez plusieurs gigs ciblés', body: 'Plusieurs services précis valent mieux qu\'un service vague.' },
-          { title: 'Répondez vite', body: 'La rapidité améliore le classement.' },
-          { title: 'Livrez avant l\'échéance', body: 'Le signal de classement le plus fort.' },
-          { title: 'Demandez un avis', body: 'Après acceptation, invitez poliment l\'acheteur.' },
-          { title: 'Faites-vous vérifier', body: 'Le badge vérifié renforce la confiance.' },
-          { title: 'Développez', body: 'Ajoutez des offres et envisagez Fivesom Ads.' },
+          { title: 'Ouvrir la commande livrée', body: 'Dans Mes commandes, ouvrez la commande « Livrée ».' },
+          { title: 'Examiner la livraison', body: 'Lisez le message et prévisualisez les fichiers.' },
+          { title: 'Accepter la livraison', body: '« Accept Delivery » libère le paiement et débloque les téléchargements.' },
+          { title: 'Ou demander une révision', body: 'Expliquez précisément ce qui doit changer.' },
+          { title: 'Laisser une note', body: 'De 1 à 5 étoiles avec un commentaire honnête.' },
+          { title: 'Commande terminée', body: 'Le statut devient « Terminée » et votre avis s\'affiche.' },
         ],
         bullets: [
-          'Complétez votre profil à 100%.',
-          'Évitez les annulations inutiles.',
-          'Gardez les échanges sur la plateforme.',
-          'Une note de 4.5+ avec 10 commandes ouvre le badge bleu.',
+          'Les téléchargements se débloquent après acceptation.',
+          'Les fonds sont libérés au moment de l\'acceptation.',
+          'Vous pouvez ouvrir un litige au lieu d\'accepter.',
+          'Seuls les acheteurs ayant terminé une commande peuvent noter.',
         ],
-        tip: 'Une excellente livraison vaut mieux que dix précipitées.',
+        tip: 'Vérifiez bien la livraison avant d\'accepter : le paiement est libéré immédiatement.',
       },
     },
   },
+
 ];
 
 
