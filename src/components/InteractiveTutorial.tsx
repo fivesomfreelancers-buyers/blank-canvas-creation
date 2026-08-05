@@ -23,7 +23,7 @@ const InteractiveTutorial = () => {
       title: 'Verify Account',
       icon: <User className="w-6 h-6" />,
       description: 'Set up and manage your freelancer profile',
-      videoSrc: '/account-tutorial.mp4',
+      videoSrc: verifyAccountVideo.url,
       steps: [
         'Complete Profile Setup',
         'Verify Your Identity',
@@ -37,7 +37,7 @@ const InteractiveTutorial = () => {
       title: 'Create Gig',
       icon: <PlusCircle className="w-6 h-6" />,
       description: 'Launch your services and attract clients',
-      videoSrc: '/create-gig-tutorial.mp4',
+      videoSrc: createGigVideo.url,
       steps: [
         'Choose Service Category',
         'Write Compelling Description',
@@ -51,7 +51,7 @@ const InteractiveTutorial = () => {
       title: 'Withdraw',
       icon: <Wallet className="w-6 h-6" />,
       description: 'Secure payment processing and withdrawal',
-      videoSrc: '/withdraw-tutorial.mp4',
+      videoSrc: withdrawVideo.url,
       steps: [
         'Complete Payment Setup',
         'Track Your Earnings',
