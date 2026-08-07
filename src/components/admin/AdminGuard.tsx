@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { authCooldownRemaining, clearAuthFailures, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
+import { useAdminRole } from '@/hooks/useAdminRole';
 
 
 interface AdminGuardProps {
@@ -31,36 +32,17 @@ const checkAdminRole = async (userId: string): Promise<boolean> => {
 const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
   const { user, isLoading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [checking, setChecking] = useState(true);
+  const { isAdmin: hookIsAdmin, isAdminResolved, isLoading: roleLoading, recheck } = useAdminRole();
+  const [override, setOverride] = useState<boolean | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
-  const runCheck = useCallback(async () => {
-    setChecking(true);
-    const { data: { user: current } } = await supabase.auth.getUser();
-    if (!current) {
-      setIsAdmin(false);
-      setChecking(false);
-      return;
-    }
-    const ok = await checkAdminRole(current.id);
-    setIsAdmin(ok);
-    setChecking(false);
-  }, []);
+  const isAdmin = override !== null ? override : hookIsAdmin;
+  const checking = roleLoading && !isAdminResolved && override === null;
 
-  useEffect(() => {
-    if (authLoading) return;
-    runCheck();
-  }, [user?.id, authLoading, runCheck]);
-
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      runCheck();
-    });
-    return () => subscription.unsubscribe();
-  }, [runCheck]);
+  const setIsAdmin = setOverride;
+  const runCheck = useCallback(() => { setOverride(null); recheck(); }, [recheck]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
