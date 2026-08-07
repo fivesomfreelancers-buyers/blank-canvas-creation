@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import SmartImage from '@/components/media/SmartImage';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchAdminProfile, fetchAdminProfiles, fetchAllAdminProfiles, findAdminProfileByEmail, displayName } from '@/lib/adminUsers';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -85,7 +86,7 @@ const AdminVerifications = () => {
         <Card key={d.id} className="border-border bg-card">
           <CardContent className="p-4 flex items-center gap-4">
             <div className="h-12 w-12 rounded-full bg-primary/10 overflow-hidden flex items-center justify-center text-primary font-bold">
-              {d.profile?.profile_image_url ? <img src={d.profile.profile_image_url} alt="" className="h-full w-full object-cover" /> : (d.profile?.full_name?.[0] || '?').toUpperCase()}
+              {d.profile?.profile_image_url ? <SmartImage src={d.profile.profile_image_url} alt="Profile" wrapperClassName="h-full w-full" className="h-full w-full object-cover" /> : (d.profile?.full_name?.[0] || '?').toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-foreground truncate">{d.profile?.full_name || 'Unknown'}</p>
@@ -163,7 +164,7 @@ const AdminVerifications = () => {
                   {open.document_url && (
                     open.document_url.match(/\.(mp4|webm|mov)$/i)
                       ? <video src={open.document_url} controls className="w-full rounded-lg max-h-64" />
-                      : <img src={open.document_url} alt="document" className="w-full rounded-lg max-h-64 object-contain bg-muted" />
+                      : <SmartImage src={open.document_url} alt="Verification document" wrapperClassName="w-full h-64 rounded-lg bg-muted" className="w-full h-full object-contain" showRetry />
                   )}
                 </div>
                 {open.portfolio && open.portfolio.length > 0 && (
@@ -173,7 +174,7 @@ const AdminVerifications = () => {
                       {open.portfolio.map((p, i) => (
                         p.media_type === 'video'
                           ? <video key={i} src={p.media_url} controls className="rounded-lg w-full h-24 object-cover" />
-                          : <img key={i} src={p.media_url} alt="" className="rounded-lg w-full h-24 object-cover" />
+                          : <SmartImage key={i} src={p.media_url} alt="Portfolio item" wrapperClassName="rounded-lg w-full h-24" className="w-full h-full object-cover" />
                       ))}
                     </div>
                   </div>
