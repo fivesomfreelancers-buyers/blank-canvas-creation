@@ -44,24 +44,31 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-        queryParams: { access_type: 'offline', prompt: 'consent' },
-      },
-    });
+    try {
+      const redirectTo = new URL('/auth/callback', window.location.origin).toString();
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo,
+          queryParams: { access_type: 'offline', prompt: 'consent' },
+          skipBrowserRedirect: true,
+        },
+      });
 
-    if (error) {
-      const raw = `${(error as any).code || ''} ${error.message || ''}`.toLowerCase();
+      if (error) throw error;
+      if (!data.url) throw new Error('Google did not return a valid sign-in URL.');
+
+      window.location.assign(data.url);
+    } catch (error: unknown) {
+      const authError = error instanceof Error ? error : new Error(String(error));
+      const codedError = error as { code?: string; error_code?: string };
+      const raw = `${codedError.code || codedError.error_code || ''} ${authError.message}`.toLowerCase();
       const description = raw.includes('unexpected_failure') || raw.includes('500') || raw.includes('server')
-        ? 'Sign-in service is temporarily unavailable. Please wait a moment and try again.'
-        : error.message || 'Could not sign in with Google. Please try again.';
+        ? 'Google sign-in is temporarily unavailable because the authentication callback failed. Please try again shortly.'
+        : authError.message || 'Could not sign in with Google. Please try again.';
       toast({ title: 'Sign-in Failed', description, variant: 'destructive' });
       setGoogleLoading(false);
     }
-
-    // On success the browser is redirected to Google.
   };
 
 
