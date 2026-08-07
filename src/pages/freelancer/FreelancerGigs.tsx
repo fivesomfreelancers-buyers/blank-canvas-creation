@@ -2,17 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Eye, Edit, Trash2, Plus, Briefcase, Crown, Gem } from 'lucide-react';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Eye, Edit, Trash2, Plus, Briefcase, Crown, Gem, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { getGigLimitForVipTier, resolveVipTier } from '@/lib/vipTheme';
+import { deleteGigCompletely, DELETE_GIG_CONFIRM } from '@/lib/deleteGig';
 
 const FreelancerGigs = () => {
   const navigate = useNavigate();
   const [gigs, setGigs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [vipTier, setVipTier] = useState<'golden' | 'platinum' | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; title: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const gigLimit = getGigLimitForVipTier(vipTier);
   const activeGigsUsed = gigs.filter(g => g.status === 'active').length;
@@ -74,15 +81,25 @@ const FreelancerGigs = () => {
     fetchGigs();
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async () => {
+    if (!pendingDelete) return;
+    const target = pendingDelete;
+    setDeleting(true);
     try {
-      const { error } = await supabase.from('gigs').delete().eq('id', id);
-      if (error) throw error;
-      setGigs(prev => prev.filter(g => g.id !== id));
-      toast({ title: "Gig Deleted", description: "This gig has been removed." });
-    } catch (error) {
+      await deleteGigCompletely(target.id);
+      setGigs(prev => prev.filter(g => g.id !== target.id));
+      setPendingDelete(null);
+      toast({ title: 'Gig deleted', description: 'The gig and all of its files were permanently removed.' });
+      fetchGigs();
+    } catch (error: any) {
       console.error('Error deleting gig:', error);
-      toast({ title: "Error", description: "Failed to delete gig. Please try again.", variant: "destructive" });
+      toast({
+        title: 'Error',
+        description: error?.message || 'Failed to delete gig. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -150,7 +167,7 @@ const FreelancerGigs = () => {
                         <Button variant="outline" size="sm" className="w-full sm:w-auto" onClick={() => navigate(`/edit-gig/${gig.id}`)}>
                           <Edit className="w-4 h-4 mr-1" />Edit
                         </Button>
-                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 w-full sm:w-auto" onClick={() => handleDelete(gig.id)}>
+                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 w-full sm:w-auto" onClick={() => setPendingDelete({ id: gig.id, title: gig.title })}>
                           <Trash2 className="w-4 h-4 mr-1" />Delete
                         </Button>
                       </div>
@@ -181,6 +198,30 @@ const FreelancerGigs = () => {
           )}
         </div>
       </div>
+
+      <AlertDialog open={!!pendingDelete} onOpenChange={(open) => !open && !deleting && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this gig?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {DELETE_GIG_CONFIRM}
+              {pendingDelete?.title && (
+                <span className="block mt-2 font-medium text-foreground break-words">{pendingDelete.title}</span>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => { e.preventDefault(); handleDelete(); }}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Deleting…</> : 'Delete permanently'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
