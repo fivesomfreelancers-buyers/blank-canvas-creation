@@ -81,6 +81,12 @@ const SmartVideo = ({
             // Ignore aborted/interrupted loads (range-request restarts, remounts, tab switches).
             const err = e.currentTarget.error;
             if (!err || err.code === err.MEDIA_ERR_ABORTED) return;
+            // One silent auto-retry for transient network/decode hiccups.
+            if (attempt === 0) {
+              setAttempt(1);
+              setStatus('loading');
+              return;
+            }
             setStatus('error');
           }}
           {...rest}
