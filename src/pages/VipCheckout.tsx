@@ -1,54 +1,12 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Crown, Gem, Building2, Copy, ArrowLeft, ShieldCheck, Upload, Loader2 } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-import { getVipTheme } from '@/lib/vipTheme';
-import { useTheme } from '@/components/ThemeProvider';
-
-const BANK_ACCOUNTS = [
-  { bank: 'Salaam Somali Bank', account_name: 'Fivesom Marketplace', account_number: '1001-220-3045' },
-  { bank: 'Premier Bank', account_name: 'Fivesom Marketplace', account_number: '7700-998-1224' },
-  { bank: 'Dahabshiil Bank', account_name: 'Fivesom Marketplace', account_number: '2098-554-7100' },
-];
-
-const TIER_PRICES = {
-  golden: { price: 2, period: '/month', duration: '30 days' },
-  platinum: { price: 10, period: '/year', duration: '1 year' },
-} as const;
+import React, { useEffect } from 'react';
 
 const VipCheckout: React.FC = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const tier: 'golden' | 'platinum' = (location.state?.tier === 'platinum' ? 'platinum' : 'golden');
-  const { theme: mode } = useTheme();
-  const theme = getVipTheme(tier, mode)!;
-  const pricing = TIER_PRICES[tier];
+  useEffect(() => {
+    window.location.replace('/vip');
+  }, []);
 
-  const [bankName, setBankName] = useState('');
-  const [reference, setReference] = useState('');
-  const [note, setNote] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="max-w-2xl mx-auto p-8 pt-28 text-center">
-          <p className="text-muted-foreground mb-4">Please sign in to continue your VIP purchase.</p>
-          <Link to="/login"><Button>Sign in</Button></Link>
-        </div>
-      </div>
-    );
-  }
+  return null;
+};
 
   const copy = (val: string) => {
     navigator.clipboard.writeText(val);
