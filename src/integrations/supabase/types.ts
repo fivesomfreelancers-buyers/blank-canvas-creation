@@ -1771,6 +1771,7 @@ export type Database = {
         }
         Returns: Json
       }
+      delete_gig: { Args: { _gig_id: string }; Returns: Json }
       expire_vip_memberships: { Args: never; Returns: number }
       freelancer_privileged_snapshot: { Args: { _id: string }; Returns: Json }
       get_freelancer_earnings: {

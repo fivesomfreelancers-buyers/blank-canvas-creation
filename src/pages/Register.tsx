@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { lovable } from '@/integrations/lovable';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/Navbar';
 import logo from '@/assets/logo.png';
@@ -36,20 +35,33 @@ const Register = () => {
 
   const handleGoogleSignUp = async () => {
     setGoogleLoading(true);
-    const result: any = await lovable.auth.signInWithOAuth('google', {
-      redirect_uri: `${window.location.origin}/auth/callback`,
-    });
+    try {
+      const redirectTo = new URL('/auth/callback', window.location.origin).toString();
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo,
+          queryParams: { access_type: 'offline', prompt: 'consent' },
+          skipBrowserRedirect: true,
+        },
+      });
 
-    if (result?.redirected) return;
+      if (error) throw error;
+      if (!data.url) throw new Error('Google did not return a valid sign-in URL.');
 
-    if (result?.error) {
-      toast({ title: 'Sign Up Failed', description: result.error.message, variant: 'destructive' });
+      window.location.assign(data.url);
+    } catch (error: unknown) {
+      const authError = error instanceof Error ? error : new Error(String(error));
+      const codedError = error as { code?: string; error_code?: string };
+      const raw = `${codedError.code || codedError.error_code || ''} ${authError.message}`.toLowerCase();
+      const description = raw.includes('unexpected_failure') || raw.includes('500') || raw.includes('server')
+        ? 'Google sign-up is temporarily unavailable because the authentication callback failed. Please try again shortly.'
+        : authError.message || 'Could not sign up with Google. Please try again.';
+      toast({ title: 'Sign Up Failed', description, variant: 'destructive' });
       setGoogleLoading(false);
-      return;
     }
-
-    navigate('/auth/callback', { replace: true });
   };
+
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();

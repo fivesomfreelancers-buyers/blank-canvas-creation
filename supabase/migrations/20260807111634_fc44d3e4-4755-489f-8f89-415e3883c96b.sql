@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "temp tutorial media upload" ON storage.objects;

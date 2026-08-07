@@ -9,7 +9,6 @@ import { useAuth } from '@/hooks/useAuth';
 import Navbar from '@/components/Navbar';
 import logo from '@/assets/logo.png';
 import { supabase } from '@/integrations/supabase/client';
-import { lovable } from '@/integrations/lovable';
 import { authCooldownRemaining, clearAuthFailures, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 
 
@@ -45,24 +44,33 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
-    const result: any = await lovable.auth.signInWithOAuth('google', {
-      redirect_uri: `${window.location.origin}/auth/callback`,
-    });
-
-    if (result?.redirected) return;
-
-    if (result?.error) {
-      toast({
-        title: "Login Failed",
-        description: result.error.message || "Could not sign in with Google. Please try again.",
-        variant: "destructive",
+    try {
+      const redirectTo = new URL('/auth/callback', window.location.origin).toString();
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo,
+          queryParams: { access_type: 'offline', prompt: 'consent' },
+          skipBrowserRedirect: true,
+        },
       });
-      setGoogleLoading(false);
-      return;
-    }
 
-    navigate('/auth/callback', { replace: true });
+      if (error) throw error;
+      if (!data.url) throw new Error('Google did not return a valid sign-in URL.');
+
+      window.location.assign(data.url);
+    } catch (error: unknown) {
+      const authError = error instanceof Error ? error : new Error(String(error));
+      const codedError = error as { code?: string; error_code?: string };
+      const raw = `${codedError.code || codedError.error_code || ''} ${authError.message}`.toLowerCase();
+      const description = raw.includes('unexpected_failure') || raw.includes('500') || raw.includes('server')
+        ? 'Google sign-in is temporarily unavailable because the authentication callback failed. Please try again shortly.'
+        : authError.message || 'Could not sign in with Google. Please try again.';
+      toast({ title: 'Sign-in Failed', description, variant: 'destructive' });
+      setGoogleLoading(false);
+    }
   };
+
 
   const routeAfterLogin = async (userId: string) => {
     // A user can hold several role rows — never use maybeSingle() here.

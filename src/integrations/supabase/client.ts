@@ -13,5 +13,9 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     storage: localStorage,
     persistSession: true,
     autoRefreshToken: true,
+    // OAuth returns the session in the URL — parse it automatically so the
+    // callback page never races ahead of the session being stored.
+    detectSessionInUrl: true,
+    flowType: 'pkce',
   }
 });
