@@ -79,15 +79,25 @@ const FreelancerGigs = () => {
     fetchGigs();
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async () => {
+    if (!pendingDelete) return;
+    const target = pendingDelete;
+    setDeleting(true);
     try {
-      const { error } = await supabase.from('gigs').delete().eq('id', id);
-      if (error) throw error;
-      setGigs(prev => prev.filter(g => g.id !== id));
-      toast({ title: "Gig Deleted", description: "This gig has been removed." });
-    } catch (error) {
+      await deleteGigCompletely(target.id);
+      setGigs(prev => prev.filter(g => g.id !== target.id));
+      setPendingDelete(null);
+      toast({ title: 'Gig deleted', description: 'The gig and all of its files were permanently removed.' });
+      fetchGigs();
+    } catch (error: any) {
       console.error('Error deleting gig:', error);
-      toast({ title: "Error", description: "Failed to delete gig. Please try again.", variant: "destructive" });
+      toast({
+        title: 'Error',
+        description: error?.message || 'Failed to delete gig. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleting(false);
     }
   };
 
