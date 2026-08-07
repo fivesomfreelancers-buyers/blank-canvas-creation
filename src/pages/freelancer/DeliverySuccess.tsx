@@ -154,7 +154,7 @@ const DeliverySuccess = () => {
                   <span className="text-sm font-medium text-foreground truncate">
                     {delivery.delivery_link}
                   </span>
-                </SecureFileLink>
+                </a>
               </div>
             )}
           </CardContent>
