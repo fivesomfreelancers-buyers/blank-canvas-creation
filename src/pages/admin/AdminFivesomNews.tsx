@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
+import SmartImage from '@/components/media/SmartImage';
+import { useSignedAttachmentUrl } from '@/hooks/useSignedAttachmentUrl';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -124,13 +126,25 @@ const AdminFivesomNews: React.FC = () => {
                 <span className="text-[10px] text-muted-foreground">{new Date(h.created_at).toLocaleString()} · sent to ~{h.count}</span>
               </div>
               <p className="text-sm whitespace-pre-wrap text-foreground">{h.body}</p>
-              {h.attachment_url && <img src={h.attachment_url} alt="" className="mt-2 max-h-32 rounded" />}
+              {h.attachment_url && <NewsAttachmentImage url={h.attachment_url} />}
             </div>
           ))}
           {history.length === 0 && <p className="text-center text-muted-foreground py-6">No news yet</p>}
         </CardContent>
       </Card>
     </div>
+  );
+};
+
+const NewsAttachmentImage = ({ url }: { url: string }) => {
+  const signed = useSignedAttachmentUrl(url);
+  return (
+    <SmartImage
+      src={signed}
+      alt="News attachment"
+      wrapperClassName="mt-2 h-32 w-fit rounded"
+      className="max-h-32 rounded object-contain"
+    />
   );
 };
 

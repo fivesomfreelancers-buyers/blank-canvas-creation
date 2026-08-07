@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import SecureFileLink from '@/components/media/SecureFileLink';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -127,17 +128,15 @@ const DeliverySuccess = () => {
             {delivery?.delivery_file_url && (
               <div>
                 <p className="text-xs text-muted-foreground mb-2">Attached File</p>
-                <a
-                  href={delivery.delivery_file_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <SecureFileLink
+                  url={delivery.delivery_file_url}
                   className="flex items-center gap-3 p-3 bg-muted rounded-lg hover:bg-muted/70 transition-colors"
                 >
                   <FileText className="w-5 h-5 text-primary" />
                   <span className="text-sm font-medium text-foreground truncate">
                     {delivery.delivery_file_url.split('/').pop()}
                   </span>
-                </a>
+                </SecureFileLink>
               </div>
             )}
 
@@ -155,7 +154,7 @@ const DeliverySuccess = () => {
                   <span className="text-sm font-medium text-foreground truncate">
                     {delivery.delivery_link}
                   </span>
-                </a>
+                </SecureFileLink>
               </div>
             )}
           </CardContent>
