@@ -165,10 +165,11 @@ const AuthCallback = () => {
         }
         setStatus('Authentication failed. Redirecting...');
         toast({
-          title: 'Login Failed',
-          description: err?.message || 'Something went wrong. Please try again.',
+          title: 'Sign-in Failed',
+          description: friendlyMessage(err?.message, err?.code ?? err?.error_code),
           variant: 'destructive',
         });
+
         setTimeout(() => navigate('/login', { replace: true }), 1800);
       }
     };
