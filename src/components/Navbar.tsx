@@ -6,6 +6,7 @@ import { useTheme } from './ThemeProvider';
 import { Logo } from './Logo';
 import { useAuth } from '@/hooks/useAuth';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
+import { useAdminRole } from '@/hooks/useAdminRole';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
