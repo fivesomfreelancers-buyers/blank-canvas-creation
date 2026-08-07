@@ -163,7 +163,7 @@ export default function AdminSomAdz() {
 
   const save = async () => {
     if (!form.title.trim()) { toast({ title: 'Title waa lagama maarmaan', variant: 'destructive' }); return; }
-    if (!form.media_path) { toast({ title: 'Fadlan upload gareyso sawir ama video', variant: 'destructive' }); return; }
+    if (!form.media_path) { toast({ title: 'Please upload an image or video', variant: 'destructive' }); return; }
     setSaving(true);
     const payload: any = {
       title: form.title.trim(),
@@ -442,12 +442,12 @@ export default function AdminSomAdz() {
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm">
-                    Upload media si aad preview u aragto
+                    Upload media to see a preview
                   </div>
                 )}
               </div>
               <p className="text-xs text-muted-foreground">
-                Sawirka ama video-gu wuxuu buuxinayaa frame-ka gebi ahaan. Jiid frame-ka si aad u dhaqaajiso focal point-ka, isticmaal zoom slider-ka si aad u dhow u ekayso.
+                The image or video fills the frame completely. Drag the frame to move the focal point, and use the zoom slider to get closer.
               </p>
             </div>
           </div>

@@ -1,13 +1,12 @@
-
 import React from 'react';
 import Navbar from '../components/Navbar';
 import HeroSection from '../components/HeroSection';
 import FeaturedCategories from '../components/FeaturedCategories';
 import HowItWorksSection from '../components/HowItWorksSection';
 import InteractiveTutorial from '../components/InteractiveTutorial';
+import VipMembershipSection from '../components/VipMembershipSection';
 import { Footer } from '../components/Footer';
 import SEO from '../components/SEO';
-
 
 const Index = () => {
   return (
@@ -22,13 +21,12 @@ const Index = () => {
       <FeaturedCategories />
       <HowItWorksSection />
       <InteractiveTutorial />
-      
-
-      
+      <VipMembershipSection />
       <Footer />
     </div>
   );
 };
 
 export default Index;
+
 
