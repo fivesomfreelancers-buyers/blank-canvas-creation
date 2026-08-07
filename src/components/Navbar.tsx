@@ -16,7 +16,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/integrations/supabase/client';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -78,7 +77,6 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <LanguageSwitcher />
             <button
 
               onClick={toggleTheme}
@@ -191,7 +189,6 @@ const Navbar = () => {
           </div>
 
           <div className="md:hidden flex items-center gap-1">
-            <LanguageSwitcher compact />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2"
