@@ -35,9 +35,26 @@ const AuthCallback = () => {
         accessToken: get('access_token'),
         refreshToken: get('refresh_token'),
         error: get('error'),
+        errorCode: get('error_code'),
         errorDescription: get('error_description'),
       };
     };
+
+    // Turn provider/server errors into something a user can act on.
+    const friendlyMessage = (raw?: string | null, code?: string | null) => {
+      const text = `${code || ''} ${raw || ''}`.toLowerCase();
+      if (text.includes('unexpected_failure') || text.includes('500') || text.includes('server_error')) {
+        return 'Sign-in service is temporarily unavailable. Please wait a moment and try again.';
+      }
+      if (text.includes('access_denied') || text.includes('cancel')) {
+        return 'Sign-in was cancelled. Please try again to continue.';
+      }
+      if (text.includes('redirect') || text.includes('invalid request')) {
+        return 'This sign-in link is no longer valid. Please start the sign-in again.';
+      }
+      return raw || 'We could not complete your sign-in. Please try again.';
+    };
+
 
     // Strip tokens from the address bar as soon as they are consumed.
     const cleanUrl = () => {
@@ -59,10 +76,12 @@ const AuthCallback = () => {
       try {
         const params = readParams();
 
-        // Provider-side rejection (consent denied, misconfigured client, ...).
-        if (params.error) {
-          throw new Error(params.errorDescription || params.error);
+        // Provider-side rejection (consent denied, server error, ...).
+        if (params.error || params.errorCode) {
+          console.error('OAuth provider error:', params.errorCode, params.errorDescription);
+          throw new Error(friendlyMessage(params.errorDescription || params.error, params.errorCode));
         }
+
 
         if (params.accessToken && params.refreshToken) {
           const { error } = await supabase.auth.setSession({
@@ -146,10 +165,11 @@ const AuthCallback = () => {
         }
         setStatus('Authentication failed. Redirecting...');
         toast({
-          title: 'Login Failed',
-          description: err?.message || 'Something went wrong. Please try again.',
+          title: 'Sign-in Failed',
+          description: friendlyMessage(err?.message, err?.code ?? err?.error_code),
           variant: 'destructive',
         });
+
         setTimeout(() => navigate('/login', { replace: true }), 1800);
       }
     };
