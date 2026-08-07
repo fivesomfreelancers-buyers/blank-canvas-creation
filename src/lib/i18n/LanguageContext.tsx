@@ -1,13 +1,16 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
-export type LangCode = 'en' | 'so' | 'fr' | 'ar';
+export type LangCode = 'en' | 'so' | 'fr' | 'am' | 'ar';
 
 export const LANGUAGES: { code: LangCode; label: string; flag: string; native: string }[] = [
   { code: 'en', label: 'English', flag: '🇺🇸', native: 'English' },
   { code: 'so', label: 'Somali', flag: '🇸🇴', native: 'Soomaali' },
   { code: 'fr', label: 'Français', flag: '🇫🇷', native: 'Français' },
+  { code: 'am', label: 'Amharic', flag: '🇪🇹', native: 'አማርኛ' },
   { code: 'ar', label: 'العربية', flag: '🇸🇦', native: 'العربية' },
 ];
+
+const CODES: LangCode[] = ['en', 'so', 'fr', 'am', 'ar'];
 
 const STORAGE_KEY = 'fivesom.lang';
 
@@ -23,7 +26,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [lang, setLangState] = useState<LangCode>(() => {
     if (typeof window === 'undefined') return 'en';
     const stored = localStorage.getItem(STORAGE_KEY) as LangCode | null;
-    return stored && ['en', 'so', 'fr', 'ar'].includes(stored) ? stored : 'en';
+    return stored && CODES.includes(stored) ? stored : 'en';
   });
 
   const setLang = useCallback((l: LangCode) => {
@@ -35,7 +38,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   useEffect(() => {
     document.documentElement.lang = lang;
-  }, [lang]);
+    document.documentElement.dir = dir;
+  }, [lang, dir]);
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, dir }}>
@@ -50,6 +54,6 @@ export const useLanguage = () => {
   return ctx;
 };
 
-export function t<T>(dict: Record<LangCode, T>, lang: LangCode): T {
-  return dict[lang] ?? dict.en;
+export function t<T>(dict: Partial<Record<LangCode, T>> & { en: T }, lang: LangCode): T {
+  return (dict[lang] ?? dict.en) as T;
 }
