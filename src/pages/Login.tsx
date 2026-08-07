@@ -9,7 +9,6 @@ import { useAuth } from '@/hooks/useAuth';
 import Navbar from '@/components/Navbar';
 import logo from '@/assets/logo.png';
 import { supabase } from '@/integrations/supabase/client';
-import { lovable } from '@/integrations/lovable';
 import { authCooldownRemaining, clearAuthFailures, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 
 
@@ -45,24 +44,25 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
-    const result: any = await lovable.auth.signInWithOAuth('google', {
-      redirect_uri: `${window.location.origin}/auth/callback`,
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: { access_type: 'offline', prompt: 'consent' },
+      },
     });
 
-    if (result?.redirected) return;
-
-    if (result?.error) {
+    if (error) {
       toast({
         title: "Login Failed",
-        description: result.error.message || "Could not sign in with Google. Please try again.",
+        description: error.message || "Could not sign in with Google. Please try again.",
         variant: "destructive",
       });
       setGoogleLoading(false);
-      return;
     }
-
-    navigate('/auth/callback', { replace: true });
+    // On success the browser is redirected to Google.
   };
+
 
   const routeAfterLogin = async (userId: string) => {
     // A user can hold several role rows — never use maybeSingle() here.

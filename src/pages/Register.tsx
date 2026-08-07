@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { lovable } from '@/integrations/lovable';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/Navbar';
 import logo from '@/assets/logo.png';
@@ -36,20 +35,21 @@ const Register = () => {
 
   const handleGoogleSignUp = async () => {
     setGoogleLoading(true);
-    const result: any = await lovable.auth.signInWithOAuth('google', {
-      redirect_uri: `${window.location.origin}/auth/callback`,
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: { access_type: 'offline', prompt: 'consent' },
+      },
     });
 
-    if (result?.redirected) return;
-
-    if (result?.error) {
-      toast({ title: 'Sign Up Failed', description: result.error.message, variant: 'destructive' });
+    if (error) {
+      toast({ title: 'Sign Up Failed', description: error.message, variant: 'destructive' });
       setGoogleLoading(false);
-      return;
     }
-
-    navigate('/auth/callback', { replace: true });
+    // On success the browser is redirected to Google.
   };
+
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
