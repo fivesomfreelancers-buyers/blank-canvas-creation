@@ -18,6 +18,8 @@ const FreelancerGigs = () => {
   const [gigs, setGigs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [vipTier, setVipTier] = useState<'golden' | 'platinum' | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; title: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const gigLimit = getGigLimitForVipTier(vipTier);
   const activeGigsUsed = gigs.filter(g => g.status === 'active').length;
