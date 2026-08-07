@@ -3,6 +3,7 @@ import { User, PlusCircle, Wallet, Maximize } from 'lucide-react';
 import verifyAccountVideo from '@/assets/verify-account-tutorial.mp4.asset.json';
 import createGigVideo from '@/assets/create-gig-tutorial.mp4.asset.json';
 import withdrawVideo from '@/assets/withdraw-tutorial.mp4.asset.json';
+import SmartVideo from '@/components/media/SmartVideo';
 
 
 interface TutorialOption {
@@ -132,24 +133,16 @@ const InteractiveTutorial = () => {
           <div className="relative">
             <div className="relative">
               <div className="aspect-video rounded-2xl overflow-hidden border-2 border-primary/30 bg-muted/20 shadow-2xl shadow-primary/20 hover:shadow-primary/30 hover:border-primary/50 transition-all duration-500">
-                <video
+                <SmartVideo
                   key={activeTutorial.id}
                   id={`video-${activeTutorial.id}`}
+                  src={activeTutorial.videoSrc}
+                  label="tutorial video"
+                  lazy
                   autoPlay
                   muted
                   loop
-                  playsInline
-                  preload="metadata"
-                  className="w-full h-full object-contain"
-                  onLoadedData={(e) => {
-                    const video = e.currentTarget;
-                    video.currentTime = 0;
-                    video.play().catch(() => {});
-                  }}
-                >
-                  <source src={activeTutorial.videoSrc} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                />
               </div>
               <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 rounded-2xl blur-sm opacity-75 animate-pulse -z-10" />
             </div>
