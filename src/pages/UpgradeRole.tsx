@@ -14,7 +14,7 @@ interface UpgradeRoleProps {
 const COPY = {
   buyer: {
     icon: Users,
-    title: 'Dhammaystir Buyer Dashboard-kaaga',
+    title: 'Complete Your Buyer Dashboard',
     subtitle: NEED_BUYER_MESSAGE,
     gradient: 'from-purple-500 to-pink-500',
     cta: 'Continue as Buyer',
@@ -28,7 +28,7 @@ const COPY = {
   freelancer: {
     icon: Briefcase,
     title: 'Become a Freelancer on FIVESOM',
-    subtitle: 'Bilow inaad adeegyadaada iibiso oo lacag kasbato.',
+    subtitle: 'Start selling your services and earning money.',
     gradient: 'from-cyan-500 to-blue-500',
     cta: 'Continue as Freelancer',
     benefits: [
@@ -65,7 +65,7 @@ const UpgradeRole = ({ role }: UpgradeRoleProps) => {
     try {
       await upgradeToRole(user.id, role);
       await refreshRole();
-      toast({ title: 'Waa la sameeyay!', description: `You are now a ${role}.` });
+      toast({ title: 'All set!', description: `You are now a ${role}.` });
       navigate(`/complete-profile/${role}`, { replace: true });
     } catch (err) {
       console.error('upgradeToRole error:', err);
@@ -102,7 +102,7 @@ const UpgradeRole = ({ role }: UpgradeRoleProps) => {
             onClick={() => navigate(-1)}
             className="w-full mt-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            Maya, ka sii wad sahminta (keep browsing)
+            No thanks, keep browsing
           </button>
         </div>
       </div>

@@ -146,7 +146,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
 
             {isNews ? (
               <div className="pt-2 border-t text-center text-xs text-muted-foreground py-3">
-                📣 Fivesom News waa hal-dhinac. Halkaan wax ku qori maysid — kaliya warbixinada rasmiga ah ayaa kuugu imanaya.
+                📣 Fivesom News is one-way. You cannot write here — you will only receive official announcements.
               </div>
             ) : (
               <div className="flex space-x-2 pt-2 border-t items-center relative">

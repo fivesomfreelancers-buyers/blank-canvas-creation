@@ -47,7 +47,7 @@ const PaymentSuccess = () => {
               <>
                 <Loader2 className="w-10 h-10 mx-auto animate-spin text-primary" />
                 <h1 className="text-xl font-semibold">Verifying your payment…</h1>
-                <p className="text-sm text-muted-foreground">Fadlan sug, lacag bixinta waa la xaqiijinayaa.</p>
+                <p className="text-sm text-muted-foreground">Please wait, your payment is being confirmed.</p>
               </>
             )}
             {status === 'paid' && (
@@ -55,7 +55,7 @@ const PaymentSuccess = () => {
                 <CheckCircle className="w-12 h-12 mx-auto text-green-500" />
                 <h1 className="text-2xl font-bold">Payment Successful</h1>
                 <p className="text-sm text-muted-foreground">
-                  Lacagtaadu waa la helay. Hadda gudbi requirements-ka si freelancer-ku u bilaabo shaqada.
+                  Your payment was received. Now submit your requirements so the freelancer can start working.
                 </p>
                 <Button
                   className="w-full"
@@ -71,7 +71,7 @@ const PaymentSuccess = () => {
                 <AlertCircle className="w-12 h-12 mx-auto text-destructive" />
                 <h1 className="text-2xl font-bold">Payment Not Confirmed</h1>
                 <p className="text-sm text-muted-foreground">
-                  Ma xaqiijin karin lacag bixintaada. Haddii lacagta laga jaray, la xiriir support.
+                  We could not confirm your payment. If you were charged, please contact support.
                 </p>
                 <div className="flex gap-2">
                   <Button variant="outline" className="flex-1" onClick={() => navigate('/buyer/orders', { replace: true })}>

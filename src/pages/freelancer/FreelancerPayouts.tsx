@@ -31,7 +31,7 @@ const FreelancerPayouts = () => {
       body: { loginLink: withLoginLink },
     });
     if (error) {
-      toast.error('Xogta Stripe lama soo helin. Isku day mar kale.');
+      toast.error('Could not load your Stripe details. Please try again.');
       setStatus(null);
     } else {
       setStatus(data as Status);
@@ -49,7 +49,7 @@ const FreelancerPayouts = () => {
 
   useEffect(() => {
     if (params.get('done') === '1') {
-      toast.success('Onboarding-ka waa la dhammeeyay. Waxaan hubinaynaa xaaladda akoonkaaga.');
+      toast.success('Onboarding complete. We are checking your account status.');
     }
   }, [params]);
 
@@ -58,7 +58,7 @@ const FreelancerPayouts = () => {
     const { data, error } = await supabase.functions.invoke('stripe-connect-onboard', {});
     setWorking(false);
     if (error || !data?.url) {
-      toast.error('Lama furin Stripe onboarding. Isku day mar kale.');
+      toast.error('Could not open Stripe onboarding. Please try again.');
       return;
     }
     window.location.href = data.url as string;
@@ -73,8 +73,8 @@ const FreelancerPayouts = () => {
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">Stripe Payouts</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Ku xir akoonkaaga Stripe si lacagta orders-kaaga si toos ah kuugu soo gasho — Fivesom waxay qaadataa 15%
-            commission iyo $1 service fee ee iibsadaha.
+            Connect your Stripe account to receive order payments directly — Fivesom takes a 15%
+            commission plus a $1 buyer service fee.
           </p>
         </div>
 
@@ -100,13 +100,12 @@ const FreelancerPayouts = () => {
                 <div className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
                   <p>
-                    Akoonkaagu waa firfircoon. Lacagaha orders-ka cusub waxay si toos ah u gelayaan akoonkaaga Stripe,
-                    ka dibna payout-ka bangigaaga.
+                    Your account is active. Payments from new orders go straight to your Stripe account, and then get paid out to your bank.
                   </p>
                 </div>
                 {status?.loginUrl && (
                   <Button variant="outline" onClick={() => window.open(status.loginUrl!, '_blank')}>
-                    Fur Stripe Dashboard <ExternalLink className="w-4 h-4 ml-2" />
+                    Open Stripe Dashboard <ExternalLink className="w-4 h-4 ml-2" />
                   </Button>
                 )}
               </>
@@ -116,8 +115,8 @@ const FreelancerPayouts = () => {
                   <AlertCircle className="w-5 h-5 text-yellow-500 shrink-0" />
                   <p>
                     {status?.connected
-                      ? 'Onboarding-kaagu wuu dhammaystiran yahay. Fadlan dhammaystir xogta Stripe uu weydiisanayo.'
-                      : 'Weli ma xirin akoon Stripe. Riix badhanka hoose si aad u bilowdo.'}
+                      ? 'Your onboarding is incomplete. Please provide the information Stripe is requesting.'
+                      : 'You have not connected a Stripe account yet. Click the button below to get started.'}
                   </p>
                 </div>
                 {!!status?.requirements?.length && (
@@ -129,13 +128,12 @@ const FreelancerPayouts = () => {
                 )}
                 <Button onClick={startOnboarding} disabled={working}>
                   {working && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                  {status?.connected ? 'Sii wad onboarding-ka' : 'Ku xir Stripe'}
+                  {status?.connected ? 'Continue onboarding' : 'Connect Stripe'}
                 </Button>
               </>
             )}
             <p className="text-xs text-muted-foreground">
-              Haddii aadan Stripe isticmaalin, lacagtaada waxay ku gelaysaa Fivesom Wallet-kaaga oo waad la bixi kartaa
-              ZAAD / EVC / eDahab ama bangi.
+              If you do not use Stripe, your money goes to your Fivesom Wallet and you can withdraw via ZAAD / EVC / eDahab or bank.
             </p>
           </CardContent>
         </Card>
