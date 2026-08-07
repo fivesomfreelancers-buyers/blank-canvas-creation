@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { FileText, Download, Lock, ZoomIn, X, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSignedAttachmentUrl } from '@/hooks/useSignedAttachmentUrl';
+import SmartImage from '@/components/media/SmartImage';
+import SmartVideo from '@/components/media/SmartVideo';
 
 const IMAGE_EXT = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg', 'heic'];
 const VIDEO_EXT = ['mp4', 'mov', 'webm', 'ogg', 'mkv', 'avi', 'm4v'];
@@ -94,12 +96,14 @@ const AttachmentPreview: React.FC<Props> = ({ url, isOwn, allowDownload = true, 
             className="relative group cursor-zoom-in"
             onClick={() => setZoomOpen(true)}
           >
-            <img
+            <SmartImage
               src={signedUrl}
               alt={name}
               onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
               draggable={allowDownload}
-              className={`max-w-[260px] max-h-[260px] rounded-lg border shadow-sm object-cover block ${!allowDownload ? 'blur-[1px]' : ''}`}
+              wrapperClassName="w-[260px] h-[200px] rounded-lg border shadow-sm"
+              className={`w-full h-full object-cover block ${!allowDownload ? 'blur-[1px]' : ''}`}
+              showRetry
             />
             {!allowDownload && <Watermark />}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -145,18 +149,15 @@ const AttachmentPreview: React.FC<Props> = ({ url, isOwn, allowDownload = true, 
     return (
       <div className="mt-2 inline-block">
         <div className="relative">
-          <video
-            src={signedUrl}
-            controls
-            controlsList={allowDownload ? undefined : 'nodownload noremoteplayback'}
-            disablePictureInPicture={!allowDownload}
-            onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
-            preload="metadata"
-            className="max-w-[320px] max-h-[280px] rounded-lg border bg-black block"
-          >
-            <source src={signedUrl} />
-            Your browser does not support video.
-          </video>
+          <div className="w-[320px] h-[220px] rounded-lg border bg-black overflow-hidden">
+            <SmartVideo
+              src={signedUrl}
+              controls
+              controlsList={allowDownload ? undefined : 'nodownload noremoteplayback'}
+              disablePictureInPicture={!allowDownload}
+              onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
+            />
+          </div>
           {!allowDownload && <Watermark />}
         </div>
         <div className="mt-2 flex items-center justify-between gap-3">

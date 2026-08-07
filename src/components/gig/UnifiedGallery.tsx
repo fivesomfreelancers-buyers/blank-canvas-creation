@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import SmartImage from '@/components/media/SmartImage';
+import SmartVideo from '@/components/media/SmartVideo';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
@@ -51,17 +53,20 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
                 <CarouselItem key={idx}>
                   <div className="w-full h-96 bg-black rounded-t-lg overflow-hidden flex items-center justify-center">
                     {slide.type === 'video' ? (
-                      <video
-                        ref={(el) => { videoRefs.current[idx] = el; }}
+                      <SmartVideo
                         src={slide.url}
                         controls
-                        playsInline
-                        preload="metadata"
                         poster={images[0] || undefined}
-                        className="w-full h-full object-contain bg-black"
+                        label="video"
                       />
                     ) : (
-                      <img src={slide.url} alt={title} className="w-full h-full object-cover" />
+                      <SmartImage
+                        src={slide.url}
+                        alt={title}
+                        wrapperClassName="w-full h-full"
+                        className="w-full h-full object-cover"
+                        showRetry
+                      />
                     )}
                   </div>
                 </CarouselItem>
@@ -116,12 +121,12 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
                 {slide.type === 'video' ? (
                   <div className="w-full h-full bg-black flex items-center justify-center">
                     {images[0] ? (
-                      <img src={images[0]} alt="" className="w-full h-full object-cover opacity-70" />
+                      <SmartImage src={images[0]} alt="Video thumbnail" wrapperClassName="w-full h-full" className="w-full h-full object-cover opacity-70" />
                     ) : null}
                     <Play className="w-5 h-5 text-white absolute" fill="currentColor" />
                   </div>
                 ) : (
-                  <img src={slide.url} alt="" className="w-full h-full object-cover" />
+                  <SmartImage src={slide.url} alt={title} wrapperClassName="w-full h-full" className="w-full h-full object-cover" />
                 )}
               </button>
             ))}

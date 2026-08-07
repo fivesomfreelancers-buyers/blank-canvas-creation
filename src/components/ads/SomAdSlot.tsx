@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import SmartImage from '@/components/media/SmartImage';
 import { X } from 'lucide-react';
 import { useSomAds, SomAdPlacement, SomAd } from '@/hooks/useSomAd';
 import { cn } from '@/lib/utils';
@@ -51,9 +52,11 @@ export function SomAdCreative({ ad, className }: { ad: SomAd; className?: string
         style={{ overflow: 'hidden' }}
       >
         {ad.media_type === 'image' ? (
-          <img
+          <SmartImage
             src={ad.media_url}
             alt={ad.title}
+            loading="eager"
+            wrapperClassName="w-full h-full"
             className="w-full h-full"
             style={{
               objectFit: 'cover',

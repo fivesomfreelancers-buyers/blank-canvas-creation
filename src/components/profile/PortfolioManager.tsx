@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import SmartImage from '@/components/media/SmartImage';
+import SmartVideo from '@/components/media/SmartVideo';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, Trash2, Upload, ImageIcon, Video } from 'lucide-react';
@@ -107,8 +109,8 @@ const PortfolioManager: React.FC<Props> = ({ freelancerId }) => {
             {items.map(it => (
               <div key={it.id} className="relative group rounded-md overflow-hidden bg-muted aspect-square">
                 {it.media_type === 'image'
-                  ? <img src={it.media_url} className="w-full h-full object-cover" alt="Portfolio" />
-                  : <video src={it.media_url} controls className="w-full h-full object-cover bg-black" />
+                  ? <SmartImage src={it.media_url} alt="Portfolio item" wrapperClassName="w-full h-full" className="w-full h-full object-cover" showRetry />
+                  : <SmartVideo src={it.media_url} controls label="portfolio video" />
                 }
                 <button
                   onClick={() => remove(it.id)}

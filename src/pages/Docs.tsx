@@ -27,20 +27,28 @@ import ordersVid from '@/assets/docs/orders.mp4.asset.json';
 import disputeVid from '@/assets/docs/dispute.mp4.asset.json';
 import withdrawMoneyVid from '@/assets/docs/withdraw-money.mp4.asset.json';
 import buyerAcceptVid from '@/assets/docs/buyer-accept.mp4.asset.json';
+import docsIntroImg from '@/assets/docs/docs-intro.png.asset.json';
+import docsProfileImg from '@/assets/docs/docs-profile.png.asset.json';
+import docsPaymentImg from '@/assets/docs/docs-payment.png.asset.json';
+import docsCommunityImg from '@/assets/docs/docs-community.png.asset.json';
+import docsLevelsImg from '@/assets/docs/docs-levels.png.asset.json';
+import docsSupportImg from '@/assets/docs/docs-support.png.asset.json';
+import SmartVideo from '@/components/media/SmartVideo';
+import SmartImage from '@/components/media/SmartImage';
 
 // Legacy illustrations kept for the sections that still use a static image
-const imgIntro = 'https://i.postimg.cc/Vknzq7BP/5f01f0f6-0e76-4d74-9fd2-ac233c98db20.png';
+const imgIntro = docsIntroImg.url;
 const imgHow = howWorksImg.url;
-const imgProfile = 'https://i.postimg.cc/Hncqpx6y/ed0c0e61-3d22-4378-b0e8-3414ae132229.png';
+const imgProfile = docsProfileImg.url;
 const imgEscrow = escrowImg.url;
-const imgPayment = 'https://i.postimg.cc/rwf2CvRT/da785612-fdaf-48dc-965e-f65d99595f0b.png';
+const imgPayment = docsPaymentImg.url;
 const imgReviews = reviewsImg.url;
 const imgSecurity = securityImg.url;
-const imgCommunity = 'https://i.postimg.cc/gJ9SvDsc/7670fe7c-0f93-4bfa-84b3-9bb46b490cb8.png';
-const imgLevels = 'https://i.postimg.cc/BZpp6srD/45985dc0-518d-4116-97f8-d43617873de8.png';
-const imgTick = 'https://i.postimg.cc/BZpp6srD/45985dc0-518d-4116-97f8-d43617873de8.png';
-const imgSupport = 'https://i.postimg.cc/C5xjDB31/815b9ecb-15c1-4440-adec-e473f3335032.png';
-const imgFaq = 'https://i.postimg.cc/C5xjDB31/815b9ecb-15c1-4440-adec-e473f3335032.png';
+const imgCommunity = docsCommunityImg.url;
+const imgLevels = docsLevelsImg.url;
+const imgTick = docsLevelsImg.url;
+const imgSupport = docsSupportImg.url;
+const imgFaq = docsSupportImg.url;
 
 type Lang = 'en' | 'so' | 'ar' | 'fr';
 
@@ -1822,23 +1830,25 @@ const Docs: React.FC = () => {
                     {/* Section media — tutorial video, illustration, or nothing */}
                     {s.video ? (
                       <figure className="rounded-2xl overflow-hidden border border-border mb-8 bg-black shadow-sm">
-                        <video
-                          src={s.video}
-                          controls
-                          playsInline
-                          preload="metadata"
-                          className="w-full h-auto max-h-[70vh] bg-black"
-                        />
+                        <div className="aspect-video w-full max-h-[70vh]">
+                          <SmartVideo
+                            src={s.video}
+                            label="tutorial video"
+                            controls
+                            lazy
+                          />
+                        </div>
                       </figure>
                     ) : s.image ? (
                       <figure className="rounded-2xl overflow-hidden border border-border mb-8 bg-muted shadow-sm">
-                        <img
+                        <SmartImage
                           src={s.image}
                           alt={t.title}
-                          loading="lazy"
                           width={1280}
                           height={720}
-                          className="w-full h-auto object-cover"
+                          wrapperClassName="w-full aspect-video"
+                          className="w-full h-full object-cover"
+                          showRetry
                         />
                       </figure>
                     ) : null}
