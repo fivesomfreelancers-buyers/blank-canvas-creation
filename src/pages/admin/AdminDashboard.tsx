@@ -98,6 +98,7 @@ const AdminDashboardInner = () => {
       case 'users': return <AdminUsers />;
       case 'verifications': return <AdminVerifications />;
       case 'blue_tick': return <AdminBlueTick />;
+      case 'gigs': return <AdminGigs />;
       case 'orders': return <AdminOrders />;
       case 'chats': return <AdminChats />;
       case 'payments': return <AdminPayments />;
