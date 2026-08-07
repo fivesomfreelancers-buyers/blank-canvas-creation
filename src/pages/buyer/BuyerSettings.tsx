@@ -151,20 +151,13 @@ const BuyerSettings = ({ onProfileUpdated }: BuyerSettingsProps) => {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-1">
             <TabsTrigger value="profile" className="flex items-center space-x-2">
               <User className="w-4 h-4" />
               <span>Profile</span>
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex items-center space-x-2">
-              <Bell className="w-4 h-4" />
-              <span>Notifications</span>
-            </TabsTrigger>
-            <TabsTrigger value="security" className="flex items-center space-x-2">
-              <Shield className="w-4 h-4" />
-              <span>Security</span>
-            </TabsTrigger>
           </TabsList>
+
 
           <TabsContent value="profile">
             <Card>
@@ -216,61 +209,6 @@ const BuyerSettings = ({ onProfileUpdated }: BuyerSettingsProps) => {
                 <Button onClick={handleSaveProfile} disabled={loading}>
                   {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</> : 'Save Changes'}
                 </Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="notifications">
-            <Card>
-              <CardHeader>
-                <CardTitle>Notification Preferences</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {[
-                  { key: 'orderUpdates', label: 'Order Updates', desc: 'Get notified about order status changes and deliveries' },
-                  { key: 'messages', label: 'Messages', desc: 'Receive notifications for new messages from freelancers' },
-                  { key: 'promotions', label: 'Promotions', desc: 'Receive special offers and promotional content' },
-                  { key: 'newsletters', label: 'Newsletters', desc: 'Get monthly newsletters with platform updates' },
-                  { key: 'projectReminders', label: 'Project Reminders', desc: 'Reminders about pending project actions' },
-                ].map(item => (
-                  <div key={item.key} className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">{item.label}</h3>
-                      <p className="text-sm text-muted-foreground">{item.desc}</p>
-                    </div>
-                    <Switch
-                      checked={notifications[item.key as keyof typeof notifications]}
-                      onCheckedChange={(checked) => setNotifications({ ...notifications, [item.key]: checked })}
-                    />
-                  </div>
-                ))}
-                <Button onClick={() => toast.success('Preferences saved')}>Save Preferences</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="security">
-            <Card>
-              <CardHeader>
-                <CardTitle>Security Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <h3 className="font-medium mb-4">Change Password</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="newPassword">New Password</Label>
-                      <Input id="newPassword" type="password" value={passwords.newPassword} onChange={e => setPasswords({ ...passwords, newPassword: e.target.value })} />
-                    </div>
-                    <div>
-                      <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                      <Input id="confirmPassword" type="password" value={passwords.confirmPassword} onChange={e => setPasswords({ ...passwords, confirmPassword: e.target.value })} />
-                    </div>
-                    <Button onClick={handleChangePassword} disabled={loading}>
-                      {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Updating...</> : 'Update Password'}
-                    </Button>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </TabsContent>
