@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Eye, Edit, Trash2, Plus, Briefcase, Crown, Gem } from 'lucide-react';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Eye, Edit, Trash2, Plus, Briefcase, Crown, Gem, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { getGigLimitForVipTier, resolveVipTier } from '@/lib/vipTheme';
+import { deleteGigCompletely, DELETE_GIG_CONFIRM } from '@/lib/deleteGig';
 
 const FreelancerGigs = () => {
   const navigate = useNavigate();
