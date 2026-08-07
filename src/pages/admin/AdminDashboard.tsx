@@ -48,6 +48,7 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
     { key: 'users', label: 'Users', icon: Users },
     { key: 'verifications', label: 'Verifications', icon: ShieldCheck },
     { key: 'blue_tick', label: 'Blue Tick Requests', icon: BadgeCheck },
+    { key: 'gigs', label: 'Gigs', icon: Briefcase },
     { key: 'orders', label: 'Orders', icon: Package },
     { key: 'chats', label: 'Live Chats', icon: MessageSquare },
   ]},
