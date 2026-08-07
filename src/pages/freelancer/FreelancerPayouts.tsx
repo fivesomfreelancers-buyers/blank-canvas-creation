@@ -31,7 +31,7 @@ const FreelancerPayouts = () => {
       body: { loginLink: withLoginLink },
     });
     if (error) {
-      toast.error('Xogta Stripe lama soo helin. Isku day mar kale.');
+      toast.error('Could not load your Stripe details. Please try again.');
       setStatus(null);
     } else {
       setStatus(data as Status);
