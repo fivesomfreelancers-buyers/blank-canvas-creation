@@ -12,21 +12,28 @@ import { translatePhrase } from './dictionary';
  */
 
 const ORIGINAL = new WeakMap<Node, string>();
+const APPLIED = new WeakMap<Node, string>();
 const ORIGINAL_ATTR = new WeakMap<Element, Record<string, string>>();
 const ATTRS = ['placeholder', 'title', 'aria-label', 'value'];
 const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'CODE', 'PRE']);
 
 function translateTextNode(node: Text, lang: LangCode) {
-  const original = ORIGINAL.get(node) ?? node.nodeValue ?? '';
-  if (!original.trim()) return;
-  if (!ORIGINAL.has(node)) ORIGINAL.set(node, original);
+  const current = node.nodeValue ?? '';
+  if (!current.trim()) return;
+
+  // If React (or any code) wrote a new value into this node, that value becomes
+  // the new source text — never resurrect a stale original.
+  const stored = ORIGINAL.get(node);
+  const applied = APPLIED.get(node);
+  const original = stored !== undefined && current === applied ? stored : current;
+  ORIGINAL.set(node, original);
 
   const translated = translatePhrase(original, lang);
-  const next = translated
-    ? original.replace(original.trim(), translated)
-    : original;
+  const next = translated ? original.replace(original.trim(), translated) : original;
+  APPLIED.set(node, next);
   if (node.nodeValue !== next) node.nodeValue = next;
 }
+
 
 function translateAttrs(el: Element, lang: LangCode) {
   if (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA' && !el.hasAttribute('title') && !el.hasAttribute('aria-label')) return;
