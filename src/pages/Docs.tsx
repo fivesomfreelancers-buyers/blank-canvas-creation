@@ -1822,23 +1822,25 @@ const Docs: React.FC = () => {
                     {/* Section media — tutorial video, illustration, or nothing */}
                     {s.video ? (
                       <figure className="rounded-2xl overflow-hidden border border-border mb-8 bg-black shadow-sm">
-                        <video
-                          src={s.video}
-                          controls
-                          playsInline
-                          preload="metadata"
-                          className="w-full h-auto max-h-[70vh] bg-black"
-                        />
+                        <div className="aspect-video w-full max-h-[70vh]">
+                          <SmartVideo
+                            src={s.video}
+                            label="tutorial video"
+                            controls
+                            lazy
+                          />
+                        </div>
                       </figure>
                     ) : s.image ? (
                       <figure className="rounded-2xl overflow-hidden border border-border mb-8 bg-muted shadow-sm">
-                        <img
+                        <SmartImage
                           src={s.image}
                           alt={t.title}
-                          loading="lazy"
                           width={1280}
                           height={720}
-                          className="w-full h-auto object-cover"
+                          wrapperClassName="w-full aspect-video"
+                          className="w-full h-full object-cover"
+                          showRetry
                         />
                       </figure>
                     ) : null}
