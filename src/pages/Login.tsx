@@ -53,13 +53,14 @@ const Login = () => {
     });
 
     if (error) {
-      toast({
-        title: "Login Failed",
-        description: error.message || "Could not sign in with Google. Please try again.",
-        variant: "destructive",
-      });
+      const raw = `${(error as any).code || ''} ${error.message || ''}`.toLowerCase();
+      const description = raw.includes('unexpected_failure') || raw.includes('500') || raw.includes('server')
+        ? 'Sign-in service is temporarily unavailable. Please wait a moment and try again.'
+        : error.message || 'Could not sign in with Google. Please try again.';
+      toast({ title: 'Sign-in Failed', description, variant: 'destructive' });
       setGoogleLoading(false);
     }
+
     // On success the browser is redirected to Google.
   };
 
