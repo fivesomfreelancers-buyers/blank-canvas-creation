@@ -70,7 +70,6 @@ const SmartVideo = ({
           autoPlay={autoPlay}
           playsInline
           preload="auto"
-          crossOrigin="anonymous"
           className="w-full h-full object-contain"
           onLoadedMetadata={() => setStatus('ready')}
           onLoadedData={(e) => {
