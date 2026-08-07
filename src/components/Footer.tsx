@@ -96,10 +96,10 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/vip" className="text-sm transition-colors text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
+                <span className="text-sm text-muted-foreground inline-flex items-center gap-1 cursor-not-allowed opacity-70">
                   <span>VIP Membership</span>
-                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-gradient-to-r from-[#FFD166] to-[#FF9F1C] text-black">NEW</span>
-                </Link>
+                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-gradient-to-r from-[#FFD166] to-[#FF9F1C] text-black">Coming Soon</span>
+                </span>
               </li>
               <li>
                 <Link to="/docs#support" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
