@@ -163,7 +163,7 @@ export default function AdminSomAdz() {
 
   const save = async () => {
     if (!form.title.trim()) { toast({ title: 'Title waa lagama maarmaan', variant: 'destructive' }); return; }
-    if (!form.media_path) { toast({ title: 'Fadlan upload gareyso sawir ama video', variant: 'destructive' }); return; }
+    if (!form.media_path) { toast({ title: 'Please upload an image or video', variant: 'destructive' }); return; }
     setSaving(true);
     const payload: any = {
       title: form.title.trim(),

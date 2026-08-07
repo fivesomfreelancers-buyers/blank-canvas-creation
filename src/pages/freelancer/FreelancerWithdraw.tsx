@@ -92,7 +92,7 @@ const REASON_OPTIONS = [
 
 const minimumWithdrawal = 20;
 const INSUFFICIENT_FUNDS_MSG =
-  'Lacag ku filan uguma jirto wallet-kaaga. Waxaad la bixi kartaa oo keliya inta kuugu jirta Available Balance-ka.';
+  'You do not have enough funds in your wallet. You can only withdraw from your Available Balance.';
 
 const FreelancerWithdraw = () => {
   const navigate = useNavigate();

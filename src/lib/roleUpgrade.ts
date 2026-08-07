@@ -42,4 +42,4 @@ export const upgradeToRole = async (userId: string, role: 'buyer' | 'freelancer'
 };
 
 export const NEED_BUYER_MESSAGE =
-  'Si aad u dalbato adeeg, fadlan dhammaystir Buyer Dashboard-kaaga.';
+  'To order a service, please complete your Buyer Dashboard.';

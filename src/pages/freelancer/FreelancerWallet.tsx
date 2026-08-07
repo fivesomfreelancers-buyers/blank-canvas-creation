@@ -165,7 +165,7 @@ const FreelancerWallet = () => {
             </div>
             <div className="mt-4 pt-4 border-t flex flex-col md:flex-row md:items-center md:justify-between gap-3">
               <p className="text-sm text-muted-foreground">
-                Rabta lacagta si toos ah? Ku xir akoonkaaga Stripe oo hel payouts automatic ah.
+                Want your money faster? Connect your Stripe account to receive automatic payouts.
               </p>
               <Button variant="outline" onClick={() => navigate('/freelancer/payouts')}>
                 Stripe Payouts
