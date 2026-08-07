@@ -142,7 +142,9 @@ const InteractiveTutorial = () => {
                   autoPlay
                   muted
                   loop
+                  controls
                 />
+
               </div>
               <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 rounded-2xl blur-sm opacity-75 animate-pulse -z-10" />
             </div>

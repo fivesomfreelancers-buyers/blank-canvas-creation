@@ -69,17 +69,28 @@ const SmartVideo = ({
           poster={poster}
           autoPlay={autoPlay}
           playsInline
-          preload="metadata"
+          preload="auto"
           className="w-full h-full object-contain"
+          onLoadedMetadata={() => setStatus('ready')}
           onLoadedData={(e) => {
             setStatus('ready');
             if (autoPlay) e.currentTarget.play().catch(() => {});
           }}
           onCanPlay={() => setStatus('ready')}
-          onError={() => setStatus('error')}
+          onError={(e) => {
+            // Ignore aborted/interrupted loads (range-request restarts, remounts, tab switches).
+            const err = e.currentTarget.error;
+            if (!err || err.code === err.MEDIA_ERR_ABORTED) return;
+            // One silent auto-retry for transient network/decode hiccups.
+            if (attempt === 0) {
+              setAttempt(1);
+              setStatus('loading');
+              return;
+            }
+            setStatus('error');
+          }}
           {...rest}
         >
-          <source src={src} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       )}
@@ -106,14 +117,24 @@ const SmartVideo = ({
           <p className="text-xs text-muted-foreground">
             Check your connection and try again.
           </p>
-          <button
-            type="button"
-            onClick={retry}
-            className="mt-1 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
-            Retry
-          </button>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={retry}
+              className="mt-1 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+            >
+              <RotateCcw className="w-4 h-4" />
+              Retry
+            </button>
+            <a
+              href={src}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors"
+            >
+              Open {label}
+            </a>
+          </div>
         </div>
       )}
     </div>
