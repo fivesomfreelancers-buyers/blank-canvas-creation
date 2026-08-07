@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { User, PlusCircle, Wallet, Maximize } from 'lucide-react';
-import verifyAccountVideo from '@/assets/verify-account-tutorial.mp4.asset.json';
-import createGigVideo from '@/assets/create-gig-tutorial.mp4.asset.json';
-import withdrawVideo from '@/assets/withdraw-tutorial.mp4.asset.json';
+import { verifyAccountTutorialMp4 as verifyAccountVideo } from '@/lib/mediaUrls';
+import { createGigTutorialMp4 as createGigVideo } from '@/lib/mediaUrls';
+import { withdrawTutorialMp4 as withdrawVideo } from '@/lib/mediaUrls';
 import SmartVideo from '@/components/media/SmartVideo';
 
 
