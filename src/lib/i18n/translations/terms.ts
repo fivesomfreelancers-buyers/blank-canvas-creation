@@ -54,7 +54,7 @@ const PROHIBITED_KEYS = [
   'Identity Theft', 'Impersonation',
 ];
 
-export const termsCopy: Record<LangCode, TermsCopy> = {
+export const termsCopy: Partial<Record<LangCode, TermsCopy>> & { en: TermsCopy } = {
   en: {
     badge: 'LEGAL DOCUMENT',
     title: 'Terms of Service',

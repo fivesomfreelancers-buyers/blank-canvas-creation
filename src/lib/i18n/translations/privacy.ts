@@ -31,7 +31,7 @@ export interface PrivacyCopy {
   contactLink: string;
 }
 
-export const privacyCopy: Record<LangCode, PrivacyCopy> = {
+export const privacyCopy: Partial<Record<LangCode, PrivacyCopy>> & { en: PrivacyCopy } = {
   en: {
     badge: 'PRIVACY & DATA',
     title: 'Privacy Policy',
