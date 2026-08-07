@@ -76,10 +76,12 @@ const AuthCallback = () => {
       try {
         const params = readParams();
 
-        // Provider-side rejection (consent denied, misconfigured client, ...).
-        if (params.error) {
-          throw new Error(params.errorDescription || params.error);
+        // Provider-side rejection (consent denied, server error, ...).
+        if (params.error || params.errorCode) {
+          console.error('OAuth provider error:', params.errorCode, params.errorDescription);
+          throw new Error(friendlyMessage(params.errorDescription || params.error, params.errorCode));
         }
+
 
         if (params.accessToken && params.refreshToken) {
           const { error } = await supabase.auth.setSession({
