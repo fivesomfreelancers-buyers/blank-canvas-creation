@@ -56,7 +56,6 @@ import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
 import { ThemeProvider } from "./components/ThemeProvider";
 import PresenceProvider from "./components/presence/PresenceProvider";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
-import { AutoTranslate } from "@/lib/i18n/autoTranslate";
 
 const queryClient = new QueryClient();
 
@@ -65,7 +64,6 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <LanguageProvider>
-        <AutoTranslate />
         <PresenceProvider>
         <TooltipProvider>
           <Toaster />
