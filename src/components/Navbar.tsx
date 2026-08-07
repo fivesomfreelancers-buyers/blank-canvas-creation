@@ -78,6 +78,7 @@ const Navbar = () => {
 
           <div className="hidden md:flex items-center space-x-4">
             <button
+
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-accent transition-colors"
               aria-label="Toggle theme"
@@ -187,13 +188,16 @@ const Navbar = () => {
             )}
           </div>
 
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2"
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <div className="md:hidden flex items-center gap-1">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2"
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
+
         </div>
 
         {isMenuOpen && (

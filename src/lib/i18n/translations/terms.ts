@@ -1,4 +1,3 @@
-import { LangCode } from '@/lib/i18n/LanguageContext';
 
 type ListSection = { id: string; title: string; intro?: string; items: string[] };
 type TextSection = { id: string; title: string; body: string };
@@ -54,7 +53,7 @@ const PROHIBITED_KEYS = [
   'Identity Theft', 'Impersonation',
 ];
 
-export const termsCopy: Record<LangCode, TermsCopy> = {
+export const termsCopy: Partial<Record<string, TermsCopy>> & { en: TermsCopy } = {
   en: {
     badge: 'LEGAL DOCUMENT',
     title: 'Terms of Service',

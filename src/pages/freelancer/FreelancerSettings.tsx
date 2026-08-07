@@ -103,24 +103,13 @@ const FreelancerSettings = () => {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-1">
             <TabsTrigger value="profile" className="flex items-center space-x-2">
               <User className="w-4 h-4" />
               <span className="hidden sm:inline">Profile</span>
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex items-center space-x-2">
-              <Bell className="w-4 h-4" />
-              <span className="hidden sm:inline">Notifications</span>
-            </TabsTrigger>
-            <TabsTrigger value="security" className="flex items-center space-x-2">
-              <Shield className="w-4 h-4" />
-              <span className="hidden sm:inline">Security</span>
-            </TabsTrigger>
-            <TabsTrigger value="billing" className="flex items-center space-x-2">
-              <CreditCard className="w-4 h-4" />
-              <span className="hidden sm:inline">Billing</span>
-            </TabsTrigger>
           </TabsList>
+
 
           <TabsContent value="profile">
             <Card>
@@ -161,70 +150,6 @@ const FreelancerSettings = () => {
                 <Button onClick={handleSave} disabled={saving}>
                   {saving ? 'Saving...' : 'Save Changes'}
                 </Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="notifications">
-            <Card>
-              <CardHeader><CardTitle>Notification Preferences</CardTitle></CardHeader>
-              <CardContent className="space-y-6">
-                {[
-                  { key: 'orderUpdates', label: 'Order Updates', desc: 'Get notified about new orders and status changes' },
-                  { key: 'messages', label: 'Messages', desc: 'Receive notifications for new messages' },
-                  { key: 'marketing', label: 'Marketing', desc: 'Receive promotional emails and updates' },
-                  { key: 'weeklyReport', label: 'Weekly Report', desc: 'Get weekly performance summaries' },
-                ].map(item => (
-                  <div key={item.key} className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">{item.label}</h3>
-                      <p className="text-sm text-muted-foreground">{item.desc}</p>
-                    </div>
-                    <Switch
-                      checked={notifications[item.key as keyof typeof notifications]}
-                      onCheckedChange={(checked) => setNotifications({...notifications, [item.key]: checked})}
-                    />
-                  </div>
-                ))}
-                <Button>Save Preferences</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="security">
-            <Card>
-              <CardHeader><CardTitle>Security Settings</CardTitle></CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <Label htmlFor="currentPassword">Current Password</Label>
-                  <Input id="currentPassword" type="password" />
-                </div>
-                <div>
-                  <Label htmlFor="newPassword">New Password</Label>
-                  <Input id="newPassword" type="password" />
-                </div>
-                <div>
-                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                  <Input id="confirmPassword" type="password" />
-                </div>
-                <Button>Update Password</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="billing">
-            <Card>
-              <CardHeader><CardTitle>Billing Information</CardTitle></CardHeader>
-              <CardContent className="space-y-6">
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <h3 className="font-medium text-green-800">Account Status: Active</h3>
-                  <p className="text-green-600">Your freelancer account is in good standing</p>
-                </div>
-                <div>
-                  <h3 className="font-medium mb-2">Payment Methods</h3>
-                  <p className="text-muted-foreground">Manage how you receive payments from completed orders</p>
-                  <Button variant="outline" className="mt-2">Add Payment Method</Button>
-                </div>
               </CardContent>
             </Card>
           </TabsContent>

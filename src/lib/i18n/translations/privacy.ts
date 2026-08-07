@@ -1,4 +1,3 @@
-import { LangCode } from '@/lib/i18n/LanguageContext';
 
 export interface PrivacyCopy {
   badge: string;
@@ -31,7 +30,7 @@ export interface PrivacyCopy {
   contactLink: string;
 }
 
-export const privacyCopy: Record<LangCode, PrivacyCopy> = {
+export const privacyCopy: Partial<Record<string, PrivacyCopy>> & { en: PrivacyCopy } = {
   en: {
     badge: 'PRIVACY & DATA',
     title: 'Privacy Policy',

@@ -6,7 +6,6 @@ import SEO from '@/components/SEO';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { privacyCopy } from '@/lib/i18n/translations/privacy';
 import { Lock, Database, Cookie, Shield, CreditCard, MessageSquare, FileText, UserX, Mail, Globe, Eye } from 'lucide-react';
@@ -29,10 +28,6 @@ const PrivacyPolicy: React.FC = () => {
 
       <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-end mb-4">
-            <LanguageSwitcher />
-          </div>
-
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
               <Lock className="w-3.5 h-3.5" />
@@ -41,7 +36,7 @@ const PrivacyPolicy: React.FC = () => {
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">{c.title}</h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">{c.subtitle}</p>
             <p className="text-xs text-muted-foreground mt-3">
-              {c.updatedLabel}: {new Date().toLocaleDateString(lang === 'ar' ? 'ar' : lang === 'fr' ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+              {c.updatedLabel}: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
           </div>
 
