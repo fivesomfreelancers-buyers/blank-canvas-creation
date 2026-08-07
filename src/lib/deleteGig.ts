@@ -26,7 +26,11 @@ export async function deleteGigCompletely(gigId: string): Promise<void> {
   // Group by bucket so each bucket is cleaned up in a single request.
   const byBucket = files.reduce<Record<string, string[]>>((acc, f) => {
     if (!f?.bucket || !f?.path) return acc;
-    (acc[f.bucket] ||= []).push(f.path);
+    // Paths come from public URLs, so they are percent-encoded; the Storage
+    // API expects the raw object key.
+    let path = f.path;
+    try { path = decodeURIComponent(f.path); } catch { /* keep raw path */ }
+    (acc[f.bucket] ||= []).push(path);
     return acc;
   }, {});
 
