@@ -78,7 +78,9 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
+            <LanguageSwitcher />
             <button
+
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-accent transition-colors"
               aria-label="Toggle theme"
