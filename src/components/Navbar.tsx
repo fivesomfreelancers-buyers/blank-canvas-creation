@@ -219,6 +219,11 @@ const Navbar = () => {
                     <p className="text-xs text-muted-foreground capitalize">{userRole}</p>
                   </div>
                 </div>
+                {isAdmin && (
+                  <Link to="/admin" className="flex items-center gap-2 text-primary font-semibold" onClick={() => setIsMenuOpen(false)}>
+                    <Shield className="h-4 w-4" /> Admin Panel
+                  </Link>
+                )}
                 <Link to={dashboardPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
                 <Link to={profilePath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>My Profile</Link>
                 <Link to={settingsPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Settings</Link>
