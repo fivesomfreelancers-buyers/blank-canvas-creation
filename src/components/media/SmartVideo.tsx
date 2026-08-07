@@ -69,17 +69,23 @@ const SmartVideo = ({
           poster={poster}
           autoPlay={autoPlay}
           playsInline
-          preload="metadata"
+          preload="auto"
+          crossOrigin="anonymous"
           className="w-full h-full object-contain"
+          onLoadedMetadata={() => setStatus('ready')}
           onLoadedData={(e) => {
             setStatus('ready');
             if (autoPlay) e.currentTarget.play().catch(() => {});
           }}
           onCanPlay={() => setStatus('ready')}
-          onError={() => setStatus('error')}
+          onError={(e) => {
+            // Ignore aborted/interrupted loads (range-request restarts, remounts, tab switches).
+            const err = e.currentTarget.error;
+            if (!err || err.code === err.MEDIA_ERR_ABORTED) return;
+            setStatus('error');
+          }}
           {...rest}
         >
-          <source src={src} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       )}
