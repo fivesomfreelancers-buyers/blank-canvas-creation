@@ -23,6 +23,7 @@ const Navbar = () => {
   const { user, userRole, signOut } = useAuth();
   const navigate = useNavigate();
   const { unreadCount } = useUnreadMessages();
+  const { isAdmin } = useAdminRole();
   const [profile, setProfile] = useState<{ full_name: string; profile_image_url: string | null } | null>(null);
 
   useEffect(() => {
