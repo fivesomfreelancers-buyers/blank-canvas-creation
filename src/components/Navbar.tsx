@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Moon, Sun, Menu, X, User, LogOut, Settings, LayoutDashboard, MessageSquare } from 'lucide-react';
+import { Moon, Sun, Menu, X, User, LogOut, Settings, LayoutDashboard, MessageSquare, Shield } from 'lucide-react';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { Logo } from './Logo';
 import { useAuth } from '@/hooks/useAuth';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
+import { useAdminRole } from '@/hooks/useAdminRole';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -23,6 +24,7 @@ const Navbar = () => {
   const { user, userRole, signOut } = useAuth();
   const navigate = useNavigate();
   const { unreadCount } = useUnreadMessages();
+  const { isAdmin } = useAdminRole();
   const [profile, setProfile] = useState<{ full_name: string; profile_image_url: string | null } | null>(null);
 
   useEffect(() => {
@@ -85,6 +87,15 @@ const Navbar = () => {
 
             {user ? (
               <>
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/30 hover:bg-primary/20 transition-colors"
+                  >
+                    <Shield className="h-3.5 w-3.5" />
+                    Admin
+                  </Link>
+                )}
                 {!isNormal && (
                 <Link
                   to={messagesPath}
@@ -208,6 +219,11 @@ const Navbar = () => {
                     <p className="text-xs text-muted-foreground capitalize">{userRole}</p>
                   </div>
                 </div>
+                {isAdmin && (
+                  <Link to="/admin" className="flex items-center gap-2 text-primary font-semibold" onClick={() => setIsMenuOpen(false)}>
+                    <Shield className="h-4 w-4" /> Admin Panel
+                  </Link>
+                )}
                 <Link to={dashboardPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
                 <Link to={profilePath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>My Profile</Link>
                 <Link to={settingsPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Settings</Link>
