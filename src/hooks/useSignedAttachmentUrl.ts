@@ -6,6 +6,8 @@ const PRIVATE_BUCKETS = new Set([
   'order-requirements',
   'delivery-files',
   'message-attachments',
+  'verification-docs',
+  'somadz-media',
 ]);
 
 interface ParsedRef {

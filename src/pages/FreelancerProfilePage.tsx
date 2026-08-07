@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SmartVideo from '@/components/media/SmartVideo';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -387,7 +388,9 @@ const FreelancerProfilePage = () => {
                     {p.media_type === 'image' ? (
                       <img src={p.media_url} alt="Portfolio" className="w-full h-56 object-cover" />
                     ) : (
-                      <video src={p.media_url} controls className="w-full h-56 object-cover bg-black" />
+                      <div className="w-full h-56 bg-black">
+                        <SmartVideo src={p.media_url} controls label="portfolio video" />
+                      </div>
                     )}
                   </Card>
                 ))}

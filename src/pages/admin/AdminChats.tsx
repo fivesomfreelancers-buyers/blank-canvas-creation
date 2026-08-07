@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { MessageSquare, Eye, Paperclip, Shield } from 'lucide-react';
+import SecureFileLink from '@/components/media/SecureFileLink';
 
 interface Conv {
   id: string;
@@ -203,14 +204,12 @@ const AdminChats = () => {
                         >
                           {m.message && <p className="whitespace-pre-wrap">{m.message}</p>}
                           {m.attachment_url && (
-                            <a
-                              href={m.attachment_url}
-                              target="_blank"
-                              rel="noreferrer"
+                            <SecureFileLink
+                              url={m.attachment_url}
                               className="mt-1 text-xs flex items-center gap-1 underline opacity-80 hover:opacity-100"
                             >
                               <Paperclip className="h-3 w-3" /> Attachment
-                            </a>
+                            </SecureFileLink>
                           )}
                         </div>
                       </div>

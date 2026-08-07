@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import SmartVideo from '@/components/media/SmartVideo';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -188,7 +189,7 @@ const FreelancerProfileCard: React.FC<Props> = ({ freelancerId, userId, hidePort
               <div key={i} className="aspect-square rounded-md overflow-hidden bg-muted">
                 {m.media_type === 'image'
                   ? <img src={m.media_url} alt={`Portfolio ${i + 1}`} className="w-full h-full object-cover" />
-                  : <video src={m.media_url} controls className="w-full h-full object-cover bg-black" />}
+                  : <SmartVideo src={m.media_url} controls label="portfolio video" />}
               </div>
             ))}
           </div>
