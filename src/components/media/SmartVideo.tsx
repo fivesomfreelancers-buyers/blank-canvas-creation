@@ -65,6 +65,7 @@ const SmartVideo = ({
         <video
           key={`${src}#${attempt}`}
           ref={videoRef}
+          src={src}
           poster={poster}
           autoPlay={autoPlay}
           playsInline
