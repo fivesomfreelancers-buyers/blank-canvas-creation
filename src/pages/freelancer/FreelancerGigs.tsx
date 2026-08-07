@@ -167,7 +167,7 @@ const FreelancerGigs = () => {
                         <Button variant="outline" size="sm" className="w-full sm:w-auto" onClick={() => navigate(`/edit-gig/${gig.id}`)}>
                           <Edit className="w-4 h-4 mr-1" />Edit
                         </Button>
-                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 w-full sm:w-auto" onClick={() => handleDelete(gig.id)}>
+                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 w-full sm:w-auto" onClick={() => setPendingDelete({ id: gig.id, title: gig.title })}>
                           <Trash2 className="w-4 h-4 mr-1" />Delete
                         </Button>
                       </div>
