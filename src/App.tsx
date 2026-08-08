@@ -56,6 +56,7 @@ import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
 import { ThemeProvider } from "./components/ThemeProvider";
 import PresenceProvider from "./components/presence/PresenceProvider";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -73,7 +74,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/explore" element={<Explore />} />
-              <Route path="/gig/:id" element={<GigDetails />} />
+              <Route path="/gig/:slug" element={<GigDetails />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/docs" element={<Docs />} />
               <Route path="/vip" element={<Vip />} />
@@ -86,46 +87,49 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
 
-              <Route path="/select-role" element={<RoleSelection />} />
-              <Route path="/become-buyer" element={<UpgradeRole role="buyer" />} />
-              <Route path="/become-freelancer" element={<UpgradeRole role="freelancer" />} />
-              <Route path="/complete-profile/:role" element={<CompleteProfile />} />
-              <Route path="/payment" element={<PaymentPage />} />
-              <Route path="/buyer/payment-success" element={<PaymentSuccess />} />
-              <Route path="/create-gig" element={<CreateGig />} />
-              <Route path="/edit-gig/:gigId" element={<CreateGig />} />
+              <Route path="/select-role" element={<ProtectedRoute require="authenticated"><RoleSelection /></ProtectedRoute>} />
+              <Route path="/become-buyer" element={<ProtectedRoute><UpgradeRole role="buyer" /></ProtectedRoute>} />
+              <Route path="/become-freelancer" element={<ProtectedRoute><UpgradeRole role="freelancer" /></ProtectedRoute>} />
+              <Route path="/complete-profile/:role" element={<ProtectedRoute require="authenticated"><CompleteProfile /></ProtectedRoute>} />
+              <Route path="/payment" element={<ProtectedRoute require="authenticated"><PaymentPage /></ProtectedRoute>} />
+              <Route path="/buyer/payment-success" element={<ProtectedRoute require="authenticated"><PaymentSuccess /></ProtectedRoute>} />
+              <Route path="/create-gig" element={<ProtectedRoute require="authenticated"><CreateGig /></ProtectedRoute>} />
+              <Route path="/edit-gig/:gigId" element={<ProtectedRoute require="authenticated"><CreateGig /></ProtectedRoute>} />
               
-              {/* Public Freelancer Profile Route */}
+              {/* Public Freelancer Profile Routes (slug based) */}
               <Route path="/profile/:freelancerId" element={<FreelancerProfilePage />} />
               
               {/* Freelancer Routes */}
-              <Route path="/freelancer/dashboard" element={<FreelancerDashboard />} />
-              <Route path="/freelancer/gigs" element={<FreelancerGigs />} />
-              <Route path="/freelancer/orders" element={<FreelancerOrders />} />
-              <Route path="/freelancer/order/:orderId" element={<FreelancerOrderDetails />} />
-              <Route path="/freelancer/messages" element={<FreelancerMessages />} />
-              <Route path="/freelancer/deliver" element={<FreelancerDeliverWork />} />
-              <Route path="/freelancer/delivery-success/:orderId" element={<DeliverySuccess />} />
-              <Route path="/freelancer/wallet" element={<FreelancerWallet />} />
-              <Route path="/freelancer/wallet/withdraw" element={<FreelancerWithdraw />} />
-              <Route path="/freelancer/payouts" element={<FreelancerPayouts />} />
-              <Route path="/freelancer/help" element={<FreelancerHelp />} />
-              <Route path="/freelancer/settings" element={<FreelancerSettings />} />
-              <Route path="/freelancer/profile" element={<FreelancerProfile />} />
-              <Route path="/freelancer/verify" element={<FreelancerVerify />} />
+              <Route path="/freelancer/dashboard" element={<ProtectedRoute require="freelancer"><FreelancerDashboard /></ProtectedRoute>} />
+              <Route path="/freelancer/gigs" element={<ProtectedRoute require="freelancer"><FreelancerGigs /></ProtectedRoute>} />
+              <Route path="/freelancer/orders" element={<ProtectedRoute require="freelancer"><FreelancerOrders /></ProtectedRoute>} />
+              <Route path="/freelancer/order/:orderId" element={<ProtectedRoute require="freelancer"><FreelancerOrderDetails /></ProtectedRoute>} />
+              <Route path="/freelancer/messages" element={<ProtectedRoute require="freelancer"><FreelancerMessages /></ProtectedRoute>} />
+              <Route path="/freelancer/deliver" element={<ProtectedRoute require="freelancer"><FreelancerDeliverWork /></ProtectedRoute>} />
+              <Route path="/freelancer/delivery-success/:orderId" element={<ProtectedRoute require="freelancer"><DeliverySuccess /></ProtectedRoute>} />
+              <Route path="/freelancer/wallet" element={<ProtectedRoute require="freelancer"><FreelancerWallet /></ProtectedRoute>} />
+              <Route path="/freelancer/wallet/withdraw" element={<ProtectedRoute require="freelancer"><FreelancerWithdraw /></ProtectedRoute>} />
+              <Route path="/freelancer/payouts" element={<ProtectedRoute require="freelancer"><FreelancerPayouts /></ProtectedRoute>} />
+              <Route path="/freelancer/help" element={<ProtectedRoute require="freelancer"><FreelancerHelp /></ProtectedRoute>} />
+              <Route path="/freelancer/settings" element={<ProtectedRoute require="freelancer"><FreelancerSettings /></ProtectedRoute>} />
+              <Route path="/freelancer/profile" element={<ProtectedRoute require="freelancer"><FreelancerProfile /></ProtectedRoute>} />
+              <Route path="/freelancer/verify" element={<ProtectedRoute require="freelancer"><FreelancerVerify /></ProtectedRoute>} />
               
+              {/* Public freelancer profile — MUST stay after the static /freelancer/* routes */}
+              <Route path="/freelancer/:username" element={<FreelancerProfilePage />} />
+
               {/* Buyer Routes */}
-              <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
-              <Route path="/buyer/browse" element={<BuyerBrowse />} />
-              <Route path="/buyer/orders" element={<BuyerOrders />} />
-              <Route path="/buyer/messages" element={<BuyerMessages />} />
-              <Route path="/buyer/payments" element={<BuyerPayments />} />
-              <Route path="/buyer/help" element={<BuyerHelp />} />
-              <Route path="/buyer/settings" element={<BuyerSettings />} />
-              <Route path="/buyer/order/:orderId" element={<BuyerOrderDetails />} />
-              <Route path="/buyer/orders/:orderId" element={<BuyerOrderDetails />} />
-              <Route path="/buyer/order/:orderId/requirements" element={<SubmitRequirements />} />
-              <Route path="/buyer/orders/:orderId/requirements" element={<SubmitRequirements />} />
+              <Route path="/buyer/dashboard" element={<ProtectedRoute require="buyer"><BuyerDashboard /></ProtectedRoute>} />
+              <Route path="/buyer/browse" element={<ProtectedRoute require="buyer"><BuyerBrowse /></ProtectedRoute>} />
+              <Route path="/buyer/orders" element={<ProtectedRoute require="buyer"><BuyerOrders /></ProtectedRoute>} />
+              <Route path="/buyer/messages" element={<ProtectedRoute require="buyer"><BuyerMessages /></ProtectedRoute>} />
+              <Route path="/buyer/payments" element={<ProtectedRoute require="buyer"><BuyerPayments /></ProtectedRoute>} />
+              <Route path="/buyer/help" element={<ProtectedRoute require="buyer"><BuyerHelp /></ProtectedRoute>} />
+              <Route path="/buyer/settings" element={<ProtectedRoute require="buyer"><BuyerSettings /></ProtectedRoute>} />
+              <Route path="/buyer/order/:orderId" element={<ProtectedRoute require="buyer"><BuyerOrderDetails /></ProtectedRoute>} />
+              <Route path="/buyer/orders/:orderId" element={<ProtectedRoute require="buyer"><BuyerOrderDetails /></ProtectedRoute>} />
+              <Route path="/buyer/order/:orderId/requirements" element={<ProtectedRoute require="buyer"><SubmitRequirements /></ProtectedRoute>} />
+              <Route path="/buyer/orders/:orderId/requirements" element={<ProtectedRoute require="buyer"><SubmitRequirements /></ProtectedRoute>} />
               
               {/* Legal Routes */}
               <Route path="/legal/terms" element={<TermsOfService />} />

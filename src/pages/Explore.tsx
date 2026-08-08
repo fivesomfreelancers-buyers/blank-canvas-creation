@@ -15,6 +15,7 @@ import SEO from '../components/SEO';
 import { useTheme } from '../components/ThemeProvider';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { gigPath } from '@/lib/urls';
 import { CATEGORIES, getCategoryBySlug } from '@/lib/categories';
 import { useSearchParams } from 'react-router-dom';
 
@@ -64,6 +65,7 @@ const Explore = () => {
 
           return {
             id: gig.id,
+            slug: gig.slug,
             title: gig.title,
             freelancer: profile?.full_name || 'Anonymous',
             freelancerId: gig.freelancer_id,
@@ -283,7 +285,7 @@ const Explore = () => {
               {currentGigs.map(gig => (
                 <Link
                   key={gig.id}
-                  to={`/gig/${gig.id}`}
+                  to={gigPath(gig)}
                   className="group backdrop-blur-lg rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl bg-card border border-border"
                 >
                   <div className="relative overflow-hidden">

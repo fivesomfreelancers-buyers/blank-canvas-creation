@@ -728,6 +728,7 @@ export type Database = {
           id: string
           images: string[] | null
           is_vip: boolean
+          slug: string | null
           status: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id: string | null
           subcategory_slug: string | null
@@ -748,6 +749,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_vip?: boolean
+          slug?: string | null
           status?: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id?: string | null
           subcategory_slug?: string | null
@@ -768,6 +770,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_vip?: boolean
+          slug?: string | null
           status?: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id?: string | null
           subcategory_slug?: string | null
@@ -1799,6 +1802,7 @@ export type Database = {
         Args: { _dispute_id: string; _user_id: string }
         Returns: boolean
       }
+      slugify: { Args: { _txt: string }; Returns: string }
       touch_last_seen: { Args: never; Returns: undefined }
       user_owns_support_ticket: {
         Args: { _ticket_id: string; _ticket_table: string; _user_id: string }

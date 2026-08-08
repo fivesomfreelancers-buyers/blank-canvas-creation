@@ -22,10 +22,12 @@ import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
+import { isUuid, freelancerPath, gigPath } from '@/lib/urls';
 
 
 const FreelancerProfilePage = () => {
-  const { freelancerId } = useParams();
+  const { username: usernameParam, freelancerId: idParam } = useParams();
+  const profileRef = usernameParam || idParam;
   const navigate = useNavigate();
   const { user } = useAuth();
   const { theme: mode } = useTheme();
@@ -39,25 +41,52 @@ const FreelancerProfilePage = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!freelancerId) return;
+      if (!profileRef) return;
 
-      // freelancerId here is the freelancers table id
-      const { data: freelancer } = await (supabase as any)
-        .from('public_freelancers')
-        .select('*')
-        .eq('id', freelancerId)
-        .single();
+      // Public profiles are addressed by username (/freelancer/{username}).
+      // Legacy UUID links (/profile/{id}) still resolve and redirect.
+      let profile: any = null;
+      let freelancer: any = null;
+
+      if (isUuid(profileRef)) {
+        const { data } = await (supabase as any)
+          .from('public_freelancers')
+          .select('*')
+          .eq('id', profileRef)
+          .maybeSingle();
+        freelancer = data;
+        if (freelancer) {
+          const { data: prof } = await (supabase as any)
+            .from('public_profiles')
+            .select('*')
+            .eq('id', freelancer.user_id)
+            .maybeSingle();
+          profile = prof;
+          if (prof?.username) navigate(freelancerPath({ username: prof.username }), { replace: true });
+        }
+      } else {
+        const { data: prof } = await (supabase as any)
+          .from('public_profiles')
+          .select('*')
+          .eq('username', profileRef)
+          .maybeSingle();
+        profile = prof;
+        if (prof) {
+          const { data } = await (supabase as any)
+            .from('public_freelancers')
+            .select('*')
+            .eq('user_id', prof.id)
+            .maybeSingle();
+          freelancer = data;
+        }
+      }
 
       if (!freelancer) {
         setLoading(false);
         return;
       }
 
-      const { data: profile } = await (supabase as any)
-        .from('public_profiles')
-        .select('*')
-        .eq('id', freelancer.user_id)
-        .single();
+      const freelancerId = freelancer.id;
 
       // Fetch gigs by this freelancer
       const { data: gigsData } = await supabase
@@ -101,6 +130,7 @@ const FreelancerProfilePage = () => {
         avgRating,
         totalReviews: allReviews.length,
         userId: freelancer.user_id,
+        username: profile?.username || null,
       });
       setGigs(gigsData || []);
       setReviews(allReviews);
@@ -108,7 +138,8 @@ const FreelancerProfilePage = () => {
     };
 
     fetchProfile();
-  }, [freelancerId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileRef]);
 
   const getOrCreateConversation = async (partnerId: string): Promise<string | null> => {
     if (!user) return null;
@@ -204,7 +235,7 @@ const FreelancerProfilePage = () => {
       <SEO
         title={seoTitle}
         description={seoDescription}
-        canonical={`/profile/${freelancerId}`}
+        canonical={freelancerPath({ username: profileData.username, id: profileData.id })}
         type="profile"
         image={profileData.imageUrl || undefined}
         jsonLd={{
@@ -220,7 +251,7 @@ const FreelancerProfilePage = () => {
               ? { address: { '@type': 'PostalAddress', addressLocality: profileData.location } }
               : {}),
             ...(profileData.languages?.length ? { knowsLanguage: profileData.languages } : {}),
-            url: `/profile/${freelancerId}`,
+            url: freelancerPath({ username: profileData.username, id: profileData.id }),
             ...(profileData.totalReviews > 0
               ? {
                   aggregateRating: {
@@ -401,10 +432,10 @@ const FreelancerProfilePage = () => {
           <TabsContent value="about" className="space-y-6">
             <Card>
               <CardContent className="p-6">
-                <FreelancerProfileCard freelancerId={freelancerId} hidePortfolio />
+                <FreelancerProfileCard freelancerId={profileData.id} hidePortfolio />
               </CardContent>
             </Card>
-            {freelancerId && <FreelancerFAQDisplay freelancerId={freelancerId} />}
+            {profileData.id && <FreelancerFAQDisplay freelancerId={profileData.id} />}
           </TabsContent>
         </Tabs>
       </div>
