@@ -432,10 +432,10 @@ const FreelancerProfilePage = () => {
           <TabsContent value="about" className="space-y-6">
             <Card>
               <CardContent className="p-6">
-                <FreelancerProfileCard freelancerId={freelancerId} hidePortfolio />
+                <FreelancerProfileCard freelancerId={profileData.id} hidePortfolio />
               </CardContent>
             </Card>
-            {freelancerId && <FreelancerFAQDisplay freelancerId={freelancerId} />}
+            {profileData.id && <FreelancerFAQDisplay freelancerId={profileData.id} />}
           </TabsContent>
         </Tabs>
       </div>
