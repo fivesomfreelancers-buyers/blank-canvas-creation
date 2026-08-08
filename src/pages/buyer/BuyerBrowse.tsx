@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Search, Filter, Star, Heart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { gigPath } from '@/lib/urls';
 import VipBadge from '@/components/VipBadge';
 
 const BuyerBrowse = () => {
@@ -159,7 +160,7 @@ const BuyerBrowse = () => {
                     <span className="text-sm text-muted-foreground">{gig.delivery_time_days} days</span>
                   </div>
                   <Button size="sm" className="w-full mt-3" asChild>
-                    <Link to={`/gig/${gig.id}`}>View Details</Link>
+                    <Link to={gigPath(gig)}>View Details</Link>
                   </Button>
                 </CardContent>
               </Card>

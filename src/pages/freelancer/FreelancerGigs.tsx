@@ -10,6 +10,7 @@ import { Eye, Edit, Trash2, Plus, Briefcase, Crown, Gem, Loader2 } from 'lucide-
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { gigPath } from '@/lib/urls';
 import { getGigLimitForVipTier, resolveVipTier } from '@/lib/vipTheme';
 import { deleteGigCompletely, DELETE_GIG_CONFIRM } from '@/lib/deleteGig';
 
@@ -161,7 +162,7 @@ const FreelancerGigs = () => {
                             <Crown className="w-4 h-4 mr-1" />{gig.is_vip ? 'Unmark VIP' : 'Mark VIP'}
                           </Button>
                         )}
-                        <Button variant="outline" size="sm" className="w-full sm:w-auto" onClick={() => navigate(`/gig/${gig.id}`)}>
+                        <Button variant="outline" size="sm" className="w-full sm:w-auto" onClick={() => navigate(gigPath(gig))}>
                           <Eye className="w-4 h-4 mr-1" />View
                         </Button>
                         <Button variant="outline" size="sm" className="w-full sm:w-auto" onClick={() => navigate(`/edit-gig/${gig.id}`)}>

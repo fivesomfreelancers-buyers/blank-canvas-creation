@@ -23,9 +23,10 @@ import { NEED_BUYER_MESSAGE } from '@/lib/roleUpgrade';
 import { toast } from '@/hooks/use-toast';
 import { getVipTheme, resolveVipTier } from '@/lib/vipTheme';
 import { useTheme } from '@/components/ThemeProvider';
+import { isUuid, gigPath, freelancerPath } from '@/lib/urls';
 
 const GigDetails = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const { user, userRole } = useAuth();
   const { theme: mode } = useTheme();
@@ -39,21 +40,30 @@ const GigDetails = () => {
   const [faqs, setFaqs] = useState<any[]>([]);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [docs, setDocs] = useState<{ url: string; name: string }[]>([]);
+  const [gigId, setGigId] = useState<string | null>(null);
   
 
   useEffect(() => {
     const fetchGig = async () => {
-      if (!id) return;
+      if (!slug) return;
 
-      const { data: gigData, error } = await supabase
-        .from('gigs')
-        .select(`*, freelancers ( id, user_id, rating, completed_orders, is_verified, has_blue_tick, bio, vip_tier, vip_expires_at )`)
-        .eq('id', id)
-        .single();
+      // Public URLs are slug based. Legacy UUID links keep working and are
+      // redirected to the canonical slug URL.
+      const select = `*, freelancers ( id, user_id, rating, completed_orders, is_verified, has_blue_tick, bio, vip_tier, vip_expires_at )`;
+      const query = supabase.from('gigs').select(select);
+      const { data: gigData, error } = isUuid(slug)
+        ? await query.eq('id', slug).maybeSingle()
+        : await query.eq('slug', slug).maybeSingle();
 
       if (error || !gigData) { setLoading(false); return; }
 
-      const { data: profile } = await (supabase as any).from('public_profiles').select('full_name, profile_image_url, languages').eq('id', gigData.freelancers?.user_id).single();
+      const id = gigData.id;
+      setGigId(id);
+      if (isUuid(slug) && (gigData as any).slug) {
+        navigate(gigPath(gigData as any), { replace: true });
+      }
+
+      const { data: profile } = await (supabase as any).from('public_profiles').select('full_name, profile_image_url, languages, username').eq('id', gigData.freelancers?.user_id).single();
 
       
 
@@ -86,6 +96,7 @@ const GigDetails = () => {
         freelancerImageUrl: profile?.profile_image_url,
         freelancerUserId: gigData.freelancers?.user_id,
         freelancerId: gigData.freelancers?.id,
+        freelancerUsername: profile?.username || null,
         freelancerLanguages: profile?.languages || [],
         rating: avgRating,
         totalReviews: reviews?.length || 0,
@@ -102,12 +113,14 @@ const GigDetails = () => {
     fetchGig();
 
     // Realtime: refresh when a new review is added for this gig
+    if (!gigId) return;
     const channel = supabase
-      .channel(`gig-${id}-reviews`)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'gig_reviews', filter: `gig_id=eq.${id}` }, () => fetchGig())
+      .channel(`gig-${gigId}-reviews`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'gig_reviews', filter: `gig_id=eq.${gigId}` }, () => fetchGig())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug, gigId]);
 
   const getOrCreateConversation = async (partnerId: string): Promise<string | null> => {
     if (!user) return null;
@@ -195,7 +208,7 @@ const GigDetails = () => {
       <SEO
         title={`${gig.title} | FIVESOM`}
         description={(gig.description || gig.title || '').toString().slice(0, 160)}
-        canonical={`/gig/${gig.id}`}
+        canonical={gigPath(gig)}
         type="product"
         image={images[0]}
         jsonLd={[
@@ -217,7 +230,7 @@ const GigDetails = () => {
                 '@type': 'Person',
                 name: gig.freelancerName,
                 ...(gig.freelancerImageUrl ? { image: gig.freelancerImageUrl } : {}),
-                ...(gig.freelancerId ? { url: `/profile/${gig.freelancerId}` } : {}),
+                ...(gig.freelancerUsername || gig.freelancerId ? { url: freelancerPath({ username: gig.freelancerUsername, id: gig.freelancerId }) } : {}),
               },
             } : {}),
             ...(gig.rating ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: gig.rating, reviewCount: gig.reviewCount || 1 } } : {}),

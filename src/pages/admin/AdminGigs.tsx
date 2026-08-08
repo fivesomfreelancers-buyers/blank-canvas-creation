@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { gigPath } from '@/lib/urls';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -158,7 +159,7 @@ const AdminGigs = () => {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
-                    <a href={`/gig/${gig.id}`} target="_blank" rel="noopener noreferrer">
+                    <a href={gigPath(gig)} target="_blank" rel="noopener noreferrer">
                       <ExternalLink className="w-4 h-4 mr-1" />View gig
                     </a>
                   </Button>
