@@ -9,4 +9,6 @@
   <url><loc>https://fivesom.net/register</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
   <url><loc>https://fivesom.net/register/buyer</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
   <url><loc>https://fivesom.net/register/freelancer</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://fivesom.net/legal/terms</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://fivesom.net/legal/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>
