@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
@@ -6,8 +6,10 @@ import SEO from '@/components/SEO';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { privacyCopy } from '@/lib/i18n/translations/privacy';
+import LegalLanguageSwitcher, { type LegalLang } from '@/components/legal/LegalLanguageSwitcher';
+import SupportLink from '@/components/support/SupportLink';
+import { SUPPORT_EMAIL, SUPPORT_MAILTO } from '@/lib/support';
 import { Lock, Database, Cookie, Shield, CreditCard, MessageSquare, FileText, UserX, Mail, Globe, Eye } from 'lucide-react';
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -18,8 +20,9 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const PrivacyPolicy: React.FC = () => {
-  const { lang, dir } = useLanguage();
-  const c = privacyCopy[lang];
+  const [lang, setLang] = useState<LegalLang>('en');
+  const dir = lang === 'ar' ? 'rtl' : 'ltr';
+  const c = privacyCopy[lang] ?? privacyCopy.en;
 
   return (
     <div className="min-h-screen bg-background" dir={dir}>
@@ -38,7 +41,11 @@ const PrivacyPolicy: React.FC = () => {
             <p className="text-xs text-muted-foreground mt-3">
               {c.updatedLabel}: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
+            <div className="mt-5">
+              <LegalLanguageSwitcher value={lang} onChange={setLang} />
+            </div>
           </div>
+
 
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
             <aside className="lg:sticky lg:top-24 lg:self-start">
@@ -138,7 +145,8 @@ const PrivacyPolicy: React.FC = () => {
                     <h2 className="text-2xl font-bold mb-3 flex items-center gap-2"><Mail className="w-5 h-5 text-primary" /> {c.support.title}</h2>
                     <p className="text-muted-foreground">
                       {c.support.body}{' '}
-                      <Link to="/support/contact" className="text-primary underline">{c.support.linkLabel}</Link>.
+                      <SupportLink>{c.support.linkLabel}</SupportLink>{' — '}
+                      <a href={SUPPORT_MAILTO} className="text-primary underline">{SUPPORT_EMAIL}</a>.
                     </p>
                   </section>
 
@@ -150,8 +158,9 @@ const PrivacyPolicy: React.FC = () => {
 
                   <div className="pt-4 flex flex-wrap gap-3">
                     <Link to="/legal/terms" className="text-sm text-primary underline">{c.backToTerms}</Link>
-                    <Link to="/support/contact" className="text-sm text-primary underline">{c.contactLink}</Link>
+                    <SupportLink className="text-sm text-primary underline">{c.contactLink}</SupportLink>
                   </div>
+
 
                 </CardContent>
               </Card>
