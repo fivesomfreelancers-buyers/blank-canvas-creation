@@ -145,9 +145,11 @@ const BuyerHelp = () => {
                   <MessageSquare className="w-4 h-4 mr-2" />
                   Report an Issue
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Email Support
+                <Button asChild variant="outline" className="w-full justify-start">
+                  <a href="mailto:noreply@fivesom.com">
+                    <Mail className="w-4 h-4 mr-2" />
+                    noreply@fivesom.com
+                  </a>
                 </Button>
               </CardContent>
             </Card>

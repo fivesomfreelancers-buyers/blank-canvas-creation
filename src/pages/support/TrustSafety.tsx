@@ -289,10 +289,10 @@ const TrustSafety = () => {
                     contact our security team immediately.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <Button className="bg-red-600 hover:bg-red-700 text-white">
+                    <Button asChild className="bg-red-600 hover:bg-red-700 text-white"><a href="mailto:noreply@fivesom.com">
                       <Mail className="w-4 h-4 mr-2" />
-                      security@fivesom.com
-                    </Button>
+                      noreply@fivesom.com
+                    </a></Button>
                     <Button variant="outline" className="border-red-600 text-red-600 hover:bg-red-50">
                       <Phone className="w-4 h-4 mr-2" />
                       Emergency Hotline: +1 (555) 911-HELP
