@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
@@ -6,12 +6,15 @@ import SEO from '@/components/SEO';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { termsCopy } from '@/lib/i18n/translations/terms';
+import LegalLanguageSwitcher, { type LegalLang } from '@/components/legal/LegalLanguageSwitcher';
+import SupportLink from '@/components/support/SupportLink';
+import { SUPPORT_EMAIL, SUPPORT_MAILTO } from '@/lib/support';
 import {
   Shield, FileText, Users, CreditCard, Package, Star, Gavel, Ban,
   Copyright, AlertTriangle, Lock, Mail, CheckCircle2, XCircle
 } from 'lucide-react';
+
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   purpose: FileText, eligibility: Users, 'buyer-rights': CheckCircle2, 'freelancer-rights': CheckCircle2,
@@ -146,10 +149,12 @@ const TermsOfService: React.FC = () => {
                     </h2>
                     <p className="text-muted-foreground">
                       {c.contact.body}{' '}
-                      <Link to="/support/contact" className="text-primary underline">{c.contact.supportLink}</Link>{' — '}
+                      <SupportLink>{c.contact.supportLink}</SupportLink>{' — '}
+                      <a href={SUPPORT_MAILTO} className="text-primary underline">{SUPPORT_EMAIL}</a>{' — '}
                       <Link to="/legal/privacy" className="text-primary underline">{c.contact.privacyLink}</Link>.
                     </p>
                   </section>
+
 
                 </CardContent>
               </Card>
