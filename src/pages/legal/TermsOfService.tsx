@@ -26,8 +26,10 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const TermsOfService: React.FC = () => {
-  const { lang, dir } = useLanguage();
-  const c = termsCopy[lang];
+  const [lang, setLang] = useState<LegalLang>('en');
+  const dir = lang === 'ar' ? 'rtl' : 'ltr';
+  const c = termsCopy[lang] ?? termsCopy.en;
+
 
   const simpleSections = [
     c.purpose, c.eligibility, c.buyerRights, c.freelancerRights, c.buyerDuties, c.freelancerDuties,
@@ -56,7 +58,11 @@ const TermsOfService: React.FC = () => {
             <p className="text-xs text-muted-foreground mt-3">
               {c.updatedLabel}: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
+            <div className="mt-5">
+              <LegalLanguageSwitcher value={lang} onChange={setLang} />
+            </div>
           </div>
+
 
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
             <aside className="lg:sticky lg:top-24 lg:self-start">
