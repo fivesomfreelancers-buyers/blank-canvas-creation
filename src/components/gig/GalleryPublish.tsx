@@ -84,7 +84,7 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
                 <img
                   src={URL.createObjectURL(image)}
                   alt={`Gig image ${index + 1}`}
-                  className="w-full h-32 object-cover rounded-lg border"
+                  className="w-full h-32 object-contain bg-muted rounded-lg border"
                 />
                 <Button
                   size="sm"
