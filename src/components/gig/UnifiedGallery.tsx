@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import SmartImage from '@/components/media/SmartImage';
 import SmartVideo from '@/components/media/SmartVideo';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
-import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { ChevronLeft, ChevronRight, Play, X, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface UnifiedGalleryProps {
   videoUrl: string | null;
@@ -23,12 +24,20 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
   const [current, setCurrent] = useState(0);
   const videoRefs = useRef<Record<number, HTMLVideoElement | null>>({});
 
+  // Lightbox state
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [zoom, setZoom] = useState(1);
+
+  const imageSlideIndexes = slides.reduce<number[]>((acc, s, i) => {
+    if (s.type === 'image') acc.push(i);
+    return acc;
+  }, []);
+
   useEffect(() => {
     if (!api) return;
     const onSelect = () => {
       const idx = api.selectedScrollSnap();
       setCurrent(idx);
-      // Pause every video that is no longer the active slide
       Object.entries(videoRefs.current).forEach(([key, el]) => {
         if (el && Number(key) !== idx) el.pause();
       });
@@ -41,7 +50,33 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
     };
   }, [api]);
 
+  const stepLightbox = useCallback(
+    (dir: 1 | -1) => {
+      setZoom(1);
+      setLightboxIndex((prev) => {
+        if (prev === null || imageSlideIndexes.length === 0) return prev;
+        const pos = imageSlideIndexes.indexOf(prev);
+        const nextPos = (pos + dir + imageSlideIndexes.length) % imageSlideIndexes.length;
+        return imageSlideIndexes[nextPos];
+      });
+    },
+    [imageSlideIndexes]
+  );
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') stepLightbox(1);
+      if (e.key === 'ArrowLeft') stepLightbox(-1);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lightboxIndex, stepLightbox]);
+
   if (slides.length === 0) return null;
+
+  const activeLightboxUrl =
+    lightboxIndex !== null && slides[lightboxIndex]?.type === 'image' ? slides[lightboxIndex].url : null;
 
   return (
     <Card>
@@ -51,7 +86,8 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
             <CarouselContent>
               {slides.map((slide, idx) => (
                 <CarouselItem key={idx}>
-                  <div className="w-full h-96 bg-black rounded-t-lg overflow-hidden flex items-center justify-center">
+                  {/* Responsive container: the image is contained, never cropped */}
+                  <div className="w-full aspect-[4/3] sm:aspect-[16/10] max-h-[75vh] bg-muted rounded-t-lg overflow-hidden flex items-center justify-center">
                     {slide.type === 'video' ? (
                       <SmartVideo
                         src={slide.url}
@@ -60,13 +96,20 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
                         label="video"
                       />
                     ) : (
-                      <SmartImage
-                        src={slide.url}
-                        alt={title}
-                        wrapperClassName="w-full h-full"
-                        className="w-full h-full object-cover"
-                        showRetry
-                      />
+                      <button
+                        type="button"
+                        onClick={() => { setZoom(1); setLightboxIndex(idx); }}
+                        aria-label="Open full-size image"
+                        className="w-full h-full flex items-center justify-center cursor-zoom-in"
+                      >
+                        <SmartImage
+                          src={slide.url}
+                          alt={title}
+                          wrapperClassName="w-full h-full flex items-center justify-center"
+                          className="max-w-full max-h-full w-auto h-auto object-contain"
+                          showRetry
+                        />
+                      </button>
                     )}
                   </div>
                 </CarouselItem>
@@ -80,7 +123,7 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
                 type="button"
                 onClick={() => api?.scrollPrev()}
                 aria-label="Previous"
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
@@ -88,7 +131,7 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
                 type="button"
                 onClick={() => api?.scrollNext()}
                 aria-label="Next"
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -114,25 +157,97 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
               <button
                 key={idx}
                 onClick={() => api?.scrollTo(idx)}
-                className={`relative w-16 h-16 flex-shrink-0 rounded-md overflow-hidden border-2 transition-colors ${
+                className={`relative w-16 h-16 flex-shrink-0 rounded-md overflow-hidden border-2 bg-muted transition-colors ${
                   idx === current ? 'border-primary' : 'border-transparent'
                 }`}
               >
                 {slide.type === 'video' ? (
                   <div className="w-full h-full bg-black flex items-center justify-center">
                     {images[0] ? (
-                      <SmartImage src={images[0]} alt="Video thumbnail" wrapperClassName="w-full h-full" className="w-full h-full object-cover opacity-70" />
+                      <SmartImage src={images[0]} alt="Video thumbnail" wrapperClassName="w-full h-full flex items-center justify-center" className="max-w-full max-h-full object-contain opacity-70" />
                     ) : null}
                     <Play className="w-5 h-5 text-white absolute" fill="currentColor" />
                   </div>
                 ) : (
-                  <SmartImage src={slide.url} alt={title} wrapperClassName="w-full h-full" className="w-full h-full object-cover" />
+                  <SmartImage
+                    src={slide.url}
+                    alt={title}
+                    wrapperClassName="w-full h-full flex items-center justify-center"
+                    className="max-w-full max-h-full w-auto h-auto object-contain"
+                  />
                 )}
               </button>
             ))}
           </div>
         )}
       </CardContent>
+
+      {/* Full-size viewer */}
+      <Dialog
+        open={lightboxIndex !== null}
+        onOpenChange={(open) => { if (!open) { setLightboxIndex(null); setZoom(1); } }}
+      >
+        <DialogContent className="max-w-[96vw] sm:max-w-5xl p-0 bg-background/95 border-border [&>button]:hidden">
+          <div className="relative w-full h-[85vh] flex items-center justify-center overflow-auto">
+            {activeLightboxUrl && (
+              <img
+                src={activeLightboxUrl}
+                alt={title}
+                style={{ transform: `scale(${zoom})` }}
+                className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-200 origin-center"
+              />
+            )}
+
+            <div className="absolute top-3 right-3 flex items-center gap-2 z-20">
+              <button
+                type="button"
+                aria-label="Zoom out"
+                onClick={() => setZoom((z) => Math.max(1, +(z - 0.25).toFixed(2)))}
+                className="bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow"
+              >
+                <ZoomOut className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                aria-label="Zoom in"
+                onClick={() => setZoom((z) => Math.min(3, +(z + 0.25).toFixed(2)))}
+                className="bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow"
+              >
+                <ZoomIn className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                aria-label="Close viewer"
+                onClick={() => { setLightboxIndex(null); setZoom(1); }}
+                className="bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {imageSlideIndexes.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  aria-label="Previous image"
+                  onClick={() => stepLightbox(-1)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow z-20"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Next image"
+                  onClick={() => stepLightbox(1)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground rounded-full p-2 shadow z-20"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
