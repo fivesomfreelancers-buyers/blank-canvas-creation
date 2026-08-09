@@ -5,4 +5,4 @@ Disallow: /auth/callback
 Disallow: /freelancer/
 Disallow: /buyer/
 
-Sitemap: /sitemap.xml
+Sitemap: https://fivesom.net/sitemap.xml
