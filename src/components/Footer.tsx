@@ -165,7 +165,7 @@ export const Footer: React.FC = () => {
         
         <div className="border-t pt-8 mt-8 text-center border-border">
           <p className="text-sm text-muted-foreground">
-            © 2024 FIVESOM. All rights reserved.
+            © 2026 FIVESOM. All rights reserved.
           </p>
         </div>
       </div>
