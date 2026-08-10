@@ -88,6 +88,12 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
 
+              {/* Email links land here and get routed to the right inbox */}
+              <Route path="/messages" element={<MessagesRedirect />} />
+              <Route path="/support/messages" element={<MessagesRedirect />} />
+
+
+
               <Route path="/select-role" element={<ProtectedRoute require="authenticated"><RoleSelection /></ProtectedRoute>} />
               <Route path="/become-buyer" element={<ProtectedRoute><UpgradeRole role="buyer" /></ProtectedRoute>} />
               <Route path="/become-freelancer" element={<ProtectedRoute><UpgradeRole role="freelancer" /></ProtectedRoute>} />
