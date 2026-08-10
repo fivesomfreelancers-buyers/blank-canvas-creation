@@ -20,6 +20,7 @@ import ReportDialog from '@/components/ReportDialog';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
 import { supabase } from '@/integrations/supabase/client';
+import { getOrCreateConversation, inboxPath } from '@/lib/conversations';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { isUuid, freelancerPath, gigPath } from '@/lib/urls';

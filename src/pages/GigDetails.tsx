@@ -18,6 +18,7 @@ import ReportDialog from '@/components/ReportDialog';
 import SEO from '@/components/SEO';
 import SomAdSlot from '@/components/ads/SomAdSlot';
 import { supabase } from '@/integrations/supabase/client';
+import { getOrCreateConversation, inboxPath } from '@/lib/conversations';
 import { useAuth } from '@/hooks/useAuth';
 import { NEED_BUYER_MESSAGE } from '@/lib/roleUpgrade';
 import { toast } from '@/hooks/use-toast';
