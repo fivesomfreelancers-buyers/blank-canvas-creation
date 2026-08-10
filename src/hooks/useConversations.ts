@@ -295,10 +295,16 @@ export function useConversations() {
         sender_type: 'user',
         body: newMessage.trim(),
       });
-      if (!error) { setNewMessage(''); setShowEmojis(false); }
+      if (error) {
+        toast.error('Message not sent', { description: error.message });
+        return;
+      }
+      setNewMessage('');
+      setShowEmojis(false);
+      fetchMessages(selectedConversationId, 'support');
       return;
     }
-    if (!selectedPartnerId) return;
+    if (!selectedPartnerId) { toast.error('This conversation has no recipient.'); return; }
     const { error } = await supabase.from('messages').insert({
       sender_id: currentUserId,
       receiver_id: selectedPartnerId,
