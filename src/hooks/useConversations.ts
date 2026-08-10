@@ -397,7 +397,10 @@ export function useConversations() {
       }
 
       const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase();
-      const filePath = `${currentUserId}/${crypto.randomUUID()}.${fileExt}`;
+      // DM attachments live in the conversation folder so BOTH participants are
+      // allowed to sign/download them. Support uploads stay under the user id.
+      const folder = selectedKind === 'dm' ? selectedConversationId : currentUserId;
+      const filePath = `${folder}/${crypto.randomUUID()}.${fileExt}`;
       const { error: uploadError } = await supabase.storage
         .from('message-attachments')
         .upload(filePath, file, { contentType: file.type || undefined });
