@@ -128,12 +128,7 @@ const AdminOrders = () => {
         <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-2">
           <CardTitle className="text-base flex items-center gap-2"><Package className="h-4 w-4" /> All Orders</CardTitle>
           <div className="flex gap-2 items-center flex-wrap">
-            {selected.length > 0 && (
-              <Button size="sm" variant="destructive" className="h-9" disabled={deleting}
-                      onClick={() => deleteOrders(selected)}>
-                <Trash2 className="h-4 w-4 mr-1" /> Delete Selected ({selected.length})
-              </Button>
-            )}
+
             <div className="relative w-56">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search…" className="pl-9 h-9" />
