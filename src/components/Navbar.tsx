@@ -99,7 +99,6 @@ const Navbar = () => {
                   </Link>
                 )}
                 <NotificationBell />
-                {(
                 <Link
                   to={messagesPath}
                   aria-label="Messages"
@@ -112,7 +111,6 @@ const Navbar = () => {
                     </span>
                   )}
                 </Link>
-                )}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center space-x-2 focus:outline-none relative">
