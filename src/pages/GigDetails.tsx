@@ -122,46 +122,21 @@ const GigDetails = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, gigId]);
 
-  const getOrCreateConversation = async (partnerId: string): Promise<string | null> => {
-    if (!user) return null;
-    const { data: existing } = await supabase
-      .from('conversations')
-      .select('id')
-      .or(`and(buyer_id.eq.${user.id},freelancer_id.eq.${partnerId}),and(buyer_id.eq.${partnerId},freelancer_id.eq.${user.id})`)
-      .maybeSingle();
-    if (existing) return existing.id;
-
-    const { data: buyerCheck } = await supabase.from('buyers').select('id').eq('user_id', user.id).maybeSingle();
-    const buyerId = buyerCheck ? user.id : partnerId;
-    const freelancerId = buyerCheck ? partnerId : user.id;
-
-    const { data: newConvo, error } = await supabase
-      .from('conversations')
-      .insert({ buyer_id: buyerId, freelancer_id: freelancerId })
-      .select('id')
-      .single();
-    if (error) return null;
-    return newConvo.id;
-  };
-
   const handleContact = async () => {
     if (!user) { toast({ title: "Please log in", description: "You need to be logged in to contact a freelancer.", variant: "destructive" }); return; }
     if (!gig?.freelancerUserId) { toast({ title: "Error", description: "Seller information unavailable.", variant: "destructive" }); return; }
     if (user.id === gig.freelancerUserId) { toast({ title: "That's your gig", description: "You can't message yourself.", variant: "destructive" }); return; }
     setSendingMessage(true);
     try {
-      const conversationId = await getOrCreateConversation(gig.freelancerUserId);
+      const conversationId = await getOrCreateConversation(user.id, gig.freelancerUserId);
       if (!conversationId) throw new Error('Could not create conversation');
       if (contactMessage.trim()) {
         const { error } = await supabase.from('messages').insert({ sender_id: user.id, receiver_id: gig.freelancerUserId, conversation_id: conversationId, message: contactMessage.trim() });
         if (error) throw error;
       }
-      // Decide route by role
-      const { data: buyerCheck } = await supabase.from('buyers').select('id').eq('user_id', user.id).maybeSingle();
-      const route = buyerCheck ? '/buyer/messages' : '/freelancer/messages';
       setContactMessage('');
       toast({ title: "Opening chat…", description: `Continuing your conversation with ${gig.freelancerName}.` });
-      navigate(route, { state: { openConversationId: conversationId, partnerId: gig.freelancerUserId } });
+      navigate(inboxPath(conversationId), { state: { openConversationId: conversationId, partnerId: gig.freelancerUserId } });
     } catch (err: any) {
       console.error('handleContact error', err);
       toast({ title: "Error", description: err?.message || "Failed to open chat.", variant: "destructive" });

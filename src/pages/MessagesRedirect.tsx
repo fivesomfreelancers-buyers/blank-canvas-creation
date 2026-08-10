@@ -31,8 +31,8 @@ const MessagesRedirect: React.FC = () => {
     } else if (userRole === 'buyer') {
       navigate(`/buyer/messages${suffix}`, { replace: true, state });
     } else {
-      // Neutral member: let them pick / upgrade a role first
-      navigate('/select-role', { replace: true });
+      // Neutral member: the universal inbox works without a role upgrade.
+      navigate(`/inbox${suffix}`, { replace: true, state });
     }
   }, [user, userRole, isLoading, navigate, location.search]);
 
