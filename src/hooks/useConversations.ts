@@ -229,22 +229,28 @@ export function useConversations() {
   // Realtime: DM messages
   useEffect(() => {
     if (!currentUserId) return;
+    // Per-user channel name so several tabs/accounts never share a topic.
     const channel = supabase
-      .channel('chat-messages-rt')
+      .channel(`chat-messages-rt-${currentUserId}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
         const msg = payload.new as ChatMessage;
         if (msg.sender_id === currentUserId || msg.receiver_id === currentUserId) {
           if (selectedConversationId && selectedKind === 'dm' && msg.conversation_id === selectedConversationId) {
-            setMessages(prev => [...prev, msg]);
+            setMessages(prev => (prev.some(p => p.id === msg.id) ? prev : [...prev, msg]));
             if (msg.sender_id !== currentUserId) markAsRead(selectedConversationId, 'dm');
           }
           fetchConversations();
         }
       })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'messages' }, (payload) => {
+        const msg = payload.new as ChatMessage;
+        if (msg.sender_id !== currentUserId && msg.receiver_id !== currentUserId) return;
+        setMessages(prev => prev.map(p => (p.id === msg.id ? { ...p, ...msg } : p)));
+      })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'system_messages' }, (payload) => {
         const m: any = payload.new;
         if (selectedConversationId && selectedKind !== 'dm' && m.conversation_id === selectedConversationId) {
-          setMessages(prev => [...prev, {
+          setMessages(prev => (prev.some(p => p.id === m.id) ? prev : [...prev, {
             id: m.id,
             sender_id: m.sender_type === 'user' ? currentUserId : 'system',
             receiver_id: m.sender_type === 'user' ? 'system' : currentUserId,
@@ -253,9 +259,12 @@ export function useConversations() {
             created_at: m.created_at,
             is_read: false,
             attachment_url: m.attachment_url,
-          }]);
+          }]));
           if (m.sender_type !== 'user') markAsRead(selectedConversationId, selectedKind);
         }
+        fetchConversations();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'conversations' }, () => {
         fetchConversations();
       })
       .subscribe();
