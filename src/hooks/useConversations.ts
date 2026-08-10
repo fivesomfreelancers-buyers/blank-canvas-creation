@@ -318,7 +318,7 @@ export function useConversations() {
     setNewMessage('');
     setShowEmojis(false);
     fetchMessages(selectedConversationId, 'dm');
-  }, [newMessage, selectedConversationId, selectedPartnerId, selectedKind, currentUserId]);
+  }, [newMessage, selectedConversationId, selectedPartnerId, selectedKind, currentUserId, fetchMessages]);
 
   const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
