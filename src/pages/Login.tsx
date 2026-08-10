@@ -271,6 +271,25 @@ const Login = () => {
                 </Button>
               </form>
 
+              {needsVerification && (
+                <div className="rounded-xl border border-border bg-muted/40 p-4 space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    Your email address is not verified yet. We can send the verification link again to{' '}
+                    <span className="font-medium text-foreground">{email.trim()}</span>.
+                  </p>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="w-full h-11 font-semibold"
+                    onClick={handleResendVerification}
+                    disabled={resendLoading}
+                  >
+                    {resendLoading ? 'Sending…' : 'Resend verification email'}
+                  </Button>
+                </div>
+              )}
+
+
               <div className="relative flex items-center justify-center">
                 <div className="absolute inset-x-0 top-1/2 border-t border-border" />
                 <span className="relative bg-card px-3 text-xs uppercase text-muted-foreground">or</span>
