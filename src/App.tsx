@@ -50,6 +50,7 @@ import SubmitRequirements from "./pages/buyer/SubmitRequirements";
 import PaymentSuccess from "./pages/buyer/PaymentSuccess";
 import PaymentPage from "./pages/PaymentPage";
 import NotFound from "./pages/NotFound";
+import MessagesRedirect from "./pages/MessagesRedirect";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import TermsOfService from "./pages/legal/TermsOfService";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
