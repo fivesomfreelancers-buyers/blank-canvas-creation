@@ -109,9 +109,9 @@ const FreelancerHelp = () => {
                   Community Forum
                 </Button>
                 <Button asChild variant="outline" className="w-full justify-start">
-                  <a href="mailto:noreply@fivesom.com">
+                  <a href="mailto:noreply@fivesom.net">
                     <Mail className="w-4 h-4 mr-2" />
-                    noreply@fivesom.com
+                    noreply@fivesom.net
                   </a>
                 </Button>
               </CardContent>

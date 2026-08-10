@@ -159,7 +159,7 @@ export function buildSystemNotificationEmail({
     <td align="center" style="padding:18px 32px 30px 32px;font-family:Arial,Helvetica,sans-serif;">
       <img src="${logo}" width="130" alt="FIVESOM" style="display:block;width:130px;height:auto;border:0;margin:0 auto;" />
       <p style="margin:12px 0 0 0;font-size:12px;line-height:19px;color:${MUTED};">You are receiving this email because you have a Fivesom account.<br />
-      Questions? Write to <a href="mailto:noreply@fivesom.com" style="color:${BLUE};text-decoration:none;">noreply@fivesom.com</a></p>
+      Questions? Write to <a href="mailto:noreply@fivesom.net" style="color:${BLUE};text-decoration:none;">noreply@fivesom.net</a></p>
       <p style="margin:10px 0 0 0;font-size:11px;color:${MUTED};">&copy; 2026 FIVESOM. All rights reserved.</p>
     </td>
   </tr>
