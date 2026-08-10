@@ -66,12 +66,16 @@ export function useNotifications() {
     const senderIds = Array.from(new Set(dms.map((m) => m.sender_id)));
     const nameById = new Map<string, { name: string; image: string | null }>();
     if (senderIds.length) {
-      const { data: people } = await supabase
-        .from('profiles')
-        .select('id, full_name, profile_image_url')
+      // `profiles` is not client-readable (privacy); the public view is.
+      const { data: people } = await (supabase as any)
+        .from('public_profiles')
+        .select('id, full_name, username, profile_image_url')
         .in('id', senderIds);
       (people || []).forEach((p: any) =>
-        nameById.set(p.id, { name: p.full_name || 'Fivesom Member', image: p.profile_image_url || null }),
+        nameById.set(p.id, {
+          name: p.full_name?.trim() || p.username?.trim() || 'Fivesom Member',
+          image: p.profile_image_url || null,
+        }),
       );
     }
 
