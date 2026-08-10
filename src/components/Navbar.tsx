@@ -99,7 +99,7 @@ const Navbar = () => {
                   </Link>
                 )}
                 <NotificationBell />
-                {!isNormal && (
+                {(
                 <Link
                   to={messagesPath}
                   aria-label="Messages"
