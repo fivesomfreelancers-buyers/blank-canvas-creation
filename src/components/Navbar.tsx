@@ -97,6 +97,7 @@ const Navbar = () => {
                     Admin
                   </Link>
                 )}
+                <NotificationBell />
                 {!isNormal && (
                 <Link
                   to={messagesPath}
