@@ -54,7 +54,7 @@ const Navbar = () => {
   const dashboardPath = userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard';
   const profilePath = userRole === 'freelancer' ? '/freelancer/profile' : '/buyer/settings';
   const settingsPath = userRole === 'freelancer' ? '/freelancer/settings' : '/buyer/settings';
-  const messagesPath = userRole === 'freelancer' ? '/freelancer/messages' : '/buyer/messages';
+  const messagesPath = userRole === 'freelancer' ? '/freelancer/messages' : userRole === 'buyer' ? '/buyer/messages' : '/inbox';
 
   const handleLogout = async () => {
     await signOut();
@@ -99,7 +99,6 @@ const Navbar = () => {
                   </Link>
                 )}
                 <NotificationBell />
-                {!isNormal && (
                 <Link
                   to={messagesPath}
                   aria-label="Messages"
@@ -112,7 +111,6 @@ const Navbar = () => {
                     </span>
                   )}
                 </Link>
-                )}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center space-x-2 focus:outline-none relative">

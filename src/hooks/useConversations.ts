@@ -4,6 +4,7 @@ import supportLogoAsset from '@/assets/fivesom-support-logo.png';
 import newsLogoAsset from '@/assets/fivesom-news-logo.png';
 import { toast } from 'sonner';
 import { moderateText, moderateImageFile, recordStrike, isChatBlocked } from '@/lib/chatModeration';
+import { getOrCreateConversation as createConversation } from '@/lib/conversations';
 
 export type ConversationKind = 'dm' | 'support' | 'news';
 
@@ -256,29 +257,19 @@ export function useConversations() {
         fetchConversations();
       })
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
-  }, [currentUserId, selectedConversationId, selectedKind, fetchConversations, markAsRead]);
+
+    // Safety net if realtime drops (mobile networks, background tabs).
+    const poll = setInterval(() => {
+      fetchConversations();
+      if (selectedConversationId) fetchMessages(selectedConversationId, selectedKind);
+    }, 20_000);
+
+    return () => { supabase.removeChannel(channel); clearInterval(poll); };
+  }, [currentUserId, selectedConversationId, selectedKind, fetchConversations, fetchMessages, markAsRead]);
 
   const getOrCreateConversation = useCallback(async (partnerId: string): Promise<string | null> => {
     if (!currentUserId) return null;
-    const { data: existing } = await supabase
-      .from('conversations')
-      .select('id')
-      .or(
-        `and(buyer_id.eq.${currentUserId},freelancer_id.eq.${partnerId}),and(buyer_id.eq.${partnerId},freelancer_id.eq.${currentUserId})`
-      )
-      .maybeSingle();
-    if (existing) return existing.id;
-    const { data: buyerCheck } = await supabase
-      .from('buyers').select('id').eq('user_id', currentUserId).maybeSingle();
-    const buyerId = buyerCheck ? currentUserId : partnerId;
-    const freelancerId = buyerCheck ? partnerId : currentUserId;
-    const { data: newConvo, error } = await supabase
-      .from('conversations')
-      .insert({ buyer_id: buyerId, freelancer_id: freelancerId })
-      .select('id').single();
-    if (error) { console.error(error); return null; }
-    return newConvo.id;
+    return createConversation(currentUserId, partnerId);
   }, [currentUserId]);
 
   const handleSend = useCallback(async () => {
@@ -304,18 +295,30 @@ export function useConversations() {
         sender_type: 'user',
         body: newMessage.trim(),
       });
-      if (!error) { setNewMessage(''); setShowEmojis(false); }
+      if (error) {
+        toast.error('Message not sent', { description: error.message });
+        return;
+      }
+      setNewMessage('');
+      setShowEmojis(false);
+      fetchMessages(selectedConversationId, 'support');
       return;
     }
-    if (!selectedPartnerId) return;
+    if (!selectedPartnerId) { toast.error('This conversation has no recipient.'); return; }
     const { error } = await supabase.from('messages').insert({
       sender_id: currentUserId,
       receiver_id: selectedPartnerId,
       conversation_id: selectedConversationId,
       message: newMessage.trim(),
     });
-    if (!error) { setNewMessage(''); setShowEmojis(false); }
-  }, [newMessage, selectedConversationId, selectedPartnerId, selectedKind, currentUserId]);
+    if (error) {
+      toast.error('Message not sent', { description: error.message });
+      return;
+    }
+    setNewMessage('');
+    setShowEmojis(false);
+    fetchMessages(selectedConversationId, 'dm');
+  }, [newMessage, selectedConversationId, selectedPartnerId, selectedKind, currentUserId, fetchMessages]);
 
   const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

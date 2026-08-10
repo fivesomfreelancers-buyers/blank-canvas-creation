@@ -51,6 +51,7 @@ import PaymentSuccess from "./pages/buyer/PaymentSuccess";
 import PaymentPage from "./pages/PaymentPage";
 import NotFound from "./pages/NotFound";
 import MessagesRedirect from "./pages/MessagesRedirect";
+import Inbox from "./pages/Inbox";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import TermsOfService from "./pages/legal/TermsOfService";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
@@ -91,6 +92,8 @@ const App = () => (
               {/* Email links land here and get routed to the right inbox */}
               <Route path="/messages" element={<MessagesRedirect />} />
               <Route path="/support/messages" element={<MessagesRedirect />} />
+              {/* Universal inbox — works for every signed-in role */}
+              <Route path="/inbox" element={<ProtectedRoute require="authenticated"><Inbox /></ProtectedRoute>} />
 
 
 

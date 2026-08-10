@@ -20,6 +20,7 @@ import ReportDialog from '@/components/ReportDialog';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
 import { supabase } from '@/integrations/supabase/client';
+import { getOrCreateConversation, inboxPath } from '@/lib/conversations';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { isUuid, freelancerPath, gigPath } from '@/lib/urls';
@@ -141,28 +142,6 @@ const FreelancerProfilePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileRef]);
 
-  const getOrCreateConversation = async (partnerId: string): Promise<string | null> => {
-    if (!user) return null;
-    const { data: existing } = await supabase
-      .from('conversations')
-      .select('id')
-      .or(`and(buyer_id.eq.${user.id},freelancer_id.eq.${partnerId}),and(buyer_id.eq.${partnerId},freelancer_id.eq.${user.id})`)
-      .maybeSingle();
-    if (existing) return existing.id;
-
-    const { data: buyerCheck } = await supabase.from('buyers').select('id').eq('user_id', user.id).maybeSingle();
-    const buyerId = buyerCheck ? user.id : partnerId;
-    const freelancerId = buyerCheck ? partnerId : user.id;
-
-    const { data: newConvo, error } = await supabase
-      .from('conversations')
-      .insert({ buyer_id: buyerId, freelancer_id: freelancerId })
-      .select('id')
-      .single();
-    if (error) return null;
-    return newConvo.id;
-  };
-
   const handleContact = async () => {
     if (!user) {
       toast({ title: "Please log in", description: "You need to be logged in to contact.", variant: "destructive" });
@@ -175,7 +154,7 @@ const FreelancerProfilePage = () => {
     }
     setSendingMessage(true);
     try {
-      const conversationId = await getOrCreateConversation(profileData.userId);
+      const conversationId = await getOrCreateConversation(user.id, profileData.userId);
       if (!conversationId) throw new Error('Could not create conversation');
       if (contactMessage.trim()) {
         const { error } = await supabase.from('messages').insert({
@@ -186,11 +165,9 @@ const FreelancerProfilePage = () => {
         });
         if (error) throw error;
       }
-      const { data: buyerCheck } = await supabase.from('buyers').select('id').eq('user_id', user.id).maybeSingle();
-      const route = buyerCheck ? '/buyer/messages' : '/freelancer/messages';
       setContactMessage('');
       toast({ title: "Opening chat…", description: `Continuing your conversation with ${profileData.name}.` });
-      navigate(route, { state: { openConversationId: conversationId, partnerId: profileData.userId } });
+      navigate(inboxPath(conversationId), { state: { openConversationId: conversationId, partnerId: profileData.userId } });
     } catch (err: any) {
       console.error('handleContact error', err);
       toast({ title: "Error", description: err?.message || "Failed to open chat.", variant: "destructive" });
