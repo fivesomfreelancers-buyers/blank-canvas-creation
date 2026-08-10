@@ -78,7 +78,9 @@ Deno.serve(async (req) => {
       messageText: String(msg.message ?? "").slice(0, 600),
       sentAt: msg.created_at ?? new Date(),
       senderAvatarUrl: sender?.profile_image_url ?? null,
-      replyUrl: `${SITE_URL}/messages`,
+      replyUrl: message.conversation_id
+        ? `${SITE_URL}/messages?c=${message.conversation_id}`
+        : `${SITE_URL}/messages`,
       siteUrl: SITE_URL,
     });
 
