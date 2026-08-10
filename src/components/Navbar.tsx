@@ -191,6 +191,7 @@ const Navbar = () => {
           </div>
 
           <div className="md:hidden flex items-center gap-1">
+            {user && <NotificationBell />}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2"
