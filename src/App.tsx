@@ -50,6 +50,7 @@ import SubmitRequirements from "./pages/buyer/SubmitRequirements";
 import PaymentSuccess from "./pages/buyer/PaymentSuccess";
 import PaymentPage from "./pages/PaymentPage";
 import NotFound from "./pages/NotFound";
+import MessagesRedirect from "./pages/MessagesRedirect";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import TermsOfService from "./pages/legal/TermsOfService";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
@@ -86,6 +87,12 @@ const App = () => (
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
+
+              {/* Email links land here and get routed to the right inbox */}
+              <Route path="/messages" element={<MessagesRedirect />} />
+              <Route path="/support/messages" element={<MessagesRedirect />} />
+
+
 
               <Route path="/select-role" element={<ProtectedRoute require="authenticated"><RoleSelection /></ProtectedRoute>} />
               <Route path="/become-buyer" element={<ProtectedRoute><UpgradeRole role="buyer" /></ProtectedRoute>} />
