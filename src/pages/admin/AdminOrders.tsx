@@ -175,11 +175,7 @@ const AdminOrders = () => {
             </TableHeader>
             <TableBody>
               {filtered.map((o) => (
-                <TableRow key={o.id} data-state={selected.includes(o.id) ? 'selected' : undefined}>
-                  <TableCell>
-                    <Checkbox checked={selected.includes(o.id)} onCheckedChange={() => toggleOne(o.id)}
-                              aria-label="Select order" />
-                  </TableCell>
+                <TableRow key={o.id}>
                   <TableCell className="text-sm font-medium truncate max-w-[200px]">{o.gig_title || o.id.slice(0, 8)}</TableCell>
                   <TableCell className="text-sm">{o.buyer_name}</TableCell>
                   <TableCell className="text-sm">{o.seller_name}</TableCell>
@@ -187,21 +183,14 @@ const AdminOrders = () => {
                   <TableCell><Badge variant="outline">{o.status}</Badge></TableCell>
                   <TableCell className="text-xs text-muted-foreground">{new Date(o.created_at).toLocaleDateString()}</TableCell>
                   <TableCell>
-                    <div className="flex gap-1 flex-wrap">
-                      <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => openOrder(o)}>
-                        <Eye className="h-3.5 w-3.5 mr-1" /> View
-                      </Button>
-                      {o.status !== 'completed' && <Button size="sm" className="h-7 text-xs" onClick={() => update(o.id, 'completed')}>Force Complete</Button>}
-                      {o.status !== 'cancelled' && <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => update(o.id, 'cancelled')}>Cancel</Button>}
-                      <Button size="sm" variant="destructive" className="h-7 text-xs" disabled={deleting}
-                              onClick={() => deleteOrders([o.id])}>
-                        <Trash2 className="h-3.5 w-3.5 mr-1" /> Delete
-                      </Button>
-                    </div>
+                    <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => openOrder(o)}>
+                      <Eye className="h-3.5 w-3.5 mr-1" /> View
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
-              {filtered.length === 0 && <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">No orders</TableCell></TableRow>}
+              {filtered.length === 0 && <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No orders</TableCell></TableRow>}
+
             </TableBody>
           </Table>
         </CardContent>
