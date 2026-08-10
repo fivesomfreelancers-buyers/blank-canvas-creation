@@ -283,53 +283,79 @@ export function useConversations() {
     return createConversation(currentUserId, partnerId);
   }, [currentUserId]);
 
-  const handleSend = useCallback(async () => {
-    if (!newMessage.trim() || !selectedConversationId || !currentUserId) return;
-    if (selectedKind === 'news') return; // read-only
-
-    const blockState = isChatBlocked(currentUserId);
-    if (blockState.blocked) {
-      toast.error(`Chat suspended. Try again in ${blockState.minutesLeft} minutes.`);
-      return;
-    }
-
-    const check = moderateText(newMessage);
-    if (check.allowed === false) {
-      const strike = recordStrike(currentUserId);
-      toast.error(check.message, { description: strike.warning, duration: 6000 });
-      return;
-    }
+  /**
+   * Inserts a message and only reports success when the database confirms the
+   * row. Returns false on failure so the caller can keep the draft + retry.
+   */
+  const deliverText = useCallback(async (text: string): Promise<boolean> => {
+    if (!selectedConversationId || !currentUserId) return false;
 
     if (selectedKind === 'support') {
-      const { error } = await (supabase as any).from('system_messages').insert({
+      const { data, error } = await (supabase as any).from('system_messages').insert({
         conversation_id: selectedConversationId,
         sender_type: 'user',
-        body: newMessage.trim(),
-      });
-      if (error) {
-        toast.error('Message not sent', { description: error.message });
-        return;
-      }
-      setNewMessage('');
-      setShowEmojis(false);
-      fetchMessages(selectedConversationId, 'support');
-      return;
+        body: text,
+      }).select('*').single();
+      if (error || !data) return false;
+      setMessages(prev => (prev.some(p => p.id === data.id) ? prev : [...prev, {
+        id: data.id,
+        sender_id: currentUserId,
+        receiver_id: 'system',
+        conversation_id: data.conversation_id,
+        message: data.body,
+        created_at: data.created_at,
+        is_read: true,
+        attachment_url: data.attachment_url,
+      }]));
+      fetchConversations();
+      return true;
     }
-    if (!selectedPartnerId) { toast.error('This conversation has no recipient.'); return; }
-    const { error } = await supabase.from('messages').insert({
+
+    if (!selectedPartnerId) {
+      toast.error('This conversation has no recipient.');
+      return false;
+    }
+    const { data, error } = await supabase.from('messages').insert({
       sender_id: currentUserId,
       receiver_id: selectedPartnerId,
       conversation_id: selectedConversationId,
-      message: newMessage.trim(),
-    });
-    if (error) {
-      toast.error('Message not sent', { description: error.message });
+      message: text,
+    }).select('*').single();
+    if (error || !data) {
+      console.error('message insert failed', error);
+      return false;
+    }
+    const row = data as ChatMessage;
+    setMessages(prev => (prev.some(p => p.id === row.id) ? prev : [...prev, row]));
+    fetchConversations();
+    return true;
+  }, [selectedConversationId, selectedPartnerId, selectedKind, currentUserId, fetchConversations]);
+
+  const handleSend = useCallback(async () => {
+    const text = newMessage.trim();
+    if (!text || !selectedConversationId || !currentUserId) return;
+    if (selectedKind === 'news') return; // read-only
+
+    const ok = await deliverText(text);
+    if (ok) {
+      setNewMessage('');
+      setShowEmojis(false);
       return;
     }
-    setNewMessage('');
-    setShowEmojis(false);
-    fetchMessages(selectedConversationId, 'dm');
-  }, [newMessage, selectedConversationId, selectedPartnerId, selectedKind, currentUserId, fetchMessages]);
+    // Keep the draft in the composer and offer an explicit retry.
+    toast.error('Message not sent', {
+      description: 'Check your connection — your message was kept so you can retry.',
+      duration: 8000,
+      action: {
+        label: 'Retry',
+        onClick: async () => {
+          const retried = await deliverText(text);
+          if (retried) setNewMessage('');
+          else toast.error('Still not sent. Please try again.');
+        },
+      },
+    });
+  }, [newMessage, selectedConversationId, selectedKind, currentUserId, deliverText]);
 
   const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
