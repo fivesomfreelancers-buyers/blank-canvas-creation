@@ -98,10 +98,12 @@ export function useConversations() {
         const partnerIds = convosData.map(c => c.buyer_id === user.id ? c.freelancer_id : c.buyer_id);
         const convoIds = convosData.map(c => c.id);
 
+        // Both `profiles` and `freelancers` are locked down for clients — read the
+        // public views so partner names/photos/badges always resolve.
         const [profilesRes, messagesRes, freelancersRes] = await Promise.all([
           (supabase as any).from('public_profiles').select('id, full_name, username, profile_image_url').in('id', partnerIds),
           supabase.from('messages').select('*').in('conversation_id', convoIds).order('created_at', { ascending: false }),
-          (supabase as any).from('freelancers').select('user_id, is_verified').in('user_id', partnerIds),
+          (supabase as any).from('public_freelancers').select('user_id, is_verified').in('user_id', partnerIds),
         ]);
 
         const profileMap = new Map((profilesRes.data || []).map((p: any) => [p.id, p]));
