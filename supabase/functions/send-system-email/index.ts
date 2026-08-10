@@ -13,7 +13,7 @@ const corsHeaders = {
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
 const SITE_URL = "https://fivesom.net";
-const FROM = "Fivesom <noreply@fivesom.com>";
+const FROM = "Fivesom <noreply@fivesom.net>";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {

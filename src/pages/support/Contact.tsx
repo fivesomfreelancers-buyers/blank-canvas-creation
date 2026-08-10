@@ -126,9 +126,9 @@ const Contact = () => {
     {
       icon: Mail,
       title: "Email Support",
-      description: "Write to noreply@fivesom.com",
+      description: "Write to noreply@fivesom.net",
       availability: "Response within 24 hours",
-      action: "noreply@fivesom.com",
+      action: "noreply@fivesom.net",
       color: "from-green-400 to-emerald-500"
     },
     {

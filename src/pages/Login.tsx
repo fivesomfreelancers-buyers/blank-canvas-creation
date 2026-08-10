@@ -17,6 +17,9 @@ const Login = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [emailLoading, setEmailLoading] = useState(false);
   const [email, setEmail] = useState('');
+  const [resendLoading, setResendLoading] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
+
   const [password, setPassword] = useState('');
   const { toast } = useToast();
   const { user, userRole, isLoading: authLoading } = useAuth();
@@ -110,6 +113,37 @@ const Login = () => {
   };
 
 
+  // Real resend of the Supabase Auth signup confirmation email.
+  // Only reports success when the auth/email backend actually accepted the request.
+  const handleResendVerification = async () => {
+    const target = email.trim();
+    if (!target) {
+      toast({ title: 'Email required', description: 'Enter your email address first.', variant: 'destructive' });
+      return;
+    }
+    setResendLoading(true);
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email: target,
+      options: { emailRedirectTo: new URL('/auth/callback', window.location.origin).toString() },
+    });
+    setResendLoading(false);
+
+    if (error) {
+      toast({
+        title: 'Could not send verification email',
+        description: error.message || 'The email service rejected the request. Please try again shortly.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    toast({
+      title: 'Verification email sent',
+      description: `The email service accepted the request for ${target}. Check your inbox (and spam folder).`,
+    });
+  };
+
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || password.length < 6) {
@@ -131,12 +165,18 @@ const Login = () => {
     });
 
     if (error || !data.user) {
-      const cooldown = recordAuthFailure('login', email);
+      const raw = `${(error as any)?.code || ''} ${error?.message || ''}`.toLowerCase();
+      const unconfirmed = raw.includes('not confirmed') || raw.includes('email_not_confirmed');
+      setNeedsVerification(unconfirmed);
+
+      const cooldown = unconfirmed ? 0 : recordAuthFailure('login', email);
       toast({
-        title: 'Login Failed',
-        description: cooldown > 0
-          ? cooldownMessage(cooldown)
-          : error?.message || 'Could not authenticate. Please try again.',
+        title: unconfirmed ? 'Email not verified' : 'Login Failed',
+        description: unconfirmed
+          ? 'Confirm your email address first, then sign in. You can resend the verification email below.'
+          : cooldown > 0
+            ? cooldownMessage(cooldown)
+            : error?.message || 'Could not authenticate. Please try again.',
         variant: 'destructive',
       });
       setEmailLoading(false);
@@ -144,10 +184,12 @@ const Login = () => {
     }
 
     clearAuthFailures('login', email);
+    setNeedsVerification(false);
     toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
     await routeAfterLogin(data.user.id);
     setEmailLoading(false);
   };
+
 
 
   return (
@@ -228,6 +270,25 @@ const Login = () => {
                   )}
                 </Button>
               </form>
+
+              {needsVerification && (
+                <div className="rounded-xl border border-border bg-muted/40 p-4 space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    Your email address is not verified yet. We can send the verification link again to{' '}
+                    <span className="font-medium text-foreground">{email.trim()}</span>.
+                  </p>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="w-full h-11 font-semibold"
+                    onClick={handleResendVerification}
+                    disabled={resendLoading}
+                  >
+                    {resendLoading ? 'Sending…' : 'Resend verification email'}
+                  </Button>
+                </div>
+              )}
+
 
               <div className="relative flex items-center justify-center">
                 <div className="absolute inset-x-0 top-1/2 border-t border-border" />
