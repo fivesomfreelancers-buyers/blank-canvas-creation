@@ -24,10 +24,12 @@ const MessagesRedirect: React.FC = () => {
       return;
     }
 
+    const suffix = conversationId ? `?c=${encodeURIComponent(conversationId)}` : '';
+
     if (userRole === 'freelancer') {
-      navigate('/freelancer/messages', { replace: true, state });
+      navigate(`/freelancer/messages${suffix}`, { replace: true, state });
     } else if (userRole === 'buyer') {
-      navigate('/buyer/messages', { replace: true, state });
+      navigate(`/buyer/messages${suffix}`, { replace: true, state });
     } else {
       // Neutral member: let them pick / upgrade a role first
       navigate('/select-role', { replace: true });

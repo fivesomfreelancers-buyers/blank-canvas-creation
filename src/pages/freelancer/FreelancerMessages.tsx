@@ -15,8 +15,9 @@ const FreelancerMessages = () => {
 
   useEffect(() => {
     if (chat.conversations.length === 0 || chat.selectedConversationId) return;
-    const targetId = location.state?.openConversationId;
-    const partnerId = location.state?.partnerId;
+    const search = new URLSearchParams(location.search);
+    const targetId = location.state?.openConversationId || search.get('c') || undefined;
+    const partnerId = location.state?.partnerId || search.get('u') || undefined;
     if (targetId) {
       const match = chat.conversations.find(c => c.conversationId === targetId);
       if (match) { chat.selectConversation(match.conversationId, match.partnerId); return; }
