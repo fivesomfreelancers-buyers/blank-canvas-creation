@@ -58,7 +58,7 @@ const AdminOverview = () => {
 
     const results = await Promise.allSettled([
       // 0 orders rows (needed for money math + charts)
-      sb.from('orders').select('amount, status, created_at'),
+      sb.from('orders').select('amount, status, payment_status, created_at'),
       // 1..3 users
       head('profiles'),
       head('buyers'),
@@ -69,7 +69,7 @@ const AdminOverview = () => {
       head('gigs'),
       head('gigs', (q: any) => q.eq('status', 'active')),
       // 8..9 withdrawals
-      sb.from('withdrawals').select('amount, status'),
+      sb.from('withdrawals').select('amount, status, fee_amount'),
       head('withdrawals', (q: any) => q.eq('status', 'pending')),
       // 10..15 misc
       head('gig_reviews'),
@@ -83,17 +83,36 @@ const AdminOverview = () => {
       head('freelancers', (q: any) => q.eq('has_blue_tick', true)),
       head('vip_memberships', (q: any) => q.eq('payment_status', 'paid')),
       head('disputes', (q: any) => q.eq('status', 'open')),
+      // 20 wallet balances (money still owed to sellers)
+      sb.from('wallets').select('balance'),
     ]);
 
     const at = (i: number) => (results[i].status === 'fulfilled' ? (results[i] as any).value : null);
     const failed = results.filter(r => r.status === 'rejected' || (r as any).value?.error);
     if (failed.length) console.warn('AdminOverview: some stat queries failed', failed);
 
-    const orders = (at(0)?.data || []) as Array<{ amount: number; status: string; created_at: string }>;
-    const withdrawalRows = (at(8)?.data || []) as Array<{ amount: number; status: string }>;
+    const orders = (at(0)?.data || []) as Array<{ amount: number; status: string; payment_status: string | null; created_at: string }>;
+    const withdrawalRows = (at(8)?.data || []) as Array<{ amount: number; status: string; fee_amount: number | null }>;
+    const walletRows = (at(20)?.data || []) as Array<{ balance: number | null }>;
 
     const sum = (rows: typeof orders) => rows.reduce((s, o) => s + Number(o.amount || 0), 0);
     const completed = orders.filter(o => o.status === 'completed');
+
+    const PAID = ['paid', 'succeeded', 'held', 'released', 'verified'];
+    const isPaid = (o: typeof orders[number]) => PAID.includes(String(o.payment_status || '').toLowerCase());
+    const paidOrders = orders.filter(isPaid);
+
+    // Money that has been paid by buyers but not yet released to the seller.
+    const inEscrow = paidOrders.filter(o => o.status === 'pending' || o.status === 'in_progress' || o.status === 'delivered');
+    // Payments still awaiting manual verification by an admin.
+    const awaitingVerification = orders.filter(
+      o => !isPaid(o) && o.status !== 'cancelled' && o.status !== 'completed',
+    );
+
+    const withdrawalFees = withdrawalRows
+      .filter(w => w.status === 'approved' || w.status === 'completed')
+      .reduce((s, w) => s + Number(w.fee_amount || 0), 0);
+    const serviceFees = paidOrders.length * SERVICE_FEE_PER_ORDER;
 
     const next: Stats = {
       totalUsers: countOf(at(1)),
@@ -111,9 +130,15 @@ const AdminOverview = () => {
       totalRevenue: sum(completed),
       monthlyRevenue: sum(completed.filter(o => o.created_at >= monthStart)),
       weeklyRevenue: sum(completed.filter(o => o.created_at >= weekAgo)),
-      escrowFunds: sum(orders.filter(o => o.status === 'in_progress' || o.status === 'delivered')),
+      escrowFunds: sum(inEscrow),
+      pendingFunds: sum(awaitingVerification),
+      fivesomRevenue: serviceFees + withdrawalFees,
+      payableToSellers: walletRows.reduce((s, w) => s + Number(w.balance || 0), 0),
       withdrawals: withdrawalRows.reduce((s, w) => s + Number(w.amount || 0), 0),
       pendingWithdrawals: countOf(at(9)),
+      pendingWithdrawalAmount: withdrawalRows
+        .filter(w => w.status === 'pending')
+        .reduce((s, w) => s + Number(w.amount || 0), 0),
       reviews: countOf(at(10)),
       messages: countOf(at(11)),
       supportTickets: countOf(at(12)) + countOf(at(13)) + countOf(at(14)),
@@ -123,6 +148,7 @@ const AdminOverview = () => {
       vipMembers: countOf(at(18)),
       openDisputes: countOf(at(19)),
     };
+
     setStats(next);
 
     // Last 6 months revenue / order volume
