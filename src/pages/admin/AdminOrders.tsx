@@ -155,15 +155,7 @@ const AdminOrders = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-10">
-                  <Checkbox
-                    checked={filtered.length > 0 && filtered.every((o) => selected.includes(o.id))}
-                    onCheckedChange={(v) =>
-                      setSelected(v ? filtered.map((o) => o.id) : [])
-                    }
-                    aria-label="Select all orders"
-                  />
-                </TableHead>
+
                 <TableHead>Gig</TableHead>
                 <TableHead>Buyer</TableHead>
                 <TableHead>Seller</TableHead>
