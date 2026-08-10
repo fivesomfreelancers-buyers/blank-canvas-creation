@@ -90,7 +90,7 @@ export function useNotifications() {
     });
 
     const sysItems: AppNotification[] = ((sysRes.data || []) as any[]).map((m) => {
-      const type = m.system_conversations?.type === 'news' ? 'news' : 'support';
+      const type = convoType.get(m.conversation_id) === 'news' ? 'news' : 'support';
       return {
         id: `sys-${m.id}`,
         kind: type as NotificationKind,
@@ -117,10 +117,21 @@ export function useNotifications() {
     const channel = supabase
       .channel(`notifications-rt-${user.id}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'messages', filter: `receiver_id=eq.${user.id}` }, () => refresh())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages', filter: `sender_id=eq.${user.id}` }, () => refresh())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'system_messages' }, () => refresh())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'system_conversations', filter: `user_id=eq.${user.id}` }, () => refresh())
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    // Safety net: realtime can drop silently on flaky mobile networks.
+    const poll = setInterval(() => refresh(), 45_000);
+    const onFocus = () => refresh();
+    window.addEventListener('focus', onFocus);
+
+    return () => {
+      supabase.removeChannel(channel);
+      clearInterval(poll);
+      window.removeEventListener('focus', onFocus);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, refresh]);
 
