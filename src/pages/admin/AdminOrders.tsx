@@ -23,8 +23,6 @@ const AdminOrders = () => {
   const [deliveries, setDeliveries] = useState<any[]>([]);
   const [requirements, setRequirements] = useState<any>(null);
   const [reqFiles, setReqFiles] = useState<any[]>([]);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [deleting, setDeleting] = useState(false);
 
   const fetch = async () => {
     setLoading(true);
@@ -47,11 +45,18 @@ const AdminOrders = () => {
       })
     );
     setOrders(enriched);
-    setSelected([]);
     setLoading(false);
   };
 
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => {
+    fetch();
+    const channel = supabase
+      .channel('admin-orders-live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => fetch())
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, []);
+
 
   const openOrder = async (o: any) => {
 
