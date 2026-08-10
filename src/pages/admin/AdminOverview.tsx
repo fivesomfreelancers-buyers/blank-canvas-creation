@@ -212,14 +212,17 @@ const AdminOverview = () => {
     {
       label: 'Revenue & Funds',
       cards: [
-        { title: 'Total Revenue', value: money(stats.totalRevenue), icon: DollarSign, desc: 'Completed orders' },
-        { title: 'Monthly Revenue', value: money(stats.monthlyRevenue), icon: TrendingUp, desc: 'This month' },
-        { title: 'Weekly Revenue', value: money(stats.weeklyRevenue), icon: TrendingUp, desc: 'Last 7 days' },
-        { title: 'Escrow Balance', value: money(stats.escrowFunds), icon: DollarSign, desc: 'Held in escrow' },
-        { title: 'Withdrawals', value: money(stats.withdrawals), icon: Wallet, desc: 'All requests' },
-        { title: 'Pending Withdrawals', value: stats.pendingWithdrawals, icon: Clock, desc: 'Awaiting review' },
+        { title: 'Fivesom Revenue', value: money(stats.fivesomRevenue), icon: DollarSign, desc: 'Service + withdrawal fees' },
+        { title: 'Gross Sales Volume', value: money(stats.totalRevenue), icon: TrendingUp, desc: 'Completed orders' },
+        { title: 'Monthly Sales', value: money(stats.monthlyRevenue), icon: TrendingUp, desc: 'This month' },
+        { title: 'Weekly Sales', value: money(stats.weeklyRevenue), icon: TrendingUp, desc: 'Last 7 days' },
+        { title: 'Escrow Balance', value: money(stats.escrowFunds), icon: DollarSign, desc: 'Paid, not yet released' },
+        { title: 'Pending Funds', value: money(stats.pendingFunds), icon: Clock, desc: 'Awaiting payment verification' },
+        { title: 'Payable to Sellers', value: money(stats.payableToSellers), icon: Wallet, desc: 'Wallet balances' },
+        { title: 'Pending Withdrawals', value: money(stats.pendingWithdrawalAmount), icon: Clock, desc: `${stats.pendingWithdrawals} awaiting review` },
       ],
     },
+
     {
       label: 'Users',
       cards: [
