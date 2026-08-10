@@ -4,6 +4,7 @@ import supportLogoAsset from '@/assets/fivesom-support-logo.png';
 import newsLogoAsset from '@/assets/fivesom-news-logo.png';
 import { toast } from 'sonner';
 import { moderateText, moderateImageFile, recordStrike, isChatBlocked } from '@/lib/chatModeration';
+import { getOrCreateConversation as createConversation } from '@/lib/conversations';
 
 export type ConversationKind = 'dm' | 'support' | 'news';
 
@@ -261,24 +262,7 @@ export function useConversations() {
 
   const getOrCreateConversation = useCallback(async (partnerId: string): Promise<string | null> => {
     if (!currentUserId) return null;
-    const { data: existing } = await supabase
-      .from('conversations')
-      .select('id')
-      .or(
-        `and(buyer_id.eq.${currentUserId},freelancer_id.eq.${partnerId}),and(buyer_id.eq.${partnerId},freelancer_id.eq.${currentUserId})`
-      )
-      .maybeSingle();
-    if (existing) return existing.id;
-    const { data: buyerCheck } = await supabase
-      .from('buyers').select('id').eq('user_id', currentUserId).maybeSingle();
-    const buyerId = buyerCheck ? currentUserId : partnerId;
-    const freelancerId = buyerCheck ? partnerId : currentUserId;
-    const { data: newConvo, error } = await supabase
-      .from('conversations')
-      .insert({ buyer_id: buyerId, freelancer_id: freelancerId })
-      .select('id').single();
-    if (error) { console.error(error); return null; }
-    return newConvo.id;
+    return createConversation(currentUserId, partnerId);
   }, [currentUserId]);
 
   const handleSend = useCallback(async () => {
