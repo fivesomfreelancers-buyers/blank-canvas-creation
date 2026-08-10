@@ -13,7 +13,8 @@ interface Stats {
   totalGigs: number; activeGigs: number;
   totalOrders: number; pendingOrders: number; activeOrders: number; completedOrders: number; cancelledOrders: number;
   totalRevenue: number; monthlyRevenue: number; weeklyRevenue: number; escrowFunds: number;
-  withdrawals: number; pendingWithdrawals: number;
+  pendingFunds: number; fivesomRevenue: number; payableToSellers: number;
+  withdrawals: number; pendingWithdrawals: number; pendingWithdrawalAmount: number;
   reviews: number; messages: number; supportTickets: number; reports: number;
   verificationRequests: number; blueTickUsers: number; vipMembers: number;
   openDisputes: number;
@@ -24,11 +25,16 @@ const EMPTY: Stats = {
   totalGigs: 0, activeGigs: 0,
   totalOrders: 0, pendingOrders: 0, activeOrders: 0, completedOrders: 0, cancelledOrders: 0,
   totalRevenue: 0, monthlyRevenue: 0, weeklyRevenue: 0, escrowFunds: 0,
-  withdrawals: 0, pendingWithdrawals: 0,
+  pendingFunds: 0, fivesomRevenue: 0, payableToSellers: 0,
+  withdrawals: 0, pendingWithdrawals: 0, pendingWithdrawalAmount: 0,
   reviews: 0, messages: 0, supportTickets: 0, reports: 0,
   verificationRequests: 0, blueTickUsers: 0, vipMembers: 0,
   openDisputes: 0,
 };
+
+/** Fivesom keeps a flat $1 service fee per paid order plus the withdrawal commission. */
+const SERVICE_FEE_PER_ORDER = 1;
+
 
 const countOf = (res: any) => Number(res?.count || 0);
 
