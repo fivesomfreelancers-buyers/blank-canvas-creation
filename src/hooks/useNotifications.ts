@@ -26,12 +26,23 @@ export function useNotifications() {
   const { user, userRole } = useAuth();
   const [items, setItems] = useState<AppNotification[]>([]);
   const [loading, setLoading] = useState(true);
-  const inboxBase = userRole === 'freelancer' ? '/freelancer/messages' : '/buyer/messages';
+  const inboxBase =
+    userRole === 'freelancer' ? '/freelancer/messages'
+    : userRole === 'buyer' ? '/buyer/messages'
+    : '/inbox';
   const inboxRef = useRef(inboxBase);
   inboxRef.current = inboxBase;
 
   const refresh = useCallback(async () => {
     if (!user) { setItems([]); setLoading(false); return; }
+
+    // System conversations first: the embed-free lookup keeps Support/News
+    // notifications working regardless of PostgREST relationship naming.
+    const { data: sysConvos } = await (supabase as any)
+      .from('system_conversations')
+      .select('id, type')
+      .eq('user_id', user.id);
+    const convoType = new Map<string, string>((sysConvos || []).map((c: any) => [c.id, c.type]));
 
     const [dmRes, sysRes] = await Promise.all([
       supabase
@@ -40,13 +51,15 @@ export function useNotifications() {
         .eq('receiver_id', user.id)
         .order('created_at', { ascending: false })
         .limit(RECENT_LIMIT),
-      (supabase as any)
-        .from('system_messages')
-        .select('id, body, created_at, is_read_user, sender_type, conversation_id, system_conversations!inner(id, type, user_id)')
-        .neq('sender_type', 'user')
-        .eq('system_conversations.user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(RECENT_LIMIT),
+      convoType.size
+        ? (supabase as any)
+            .from('system_messages')
+            .select('id, body, created_at, is_read_user, sender_type, conversation_id')
+            .in('conversation_id', Array.from(convoType.keys()))
+            .neq('sender_type', 'user')
+            .order('created_at', { ascending: false })
+            .limit(RECENT_LIMIT)
+        : Promise.resolve({ data: [] }),
     ]);
 
     const dms = (dmRes.data || []) as any[];
