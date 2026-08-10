@@ -110,6 +110,37 @@ const Login = () => {
   };
 
 
+  // Real resend of the Supabase Auth signup confirmation email.
+  // Only reports success when the auth/email backend actually accepted the request.
+  const handleResendVerification = async () => {
+    const target = email.trim();
+    if (!target) {
+      toast({ title: 'Email required', description: 'Enter your email address first.', variant: 'destructive' });
+      return;
+    }
+    setResendLoading(true);
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email: target,
+      options: { emailRedirectTo: new URL('/auth/callback', window.location.origin).toString() },
+    });
+    setResendLoading(false);
+
+    if (error) {
+      toast({
+        title: 'Could not send verification email',
+        description: error.message || 'The email service rejected the request. Please try again shortly.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    toast({
+      title: 'Verification email sent',
+      description: `The email service accepted the request for ${target}. Check your inbox (and spam folder).`,
+    });
+  };
+
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || password.length < 6) {
@@ -131,12 +162,18 @@ const Login = () => {
     });
 
     if (error || !data.user) {
-      const cooldown = recordAuthFailure('login', email);
+      const raw = `${(error as any)?.code || ''} ${error?.message || ''}`.toLowerCase();
+      const unconfirmed = raw.includes('not confirmed') || raw.includes('email_not_confirmed');
+      setNeedsVerification(unconfirmed);
+
+      const cooldown = unconfirmed ? 0 : recordAuthFailure('login', email);
       toast({
-        title: 'Login Failed',
-        description: cooldown > 0
-          ? cooldownMessage(cooldown)
-          : error?.message || 'Could not authenticate. Please try again.',
+        title: unconfirmed ? 'Email not verified' : 'Login Failed',
+        description: unconfirmed
+          ? 'Confirm your email address first, then sign in. You can resend the verification email below.'
+          : cooldown > 0
+            ? cooldownMessage(cooldown)
+            : error?.message || 'Could not authenticate. Please try again.',
         variant: 'destructive',
       });
       setEmailLoading(false);
@@ -144,10 +181,12 @@ const Login = () => {
     }
 
     clearAuthFailures('login', email);
+    setNeedsVerification(false);
     toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
     await routeAfterLogin(data.user.id);
     setEmailLoading(false);
   };
+
 
 
   return (
