@@ -1,10 +1,10 @@
-// Sends a "new message" email through Resend (Lovable connector gateway).
+// Emails a user when Fivesom Support replies or Fivesom News broadcasts.
 //
-// Called by a database trigger on public.messages (via pg_net) right after a
-// message row is inserted. Requests must carry the shared hook secret.
+// Invoked by a database trigger on public.system_messages (via pg_net) for
+// admin/system messages. Requests must carry the shared hook secret.
 
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
-import { buildMessageNotificationEmail } from "../_shared/message-email.ts";
+import { buildSystemNotificationEmail, systemEmailSubject } from "../_shared/system-email.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -47,41 +47,46 @@ Deno.serve(async (req) => {
     );
 
     const { data: msg, error: msgErr } = await admin
-      .from("messages")
-      .select("id, sender_id, receiver_id, message, created_at, is_read, conversation_id")
+      .from("system_messages")
+      .select("id, conversation_id, sender_type, body, attachment_url, created_at, is_read_user")
       .eq("id", messageId)
       .maybeSingle();
     if (msgErr) throw msgErr;
     if (!msg) return json({ skipped: "message_not_found" });
-    if (msg.sender_id === msg.receiver_id) return json({ skipped: "self_message" });
-    if (msg.is_read) return json({ skipped: "already_read" });
+    if (msg.sender_type === "user") return json({ skipped: "user_message" });
+    if (msg.is_read_user) return json({ skipped: "already_read" });
 
-    const { data: people, error: peopleErr } = await admin
+    const { data: convo, error: convoErr } = await admin
+      .from("system_conversations")
+      .select("id, user_id, type")
+      .eq("id", msg.conversation_id)
+      .maybeSingle();
+    if (convoErr) throw convoErr;
+    if (!convo) return json({ skipped: "conversation_not_found" });
+
+    const channel = convo.type === "news" ? "news" : "support";
+
+    const { data: profile } = await admin
       .from("profiles")
-      .select("id, full_name, email, profile_image_url, role")
-      .in("id", [msg.sender_id, msg.receiver_id]);
-    if (peopleErr) throw peopleErr;
+      .select("full_name, email")
+      .eq("id", convo.user_id)
+      .maybeSingle();
 
-    const sender = people?.find((p: any) => p.id === msg.sender_id);
-    const receiver = people?.find((p: any) => p.id === msg.receiver_id);
-
-    let to = receiver?.email as string | undefined;
+    let to = (profile?.email as string | undefined) ?? undefined;
     if (!to) {
-      const { data: authUser } = await admin.auth.admin.getUserById(msg.receiver_id);
+      const { data: authUser } = await admin.auth.admin.getUserById(convo.user_id);
       to = authUser?.user?.email ?? undefined;
     }
     if (!to) return json({ skipped: "no_recipient_email" });
 
-    const html = buildMessageNotificationEmail({
-      senderName: sender?.full_name || "Fivesom Member",
-      senderRole: sender?.role === "freelancer" ? "freelancer" : "buyer",
-      messageText: String(msg.message ?? "").slice(0, 600),
+    const html = buildSystemNotificationEmail({
+      channel,
+      messageText: String(msg.body ?? "").slice(0, 1200),
+      attachmentUrl: msg.attachment_url ?? null,
       sentAt: msg.created_at ?? new Date(),
-      senderAvatarUrl: sender?.profile_image_url ?? null,
-      replyUrl: msg.conversation_id
-        ? `${SITE_URL}/messages?c=${msg.conversation_id}`
-        : `${SITE_URL}/messages`,
+      ctaUrl: `${SITE_URL}/messages?c=${convo.id}`,
       siteUrl: SITE_URL,
+      recipientName: profile?.full_name ?? null,
     });
 
     const res = await fetch(`${GATEWAY_URL}/emails`, {
@@ -94,7 +99,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: FROM,
         to: [to],
-        subject: `New message from ${sender?.full_name || "a Fivesom member"}`,
+        subject: systemEmailSubject(channel),
         html,
       }),
     });
@@ -106,9 +111,9 @@ Deno.serve(async (req) => {
     }
 
     const sent = await res.json().catch(() => ({}));
-    return json({ sent: true, id: (sent as any)?.id ?? null });
+    return json({ sent: true, channel, id: (sent as any)?.id ?? null });
   } catch (err) {
-    console.error("send-message-email error:", err);
+    console.error("send-system-email error:", err);
     return json({ error: err instanceof Error ? err.message : "Unexpected error" }, 500);
   }
 });

@@ -6,6 +6,7 @@ import { useTheme } from './ThemeProvider';
 import { Logo } from './Logo';
 import { useAuth } from '@/hooks/useAuth';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
+import NotificationBell from '@/components/notifications/NotificationBell';
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -97,6 +98,7 @@ const Navbar = () => {
                     Admin
                   </Link>
                 )}
+                <NotificationBell />
                 {!isNormal && (
                 <Link
                   to={messagesPath}
@@ -189,6 +191,7 @@ const Navbar = () => {
           </div>
 
           <div className="md:hidden flex items-center gap-1">
+            {user && <NotificationBell />}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2"
