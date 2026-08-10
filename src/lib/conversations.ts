@@ -19,8 +19,9 @@ export async function getOrCreateConversation(
     .or(
       `and(buyer_id.eq.${currentUserId},freelancer_id.eq.${partnerId}),and(buyer_id.eq.${partnerId},freelancer_id.eq.${currentUserId})`,
     )
-    .maybeSingle();
-  if (existing) return existing.id;
+    .order('created_at', { ascending: true })
+    .limit(1);
+  if (existing && existing.length > 0) return existing[0].id;
 
   const { data: freelancerRows } = await supabase
     .from('freelancers')
