@@ -53,29 +53,8 @@ const AdminOrders = () => {
 
   useEffect(() => { fetch(); }, []);
 
-  const update = async (id: string, status: 'pending' | 'in_progress' | 'delivered' | 'completed' | 'cancelled') => {
-    const { error } = await supabase.from('orders').update({ status }).eq('id', id);
-    if (error) return toast.error('Failed');
-    toast.success(`Order ${status}`);
-    fetch();
-  };
-
-  const toggleOne = (id: string) =>
-    setSelected((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
-
-  const deleteOrders = async (ids: string[]) => {
-    if (!ids.length) return;
-    if (!window.confirm(`Delete ${ids.length} order(s)? This cannot be undone.`)) return;
-    setDeleting(true);
-    const { data, error } = await (supabase as any).rpc('admin_delete_orders', { _ids: ids });
-    setDeleting(false);
-    if (error) return toast.error(error.message || 'Failed to delete orders');
-    toast.success(`${data ?? ids.length} order(s) deleted`);
-    setOrders((prev) => prev.filter((o) => !ids.includes(o.id)));
-    setSelected((prev) => prev.filter((id) => !ids.includes(id)));
-  };
-
   const openOrder = async (o: any) => {
+
     setViewing(o);
     setViewLoading(true);
     setDeliveries([]);
