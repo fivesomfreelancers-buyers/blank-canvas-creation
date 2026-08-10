@@ -7,8 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Search, Package, Eye, FileText, Link2, RefreshCw, Image as ImageIcon, Trash2 } from 'lucide-react';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Search, Package, Eye, FileText, Link2, RefreshCw, Image as ImageIcon } from 'lucide-react';
+
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import { toast } from 'sonner';
 import { safeExternalUrl } from '@/lib/safeUrl';
