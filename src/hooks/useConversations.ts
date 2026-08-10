@@ -421,21 +421,24 @@ export function useConversations() {
           attachment_url: publicUrl,
         });
       } else if (selectedPartnerId) {
-        await supabase.from('messages').insert({
+        const { error: insertError } = await supabase.from('messages').insert({
           sender_id: currentUserId,
           receiver_id: selectedPartnerId,
           conversation_id: selectedConversationId,
           message: label,
           attachment_url: publicUrl,
         });
+        if (insertError) throw insertError;
       }
       if (fileInputRef.current) fileInputRef.current.value = '';
-    } catch (error) {
+      fetchConversations();
+    } catch (error: any) {
       console.error('Error uploading file:', error);
+      toast.error('Attachment not sent', { description: error?.message || 'Please try again.' });
     } finally {
       setUploadingImage(false);
     }
-  }, [currentUserId, selectedConversationId, selectedPartnerId, selectedKind]);
+  }, [currentUserId, selectedConversationId, selectedPartnerId, selectedKind, fetchConversations]);
 
   const selectedConvo = conversations.find(c => c.conversationId === selectedConversationId);
   const filteredConvos = conversations.filter(c =>
