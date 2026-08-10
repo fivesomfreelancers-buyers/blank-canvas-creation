@@ -188,7 +188,7 @@ const AdminOverview = () => {
       'profiles', 'buyers', 'freelancers', 'gigs', 'orders', 'withdrawals',
       'gig_reviews', 'messages', 'disputes', 'user_reports',
       'support_tickets', 'buyer_support_tickets', 'freelancer_support_tickets',
-      'verification_documents', 'vip_memberships',
+      'verification_documents', 'vip_memberships', 'wallets', 'order_deliveries',
     ];
     const channel = supabase.channel('admin-overview-stats');
     tables.forEach((table) => {
