@@ -17,6 +17,9 @@ const Login = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [emailLoading, setEmailLoading] = useState(false);
   const [email, setEmail] = useState('');
+  const [resendLoading, setResendLoading] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
+
   const [password, setPassword] = useState('');
   const { toast } = useToast();
   const { user, userRole, isLoading: authLoading } = useAuth();
