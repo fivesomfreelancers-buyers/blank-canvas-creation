@@ -257,8 +257,15 @@ export function useConversations() {
         fetchConversations();
       })
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
-  }, [currentUserId, selectedConversationId, selectedKind, fetchConversations, markAsRead]);
+
+    // Safety net if realtime drops (mobile networks, background tabs).
+    const poll = setInterval(() => {
+      fetchConversations();
+      if (selectedConversationId) fetchMessages(selectedConversationId, selectedKind);
+    }, 20_000);
+
+    return () => { supabase.removeChannel(channel); clearInterval(poll); };
+  }, [currentUserId, selectedConversationId, selectedKind, fetchConversations, fetchMessages, markAsRead]);
 
   const getOrCreateConversation = useCallback(async (partnerId: string): Promise<string | null> => {
     if (!currentUserId) return null;
@@ -298,7 +305,13 @@ export function useConversations() {
       conversation_id: selectedConversationId,
       message: newMessage.trim(),
     });
-    if (!error) { setNewMessage(''); setShowEmojis(false); }
+    if (error) {
+      toast.error('Message not sent', { description: error.message });
+      return;
+    }
+    setNewMessage('');
+    setShowEmojis(false);
+    fetchMessages(selectedConversationId, 'dm');
   }, [newMessage, selectedConversationId, selectedPartnerId, selectedKind, currentUserId]);
 
   const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
