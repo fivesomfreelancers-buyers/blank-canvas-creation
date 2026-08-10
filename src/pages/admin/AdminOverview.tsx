@@ -13,7 +13,8 @@ interface Stats {
   totalGigs: number; activeGigs: number;
   totalOrders: number; pendingOrders: number; activeOrders: number; completedOrders: number; cancelledOrders: number;
   totalRevenue: number; monthlyRevenue: number; weeklyRevenue: number; escrowFunds: number;
-  withdrawals: number; pendingWithdrawals: number;
+  pendingFunds: number; fivesomRevenue: number; payableToSellers: number;
+  withdrawals: number; pendingWithdrawals: number; pendingWithdrawalAmount: number;
   reviews: number; messages: number; supportTickets: number; reports: number;
   verificationRequests: number; blueTickUsers: number; vipMembers: number;
   openDisputes: number;
@@ -24,11 +25,16 @@ const EMPTY: Stats = {
   totalGigs: 0, activeGigs: 0,
   totalOrders: 0, pendingOrders: 0, activeOrders: 0, completedOrders: 0, cancelledOrders: 0,
   totalRevenue: 0, monthlyRevenue: 0, weeklyRevenue: 0, escrowFunds: 0,
-  withdrawals: 0, pendingWithdrawals: 0,
+  pendingFunds: 0, fivesomRevenue: 0, payableToSellers: 0,
+  withdrawals: 0, pendingWithdrawals: 0, pendingWithdrawalAmount: 0,
   reviews: 0, messages: 0, supportTickets: 0, reports: 0,
   verificationRequests: 0, blueTickUsers: 0, vipMembers: 0,
   openDisputes: 0,
 };
+
+/** Fivesom keeps a flat $1 service fee per paid order plus the withdrawal commission. */
+const SERVICE_FEE_PER_ORDER = 1;
+
 
 const countOf = (res: any) => Number(res?.count || 0);
 
@@ -52,7 +58,7 @@ const AdminOverview = () => {
 
     const results = await Promise.allSettled([
       // 0 orders rows (needed for money math + charts)
-      sb.from('orders').select('amount, status, created_at'),
+      sb.from('orders').select('amount, status, payment_status, created_at'),
       // 1..3 users
       head('profiles'),
       head('buyers'),
@@ -63,7 +69,7 @@ const AdminOverview = () => {
       head('gigs'),
       head('gigs', (q: any) => q.eq('status', 'active')),
       // 8..9 withdrawals
-      sb.from('withdrawals').select('amount, status'),
+      sb.from('withdrawals').select('amount, status, fee_amount'),
       head('withdrawals', (q: any) => q.eq('status', 'pending')),
       // 10..15 misc
       head('gig_reviews'),
@@ -77,17 +83,36 @@ const AdminOverview = () => {
       head('freelancers', (q: any) => q.eq('has_blue_tick', true)),
       head('vip_memberships', (q: any) => q.eq('payment_status', 'paid')),
       head('disputes', (q: any) => q.eq('status', 'open')),
+      // 20 wallet balances (money still owed to sellers)
+      sb.from('wallets').select('balance'),
     ]);
 
     const at = (i: number) => (results[i].status === 'fulfilled' ? (results[i] as any).value : null);
     const failed = results.filter(r => r.status === 'rejected' || (r as any).value?.error);
     if (failed.length) console.warn('AdminOverview: some stat queries failed', failed);
 
-    const orders = (at(0)?.data || []) as Array<{ amount: number; status: string; created_at: string }>;
-    const withdrawalRows = (at(8)?.data || []) as Array<{ amount: number; status: string }>;
+    const orders = (at(0)?.data || []) as Array<{ amount: number; status: string; payment_status: string | null; created_at: string }>;
+    const withdrawalRows = (at(8)?.data || []) as Array<{ amount: number; status: string; fee_amount: number | null }>;
+    const walletRows = (at(20)?.data || []) as Array<{ balance: number | null }>;
 
     const sum = (rows: typeof orders) => rows.reduce((s, o) => s + Number(o.amount || 0), 0);
     const completed = orders.filter(o => o.status === 'completed');
+
+    const PAID = ['paid', 'succeeded', 'held', 'released', 'verified'];
+    const isPaid = (o: typeof orders[number]) => PAID.includes(String(o.payment_status || '').toLowerCase());
+    const paidOrders = orders.filter(isPaid);
+
+    // Money that has been paid by buyers but not yet released to the seller.
+    const inEscrow = paidOrders.filter(o => o.status === 'pending' || o.status === 'in_progress' || o.status === 'delivered');
+    // Payments still awaiting manual verification by an admin.
+    const awaitingVerification = orders.filter(
+      o => !isPaid(o) && o.status !== 'cancelled' && o.status !== 'completed',
+    );
+
+    const withdrawalFees = withdrawalRows
+      .filter(w => w.status === 'approved' || w.status === 'completed')
+      .reduce((s, w) => s + Number(w.fee_amount || 0), 0);
+    const serviceFees = paidOrders.length * SERVICE_FEE_PER_ORDER;
 
     const next: Stats = {
       totalUsers: countOf(at(1)),
@@ -105,9 +130,15 @@ const AdminOverview = () => {
       totalRevenue: sum(completed),
       monthlyRevenue: sum(completed.filter(o => o.created_at >= monthStart)),
       weeklyRevenue: sum(completed.filter(o => o.created_at >= weekAgo)),
-      escrowFunds: sum(orders.filter(o => o.status === 'in_progress' || o.status === 'delivered')),
+      escrowFunds: sum(inEscrow),
+      pendingFunds: sum(awaitingVerification),
+      fivesomRevenue: serviceFees + withdrawalFees,
+      payableToSellers: walletRows.reduce((s, w) => s + Number(w.balance || 0), 0),
       withdrawals: withdrawalRows.reduce((s, w) => s + Number(w.amount || 0), 0),
       pendingWithdrawals: countOf(at(9)),
+      pendingWithdrawalAmount: withdrawalRows
+        .filter(w => w.status === 'pending')
+        .reduce((s, w) => s + Number(w.amount || 0), 0),
       reviews: countOf(at(10)),
       messages: countOf(at(11)),
       supportTickets: countOf(at(12)) + countOf(at(13)) + countOf(at(14)),
@@ -117,6 +148,7 @@ const AdminOverview = () => {
       vipMembers: countOf(at(18)),
       openDisputes: countOf(at(19)),
     };
+
     setStats(next);
 
     // Last 6 months revenue / order volume
@@ -156,7 +188,7 @@ const AdminOverview = () => {
       'profiles', 'buyers', 'freelancers', 'gigs', 'orders', 'withdrawals',
       'gig_reviews', 'messages', 'disputes', 'user_reports',
       'support_tickets', 'buyer_support_tickets', 'freelancer_support_tickets',
-      'verification_documents', 'vip_memberships',
+      'verification_documents', 'vip_memberships', 'wallets', 'order_deliveries',
     ];
     const channel = supabase.channel('admin-overview-stats');
     tables.forEach((table) => {
@@ -180,14 +212,17 @@ const AdminOverview = () => {
     {
       label: 'Revenue & Funds',
       cards: [
-        { title: 'Total Revenue', value: money(stats.totalRevenue), icon: DollarSign, desc: 'Completed orders' },
-        { title: 'Monthly Revenue', value: money(stats.monthlyRevenue), icon: TrendingUp, desc: 'This month' },
-        { title: 'Weekly Revenue', value: money(stats.weeklyRevenue), icon: TrendingUp, desc: 'Last 7 days' },
-        { title: 'Escrow Balance', value: money(stats.escrowFunds), icon: DollarSign, desc: 'Held in escrow' },
-        { title: 'Withdrawals', value: money(stats.withdrawals), icon: Wallet, desc: 'All requests' },
-        { title: 'Pending Withdrawals', value: stats.pendingWithdrawals, icon: Clock, desc: 'Awaiting review' },
+        { title: 'Fivesom Revenue', value: money(stats.fivesomRevenue), icon: DollarSign, desc: 'Service + withdrawal fees' },
+        { title: 'Gross Sales Volume', value: money(stats.totalRevenue), icon: TrendingUp, desc: 'Completed orders' },
+        { title: 'Monthly Sales', value: money(stats.monthlyRevenue), icon: TrendingUp, desc: 'This month' },
+        { title: 'Weekly Sales', value: money(stats.weeklyRevenue), icon: TrendingUp, desc: 'Last 7 days' },
+        { title: 'Escrow Balance', value: money(stats.escrowFunds), icon: DollarSign, desc: 'Paid, not yet released' },
+        { title: 'Pending Funds', value: money(stats.pendingFunds), icon: Clock, desc: 'Awaiting payment verification' },
+        { title: 'Payable to Sellers', value: money(stats.payableToSellers), icon: Wallet, desc: 'Wallet balances' },
+        { title: 'Pending Withdrawals', value: money(stats.pendingWithdrawalAmount), icon: Clock, desc: `${stats.pendingWithdrawals} awaiting review` },
       ],
     },
+
     {
       label: 'Users',
       cards: [

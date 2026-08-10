@@ -7,10 +7,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Search, Package, Eye, FileText, Link2, RefreshCw, Image as ImageIcon, Trash2 } from 'lucide-react';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Search, Package, Eye, FileText, Link2, RefreshCw, Image as ImageIcon } from 'lucide-react';
+
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
-import { toast } from 'sonner';
+
 import { safeExternalUrl } from '@/lib/safeUrl';
 
 const AdminOrders = () => {
@@ -23,8 +23,6 @@ const AdminOrders = () => {
   const [deliveries, setDeliveries] = useState<any[]>([]);
   const [requirements, setRequirements] = useState<any>(null);
   const [reqFiles, setReqFiles] = useState<any[]>([]);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [deleting, setDeleting] = useState(false);
 
   const fetch = async () => {
     setLoading(true);
@@ -47,35 +45,21 @@ const AdminOrders = () => {
       })
     );
     setOrders(enriched);
-    setSelected([]);
     setLoading(false);
   };
 
-  useEffect(() => { fetch(); }, []);
-
-  const update = async (id: string, status: 'pending' | 'in_progress' | 'delivered' | 'completed' | 'cancelled') => {
-    const { error } = await supabase.from('orders').update({ status }).eq('id', id);
-    if (error) return toast.error('Failed');
-    toast.success(`Order ${status}`);
+  useEffect(() => {
     fetch();
-  };
+    const channel = supabase
+      .channel('admin-orders-live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => fetch())
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, []);
 
-  const toggleOne = (id: string) =>
-    setSelected((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
-
-  const deleteOrders = async (ids: string[]) => {
-    if (!ids.length) return;
-    if (!window.confirm(`Delete ${ids.length} order(s)? This cannot be undone.`)) return;
-    setDeleting(true);
-    const { data, error } = await (supabase as any).rpc('admin_delete_orders', { _ids: ids });
-    setDeleting(false);
-    if (error) return toast.error(error.message || 'Failed to delete orders');
-    toast.success(`${data ?? ids.length} order(s) deleted`);
-    setOrders((prev) => prev.filter((o) => !ids.includes(o.id)));
-    setSelected((prev) => prev.filter((id) => !ids.includes(id)));
-  };
 
   const openOrder = async (o: any) => {
+
     setViewing(o);
     setViewLoading(true);
     setDeliveries([]);
@@ -128,12 +112,7 @@ const AdminOrders = () => {
         <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-2">
           <CardTitle className="text-base flex items-center gap-2"><Package className="h-4 w-4" /> All Orders</CardTitle>
           <div className="flex gap-2 items-center flex-wrap">
-            {selected.length > 0 && (
-              <Button size="sm" variant="destructive" className="h-9" disabled={deleting}
-                      onClick={() => deleteOrders(selected)}>
-                <Trash2 className="h-4 w-4 mr-1" /> Delete Selected ({selected.length})
-              </Button>
-            )}
+
             <div className="relative w-56">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search…" className="pl-9 h-9" />
@@ -155,15 +134,7 @@ const AdminOrders = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-10">
-                  <Checkbox
-                    checked={filtered.length > 0 && filtered.every((o) => selected.includes(o.id))}
-                    onCheckedChange={(v) =>
-                      setSelected(v ? filtered.map((o) => o.id) : [])
-                    }
-                    aria-label="Select all orders"
-                  />
-                </TableHead>
+
                 <TableHead>Gig</TableHead>
                 <TableHead>Buyer</TableHead>
                 <TableHead>Seller</TableHead>
@@ -175,11 +146,7 @@ const AdminOrders = () => {
             </TableHeader>
             <TableBody>
               {filtered.map((o) => (
-                <TableRow key={o.id} data-state={selected.includes(o.id) ? 'selected' : undefined}>
-                  <TableCell>
-                    <Checkbox checked={selected.includes(o.id)} onCheckedChange={() => toggleOne(o.id)}
-                              aria-label="Select order" />
-                  </TableCell>
+                <TableRow key={o.id}>
                   <TableCell className="text-sm font-medium truncate max-w-[200px]">{o.gig_title || o.id.slice(0, 8)}</TableCell>
                   <TableCell className="text-sm">{o.buyer_name}</TableCell>
                   <TableCell className="text-sm">{o.seller_name}</TableCell>
@@ -187,21 +154,14 @@ const AdminOrders = () => {
                   <TableCell><Badge variant="outline">{o.status}</Badge></TableCell>
                   <TableCell className="text-xs text-muted-foreground">{new Date(o.created_at).toLocaleDateString()}</TableCell>
                   <TableCell>
-                    <div className="flex gap-1 flex-wrap">
-                      <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => openOrder(o)}>
-                        <Eye className="h-3.5 w-3.5 mr-1" /> View
-                      </Button>
-                      {o.status !== 'completed' && <Button size="sm" className="h-7 text-xs" onClick={() => update(o.id, 'completed')}>Force Complete</Button>}
-                      {o.status !== 'cancelled' && <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => update(o.id, 'cancelled')}>Cancel</Button>}
-                      <Button size="sm" variant="destructive" className="h-7 text-xs" disabled={deleting}
-                              onClick={() => deleteOrders([o.id])}>
-                        <Trash2 className="h-3.5 w-3.5 mr-1" /> Delete
-                      </Button>
-                    </div>
+                    <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => openOrder(o)}>
+                      <Eye className="h-3.5 w-3.5 mr-1" /> View
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
-              {filtered.length === 0 && <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">No orders</TableCell></TableRow>}
+              {filtered.length === 0 && <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No orders</TableCell></TableRow>}
+
             </TableBody>
           </Table>
         </CardContent>
