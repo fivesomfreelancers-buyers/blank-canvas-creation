@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Search, Package, Eye, FileText, Link2, RefreshCw, Image as ImageIcon } from 'lucide-react';
 
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
-import { toast } from 'sonner';
+
 import { safeExternalUrl } from '@/lib/safeUrl';
 
 const AdminOrders = () => {
