@@ -26,11 +26,45 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
     }
   };
 
+  const [videoError, setVideoError] = useState<string | null>(null);
+
+  const MAX_VIDEO_SECONDS = 60;
+
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      updateGigData({ video: e.target.files[0] });
-    }
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    setVideoError(null);
+    const url = URL.createObjectURL(file);
+    const probe = document.createElement('video');
+    probe.preload = 'metadata';
+    probe.onloadedmetadata = () => {
+      const duration = probe.duration;
+      URL.revokeObjectURL(url);
+      if (!isFinite(duration)) {
+        setVideoError('Could not read the video length. Please try another file.');
+        return;
+      }
+      if (duration > MAX_VIDEO_SECONDS + 0.5) {
+        setVideoError(`Video is ${Math.round(duration)}s long. Maximum allowed is 1 minute (60s).`);
+        return;
+      }
+      updateGigData({ video: file });
+    };
+    probe.onerror = () => {
+      URL.revokeObjectURL(url);
+      setVideoError('This file is not a supported video format.');
+    };
+    probe.src = url;
   };
+
+  const handleVideoThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (file) updateGigData({ videoThumbnail: file });
+  };
+
 
   const handleDocumentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
