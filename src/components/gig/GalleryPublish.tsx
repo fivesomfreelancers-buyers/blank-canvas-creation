@@ -80,7 +80,13 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
 
   const removeVideo = () => {
     updateGigData({ video: undefined });
+    setVideoError(null);
   };
+
+  const removeVideoThumbnail = () => {
+    updateGigData({ videoThumbnail: undefined });
+  };
+
 
   const removeDocument = (index: number) => {
     const newDocs = gigData.documents.filter((_, i) => i !== index);
