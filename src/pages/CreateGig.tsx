@@ -24,6 +24,8 @@ export interface GigData {
   buyerRequirements: string;
   images: File[];
   video?: File;
+  /** Cover image shown on top of the gig video (and used as gig thumbnail) */
+  videoThumbnail?: File;
   documents: File[];
 }
 export interface PackageData {
