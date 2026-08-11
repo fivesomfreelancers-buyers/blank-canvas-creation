@@ -355,6 +355,7 @@ export function useConversations() {
     const ok = await deliverText(text);
     if (ok) {
       setNewMessage('');
+      notifyStopTyping();
       setShowEmojis(false);
       return;
     }
@@ -366,12 +367,13 @@ export function useConversations() {
         label: 'Retry',
         onClick: async () => {
           const retried = await deliverText(text);
-          if (retried) setNewMessage('');
+          if (retried) { setNewMessage(''); notifyStopTyping(); }
           else toast.error('Still not sent. Please try again.');
         },
       },
     });
-  }, [newMessage, selectedConversationId, selectedKind, currentUserId, deliverText]);
+  }, [newMessage, selectedConversationId, selectedKind, currentUserId, deliverText, notifyStopTyping]);
+
 
   const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
