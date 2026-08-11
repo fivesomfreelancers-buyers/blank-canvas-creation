@@ -154,8 +154,6 @@ const CreateGig = () => {
 
       // Upload images
       const imageUrls: string[] = [];
-      // Upload images
-      const imageUrls: string[] = [];
 
       // Video cover image first — it becomes the gig thumbnail and video poster
       if (gigData.videoThumbnail) {
