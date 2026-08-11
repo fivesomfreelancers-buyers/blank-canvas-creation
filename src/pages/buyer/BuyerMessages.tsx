@@ -62,6 +62,7 @@ const BuyerMessages = () => {
               showEmojis={chat.showEmojis}
               setShowEmojis={chat.setShowEmojis}
               uploadingImage={chat.uploadingImage}
+              partnerTyping={chat.partnerTyping}
               messagesEndRef={chat.messagesEndRef}
               fileInputRef={chat.fileInputRef}
               handleSend={chat.handleSend}
