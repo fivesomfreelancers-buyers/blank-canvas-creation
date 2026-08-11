@@ -5,6 +5,8 @@ import newsLogoAsset from '@/assets/fivesom-news-logo.png';
 import { toast } from 'sonner';
 import { moderateText, moderateImageFile, recordStrike, isChatBlocked } from '@/lib/chatModeration';
 import { getOrCreateConversation as createConversation } from '@/lib/conversations';
+import { useTypingIndicator } from '@/hooks/useTypingIndicator';
+
 
 export type ConversationKind = 'dm' | 'support' | 'news';
 
