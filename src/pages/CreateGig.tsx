@@ -154,6 +154,18 @@ const CreateGig = () => {
 
       // Upload images
       const imageUrls: string[] = [];
+      // Upload images
+      const imageUrls: string[] = [];
+
+      // Video cover image first — it becomes the gig thumbnail and video poster
+      if (gigData.videoThumbnail) {
+        const tExt = gigData.videoThumbnail.name.split('.').pop();
+        const tName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${tExt}`;
+        const { error: tErr } = await supabase.storage.from('gig-images').upload(tName, gigData.videoThumbnail);
+        if (tErr) console.error('Video thumbnail upload error:', tErr);
+        else imageUrls.push(supabase.storage.from('gig-images').getPublicUrl(tName).data.publicUrl);
+      }
+
       for (const imageFile of gigData.images) {
         const fileExt = imageFile.name.split('.').pop();
         const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -164,6 +176,7 @@ const CreateGig = () => {
       }
 
       // Upload video (if any) to gig-media bucket
+
       let videoUrl: string | null = null;
       if (gigData.video) {
         const ext = gigData.video.name.split('.').pop();
