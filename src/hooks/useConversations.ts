@@ -5,6 +5,8 @@ import newsLogoAsset from '@/assets/fivesom-news-logo.png';
 import { toast } from 'sonner';
 import { moderateText, moderateImageFile, recordStrike, isChatBlocked } from '@/lib/chatModeration';
 import { getOrCreateConversation as createConversation } from '@/lib/conversations';
+import { useTypingIndicator } from '@/hooks/useTypingIndicator';
+
 
 export type ConversationKind = 'dm' | 'support' | 'news';
 
@@ -49,6 +51,20 @@ export function useConversations() {
   const [searchQuery, setSearchQuery] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { partnerTyping, notifyTyping, notifyStopTyping } = useTypingIndicator(
+    selectedConversationId,
+    currentUserId,
+    selectedKind === 'dm',
+  );
+
+  /** Composer setter that also broadcasts the typing state (WhatsApp-style). */
+  const setNewMessageTyping = useCallback((val: string) => {
+    setNewMessage(val);
+    if (val.trim()) notifyTyping();
+    else notifyStopTyping();
+  }, [notifyTyping, notifyStopTyping]);
+
 
   const fetchSystemConversations = useCallback(async (userId: string): Promise<ConversationItem[]> => {
     // Ensure user has both system conversations (idempotent)
@@ -339,6 +355,7 @@ export function useConversations() {
     const ok = await deliverText(text);
     if (ok) {
       setNewMessage('');
+      notifyStopTyping();
       setShowEmojis(false);
       return;
     }
@@ -350,12 +367,13 @@ export function useConversations() {
         label: 'Retry',
         onClick: async () => {
           const retried = await deliverText(text);
-          if (retried) setNewMessage('');
+          if (retried) { setNewMessage(''); notifyStopTyping(); }
           else toast.error('Still not sent. Please try again.');
         },
       },
     });
-  }, [newMessage, selectedConversationId, selectedKind, currentUserId, deliverText]);
+  }, [newMessage, selectedConversationId, selectedKind, currentUserId, deliverText, notifyStopTyping]);
+
 
   const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -454,7 +472,9 @@ export function useConversations() {
     currentUserId,
     loading,
     newMessage,
-    setNewMessage,
+    setNewMessage: setNewMessageTyping,
+    partnerTyping,
+
     searchQuery,
     setSearchQuery,
     showEmojis,
