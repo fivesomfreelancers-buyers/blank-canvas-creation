@@ -161,41 +161,80 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
       {/* Gig Video (Optional) */}
       <div>
         <Label className="text-foreground font-medium text-lg">Gig Video (Optional)</Label>
-        <p className="text-sm text-muted-foreground mb-2">Add a short video to explain your service</p>
-        
-        {gigData.video ? (
-          <div className="relative inline-block">
-            <div className="flex items-center space-x-2 p-3 bg-muted/30 rounded-lg border">
-              <Video className="w-5 h-5 text-muted-foreground" />
-              <span className="text-sm">{gigData.video.name}</span>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={removeVideo}
-              >
-                <X className="w-3 h-3" />
-              </Button>
-            </div>
+        <p className="text-sm text-muted-foreground mb-2">
+          Add a short video (max 1 minute) and a cover image that shows on top of it
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Video */}
+          <div>
+            {gigData.video ? (
+              <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg border">
+                <Video className="w-5 h-5 text-muted-foreground shrink-0" />
+                <span className="text-sm truncate flex-1">{gigData.video.name}</span>
+                <Button size="sm" variant="outline" onClick={removeVideo}>
+                  <X className="w-3 h-3" />
+                </Button>
+              </div>
+            ) : (
+              <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-cyan-400 transition-colors h-full flex flex-col justify-center">
+                <Video className="mx-auto h-12 w-12 text-muted-foreground mb-2" />
+                <label htmlFor="video" className="cursor-pointer">
+                  <span className="font-medium text-cyan-600 hover:text-cyan-500">Upload gig video</span>
+                  <input
+                    id="video"
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoUpload}
+                    className="sr-only"
+                  />
+                </label>
+                <p className="text-xs text-muted-foreground mt-1">MP4 up to 100MB — maximum 1 minute</p>
+              </div>
+            )}
+            {videoError && <p className="text-xs text-destructive mt-2">{videoError}</p>}
           </div>
-        ) : (
-          <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-cyan-400 transition-colors">
-            <Video className="mx-auto h-12 w-12 text-muted-foreground mb-2" />
-            <label htmlFor="video" className="cursor-pointer">
-              <span className="font-medium text-cyan-600 hover:text-cyan-500">
-                Upload gig video
-              </span>
-              <input
-                id="video"
-                type="file"
-                accept="video/*"
-                onChange={handleVideoUpload}
-                className="sr-only"
-              />
-            </label>
-            <p className="text-xs text-muted-foreground mt-1">MP4 up to 100MB</p>
+
+          {/* Video cover image (thumbnail) */}
+          <div>
+            {gigData.videoThumbnail ? (
+              <div className="relative">
+                <img
+                  src={URL.createObjectURL(gigData.videoThumbnail)}
+                  alt="Video cover"
+                  className="w-full h-32 object-contain bg-muted rounded-lg border"
+                />
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  className="absolute top-2 right-2 h-6 w-6 p-0"
+                  onClick={removeVideoThumbnail}
+                >
+                  <X className="w-3 h-3" />
+                </Button>
+              </div>
+            ) : (
+              <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-cyan-400 transition-colors h-full flex flex-col justify-center">
+                <Image className="mx-auto h-12 w-12 text-muted-foreground mb-2" />
+                <label htmlFor="video-thumbnail" className="cursor-pointer">
+                  <span className="font-medium text-cyan-600 hover:text-cyan-500">Upload video thumbnail</span>
+                  <input
+                    id="video-thumbnail"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleVideoThumbnailUpload}
+                    className="sr-only"
+                  />
+                </label>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Shown on the video and as your gig card image
+                </p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
+
 
       {/* Documents (Optional) */}
       <div>
