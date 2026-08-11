@@ -52,6 +52,20 @@ export function useConversations() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const { partnerTyping, notifyTyping, notifyStopTyping } = useTypingIndicator(
+    selectedConversationId,
+    currentUserId,
+    selectedKind === 'dm',
+  );
+
+  /** Composer setter that also broadcasts the typing state (WhatsApp-style). */
+  const setNewMessageTyping = useCallback((val: string) => {
+    setNewMessage(val);
+    if (val.trim()) notifyTyping();
+    else notifyStopTyping();
+  }, [notifyTyping, notifyStopTyping]);
+
+
   const fetchSystemConversations = useCallback(async (userId: string): Promise<ConversationItem[]> => {
     // Ensure user has both system conversations (idempotent)
     await (supabase as any).rpc('bootstrap_system_conversations', { _user_id: userId });
