@@ -472,7 +472,9 @@ export function useConversations() {
     currentUserId,
     loading,
     newMessage,
-    setNewMessage,
+    setNewMessage: setNewMessageTyping,
+    partnerTyping,
+
     searchQuery,
     setSearchQuery,
     showEmojis,
