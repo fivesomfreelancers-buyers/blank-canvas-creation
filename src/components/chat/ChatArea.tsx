@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Smile, Paperclip, Loader2, Pin } from 'lucide-react';
+import { Send, Smile, Paperclip, Loader2, Pin, Check, CheckCheck } from 'lucide-react';
 import newsLogo from '@/assets/fivesom-news-logo.png';
 import supportLogo from '@/assets/fivesom-support-logo.png';
 import VerifiedBadge from '@/components/VerifiedBadge';
@@ -24,11 +24,40 @@ interface ChatAreaProps {
   showEmojis: boolean;
   setShowEmojis: (val: boolean) => void;
   uploadingImage: boolean;
+  partnerTyping?: boolean;
   messagesEndRef: React.RefObject<HTMLDivElement>;
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleSend: () => void;
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
+
+const dayLabel = (iso: string) => {
+  const d = new Date(iso);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+  const same = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+  if (same(d, today)) return 'Today';
+  if (same(d, yesterday)) return 'Yesterday';
+  return d.toLocaleDateString([], { day: 'numeric', month: 'short', year: 'numeric' });
+};
+
+const timeLabel = (iso: string) =>
+  new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+const TypingBubble: React.FC = () => (
+  <div className="flex justify-start">
+    <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1">
+      {[0, 150, 300].map((delay) => (
+        <span
+          key={delay}
+          className="w-2 h-2 rounded-full bg-muted-foreground/60 animate-bounce"
+          style={{ animationDelay: `${delay}ms`, animationDuration: '1s' }}
+        />
+      ))}
+    </div>
+  </div>
+);
 
 const ChatArea: React.FC<ChatAreaProps> = ({
   selectedConvo,
@@ -40,6 +69,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   showEmojis,
   setShowEmojis,
   uploadingImage,
+  partnerTyping = false,
   messagesEndRef,
   fileInputRef,
   handleSend,
@@ -52,13 +82,13 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   const isNews = selectedKind === 'news';
 
   return (
-    <Card className="lg:col-span-2 flex flex-col">
-      <CardHeader className="pb-3">
+    <Card className="lg:col-span-2 flex flex-col overflow-hidden">
+      <CardHeader className="pb-3 border-b bg-card/60 backdrop-blur supports-[backdrop-filter]:bg-card/50">
         <CardTitle>
           {selectedConvo ? (
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <Avatar className="h-9 w-9">
+                <Avatar className="h-10 w-10 ring-2 ring-primary/20">
                   <AvatarImage src={selectedConvo.partnerImage || undefined} className="object-cover" />
                   <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                     {getInitials(selectedConvo.partnerName)}
@@ -73,7 +103,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                 )}
               </div>
               <div className="flex flex-col leading-tight flex-1 min-w-0">
-                <span className="text-sm sm:text-base inline-flex items-center gap-1">
+                <span className="text-sm sm:text-base inline-flex items-center gap-1 truncate">
                   {selectedConvo.partnerName}
                   {selectedConvo.partnerVerified && <VerifiedBadge size="sm" />}
                   {selectedConvo.pinned && <Pin className="w-3 h-3 text-muted-foreground" />}
@@ -82,6 +112,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                   <span className="text-xs text-muted-foreground flex items-center gap-1">
                     {isNews ? <><img src={newsLogo} alt="" className="w-4 h-4 object-contain" /> Official announcements</> : <><img src={supportLogo} alt="" className="w-4 h-4 object-contain" /> Official Fivesom support · 24/7</>}
                   </span>
+                ) : partnerTyping ? (
+                  <span className="text-xs font-medium text-primary animate-pulse">typing…</span>
                 ) : (
                   <OnlineIndicator userId={selectedConvo.partnerId} />
                 )}
@@ -93,63 +125,88 @@ const ChatArea: React.FC<ChatAreaProps> = ({
           ) : 'Select a conversation'}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col flex-1 min-h-0">
+      <CardContent className="flex flex-col flex-1 min-h-0 p-0">
         {!selectedConvo ? (
           <div className="flex-1 flex items-center justify-center text-muted-foreground">
             Select a conversation to view messages
           </div>
         ) : (
           <>
-            <div className="flex-1 overflow-y-auto space-y-3 mb-4 pr-2">
-              {messages.length === 0 ? (
-                <div className="text-center py-4 text-muted-foreground">
+            <div className="flex-1 overflow-y-auto space-y-1.5 px-3 sm:px-5 py-4 bg-muted/20">
+              {messages.length === 0 && !partnerTyping ? (
+                <div className="text-center py-6 text-muted-foreground text-sm">
                   {isNews ? 'No announcements yet.' : 'No messages yet. Start the conversation!'}
                 </div>
               ) : (
-                messages.map((msg) => {
+                messages.map((msg, i) => {
                   const isMine = msg.sender_id === currentUserId;
+                  const prev = messages[i - 1];
+                  const next = messages[i + 1];
+                  const showDay = !prev || dayLabel(prev.created_at) !== dayLabel(msg.created_at);
+                  const groupedWithPrev = !!prev && !showDay && (prev.sender_id === msg.sender_id);
+                  const lastOfGroup = !next || next.sender_id !== msg.sender_id
+                    || dayLabel(next.created_at) !== dayLabel(msg.created_at);
+
                   return (
-                    <div key={msg.id} className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[70%] px-4 py-2 rounded-2xl text-sm whitespace-pre-wrap ${
-                        isMine
-                          ? 'bg-primary text-primary-foreground rounded-br-md'
-                          : 'bg-muted text-foreground rounded-bl-md'
-                      }`}>
-                        <p>{msg.message}</p>
-                        {msg.attachment_url && (
-                          <AttachmentPreview url={msg.attachment_url} isOwn={isMine} />
-                        )}
-                        <p className={`text-xs mt-1 ${isMine ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
-                          {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </p>
+                    <React.Fragment key={msg.id}>
+                      {showDay && (
+                        <div className="flex justify-center py-3">
+                          <span className="text-[11px] uppercase tracking-wide bg-background/80 text-muted-foreground border rounded-full px-3 py-1">
+                            {dayLabel(msg.created_at)}
+                          </span>
+                        </div>
+                      )}
+                      <div className={`flex ${isMine ? 'justify-end' : 'justify-start'} ${groupedWithPrev ? 'mt-0.5' : 'mt-2'}`}>
+                        <div
+                          className={`max-w-[85%] sm:max-w-[70%] px-3.5 py-2 text-sm whitespace-pre-wrap break-words shadow-sm rounded-2xl ${
+                            isMine
+                              ? `bg-primary text-primary-foreground ${lastOfGroup ? 'rounded-br-md' : ''}`
+                              : `bg-card text-foreground border ${lastOfGroup ? 'rounded-bl-md' : ''}`
+                          }`}
+                        >
+                          <p>{msg.message}</p>
+                          {msg.attachment_url && (
+                            <AttachmentPreview url={msg.attachment_url} isOwn={isMine} />
+                          )}
+                          <span className={`mt-1 flex items-center justify-end gap-1 text-[10px] ${isMine ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
+                            {timeLabel(msg.created_at)}
+                            {isMine && !isSystem && (
+                              msg.is_read
+                                ? <CheckCheck className="w-3.5 h-3.5" />
+                                : <Check className="w-3.5 h-3.5" />
+                            )}
+                          </span>
+                        </div>
                       </div>
-                    </div>
+                    </React.Fragment>
                   );
                 })
               )}
+              {partnerTyping && <TypingBubble />}
               <div ref={messagesEndRef} />
             </div>
 
-            {showEmojis && (
-              <div className="absolute bottom-20 bg-background border rounded-lg p-2 shadow-lg flex gap-2 z-10">
-                {EMOJIS.map(emoji => (
-                  <button
-                    key={emoji}
-                    onClick={() => setNewMessage(newMessage + emoji)}
-                    className="hover:bg-accent p-1 rounded text-xl"
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            )}
-
             {isNews ? (
-              <div className="pt-2 border-t text-center text-xs text-muted-foreground py-3">
+              <div className="border-t text-center text-xs text-muted-foreground py-4 px-4">
                 📣 Fivesom News is one-way. You cannot write here — you will only receive official announcements.
               </div>
             ) : (
-              <div className="flex space-x-2 pt-2 border-t items-center relative">
+              <div className="relative border-t bg-card px-3 sm:px-4 py-3">
+                {showEmojis && (
+                  <div className="absolute bottom-full left-3 mb-2 bg-popover border rounded-xl p-2 shadow-lg flex flex-wrap gap-1 z-20 max-w-[260px]">
+                    {EMOJIS.map(emoji => (
+                      <button
+                        key={emoji}
+                        type="button"
+                        onClick={() => setNewMessage(newMessage + emoji)}
+                        className="hover:bg-accent p-1.5 rounded-lg text-xl leading-none"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
                 <input
                   type="file"
                   accept="image/*,video/*,.pdf,.doc,.docx,.txt,.xls,.xlsx,.ppt,.pptx,.zip,.csv"
@@ -157,22 +214,54 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                   ref={fileInputRef}
                   onChange={handleImageUpload}
                 />
-                <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} disabled={uploadingImage} title="Attach file">
-                  {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Paperclip className="w-5 h-5 text-muted-foreground" />}
-                </Button>
-                <Button variant="ghost" size="icon" onClick={() => setShowEmojis(!showEmojis)}>
-                  <Smile className="w-5 h-5 text-muted-foreground" />
-                </Button>
-                <Input
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder={isSystem ? 'Qor fariin u dirta Fivesom Support…' : 'Type your message...'}
-                  className="flex-1"
-                />
-                <Button onClick={handleSend} disabled={!newMessage.trim()}>
-                  <Send className="w-4 h-4" />
-                </Button>
+
+                <div className="flex items-end gap-2">
+                  <div className="flex-1 flex items-end gap-1 bg-muted/60 border rounded-3xl px-2 py-1.5 focus-within:ring-2 focus-within:ring-ring/40 transition">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9 rounded-full shrink-0"
+                      onClick={() => setShowEmojis(!showEmojis)}
+                      title="Emoji"
+                    >
+                      <Smile className="w-5 h-5 text-muted-foreground" />
+                    </Button>
+                    <Textarea
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSend();
+                        }
+                      }}
+                      rows={1}
+                      placeholder={isSystem ? 'Write a message to Fivesom Support…' : 'Type a message'}
+                      className="flex-1 min-h-[36px] max-h-32 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0 px-1 py-2 text-sm"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9 rounded-full shrink-0"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingImage}
+                      title="Attach file"
+                    >
+                      {uploadingImage
+                        ? <Loader2 className="w-4 h-4 animate-spin" />
+                        : <Paperclip className="w-5 h-5 text-muted-foreground" />}
+                    </Button>
+                  </div>
+                  <Button
+                    onClick={handleSend}
+                    disabled={!newMessage.trim()}
+                    size="icon"
+                    className="h-11 w-11 rounded-full shadow-md shrink-0"
+                    title="Send"
+                  >
+                    <Send className="w-5 h-5" />
+                  </Button>
+                </div>
               </div>
             )}
           </>
