@@ -1,8 +1,37 @@
 User-agent: *
 Allow: /
+
+# Public freelancer profiles (/freelancer/{username}) stay crawlable —
+# only the freelancer's own private dashboard pages are blocked.
 Disallow: /admin
+Disallow: /founders
 Disallow: /auth/callback
-Disallow: /freelancer/
+Disallow: /inbox
+Disallow: /messages
+Disallow: /support/messages
+Disallow: /payment
+Disallow: /vip-checkout
+Disallow: /create-gig
+Disallow: /edit-gig
+Disallow: /select-role
+Disallow: /become-buyer
+Disallow: /become-freelancer
+Disallow: /complete-profile
+Disallow: /reset-password
+Disallow: /forgot-password
 Disallow: /buyer/
+Disallow: /freelancer/dashboard
+Disallow: /freelancer/gigs
+Disallow: /freelancer/orders
+Disallow: /freelancer/order
+Disallow: /freelancer/messages
+Disallow: /freelancer/deliver
+Disallow: /freelancer/delivery-success
+Disallow: /freelancer/wallet
+Disallow: /freelancer/payouts
+Disallow: /freelancer/help
+Disallow: /freelancer/settings
+Disallow: /freelancer/profile
+Disallow: /freelancer/verify
 
 Sitemap: https://fivesom.net/sitemap.xml
