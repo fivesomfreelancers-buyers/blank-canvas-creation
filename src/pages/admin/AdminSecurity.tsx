@@ -1,3 +1,4 @@
+import RoleBadge from '@/components/admin/RoleBadge';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchAdminProfile, fetchAdminProfiles, fetchAllAdminProfiles, findAdminProfileByEmail, displayName } from '@/lib/adminUsers';
@@ -63,7 +64,7 @@ const AdminSecurity = () => {
         <CardContent className="space-y-2">
           {roles.map(r => (
             <div key={r.id} className="flex items-center justify-between p-2 border border-border rounded">
-              <div className="flex items-center gap-2"><Badge variant={r.role === 'admin' || r.role === 'super_admin' ? 'default' : 'secondary'}>{r.role}</Badge><span className="text-sm text-foreground">{r.name}</span></div>
+              <div className="flex items-center gap-2"><RoleBadge role={r.role} /><span className="text-sm text-foreground">{r.name}</span></div>
               <Button size="sm" variant="ghost" onClick={() => removeRole(r.id)}><UserX className="h-3.5 w-3.5 text-destructive" /></Button>
             </div>
           ))}

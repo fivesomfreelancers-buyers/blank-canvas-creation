@@ -1,3 +1,4 @@
+import RoleBadge from '@/components/admin/RoleBadge';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchAllAdminProfiles, displayName, type AdminProfile } from '@/lib/adminUsers';
@@ -272,7 +273,7 @@ const AdminUsers = () => {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell><Badge variant="outline" className="text-xs capitalize">{u.role || 'user'}</Badge></TableCell>
+                    <TableCell><RoleBadge role={u.role} /></TableCell>
                     <TableCell className="text-xs text-muted-foreground">
                       {u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}
                     </TableCell>
