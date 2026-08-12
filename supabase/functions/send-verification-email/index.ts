@@ -80,12 +80,23 @@ Deno.serve(async (req) => {
     const limit = await consumeRateLimit(admin, "verify_email", `${rawEmail}|${callerIp(req)}`, 3, 900);
     if (!limit.allowed) return tooManyRequests(limit.retryAfter, corsHeaders);
 
+    // Only registered addresses get a link — this endpoint must never mint accounts.
+    const { data: existing } = await admin
+      .from("profiles")
+      .select("id")
+      .ilike("email", rawEmail)
+      .maybeSingle();
+    if (!existing) {
+      return json({ error: "No Fivesom account uses this email address yet. Please sign up first." }, 404);
+    }
+
     // Mint a real verification link for the address the user actually registered.
     const { data: link, error: linkErr } = await admin.auth.admin.generateLink({
       type: "magiclink",
       email: rawEmail,
       options: { redirectTo },
     });
+
 
     if (linkErr || !link?.properties?.action_link) {
       const message = linkErr?.message ?? "Could not generate a verification link";
