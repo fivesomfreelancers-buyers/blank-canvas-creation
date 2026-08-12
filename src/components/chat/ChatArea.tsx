@@ -1,9 +1,10 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import AutoGrowTextarea from './AutoGrowTextarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Smile, Paperclip, Loader2, Pin, Check, CheckCheck } from 'lucide-react';
+
 import newsLogo from '@/assets/fivesom-news-logo.png';
 import supportLogo from '@/assets/fivesom-support-logo.png';
 import VerifiedBadge from '@/components/VerifiedBadge';
@@ -82,7 +83,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   const isNews = selectedKind === 'news';
 
   return (
-    <Card className="lg:col-span-2 flex flex-col overflow-hidden">
+    <Card className="lg:col-span-2 flex flex-col min-w-0 overflow-hidden">
       <CardHeader className="pb-3 border-b bg-card/60 backdrop-blur supports-[backdrop-filter]:bg-card/50">
         <CardTitle>
           {selectedConvo ? (
@@ -125,14 +126,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({
           ) : 'Select a conversation'}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col flex-1 min-h-0 p-0">
+      <CardContent className="flex flex-col flex-1 min-h-0 min-w-0 p-0 overflow-hidden">
         {!selectedConvo ? (
           <div className="flex-1 flex items-center justify-center text-muted-foreground">
             Select a conversation to view messages
           </div>
         ) : (
           <>
-            <div className="flex-1 overflow-y-auto space-y-1.5 px-3 sm:px-5 py-4 bg-muted/20">
+            <div className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden space-y-1.5 px-3 sm:px-5 py-4 bg-muted/20">
+
               {messages.length === 0 && !partnerTyping ? (
                 <div className="text-center py-6 text-muted-foreground text-sm">
                   {isNews ? 'No announcements yet.' : 'No messages yet. Start the conversation!'}
@@ -216,8 +218,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                   onChange={handleImageUpload}
                 />
 
-                <div className="flex items-end gap-2">
-                  <div className="flex-1 flex items-end gap-1 bg-muted/60 border rounded-3xl px-2 py-1.5 focus-within:ring-2 focus-within:ring-ring/40 transition">
+                <div className="flex w-full min-w-0 items-end gap-2">
+                  <div className="flex-1 min-w-0 flex items-end gap-1 bg-muted/60 border rounded-3xl px-2 py-1.5 focus-within:ring-2 focus-within:ring-ring/40 transition">
                     <Button
                       variant="ghost"
                       size="icon"
@@ -227,7 +229,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                     >
                       <Smile className="w-5 h-5 text-muted-foreground" />
                     </Button>
-                    <Textarea
+                    <AutoGrowTextarea
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       onKeyDown={(e) => {
@@ -236,10 +238,10 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                           handleSend();
                         }
                       }}
-                      rows={1}
                       placeholder={isSystem ? 'Write a message to Fivesom Support…' : 'Type a message'}
-                      className="flex-1 min-h-[36px] max-h-32 resize-none border-0 bg-transparent shadow-none focus-visible:ring-0 px-1 py-2 text-sm"
+                      className="min-h-[36px]"
                     />
+
                     <Button
                       variant="ghost"
                       size="icon"
