@@ -75,6 +75,29 @@ export async function ensurePaidOrder({ admin, meta, paymentIntentId, sessionId 
     })
     .select("id")
     .single();
-  if (error) throw error;
+
+  if (error) {
+    // Unique index race (webhook + client verify arriving at the same time):
+    // the order already exists for this payment — return it instead of duplicating.
+    if ((error as { code?: string }).code === "23505") {
+      if (paymentIntentId) {
+        const { data } = await admin
+          .from("orders")
+          .select("id")
+          .eq("stripe_payment_intent_id", paymentIntentId)
+          .maybeSingle();
+        if (data?.id) return data.id as string;
+      }
+      if (sessionId) {
+        const { data } = await admin
+          .from("orders")
+          .select("id")
+          .eq("stripe_session_id", sessionId)
+          .maybeSingle();
+        if (data?.id) return data.id as string;
+      }
+    }
+    throw error;
+  }
   return created.id as string;
 }
