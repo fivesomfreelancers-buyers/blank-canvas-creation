@@ -204,8 +204,8 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
           </span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col p-0">
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[420px] min-h-[280px]">
+      <CardContent className="flex flex-col min-w-0 p-0 overflow-hidden">
+        <div className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-4 space-y-3 max-h-[420px] min-h-[280px]">
           {messages.length === 0 ? (
             <div className="text-center text-sm text-muted-foreground py-8">
               No messages yet. Share your side of the story — Fivesom will mediate.
@@ -214,14 +214,15 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
             messages.map((m) => {
               const mine = m.sender_id === userId;
               return (
-                <div key={m.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[78%] rounded-2xl px-3 py-2 text-sm ${mine ? 'bg-primary text-primary-foreground rounded-br-md' : 'bg-muted rounded-bl-md'}`}>
+                <div key={m.id} className={`flex w-full min-w-0 ${mine ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[85%] sm:max-w-[78%] min-w-0 rounded-2xl px-3 py-2 text-sm chat-text ${mine ? 'bg-primary text-primary-foreground rounded-br-md' : 'bg-muted rounded-bl-md'}`}>
                     <div className="flex items-center gap-1 mb-1">
                       <Badge variant="outline" className={`text-[10px] py-0 px-1.5 capitalize ${roleStyles[m.sender_role]}`}>
                         {m.sender_role === 'admin' ? 'Fivesom' : m.sender_role}
                       </Badge>
                     </div>
-                    {m.body && <p className="whitespace-pre-wrap">{m.body}</p>}
+                    {m.body && <p className="chat-text">{m.body}</p>}
+
                     {m.attachment_url && <AttachmentPreview url={m.attachment_url} isOwn={mine} />}
                     <p className={`text-[10px] mt-1 ${mine ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                       {new Date(m.created_at).toLocaleString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' })}
