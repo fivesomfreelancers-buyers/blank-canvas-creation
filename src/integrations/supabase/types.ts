@@ -1642,20 +1642,8 @@ export type Database = {
           gig_id: string | null
           id: string | null
           rating: number | null
-        }
-        Insert: {
-          comment?: string | null
-          created_at?: string | null
-          gig_id?: string | null
-          id?: string | null
-          rating?: number | null
-        }
-        Update: {
-          comment?: string | null
-          created_at?: string | null
-          gig_id?: string | null
-          id?: string | null
-          rating?: number | null
+          reviewer_image: string | null
+          reviewer_name: string | null
         }
         Relationships: [
           {
@@ -1765,6 +1753,10 @@ export type Database = {
         Args: { _attachment_url: string; _audience: string; _body: string }
         Returns: number
       }
+      can_view_profile: {
+        Args: { _target: string; _viewer: string }
+        Returns: boolean
+      }
       check_rate_limit: {
         Args: {
           _bucket: string
@@ -1807,6 +1799,11 @@ export type Database = {
         Returns: boolean
       }
       is_founder_user: { Args: { _user_id: string }; Returns: boolean }
+      is_listed_freelancer: {
+        Args: { _freelancer_id: string }
+        Returns: boolean
+      }
+      is_public_profile: { Args: { _id: string }; Returns: boolean }
       list_founders: {
         Args: never
         Returns: {
@@ -1819,6 +1816,10 @@ export type Database = {
       }
       order_is_freelancer_visible: {
         Args: { _order_id: string }
+        Returns: boolean
+      }
+      shares_order_with_freelancer: {
+        Args: { _freelancer_id: string; _viewer: string }
         Returns: boolean
       }
       slugify: { Args: { _txt: string }; Returns: string }

@@ -13,7 +13,7 @@ const Index = () => {
     <div className="min-h-screen bg-background transition-colors duration-300">
       <SEO
         title="FIVESOM — Global Freelance Marketplace"
-        description="FIVESOM is a global freelance marketplace connecting clients with skilled freelancers worldwide. Hire trusted talent or sell your skills in web development, design, writing, marketing and more, with secure payments and escrow protection."."
+        description="FIVESOM is a global freelance marketplace connecting clients with skilled freelancers worldwide. Hire trusted talent or sell your skills in web development, design, writing, marketing and more, with secure payments and escrow protection."
         canonical="/"
       />
       <Navbar />
