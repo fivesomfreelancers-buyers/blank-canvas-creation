@@ -156,15 +156,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                           </span>
                         </div>
                       )}
-                      <div className={`flex ${isMine ? 'justify-end' : 'justify-start'} ${groupedWithPrev ? 'mt-0.5' : 'mt-2'}`}>
+                      <div className={`flex w-full min-w-0 ${isMine ? 'justify-end' : 'justify-start'} ${groupedWithPrev ? 'mt-0.5' : 'mt-2'}`}>
                         <div
-                          className={`max-w-[85%] sm:max-w-[70%] px-3.5 py-2 text-sm whitespace-pre-wrap break-words shadow-sm rounded-2xl ${
+                          className={`max-w-[85%] sm:max-w-[70%] min-w-0 px-3.5 py-2 text-sm chat-text shadow-sm rounded-2xl ${
                             isMine
                               ? `bg-primary text-primary-foreground ${lastOfGroup ? 'rounded-br-md' : ''}`
                               : `bg-card text-foreground border ${lastOfGroup ? 'rounded-bl-md' : ''}`
                           }`}
                         >
-                          <p>{msg.message}</p>
+                          <p className="chat-text">{msg.message}</p>
                           {msg.attachment_url && (
                             <AttachmentPreview url={msg.attachment_url} isOwn={isMine} />
                           )}
@@ -178,6 +178,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                           </span>
                         </div>
                       </div>
+
                     </React.Fragment>
                   );
                 })
