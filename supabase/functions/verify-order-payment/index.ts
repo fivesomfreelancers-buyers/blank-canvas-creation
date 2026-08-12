@@ -65,7 +65,9 @@ serve(async (req) => {
       metadata = (session.metadata ?? {}) as Record<string, string>;
     } else {
       const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
-      paid = intent.status === "succeeded" || intent.status === "processing";
+      // Only a genuinely succeeded charge counts as paid. "processing", "requires_*",
+      // cancelled or failed intents never create an order.
+      paid = intent.status === "succeeded";
       metadata = (intent.metadata ?? {}) as Record<string, string>;
     }
 

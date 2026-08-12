@@ -82,7 +82,7 @@ const CardFormInner: React.FC<StripeCardFormProps> = ({ gigId, packageType, tota
         return;
       }
 
-      if (result.paymentIntent?.status === 'succeeded' || result.paymentIntent?.status === 'processing') {
+      if (result.paymentIntent?.status === 'succeeded') {
         // The order row is created server-side ONLY after Stripe confirms the payment.
         const { data: verified, error: verifyError } = await supabase.functions.invoke('verify-order-payment', {
           body: { paymentIntentId: result.paymentIntent.id },
@@ -96,6 +96,10 @@ const CardFormInner: React.FC<StripeCardFormProps> = ({ gigId, packageType, tota
         return;
       }
 
+      if (result.paymentIntent?.status === 'processing') {
+        setCardError('Your bank is still processing this payment. No order is created until it succeeds — check My Orders in a few minutes.');
+        return;
+      }
 
       setCardError('Payment was not completed. Please try again.');
     } catch (err) {
