@@ -1802,6 +1802,17 @@ export type Database = {
         Args: { _dispute_id: string; _user_id: string }
         Returns: boolean
       }
+      is_founder_user: { Args: { _user_id: string }; Returns: boolean }
+      list_founders: {
+        Args: never
+        Returns: {
+          full_name: string
+          last_seen: string
+          profile_image_url: string
+          user_id: string
+          username: string
+        }[]
+      }
       slugify: { Args: { _txt: string }; Returns: string }
       touch_last_seen: { Args: never; Returns: undefined }
       user_owns_support_ticket: {
@@ -1810,7 +1821,13 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "freelancer" | "buyer" | "admin" | "super_admin" | "user"
+      app_role:
+        | "freelancer"
+        | "buyer"
+        | "admin"
+        | "super_admin"
+        | "user"
+        | "founder"
       delivery_status: "submitted" | "approved" | "revision_requested"
       dispute_sender_role: "buyer" | "freelancer" | "admin"
       gig_status: "active" | "paused" | "draft"
@@ -1954,7 +1971,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["freelancer", "buyer", "admin", "super_admin", "user"],
+      app_role: [
+        "freelancer",
+        "buyer",
+        "admin",
+        "super_admin",
+        "user",
+        "founder",
+      ],
       delivery_status: ["submitted", "approved", "revision_requested"],
       dispute_sender_role: ["buyer", "freelancer", "admin"],
       gig_status: ["active", "paused", "draft"],
