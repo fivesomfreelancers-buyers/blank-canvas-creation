@@ -9,6 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Search, Paperclip, Loader2 } from 'lucide-react';
 import supportLogo from '@/assets/fivesom-support-logo.png';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
+import AutoGrowTextarea from '@/components/chat/AutoGrowTextarea';
+
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { moderateText, moderateImageFile } from '@/lib/chatModeration';
