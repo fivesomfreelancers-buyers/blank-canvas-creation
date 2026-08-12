@@ -9,10 +9,17 @@ export type PlatformRole = 'freelancer' | 'buyer' | 'user';
  */
 export const ensureNormalUserRole = async (userId: string) => {
   try {
+    // Only seed the placeholder role when the account has no role at all —
+    // profiles.role is kept in sync by a database trigger, so we never write it
+    // here (that could downgrade a real freelancer/buyer).
+    const { data } = await (supabase as any)
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId);
+    if (data && data.length > 0) return;
     await (supabase as any)
       .from('user_roles')
       .upsert({ user_id: userId, role: 'user' }, { onConflict: 'user_id,role' });
-    await (supabase as any).from('profiles').update({ role: 'user' }).eq('id', userId);
   } catch (err) {
     console.error('ensureNormalUserRole error:', err);
   }
