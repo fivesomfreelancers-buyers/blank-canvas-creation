@@ -53,6 +53,7 @@ import NotFound from "./pages/NotFound";
 import MessagesRedirect from "./pages/MessagesRedirect";
 import Inbox from "./pages/Inbox";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import FounderDashboard from "./pages/founder/FounderDashboard";
 import TermsOfService from "./pages/legal/TermsOfService";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
 import { ThemeProvider } from "./components/ThemeProvider";
@@ -147,6 +148,11 @@ const App = () => (
 
               {/* Admin Routes */}
               <Route path="/admin/*" element={<AdminDashboard />} />
+
+              {/* Private Founder Dashboard — access decided by the `founder` role in user_roles */}
+              <Route path="/founders" element={<FounderDashboard />} />
+              <Route path="/founders/*" element={<FounderDashboard />} />
+
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
