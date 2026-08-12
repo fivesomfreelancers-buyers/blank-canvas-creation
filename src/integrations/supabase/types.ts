@@ -1817,6 +1817,10 @@ export type Database = {
           username: string
         }[]
       }
+      order_is_freelancer_visible: {
+        Args: { _order_id: string }
+        Returns: boolean
+      }
       slugify: { Args: { _txt: string }; Returns: string }
       sync_profile_role: { Args: { _user_id: string }; Returns: undefined }
       touch_last_seen: { Args: never; Returns: undefined }
