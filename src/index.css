@@ -125,4 +125,12 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* Chat text: wrap long words, URLs and continuous characters safely. */
+  .chat-text {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
 }
+
