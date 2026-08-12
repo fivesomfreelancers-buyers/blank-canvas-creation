@@ -113,8 +113,10 @@ const Login = () => {
   };
 
 
-  // Real resend of the Supabase Auth signup confirmation email.
-  // Only reports success when the auth/email backend actually accepted the request.
+  // Real resend of the verification email.
+  // Goes through the secure edge function, which mints an auth link and hands it
+  // to the verified fivesom.net sender — success is only reported when the email
+  // provider actually accepted the message.
   const handleResendVerification = async () => {
     const target = email.trim();
     if (!target) {
@@ -122,27 +124,33 @@ const Login = () => {
       return;
     }
     setResendLoading(true);
-    const { error } = await supabase.auth.resend({
-      type: 'signup',
-      email: target,
-      options: { emailRedirectTo: new URL('/auth/callback', window.location.origin).toString() },
+    const { data, error } = await supabase.functions.invoke('send-verification-email', {
+      body: { email: target, redirect_to: new URL('/auth/callback', window.location.origin).toString() },
     });
     setResendLoading(false);
 
+    let failure: string | null = null;
     if (error) {
-      toast({
-        title: 'Could not send verification email',
-        description: error.message || 'The email service rejected the request. Please try again shortly.',
-        variant: 'destructive',
-      });
+      const ctx = (error as any)?.context;
+      let detail = '';
+      try { detail = ctx && typeof ctx.text === 'function' ? await ctx.text() : ''; } catch { detail = ''; }
+      try { failure = detail ? (JSON.parse(detail).error ?? detail) : null; } catch { failure = detail || null; }
+      failure = failure || error.message || 'The email service rejected the request.';
+    } else if (!data?.sent) {
+      failure = (data as any)?.error || 'The email service did not confirm delivery.';
+    }
+
+    if (failure) {
+      toast({ title: 'Could not send verification email', description: failure, variant: 'destructive' });
       return;
     }
 
     toast({
       title: 'Verification email sent',
-      description: `The email service accepted the request for ${target}. Check your inbox (and spam folder).`,
+      description: `Delivered to ${target} (provider ref ${data.provider_id ?? 'n/a'}). Check your inbox and spam folder.`,
     });
   };
+
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
