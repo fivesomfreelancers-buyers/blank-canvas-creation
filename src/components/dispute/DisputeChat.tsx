@@ -240,22 +240,27 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
             This dispute has been resolved{dispute?.resolution ? ` — ${dispute.resolution}` : ''}. Chat is read-only.
           </div>
         ) : (
-          <div className="border-t p-2 flex items-center gap-2">
+          <div className="border-t p-2 flex w-full min-w-0 items-end gap-2">
             <input ref={fileRef} type="file" hidden onChange={onFile} accept="image/*,video/*,.pdf,.doc,.docx,.txt,.zip" />
-            <Button variant="ghost" size="icon" onClick={() => fileRef.current?.click()} disabled={uploading || sending} title="Attach proof">
+            <Button variant="ghost" size="icon" className="shrink-0" onClick={() => fileRef.current?.click()} disabled={uploading || sending} title="Attach proof">
               {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Paperclip className="w-4 h-4" />}
             </Button>
-            <Input
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), send())}
-              placeholder="Type your message…"
-              disabled={sending}
-            />
-            <Button onClick={() => send()} disabled={sending || !text.trim()}>
+            <div className="flex-1 min-w-0 border rounded-2xl bg-muted/40 px-2">
+              <AutoGrowTextarea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+                }}
+                placeholder="Type your message…"
+                disabled={sending}
+              />
+            </div>
+            <Button className="shrink-0" onClick={() => send()} disabled={sending || !text.trim()}>
               <Send className="w-4 h-4" />
             </Button>
           </div>
+
         )}
       </CardContent>
     </Card>
