@@ -1775,6 +1775,10 @@ export type Database = {
         Returns: Json
       }
       delete_gig: { Args: { _gig_id: string }; Returns: Json }
+      effective_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
       expire_vip_memberships: { Args: never; Returns: number }
       freelancer_privileged_snapshot: { Args: { _id: string }; Returns: Json }
       get_freelancer_earnings: {
@@ -1814,6 +1818,7 @@ export type Database = {
         }[]
       }
       slugify: { Args: { _txt: string }; Returns: string }
+      sync_profile_role: { Args: { _user_id: string }; Returns: undefined }
       touch_last_seen: { Args: never; Returns: undefined }
       user_owns_support_ticket: {
         Args: { _ticket_id: string; _ticket_table: string; _user_id: string }
