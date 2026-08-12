@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard, ShieldCheck, Package, MessageSquare, Headphones, Megaphone,
-  Flag, Trophy, Scale, Crown, LogOut, Bell,
+  Flag, Trophy, Scale, Crown, LogOut, Bell, Briefcase, Users,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -27,14 +27,19 @@ import AdminFivesomNews from '@/pages/admin/AdminFivesomNews';
 import AdminReports from '@/pages/admin/AdminReports';
 import AdminRanking from '@/pages/admin/AdminRanking';
 import AdminDisputes from '@/pages/admin/AdminDisputes';
+import AdminGigs from '@/pages/admin/AdminGigs';
+import AdminUsers from '@/pages/admin/AdminUsers';
 
 type TabKey =
   | 'overview' | 'verifications' | 'orders' | 'chats'
-  | 'fivesom_support' | 'fivesom_news' | 'reports' | 'ranking' | 'disputes';
+  | 'fivesom_support' | 'fivesom_news' | 'reports' | 'ranking' | 'disputes'
+  | 'gigs' | 'users';
 
 const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'overview', label: 'Dashboard', icon: LayoutDashboard },
   { key: 'verifications', label: 'Verifications', icon: ShieldCheck, badge: 'verifications' },
+  { key: 'gigs', label: 'Gigs', icon: Briefcase },
+  { key: 'users', label: 'Users', icon: Users },
   { key: 'orders', label: 'Orders', icon: Package },
   { key: 'chats', label: 'Live Chat', icon: MessageSquare },
   { key: 'fivesom_support', label: 'Fivesom Support', icon: Headphones, badge: 'fivesom_support' },
@@ -47,6 +52,8 @@ const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
 const titles: Record<TabKey, string> = {
   overview: 'Founder Dashboard',
   verifications: 'Verifications',
+  gigs: 'Gigs Management',
+  users: 'Users Management',
   orders: 'Orders',
   chats: 'Live Chat',
   fivesom_support: 'Fivesom Support',
@@ -73,6 +80,8 @@ const FounderDashboardInner = () => {
     switch (activeTab) {
       case 'overview': return <AdminOverview />;
       case 'verifications': return <AdminVerifications />;
+      case 'gigs': return <AdminGigs />;
+      case 'users': return <AdminUsers />;
       case 'orders': return <AdminOrders />;
       case 'chats': return <AdminChats />;
       case 'fivesom_support': return <AdminFivesomSupport />;
