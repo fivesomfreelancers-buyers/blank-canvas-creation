@@ -104,12 +104,26 @@ const Register = () => {
       toast({ title: 'Account created!', description: 'Welcome to FIVESOM — start exploring services.' });
       navigate('/');
     } else {
-      toast({
-        title: 'Check your email',
-        description: 'Confirm your email to continue, then sign in.',
+      // Supabase's built-in mailer is not domain-authenticated, so send the
+      // verification link ourselves from the verified fivesom.net sender.
+      const { data: sendData, error: sendError } = await supabase.functions.invoke('send-verification-email', {
+        body: { email: email.trim(), redirect_to: new URL('/auth/callback', window.location.origin).toString() },
       });
+      if (sendError || !sendData?.sent) {
+        toast({
+          title: 'Account created — verification email pending',
+          description: 'We could not confirm the verification email was accepted. Use "Resend verification email" on the login page.',
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Check your email',
+          description: `Verification link sent to ${email.trim()}. Confirm it, then sign in.`,
+        });
+      }
       navigate('/login');
     }
+
     setEmailLoading(false);
   };
 
