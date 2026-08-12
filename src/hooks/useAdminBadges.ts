@@ -49,8 +49,9 @@ export function useAdminBadges() {
       orders, disputes, reports, reviews,
       support: st + bst + fst,
       withdrawals, verifications, vip,
-      // Live chat monitor badge: unread user-to-user messages on the platform.
-      chats: unreadDm,
+      // Live chat monitor is monitoring-only: no red unread badge.
+      chats: 0,
+
       fivesom_support: fivesomSupportUnread,
     });
 
