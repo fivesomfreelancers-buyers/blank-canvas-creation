@@ -53,6 +53,7 @@ import NotFound from "./pages/NotFound";
 import MessagesRedirect from "./pages/MessagesRedirect";
 import Inbox from "./pages/Inbox";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import FounderDashboard from "./pages/founder/FounderDashboard";
 import TermsOfService from "./pages/legal/TermsOfService";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
 import { ThemeProvider } from "./components/ThemeProvider";
