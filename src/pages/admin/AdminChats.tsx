@@ -200,11 +200,7 @@ const AdminChats = () => {
           <CardTitle className="text-base flex items-center gap-2">
             <MessageSquare className="h-4 w-4" /> Live Chat Monitor
             <Badge variant="outline" className="text-xs">{convs.length}</Badge>
-            {totalUnread > 0 && (
-              <Badge className="text-xs bg-destructive text-destructive-foreground">
-                {totalUnread} unread
-              </Badge>
-            )}
+
           </CardTitle>
           <div className="flex items-center gap-2">
             <div className="relative">
