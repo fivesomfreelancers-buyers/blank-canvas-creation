@@ -271,10 +271,8 @@ const AdminChats = () => {
               <div className="hidden sm:block text-[11px] text-muted-foreground whitespace-nowrap">
                 {c.last_at ? formatTime(c.last_at) : ''}
               </div>
-              {c.unread_count > 0 && (
-                <Badge className="text-xs bg-destructive text-destructive-foreground">{c.unread_count}</Badge>
-              )}
               <Badge variant="outline" className="text-xs">{c.message_count}</Badge>
+
               <Button size="sm" variant="outline" onClick={() => setOpenId(c.id)}>
                 <Eye className="h-3.5 w-3.5 sm:mr-1" /> <span className="hidden sm:inline">Open</span>
               </Button>
