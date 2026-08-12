@@ -1,3 +1,4 @@
+import RoleBadge from '@/components/admin/RoleBadge';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchAllAdminProfiles, displayName, type AdminProfile } from '@/lib/adminUsers';
