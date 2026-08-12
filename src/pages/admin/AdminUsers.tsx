@@ -272,7 +272,7 @@ const AdminUsers = () => {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell><Badge variant="outline" className="text-xs capitalize">{u.role || 'user'}</Badge></TableCell>
+                    <TableCell><RoleBadge role={u.role} /></TableCell>
                     <TableCell className="text-xs text-muted-foreground">
                       {u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}
                     </TableCell>
