@@ -26,7 +26,7 @@ export function useAdminBadges() {
     const sb: any = supabase;
     const [
       orders, disputes, reports, reviews,
-      st, bst, fst, withdrawals, verifications, vip, sysconvo,
+      st, bst, fst, withdrawals, verifications, vip, sysconvo, unreadDm,
     ] = await Promise.all([
       headCount(sb.from('orders').select('id', { count: 'exact', head: true }).eq('status', 'pending')),
       headCount(sb.from('disputes').select('id', { count: 'exact', head: true }).eq('status', 'open')),
@@ -39,9 +39,9 @@ export function useAdminBadges() {
       headCount(sb.from('verification_documents').select('id', { count: 'exact', head: true }).eq('status', 'pending')),
       headCount(sb.from('vip_memberships').select('id', { count: 'exact', head: true }).eq('payment_status', 'pending')),
       sb.from('system_conversations').select('unread_admin, type'),
+      headCount(sb.from('messages').select('id', { count: 'exact', head: true }).eq('is_read', false)),
     ]);
     const rows = (sysconvo.data || []) as Array<{ unread_admin: number; type: string }>;
-    const chats = rows.reduce((s, r) => s + (Number(r.unread_admin) || 0), 0);
     const fivesomSupportUnread = rows
       .filter(r => r.type === 'support')
       .reduce((s, r) => s + (Number(r.unread_admin) || 0), 0);
@@ -49,9 +49,11 @@ export function useAdminBadges() {
       orders, disputes, reports, reviews,
       support: st + bst + fst,
       withdrawals, verifications, vip,
-      chats,
+      // Live chat monitor badge: unread user-to-user messages on the platform.
+      chats: unreadDm,
       fivesom_support: fivesomSupportUnread,
     });
+
   }, []);
 
   useEffect(() => {
