@@ -147,6 +147,11 @@ const App = () => (
 
               {/* Admin Routes */}
               <Route path="/admin/*" element={<AdminDashboard />} />
+
+              {/* Private Founder Dashboard — access decided by the `founder` role in user_roles */}
+              <Route path="/founders" element={<FounderDashboard />} />
+              <Route path="/founders/*" element={<FounderDashboard />} />
+
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
