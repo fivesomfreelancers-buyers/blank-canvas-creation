@@ -9,6 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Search, Paperclip, Loader2 } from 'lucide-react';
 import supportLogo from '@/assets/fivesom-support-logo.png';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
+import AutoGrowTextarea from '@/components/chat/AutoGrowTextarea';
+
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { moderateText, moderateImageFile } from '@/lib/chatModeration';
@@ -220,17 +222,17 @@ const AdminFivesomSupport: React.FC = () => {
             )}
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex-1 flex flex-col min-h-0">
+        <CardContent className="flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden">
           {selected ? (
             <>
-              <div className="flex-1 overflow-y-auto space-y-3 mb-3 pr-2">
+              <div className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden space-y-3 mb-3 pr-2">
                 {messages.map(m => {
                   const mine = m.sender_type !== 'user';
                   return (
-                    <div key={m.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[75%] px-3 py-2 rounded-2xl text-sm whitespace-pre-wrap ${mine ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'}`}>
+                    <div key={m.id} className={`flex w-full min-w-0 ${mine ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-[85%] sm:max-w-[75%] min-w-0 px-3 py-2 rounded-2xl text-sm chat-text ${mine ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'}`}>
                         {m.sender_type === 'system' && <p className="text-[10px] opacity-70 mb-0.5">SYSTEM</p>}
-                        <p>{m.body}</p>
+                        <p className="chat-text">{m.body}</p>
                         {m.attachment_url && <AttachmentPreview url={m.attachment_url} isOwn={mine} />}
                         <p className={`text-[10px] mt-1 ${mine ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>{new Date(m.created_at).toLocaleString()}</p>
                       </div>
@@ -239,14 +241,24 @@ const AdminFivesomSupport: React.FC = () => {
                 })}
                 <div ref={endRef} />
               </div>
-              <div className="flex gap-2 pt-2 border-t items-center">
+              <div className="flex w-full min-w-0 gap-2 pt-2 border-t items-end">
                 <input ref={fileRef} type="file" className="hidden" onChange={handleUpload} accept="image/*,video/*,.pdf,.doc,.docx,.zip" />
-                <Button variant="ghost" size="icon" onClick={() => fileRef.current?.click()} disabled={uploading}>
+                <Button variant="ghost" size="icon" className="shrink-0" onClick={() => fileRef.current?.click()} disabled={uploading}>
                   {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Paperclip className="h-4 w-4" />}
                 </Button>
-                <Input value={reply} onChange={e => setReply(e.target.value)} onKeyPress={e => e.key === 'Enter' && sendReply()} placeholder="Reply as Fivesom Support…" />
-                <Button onClick={sendReply} disabled={!reply.trim()}><Send className="h-4 w-4" /></Button>
+                <div className="flex-1 min-w-0 border rounded-2xl bg-muted/40 px-2">
+                  <AutoGrowTextarea
+                    value={reply}
+                    onChange={e => setReply(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); }
+                    }}
+                    placeholder="Reply as Fivesom Support…"
+                  />
+                </div>
+                <Button className="shrink-0" onClick={sendReply} disabled={!reply.trim()}><Send className="h-4 w-4" /></Button>
               </div>
+
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center text-muted-foreground">Select a user to chat</div>

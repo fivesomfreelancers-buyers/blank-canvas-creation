@@ -354,20 +354,21 @@ const AdminChats = () => {
                             </AvatarFallback>
                           </Avatar>
                         )}
-                        <div className={`max-w-[78%] sm:max-w-[72%] ${fromBuyer ? 'items-start' : 'items-end'} flex flex-col`}>
+                        <div className={`max-w-[78%] sm:max-w-[72%] min-w-0 ${fromBuyer ? 'items-start' : 'items-end'} flex flex-col`}>
                           {showHeader && (
-                            <p className={`text-[10px] mb-0.5 px-1 ${fromBuyer ? 'text-blue-500' : 'text-purple-500'}`}>
+                            <p className={`text-[10px] mb-0.5 px-1 break-words ${fromBuyer ? 'text-blue-500' : 'text-purple-500'}`}>
                               {sender.name} → <span className="text-muted-foreground">{receiver.name}</span>
                             </p>
                           )}
                           <div
-                            className={`rounded-2xl px-3.5 py-2 text-sm shadow-sm ${
+                            className={`min-w-0 max-w-full rounded-2xl px-3.5 py-2 text-sm shadow-sm ${
                               fromBuyer
                                 ? 'bg-blue-500/10 border border-blue-500/20 text-foreground rounded-bl-md'
                                 : 'bg-purple-500/10 border border-purple-500/20 text-foreground rounded-br-md'
                             }`}
                           >
-                            {m.message && <p className="whitespace-pre-wrap break-words">{m.message}</p>}
+                            {m.message && <p className="chat-text">{m.message}</p>}
+
                             {m.attachment_url && (
                               <SecureFileLink
                                 url={m.attachment_url}
