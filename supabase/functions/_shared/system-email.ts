@@ -5,6 +5,8 @@
  * Apple Mail and mobile clients.
  */
 
+import { socialRow } from './email-social.ts';
+
 export type SystemChannel = 'support' | 'news';
 
 export interface SystemNotificationEmailParams {
@@ -138,7 +140,6 @@ export function buildSystemNotificationEmail({
   <tr>
     <td align="center" style="padding:28px 32px 0 32px;">
       <a href="${cta}" style="display:inline-block;background:${BLUE};color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:17px;font-weight:700;text-decoration:none;padding:16px 42px;border-radius:12px;">${isNews ? '&#128226;&nbsp; Read the announcement' : '&#128172;&nbsp; Open the conversation'} &nbsp;&#10132;</a>
-      <p style="margin:14px 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:${MUTED};">Or open this link: <a href="${cta}" style="color:${BLUE};text-decoration:none;">${esc(cta)}</a></p>
     </td>
   </tr>
 
@@ -158,6 +159,7 @@ export function buildSystemNotificationEmail({
   <tr>
     <td align="center" style="padding:18px 32px 30px 32px;font-family:Arial,Helvetica,sans-serif;">
       <img src="${logo}" width="130" alt="FIVESOM" style="display:block;width:130px;height:auto;border:0;margin:0 auto;" />
+      <div style="padding-top:14px;">${socialRow()}</div>
       <p style="margin:12px 0 0 0;font-size:12px;line-height:19px;color:${MUTED};">You are receiving this email because you have a Fivesom account.<br />
       Questions? Write to <a href="mailto:noreply@fivesom.net" style="color:${BLUE};text-decoration:none;">noreply@fivesom.net</a></p>
       <p style="margin:10px 0 0 0;font-size:11px;color:${MUTED};">&copy; 2026 FIVESOM. All rights reserved.</p>
