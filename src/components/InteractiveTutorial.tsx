@@ -27,7 +27,7 @@ const InteractiveTutorial = () => {
       videoSrc: verifyAccountVideo.url,
       steps: [
         'Complete Profile Setup',
-        'Verify Your Identity',
+        'Skills',
         'Add Skills & Portfolio',
         'Set Availability Status',
         'Configure Notifications'
