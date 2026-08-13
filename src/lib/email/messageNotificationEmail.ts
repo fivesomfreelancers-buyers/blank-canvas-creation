@@ -1,34 +1,19 @@
 /**
- * Fivesom "new message" notification email.
+ * Fivesom "new message" notification email (English).
  *
  * Table-based, inline-styled HTML so it renders identically in Gmail,
  * Outlook, Apple Mail and mobile clients (no external CSS, no flexbox).
- *
- * Usage:
- *   const html = buildMessageNotificationEmail({
- *     senderName: 'Maxamed Ali',
- *     senderRole: 'buyer',
- *     messageText: 'Asc, waxaan u baahanahay website ganacsi...',
- *     sentAt: new Date(),
- *   });
  */
 
 export type SenderRole = 'buyer' | 'freelancer';
 
 export interface MessageNotificationEmailParams {
-  /** Full name of the person who sent the message. */
   senderName: string;
-  /** Role pill shown next to the name. */
   senderRole: SenderRole;
-  /** The exact message snippet to show inside the card. */
   messageText: string;
-  /** When the message was sent. */
   sentAt?: Date | string;
-  /** Optional avatar image URL (absolute). Falls back to an initial circle. */
   senderAvatarUrl?: string | null;
-  /** Deep link to the conversation. */
   replyUrl?: string;
-  /** Site origin used for logo + footer links. */
   siteUrl?: string;
 }
 
@@ -71,10 +56,40 @@ const trustCell = (icon: string, title: string, sub: string) => `
     <div style="font-size:12px;color:${MUTED};padding-top:3px;line-height:17px;">${sub}</div>
   </td>`;
 
-const socialIcon = (href: string, bg: string, glyph: string) => `
-  <td style="padding:0 5px;">
-    <a href="${href}" style="display:inline-block;width:36px;height:36px;border-radius:999px;background:${bg};color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:700;line-height:36px;text-align:center;text-decoration:none;">${glyph}</a>
-  </td>`;
+const FIVESOM_SOCIALS = [
+  {
+    name: 'Facebook',
+    url: 'https://www.facebook.com/profile.php?id=61590213487504',
+    icon: 'https://img.icons8.com/color/96/facebook-new.png',
+  },
+  {
+    name: 'Instagram',
+    url: 'https://www.instagram.com/fivesomofficial/',
+    icon: 'https://img.icons8.com/color/96/instagram-new.png',
+  },
+  {
+    name: 'TikTok',
+    url: 'https://www.tiktok.com/@fivesomofficial',
+    icon: 'https://img.icons8.com/color/96/tiktok.png',
+  },
+  {
+    name: 'YouTube',
+    url: 'https://www.youtube.com/@fivesom-net',
+    icon: 'https://img.icons8.com/color/96/youtube-play.png',
+  },
+];
+
+function socialRow(): string {
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+${FIVESOM_SOCIALS.map(
+  (s) => `    <td style="padding:0 6px;">
+      <a href="${s.url}" target="_blank" style="text-decoration:none;">
+        <img src="${s.icon}" width="32" height="32" alt="${s.name}" title="${s.name}" style="display:block;width:32px;height:32px;border:0;border-radius:8px;" />
+      </a>
+    </td>`,
+).join('\n')}
+  </tr></table>`;
+}
 
 export function buildMessageNotificationEmail({
   senderName,
@@ -96,15 +111,15 @@ export function buildMessageNotificationEmail({
     : `<div style="width:56px;height:56px;border-radius:999px;background:${BLUE};color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:24px;font-weight:700;line-height:56px;text-align:center;">${initial}</div>`;
 
   return `<!DOCTYPE html>
-<html lang="so">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="x-apple-disable-message-reformatting" />
-<title>Fariin Cusub oo kaga timid Fivesom</title>
+<title>New message on Fivesom</title>
 </head>
 <body style="margin:0;padding:0;background:#eef2f8;">
-<div style="display:none;font-size:1px;color:#eef2f8;max-height:0;overflow:hidden;">${name} waxaa kuu soo diray fariin cusub oo Fivesom ah.</div>
+<div style="display:none;font-size:1px;color:#eef2f8;max-height:0;overflow:hidden;">${name} sent you a new message on Fivesom.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eef2f8;padding:28px 12px;">
 <tr><td align="center">
 
@@ -120,24 +135,19 @@ export function buildMessageNotificationEmail({
     </td>
   </tr>
 
-  <!-- Envelope + badge -->
+  <!-- Envelope -->
   <tr>
     <td align="center" style="padding:24px 32px 0 32px;">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-        <td style="width:88px;height:88px;background:#eaf2ff;border-radius:999px;text-align:center;vertical-align:middle;font-size:38px;line-height:88px;">&#9993;&#65039;</td>
-        <td valign="top" style="padding-left:-6px;">
-          <span style="display:inline-block;min-width:24px;height:24px;background:${BLUE};color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;line-height:24px;text-align:center;border-radius:999px;border:2px solid #ffffff;margin-left:-14px;">1</span>
-        </td>
-      </tr></table>
+      <div style="width:88px;height:88px;background:#eaf2ff;border-radius:999px;text-align:center;font-size:38px;line-height:88px;">&#9993;&#65039;</div>
     </td>
   </tr>
 
   <!-- B. Heading + greeting -->
   <tr>
     <td align="center" style="padding:18px 40px 0 40px;font-family:Arial,Helvetica,sans-serif;">
-      <h1 style="margin:0;font-size:32px;line-height:40px;font-weight:800;color:${NAVY};">Fariin Cusub oo<br />kaga timid <span style="color:${BLUE};">Fivesom!</span></h1>
-      <p style="margin:22px 0 0 0;font-size:15px;font-weight:700;color:${NAVY};">Salaam,</p>
-      <p style="margin:8px 0 0 0;font-size:15px;line-height:24px;color:${TEXT};">Waxaad haysataa fariin cusub oo kaga timid isticmaalaye kale ee <strong style="color:${BLUE};">Fivesom</strong>.</p>
+      <h1 style="margin:0;font-size:32px;line-height:40px;font-weight:800;color:${NAVY};">New Message on<br /><span style="color:${BLUE};">Fivesom!</span></h1>
+      <p style="margin:22px 0 0 0;font-size:15px;font-weight:700;color:${NAVY};">Hi,</p>
+      <p style="margin:8px 0 0 0;font-size:15px;line-height:24px;color:${TEXT};">You have a new message from another member on <strong style="color:${BLUE};">Fivesom</strong>.</p>
     </td>
   </tr>
 
@@ -159,7 +169,7 @@ export function buildMessageNotificationEmail({
         <tr><td style="padding:0 20px;"><div style="height:1px;background:${BORDER};line-height:1px;font-size:0;">&nbsp;</div></td></tr>
         <tr>
           <td style="padding:14px 20px 18px 20px;font-family:Arial,Helvetica,sans-serif;">
-            <div style="font-size:14px;font-weight:700;color:${NAVY};">&#128172; Fariinta:</div>
+            <div style="font-size:14px;font-weight:700;color:${NAVY};">&#128172; Message:</div>
             <div style="font-size:14px;line-height:23px;color:${TEXT};padding:8px 0 0 4px;">${body}</div>
             <div style="font-size:12px;color:${MUTED};padding-top:14px;">&#128337; ${formatSentAt(sentAt)}</div>
           </td>
@@ -171,8 +181,7 @@ export function buildMessageNotificationEmail({
   <!-- D. CTA -->
   <tr>
     <td align="center" style="padding:28px 32px 0 32px;">
-      <a href="${cta}" style="display:inline-block;background:${BLUE};color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:17px;font-weight:700;text-decoration:none;padding:16px 42px;border-radius:12px;">&#128172;&nbsp; Ka Jawaab Fariinta &nbsp;&#10132;</a>
-      <p style="margin:14px 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:${MUTED};">Ama guji link-gan: <a href="${cta}" style="color:${BLUE};text-decoration:none;">${esc(cta)}</a></p>
+      <a href="${cta}" style="display:inline-block;background:${BLUE};color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:17px;font-weight:700;text-decoration:none;padding:16px 42px;border-radius:12px;">&#128172;&nbsp; Reply to the message &nbsp;&#10132;</a>
     </td>
   </tr>
 
@@ -181,10 +190,10 @@ export function buildMessageNotificationEmail({
   <tr>
     <td style="padding:20px 22px 0 22px;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-        ${trustCell('&#128737;&#65039;', 'Secure Escrow', 'Lacagahaagu waa amaan')}
-        ${trustCell('&#128100;', 'Verified Users', 'Xubno la xaqiijiyay')}
-        ${trustCell('&#128274;', 'Safe Payments', 'Lacago ammaan ah')}
-        ${trustCell('&#127758;', 'Worldwide', 'Soomaali Dunida oo dhan')}
+        ${trustCell('&#128737;&#65039;', 'Secure Escrow', 'Payments protected')}
+        ${trustCell('&#128100;', 'Verified Users', 'Trusted members')}
+        ${trustCell('&#128274;', 'Safe Payments', 'Encrypted checkout')}
+        ${trustCell('&#127758;', 'Worldwide', 'Global marketplace')}
       </tr></table>
     </td>
   </tr>
@@ -192,21 +201,10 @@ export function buildMessageNotificationEmail({
   <!-- F. Footer -->
   <tr><td style="padding:24px 32px 0 32px;"><div style="height:1px;background:${BORDER};line-height:1px;font-size:0;">&nbsp;</div></td></tr>
   <tr>
-    <td style="padding:20px 32px 0 32px;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-        <td valign="middle" style="font-family:Arial,Helvetica,sans-serif;">
-          <img src="${logo}" width="140" alt="FIVESOM" style="display:block;width:140px;height:auto;border:0;" />
-          <div style="font-size:13px;line-height:20px;color:${MUTED};padding-top:10px;">Fivesom waa madal freelancing ah oo isku xirta macaamiisha iyo xirfadlayaasha.</div>
-        </td>
-        <td valign="middle" align="right">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-            ${socialIcon('https://facebook.com/fivesom', '#1877F2', 'f')}
-            ${socialIcon('https://twitter.com/fivesom', '#1DA1F2', 'X')}
-            ${socialIcon('https://instagram.com/fivesom', '#E1306C', '&#9673;')}
-            ${socialIcon('https://linkedin.com/company/fivesom', '#0A66C2', 'in')}
-          </tr></table>
-        </td>
-      </tr></table>
+    <td align="center" style="padding:20px 32px 0 32px;font-family:Arial,Helvetica,sans-serif;">
+      <img src="${logo}" width="140" alt="FIVESOM" style="display:block;width:140px;height:auto;border:0;margin:0 auto;" />
+      <div style="font-size:13px;line-height:20px;color:${MUTED};padding-top:10px;">Fivesom is a freelance marketplace that connects buyers with skilled freelancers.</div>
+      <div style="padding-top:14px;">${socialRow()}</div>
     </td>
   </tr>
   <tr><td style="padding:20px 32px 0 32px;"><div style="height:1px;background:${BORDER};line-height:1px;font-size:0;">&nbsp;</div></td></tr>
@@ -218,7 +216,6 @@ export function buildMessageNotificationEmail({
           <a href="${siteUrl}/legal/privacy" style="color:${MUTED};text-decoration:none;">Privacy Policy</a>
           &nbsp;|&nbsp;<a href="${siteUrl}/legal/terms" style="color:${MUTED};text-decoration:none;">Terms of Service</a>
           &nbsp;|&nbsp;<a href="${siteUrl}/support" style="color:${MUTED};text-decoration:none;">Support</a>
-          &nbsp;|&nbsp;<a href="${siteUrl}" style="color:${MUTED};text-decoration:none;">Fivesom.net</a>
         </td>
       </tr></table>
     </td>
