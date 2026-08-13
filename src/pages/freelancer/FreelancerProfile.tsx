@@ -184,8 +184,9 @@ const FreelancerProfile = () => {
 
           {/* Portfolio editor */}
           {freelancerData?.id && (
-            <PortfolioManager freelancerId={freelancerData.id} />
+            <PortfolioManager freelancerId={freelancerData.id} isVerified={!!freelancerData.is_verified} />
           )}
+
 
           {/* Public preview — exactly what buyers see */}
           {freelancerData?.id && (
