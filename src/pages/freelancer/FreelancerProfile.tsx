@@ -182,9 +182,9 @@ const FreelancerProfile = () => {
             <FreelancerFAQManager freelancerId={freelancerData.id} />
           )}
 
-          {/* Portfolio editor */}
-          {freelancerData?.id && (
-            <PortfolioManager freelancerId={freelancerData.id} isVerified={!!freelancerData.is_verified} />
+          {/* Portfolio editor — only visible to verified freelancers */}
+          {freelancerData?.id && freelancerData.is_verified && (
+            <PortfolioManager freelancerId={freelancerData.id} isVerified={true} />
           )}
 
 
