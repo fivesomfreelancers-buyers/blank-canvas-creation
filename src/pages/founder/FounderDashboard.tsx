@@ -16,6 +16,7 @@ import { useTheme } from '@/components/ThemeProvider';
 import { useAdminBadges } from '@/hooks/useAdminBadges';
 import FounderGuard from '@/components/founder/FounderGuard';
 import FounderPresenceBar from '@/components/founder/FounderPresenceBar';
+import FounderScreenGuard from '@/components/founder/FounderScreenGuard';
 
 // Reuse the existing (already secured) management screens — no duplication.
 import AdminOverview from '@/pages/admin/AdminOverview';
@@ -224,7 +225,9 @@ const FounderDashboardInner = () => {
 
 const FounderDashboard = () => (
   <FounderGuard>
-    <FounderDashboardInner />
+    <FounderScreenGuard>
+      <FounderDashboardInner />
+    </FounderScreenGuard>
   </FounderGuard>
 );
 
