@@ -78,6 +78,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   fileInputRef,
   handleSend,
   handleImageUpload,
+  onBack,
 }) => {
   const getInitials = (name: string) =>
     name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
@@ -86,12 +87,25 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   const isNews = selectedKind === 'news';
 
   return (
-    <Card className="lg:col-span-2 flex flex-col min-w-0 overflow-hidden">
+    <Card className="lg:col-span-2 flex flex-col flex-1 h-full min-h-0 min-w-0 overflow-hidden">
       <CardHeader className="pb-3 border-b bg-card/60 backdrop-blur supports-[backdrop-filter]:bg-card/50">
         <CardTitle>
           {selectedConvo ? (
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              {onBack && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 -ml-1 shrink-0"
+                  onClick={onBack}
+                  title="Back"
+                  aria-label="Back to conversations"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+              )}
               <div className="relative">
+
                 <Avatar className="h-10 w-10 ring-2 ring-primary/20">
                   <AvatarImage src={selectedConvo.partnerImage || undefined} className="object-cover" />
                   <AvatarFallback className="bg-primary text-primary-foreground text-xs">
