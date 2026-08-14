@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { Search, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    navigate(q ? `/explore?q=${encodeURIComponent(q)}` : '/explore');
+  };
   
   return (
     <section className="pt-20 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-background via-background to-primary/5">
@@ -22,7 +29,7 @@ const HeroSection = () => {
           
           {/* Search Bar */}
           <div className="max-w-2xl mx-auto mb-6 sm:mb-8 backdrop-blur-lg rounded-xl sm:rounded-2xl p-1 bg-card/50 border border-border shadow-xl">
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center">
+            <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-stretch sm:items-center">
               <div className="flex-1 flex items-center px-3 sm:px-4">
                 <Search className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 flex-shrink-0 text-muted-foreground" />
                 <input 
@@ -33,11 +40,11 @@ const HeroSection = () => {
                   className="w-full py-3 sm:py-4 bg-transparent outline-none text-sm sm:text-lg text-foreground placeholder:text-muted-foreground" 
                 />
               </div>
-              <button className="bg-primary text-primary-foreground px-4 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center space-x-2 mt-2 sm:mt-0">
+              <button type="submit" className="bg-primary text-primary-foreground px-4 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center space-x-2 mt-2 sm:mt-0">
                 <span className="text-sm sm:text-base">Search</span>
                 <ArrowRight size={16} className="sm:w-5 sm:h-5" />
               </button>
-            </div>
+            </form>
           </div>
 
           {/* CTA Buttons */}
