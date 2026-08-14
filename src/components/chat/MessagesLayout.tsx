@@ -39,7 +39,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({ chat, heightClass = 'h-
             fileInputRef={chat.fileInputRef}
             handleSend={chat.handleSend}
             handleImageUpload={chat.handleImageUpload}
-            onBack={() => chat.selectConversation(null as unknown as string, '')}
+            onBack={chat.clearSelection}
           />
         ) : (
           <ConversationList

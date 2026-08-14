@@ -78,7 +78,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
   };
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col flex-1 h-full min-h-0 overflow-hidden">
       <CardHeader className="pb-3">
         <CardTitle>Conversations</CardTitle>
         <div className="relative">
