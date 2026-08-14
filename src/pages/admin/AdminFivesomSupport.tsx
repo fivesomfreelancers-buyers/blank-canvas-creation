@@ -42,7 +42,9 @@ const AdminFivesomSupport: React.FC = () => {
   const [convos, setConvos] = useState<SupportConvo[]>([]);
   const [selected, setSelected] = useState<SupportConvo | null>(null);
   const [messages, setMessages] = useState<SysMsg[]>([]);
-  const [reply, setReply] = useState('');
+  const [reply, setReply] = useState(() => {
+    try { return localStorage.getItem('fivesom.admin.support.draft') || ''; } catch { return ''; }
+  });
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -95,6 +97,28 @@ const AdminFivesomSupport: React.FC = () => {
 
   useEffect(() => { fetchConvos(); }, []);
 
+  // Persist the draft reply so leaving/reloading the page never loses typed text
+  useEffect(() => {
+    try { localStorage.setItem('fivesom.admin.support.draft', reply); } catch { /* ignore */ }
+  }, [reply]);
+
+  // Restore the last opened conversation after a refresh or tab switch
+  useEffect(() => {
+    if (selected || !convos.length) return;
+    try {
+      const last = localStorage.getItem('fivesom.admin.support.convo');
+      const match = last ? convos.find(c => c.id === last) : null;
+      if (match) setSelected(match);
+    } catch { /* ignore */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [convos]);
+
+  useEffect(() => {
+    try {
+      if (selected?.id) localStorage.setItem('fivesom.admin.support.convo', selected.id);
+    } catch { /* ignore */ }
+  }, [selected?.id]);
+
   useEffect(() => {
     const ch = supabase
       .channel('admin-support-rt')
@@ -128,6 +152,7 @@ const AdminFivesomSupport: React.FC = () => {
     });
     if (error) return toast.error(error.message);
     setReply('');
+    try { localStorage.removeItem('fivesom.admin.support.draft'); } catch { /* ignore */ }
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

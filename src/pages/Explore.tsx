@@ -23,7 +23,7 @@ const Explore = () => {
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || 'all');
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>(searchParams.get('subcategory') || 'all');
   const [currentPage, setCurrentPage] = useState(1);
