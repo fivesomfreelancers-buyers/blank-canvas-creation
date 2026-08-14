@@ -10,9 +10,10 @@ interface GalleryPublishProps {
   updateGigData: (data: Partial<GigData>) => void;
   onPrevious: () => void;
   onPublish: () => Promise<void>;
+  hasExistingMedia?: boolean;
 }
 
-const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: GalleryPublishProps) => {
+const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExistingMedia = false }: GalleryPublishProps) => {
   const [isPublishing, setIsPublishing] = useState(false);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,7 +103,10 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
     }
   };
 
-  const isValid = true; // Allow publishing even without images
+  const hasMedia =
+    gigData.images.length > 0 || !!gigData.video || !!gigData.videoThumbnail || hasExistingMedia;
+  const hasText = !!gigData.title?.trim() && !!gigData.description?.trim();
+  const isValid = hasMedia && hasText;
 
   return (
     <div className="space-y-8">
@@ -113,8 +117,8 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
 
       {/* Gig Images */}
       <div>
-        <Label className="text-foreground font-medium text-lg">Gig Images (Optional, up to 3)</Label>
-        <p className="text-sm text-muted-foreground mb-2">Upload high-quality images that showcase your work</p>
+        <Label className="text-foreground font-medium text-lg">Gig Images (Required, up to 3)</Label>
+        <p className="text-sm text-muted-foreground mb-2">Upload high-quality images that showcase your work. At least one image or a video is required to publish.</p>
         
         {/* Current Images */}
         {gigData.images.length > 0 && (
@@ -305,6 +309,13 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish }: Galle
           </div>
         </div>
       </div>
+
+      {!isValid && (
+        <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive">
+          {!hasText && <p>Add a gig title and description before publishing.</p>}
+          {!hasMedia && <p>Upload at least one image or a video before publishing.</p>}
+        </div>
+      )}
 
       {/* Navigation */}
       <div className="flex justify-between pt-6 border-t border-border">
