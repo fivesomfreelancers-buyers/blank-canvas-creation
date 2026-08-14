@@ -47,6 +47,7 @@ const CreateGig = () => {
   const isEditMode = !!gigId;
   const [currentStep, setCurrentStep] = useState(1);
   const [loadingGig, setLoadingGig] = useState(!!gigId);
+  const [hasExistingMedia, setHasExistingMedia] = useState(false);
   const [gigData, setGigData] = useState<GigData>({
     title: '',
     category: '',
@@ -72,6 +73,12 @@ const CreateGig = () => {
       try {
         const { data: gig } = await supabase.from('gigs').select('*').eq('id', gigId).single();
         if (!gig) { navigate('/freelancer/gigs'); return; }
+
+        setHasExistingMedia(
+          (Array.isArray((gig as any).images) && (gig as any).images.length > 0) ||
+          !!(gig as any).thumbnail_url ||
+          !!(gig as any).video_url
+        );
 
         const { data: packages } = await supabase.from('gig_packages').select('*').eq('gig_id', gigId);
 
@@ -139,6 +146,16 @@ const CreateGig = () => {
 
   const handlePublish = async () => {
     try {
+      if (!gigData.title?.trim() || !gigData.description?.trim()) {
+        toast({ title: "Text required", description: "Please add a gig title and description before publishing.", variant: "destructive" });
+        return;
+      }
+      const hasNewMedia = gigData.images.length > 0 || !!gigData.video || !!gigData.videoThumbnail;
+      if (!hasNewMedia && !hasExistingMedia) {
+        toast({ title: "Media required", description: "You must upload at least one image or a video before publishing your gig.", variant: "destructive" });
+        return;
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast({ title: "Authentication Required", description: "Please log in to create a gig.", variant: "destructive" });
@@ -323,7 +340,7 @@ const CreateGig = () => {
           <StepIndicator currentStep={currentStep} steps={steps} />
         </div>
         <div className="bg-card/80 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-xl border border-border mt-4 sm:mt-8">
-          <CurrentStepComponent gigData={gigData} updateGigData={updateGigData} onNext={goToNextStep} onPrevious={goToPreviousStep} onPublish={handlePublish} isFirstStep={currentStep === 1} isLastStep={currentStep === 4} />
+          <CurrentStepComponent gigData={gigData} updateGigData={updateGigData} onNext={goToNextStep} onPrevious={goToPreviousStep} onPublish={handlePublish} hasExistingMedia={hasExistingMedia} isFirstStep={currentStep === 1} isLastStep={currentStep === 4} />
         </div>
         <div className="mt-4 sm:mt-6 text-center">
           <Link to="/freelancer/gigs" className="inline-flex items-center space-x-2 text-primary hover:text-primary/80 font-medium text-sm sm:text-base">
