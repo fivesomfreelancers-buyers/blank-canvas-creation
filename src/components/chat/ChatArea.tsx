@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import AutoGrowTextarea from './AutoGrowTextarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Smile, Paperclip, Loader2, Pin, Check, CheckCheck } from 'lucide-react';
+import { Send, Smile, Paperclip, Loader2, Pin, Check, CheckCheck, ArrowLeft } from 'lucide-react';
 
 import newsLogo from '@/assets/fivesom-news-logo.png';
 import supportLogo from '@/assets/fivesom-support-logo.png';
@@ -30,7 +30,10 @@ interface ChatAreaProps {
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleSend: () => void;
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  /** Shown on mobile to return to the conversation list */
+  onBack?: () => void;
 }
+
 
 const dayLabel = (iso: string) => {
   const d = new Date(iso);
