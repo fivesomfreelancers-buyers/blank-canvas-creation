@@ -64,7 +64,27 @@ const titles: Record<TabKey, string> = {
 };
 
 const FounderDashboardInner = () => {
-  const [activeTab, setActiveTab] = useState<TabKey>('overview');
+  const [activeTab, setActiveTabState] = useState<TabKey>(() => {
+    try {
+      const hash = window.location.hash.replace('#', '') as TabKey;
+      const stored = localStorage.getItem('fivesom.founder.tab') as TabKey | null;
+      const candidate = (hash || stored) as TabKey;
+      return candidate && candidate in titles ? candidate : 'overview';
+    } catch { return 'overview'; }
+  });
+
+  const setActiveTab = (key: TabKey) => {
+    setActiveTabState(key);
+    try {
+      localStorage.setItem('fivesom.founder.tab', key);
+      window.history.replaceState(null, '', `#${key}`);
+    } catch { /* ignore */ }
+  };
+
+  React.useEffect(() => {
+    try { window.history.replaceState(null, '', `#${activeTab}`); } catch { /* ignore */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const { badges } = useAdminBadges();
