@@ -231,6 +231,14 @@ export function useConversations() {
     );
   }, []);
 
+  const clearSelection = useCallback(() => {
+    setSelectedConversationId(null);
+    setSelectedPartnerId(null);
+    setSelectedKind('dm');
+    setMessages([]);
+  }, []);
+
+
   useEffect(() => {
     if (selectedConversationId && currentUserId) {
       fetchMessages(selectedConversationId, selectedKind);
@@ -483,6 +491,8 @@ export function useConversations() {
     messagesEndRef,
     fileInputRef,
     selectConversation,
+    clearSelection,
+
     handleSend,
     handleImageUpload,
     fetchConversations,
