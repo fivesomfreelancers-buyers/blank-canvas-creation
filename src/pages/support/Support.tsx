@@ -17,7 +17,6 @@ import {
   Search
 } from 'lucide-react';
 import Navbar from '../../components/Navbar';
-import SEO from '@/components/SEO';
 
 
 const Support = () => {
@@ -126,7 +125,6 @@ const Support = () => {
     <div className={`min-h-screen transition-colors duration-300 ${
       isDarkMode ? 'bg-gray-900' : 'bg-muted/30'
     }`}>
-      <SEO title="FIVESOM Support" description="Get help from FIVESOM support: open a ticket, track replies and resolve order or payment issues." canonical="/support" />
       <Navbar />
       
       <div className="pt-20 pb-12 px-4 sm:px-6 lg:px-8">

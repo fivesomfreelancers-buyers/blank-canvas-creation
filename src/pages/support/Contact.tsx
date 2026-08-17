@@ -11,7 +11,6 @@ import { Mail, MessageSquare, Phone, Clock, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { moderateText, recordStrike, isChatBlocked } from '@/lib/chatModeration';
-import SEO from '@/components/SEO';
 
 
 const Contact = () => {
@@ -144,7 +143,6 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen transition-colors duration-300 bg-background">
-      <SEO title="Contact FIVESOM Support" description="Reach the FIVESOM support team about orders, payments, verification or account issues." canonical="/support/contact" />
       <Navbar />
       
       <div className="pt-20 pb-12 px-4 sm:px-6 lg:px-8">

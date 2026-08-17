@@ -6,7 +6,6 @@ import { Search, HelpCircle, MessageSquare, ArrowLeft } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
-import SEO from '@/components/SEO';
 
 
 const HelpCenter = () => {
@@ -107,7 +106,6 @@ const HelpCenter = () => {
     <div className={`min-h-screen transition-colors duration-300 ${
       isDarkMode ? 'bg-gray-900' : 'bg-muted/30'
     }`}>
-      <SEO title="FIVESOM Help Center | Answers for Buyers and Freelancers" description="Find answers about FIVESOM accounts, orders, payments, escrow, deliveries, withdrawals and verification." canonical="/support/help" />
       <Navbar />
       
       <div className="pt-20 pb-12 px-4 sm:px-6 lg:px-8">
