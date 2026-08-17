@@ -15,6 +15,7 @@ import {
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { useTheme } from '../../components/ThemeProvider';
+import SEO from '@/components/SEO';
 
 
 const TrustSafety = () => {
@@ -99,6 +100,7 @@ const TrustSafety = () => {
     <div className={`min-h-screen transition-colors duration-300 ${
       isDarkMode ? 'bg-gray-900' : 'bg-muted/30'
     }`}>
+      <SEO title="Trust & Safety on FIVESOM" description="How FIVESOM keeps buyers and freelancers safe: escrow payments, verified sellers, secure messaging and dispute resolution." canonical="/support/trust-safety" />
       <Navbar />
       
       <div className="pt-20 pb-12 px-4 sm:px-6 lg:px-8">

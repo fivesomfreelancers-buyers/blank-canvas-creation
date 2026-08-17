@@ -10,6 +10,7 @@ import Navbar from '@/components/Navbar';
 import logo from '@/assets/logo.png';
 import { supabase } from '@/integrations/supabase/client';
 import { authCooldownRemaining, clearAuthFailures, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
+import SEO from '@/components/SEO';
 
 
 
@@ -202,6 +203,7 @@ const Login = () => {
 
   return (
     <>
+      <SEO title="Log In to FIVESOM" description="Log in to your FIVESOM account to manage orders, messages, gigs and payouts." canonical="/login" noindex />
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10 flex items-center justify-center p-4 pt-20">
         <div className="w-full max-w-md">

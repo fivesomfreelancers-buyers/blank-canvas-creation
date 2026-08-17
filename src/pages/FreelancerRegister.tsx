@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
+import SEO from '@/components/SEO';
 
 const AVAILABLE_LANGUAGES = [
   'English', 'Somali', 'Arabic', 'Italian', 'French', 'Spanish', 'German',
@@ -127,6 +128,7 @@ const FreelancerRegister = () => {
 
   return (
     <>
+      <SEO title="Sign Up as a Freelancer | Sell Your Skills on FIVESOM" description="Join FIVESOM free as a freelancer, publish your gigs and get paid securely through escrow with local mobile-money and card payouts." canonical="/register/freelancer" />
       <Navbar />
       <div className="min-h-screen bg-background py-8 px-4 pt-20">
         <div className="max-w-2xl mx-auto">
