@@ -19,6 +19,7 @@ Disallow: /become-freelancer
 Disallow: /complete-profile
 Disallow: /reset-password
 Disallow: /forgot-password
+Disallow: /login
 Disallow: /buyer/
 Disallow: /freelancer/dashboard
 Disallow: /freelancer/gigs
@@ -33,5 +34,67 @@ Disallow: /freelancer/help
 Disallow: /freelancer/settings
 Disallow: /freelancer/profile
 Disallow: /freelancer/verify
+
+# Search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# AI / answer engines (GEO) — allowed to read and cite public pages
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
 
 Sitemap: https://fivesom.net/sitemap.xml
