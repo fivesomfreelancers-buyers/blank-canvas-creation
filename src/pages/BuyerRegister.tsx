@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
+import SEO from '@/components/SEO';
 
 const BuyerRegister = () => {
   const [formData, setFormData] = useState({
@@ -126,6 +127,7 @@ const BuyerRegister = () => {
 
   return (
     <>
+      <SEO title="Sign Up as a Buyer | Hire Freelancers on FIVESOM" description="Create a free FIVESOM buyer account to hire verified freelancers for design, development, video and marketing work, with escrow protection." canonical="/register/buyer" />
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10 py-8 px-4 pt-20">
         <div className="max-w-xl mx-auto">

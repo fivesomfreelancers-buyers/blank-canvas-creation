@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/Navbar';
 import logo from '@/assets/logo.png';
 import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
+import SEO from '@/components/SEO';
 
 
 
@@ -129,6 +130,7 @@ const Register = () => {
 
   return (
     <>
+      <SEO title="Create Your Free FIVESOM Account | Join the Freelance Marketplace" description="Sign up free on FIVESOM to hire verified freelancers or start selling your services with escrow-protected payments." canonical="/register" />
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10 flex items-center justify-center p-4 pt-20">
         <div className="w-full max-w-md">

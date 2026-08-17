@@ -41,7 +41,6 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/login</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
@@ -74,10 +73,21 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://fivesom.net/gig/i-will-design-a-professional-yt-thumbnail</loc>
+    <lastmod>2026-08-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://fivesom.net/gig/waxaan-kuu-dhisayaa-website-casri-ah-oo-ganacsi-online-ah</loc>
     <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/saeed</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fivesom.net/freelancer/amar-hassen-mohammednur</loc>
