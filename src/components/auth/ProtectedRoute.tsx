@@ -67,7 +67,15 @@ const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }
     return <Navigate to={require === 'freelancer' ? '/become-freelancer' : '/become-buyer'} replace />;
   }
 
+  // 6. Right role, but the mandatory profile was never completed
+  //    (legacy "Skip for now" accounts) → finish the profile first.
+  if (profileState === 'loading') return <Spinner />;
+  if (profileState === 'incomplete') {
+    return <Navigate to={`/complete-profile/${require}`} replace />;
+  }
+
   return <>{children}</>;
+
 };
 
 export default ProtectedRoute;
