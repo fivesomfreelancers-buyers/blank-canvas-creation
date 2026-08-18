@@ -200,6 +200,7 @@ const Explore = () => {
               </div>
 
               <select
+                aria-label="Filter by category"
                 value={selectedCategory}
                 onChange={(e) => { setSelectedCategory(e.target.value); setSelectedSubcategory('all'); setCurrentPage(1); }}
                 className="px-4 py-3 rounded-xl border-0 outline-none bg-muted/50 text-foreground"
@@ -211,6 +212,7 @@ const Explore = () => {
 
               {activeCategory && (
                 <select
+                  aria-label="Filter by subcategory"
                   value={selectedSubcategory}
                   onChange={(e) => { setSelectedSubcategory(e.target.value); setCurrentPage(1); }}
                   className="px-4 py-3 rounded-xl border-0 outline-none bg-muted/50 text-foreground"
