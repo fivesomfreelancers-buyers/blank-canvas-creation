@@ -30,11 +30,12 @@ import AdminRanking from '@/pages/admin/AdminRanking';
 import AdminDisputes from '@/pages/admin/AdminDisputes';
 import AdminGigs from '@/pages/admin/AdminGigs';
 import AdminUsers from '@/pages/admin/AdminUsers';
+import AdminAboutTeam from '@/pages/admin/AdminAboutTeam';
 
 type TabKey =
   | 'overview' | 'verifications' | 'orders' | 'chats'
   | 'fivesom_support' | 'fivesom_news' | 'reports' | 'ranking' | 'disputes'
-  | 'gigs' | 'users';
+  | 'gigs' | 'users' | 'about_team';
 
 const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'overview', label: 'Dashboard', icon: LayoutDashboard },
@@ -48,6 +49,7 @@ const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'reports', label: 'User Reports', icon: Flag, badge: 'reports' },
   { key: 'ranking', label: 'Ranking', icon: Trophy },
   { key: 'disputes', label: 'Disputes', icon: Scale, badge: 'disputes' },
+  { key: 'about_team', label: 'About / Team', icon: Users },
 ];
 
 const titles: Record<TabKey, string> = {
@@ -62,6 +64,7 @@ const titles: Record<TabKey, string> = {
   reports: 'User Reports',
   ranking: 'Ranking',
   disputes: 'Disputes',
+  about_team: 'About / Team',
 };
 
 const FounderDashboardInner = () => {
@@ -110,6 +113,7 @@ const FounderDashboardInner = () => {
       case 'reports': return <AdminReports />;
       case 'ranking': return <AdminRanking />;
       case 'disputes': return <AdminDisputes />;
+      case 'about_team': return <AdminAboutTeam />;
       default: return <AdminOverview />;
     }
   };

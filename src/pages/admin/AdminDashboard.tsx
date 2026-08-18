@@ -37,6 +37,7 @@ import AdminVip from './AdminVip';
 import AdminBlueTick from './AdminBlueTick';
 import AdminSomAdz from './AdminSomAdz';
 import AdminGigs from './AdminGigs';
+import AdminAboutTeam from './AdminAboutTeam';
 import { useAdminBadges, type AdminBadgeKey } from '@/hooks/useAdminBadges';
 import { useTheme } from '@/components/ThemeProvider';
 
@@ -75,6 +76,7 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
     { key: 'notifications', label: 'Notifications', icon: Bell },
     { key: 'ranking', label: 'Ranking', icon: Trophy },
     { key: 'logs', label: 'Activity Logs', icon: Activity },
+    { key: 'about_team', label: 'About / Team', icon: Users },
     { key: 'settings', label: 'Settings', icon: SettingsIcon },
   ]},
 ];
@@ -135,6 +137,7 @@ const AdminDashboardInner = () => {
       case 'notifications': return <AdminNotifications />;
       case 'ranking': return <AdminRanking />;
       case 'logs': return <AdminLogs />;
+      case 'about_team': return <AdminAboutTeam />;
       case 'settings': return <AdminSettings />;
       default: return <AdminOverview />;
     }

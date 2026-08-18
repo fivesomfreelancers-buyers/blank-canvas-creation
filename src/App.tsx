@@ -9,6 +9,7 @@ import Explore from "./pages/Explore";
 import GigDetails from "./pages/GigDetails";
 import HowItWorks from "./pages/HowItWorks";
 import Docs from "./pages/Docs";
+import About from "./pages/About";
 import Vip from "./pages/Vip";
 import VipCheckout from "./pages/VipCheckout";
 import Login from "./pages/Login";
@@ -80,6 +81,7 @@ const App = () => (
               <Route path="/gig/:slug" element={<GigDetails />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/docs" element={<Docs />} />
+              <Route path="/about" element={<About />} />
               <Route path="/vip" element={<Vip />} />
               <Route path="/vip-checkout" element={<VipCheckout />} />
               <Route path="/login" element={<Login />} />

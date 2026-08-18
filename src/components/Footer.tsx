@@ -136,27 +136,17 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2">
               <li>
                 <Link to="/how-it-works" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
-                  Success Stories
-                </Link>
-              </li>
-              <li>
-                <Link to="/how-it-works" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
-                  Community Forum
-                </Link>
-              </li>
-              <li>
-                <Link to="/how-it-works" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
-                  Freelancer Tips
-                </Link>
-              </li>
-              <li>
-                <Link to="/how-it-works" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
                   Blog
                 </Link>
               </li>
               <li>
                 <Link to="/how-it-works" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
                   Events
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                  About
                 </Link>
               </li>
             </ul>
