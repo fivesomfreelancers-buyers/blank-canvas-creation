@@ -49,6 +49,7 @@ const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'reports', label: 'User Reports', icon: Flag, badge: 'reports' },
   { key: 'ranking', label: 'Ranking', icon: Trophy },
   { key: 'disputes', label: 'Disputes', icon: Scale, badge: 'disputes' },
+  { key: 'about_team', label: 'About / Team', icon: Users },
 ];
 
 const titles: Record<TabKey, string> = {
@@ -63,6 +64,7 @@ const titles: Record<TabKey, string> = {
   reports: 'User Reports',
   ranking: 'Ranking',
   disputes: 'Disputes',
+  about_team: 'About / Team',
 };
 
 const FounderDashboardInner = () => {
@@ -111,6 +113,7 @@ const FounderDashboardInner = () => {
       case 'reports': return <AdminReports />;
       case 'ranking': return <AdminRanking />;
       case 'disputes': return <AdminDisputes />;
+      case 'about_team': return <AdminAboutTeam />;
       default: return <AdminOverview />;
     }
   };
