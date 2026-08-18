@@ -97,4 +97,4 @@ Allow: /
 User-agent: DuckAssistBot
 Allow: /
 
-Sitemap: https://fivesom.net/sitemap.xml
+Sitemap: https://blank-canvas-creation-7035.lovable.app/sitemap.xml
