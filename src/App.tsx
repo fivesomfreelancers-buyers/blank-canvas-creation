@@ -9,6 +9,7 @@ import Explore from "./pages/Explore";
 import GigDetails from "./pages/GigDetails";
 import HowItWorks from "./pages/HowItWorks";
 import Docs from "./pages/Docs";
+import About from "./pages/About";
 import Vip from "./pages/Vip";
 import VipCheckout from "./pages/VipCheckout";
 import Login from "./pages/Login";

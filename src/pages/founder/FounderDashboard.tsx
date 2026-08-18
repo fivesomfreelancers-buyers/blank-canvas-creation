@@ -30,11 +30,12 @@ import AdminRanking from '@/pages/admin/AdminRanking';
 import AdminDisputes from '@/pages/admin/AdminDisputes';
 import AdminGigs from '@/pages/admin/AdminGigs';
 import AdminUsers from '@/pages/admin/AdminUsers';
+import AdminAboutTeam from '@/pages/admin/AdminAboutTeam';
 
 type TabKey =
   | 'overview' | 'verifications' | 'orders' | 'chats'
   | 'fivesom_support' | 'fivesom_news' | 'reports' | 'ranking' | 'disputes'
-  | 'gigs' | 'users';
+  | 'gigs' | 'users' | 'about_team';
 
 const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'overview', label: 'Dashboard', icon: LayoutDashboard },
