@@ -3,6 +3,8 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminRole } from '@/hooks/useAdminRole';
+import { useProfileComplete } from '@/hooks/useProfileComplete';
+
 
 type Requirement = 'authenticated' | 'freelancer' | 'buyer';
 
