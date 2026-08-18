@@ -137,6 +137,7 @@ const AdminDashboardInner = () => {
       case 'notifications': return <AdminNotifications />;
       case 'ranking': return <AdminRanking />;
       case 'logs': return <AdminLogs />;
+      case 'about_team': return <AdminAboutTeam />;
       case 'settings': return <AdminSettings />;
       default: return <AdminOverview />;
     }
