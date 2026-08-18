@@ -273,6 +273,8 @@ const Explore = () => {
           </div>
 
           {/* Results Grid */}
+          <h2 className="sr-only">Search results</h2>
+
           {loading ? (
             <div className="text-center py-20 text-muted-foreground">Loading gigs...</div>
           ) : currentGigs.length === 0 ? (
