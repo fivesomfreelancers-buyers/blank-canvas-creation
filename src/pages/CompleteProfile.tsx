@@ -68,14 +68,37 @@ const CompleteProfile = () => {
       navigate('/login');
       return;
     }
-    if (user) {
+    if (!user) return;
+
+    setFormData(prev => ({
+      ...prev,
+      fullName: prev.fullName || user.user_metadata?.full_name || user.user_metadata?.name || '',
+    }));
+    setExistingAvatar(user.user_metadata?.avatar_url || null);
+
+    let cancelled = false;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from('profiles')
+        .select('full_name, location, professional_title, bio, industry, languages, profile_image_url')
+        .eq('id', user.id)
+        .maybeSingle();
+      if (cancelled || !data) return;
       setFormData(prev => ({
         ...prev,
-        fullName: user.user_metadata?.full_name || user.user_metadata?.name || '',
+        fullName: data.full_name || prev.fullName,
+        location: data.location || prev.location,
+        professionalTitle: data.professional_title || prev.professionalTitle,
+        bio: data.bio || prev.bio,
+        industry: data.industry || prev.industry,
+        languages: Array.isArray(data.languages) && data.languages.length ? data.languages : prev.languages,
       }));
-      setExistingAvatar(user.user_metadata?.avatar_url || null);
-    }
+      if (data.profile_image_url) setExistingAvatar(data.profile_image_url);
+    })();
+
+    return () => { cancelled = true; };
   }, [user, authLoading, navigate]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

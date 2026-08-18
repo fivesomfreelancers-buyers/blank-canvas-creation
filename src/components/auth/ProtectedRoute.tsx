@@ -3,6 +3,8 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminRole } from '@/hooks/useAdminRole';
+import { useProfileComplete } from '@/hooks/useProfileComplete';
+
 
 type Requirement = 'authenticated' | 'freelancer' | 'buyer';
 
@@ -36,6 +38,10 @@ const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }
   const { user, userRole, isLoading } = useAuth();
   const { isAdmin, isAdminResolved } = useAdminRole();
   const location = useLocation();
+  const profileState = useProfileComplete(
+    require === 'freelancer' || require === 'buyer' ? require : null
+  );
+
 
   // 1. Session still resolving → render nothing private.
   if (isLoading) return <Spinner />;
@@ -61,7 +67,15 @@ const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }
     return <Navigate to={require === 'freelancer' ? '/become-freelancer' : '/become-buyer'} replace />;
   }
 
+  // 6. Right role, but the mandatory profile was never completed
+  //    (legacy "Skip for now" accounts) → finish the profile first.
+  if (profileState === 'loading') return <Spinner />;
+  if (profileState === 'incomplete') {
+    return <Navigate to={`/complete-profile/${require}`} replace />;
+  }
+
   return <>{children}</>;
+
 };
 
 export default ProtectedRoute;
