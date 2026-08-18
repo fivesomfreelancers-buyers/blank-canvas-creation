@@ -302,13 +302,10 @@ const CompleteProfile = () => {
                 )}
               </Button>
 
-              <button
-                type="button"
-                onClick={() => navigate(isFreelancer ? '/freelancer/dashboard' : '/buyer/dashboard')}
-                className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Skip for now →
-              </button>
+              <p className="text-center text-xs text-muted-foreground">
+                All required fields must be completed before you can access your dashboard.
+              </p>
+
             </form>
           </div>
         </div>
