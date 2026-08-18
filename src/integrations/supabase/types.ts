@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      about_team_members: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number
+          full_name: string
+          id: string
+          is_active: boolean
+          job_title: string
+          profile_image: string | null
+          social_links: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          full_name: string
+          id?: string
+          is_active?: boolean
+          job_title: string
+          profile_image?: string | null
+          social_links?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          full_name?: string
+          id?: string
+          is_active?: boolean
+          job_title?: string
+          profile_image?: string | null
+          social_links?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       accepted_deliveries: {
         Row: {
           accepted_at: string | null
