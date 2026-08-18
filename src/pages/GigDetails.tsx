@@ -284,7 +284,9 @@ const GigDetails = () => {
                 )}
               </CardHeader>
               <CardContent>
+                <h2 className="sr-only">Service overview</h2>
                 <Tabs defaultValue="description">
+
                   <div className="-mx-2 px-2 overflow-x-auto no-scrollbar">
                     <TabsList className="w-max min-w-full justify-start">
                       <TabsTrigger value="description">Description</TabsTrigger>
