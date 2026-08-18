@@ -134,9 +134,9 @@ const Contact = () => {
     {
       icon: Phone,
       title: "Phone Support",
-      description: "Speak directly with our team",
-      availability: "Mon-Fri 9AM-6PM EST",
-      action: "+1 (555) 123-4567",
+      description: "+393208057092 \n +252636371510",
+      availability: "Speak directly with our team",
+      action: "Call Now",
       color: "from-purple-400 to-pink-500"
     }
   ];

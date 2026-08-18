@@ -141,7 +141,10 @@ const HowItWorks = () => {
               </div>
               <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-muted'}`}>
                 <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-foreground'}`}>Phone Support</h3>
-                <p className={`text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'}`}>Mon-Fri 9AM-6PM EST</p>
+                <p className={`text-sm ${isDarkMode ? 'text-muted-foreground' : 'text-muted-foreground'} whitespace-pre-line`}>
+                  +393208057092
+                  +252636371510
+                </p>
               </div>
             </div>
           </section>
