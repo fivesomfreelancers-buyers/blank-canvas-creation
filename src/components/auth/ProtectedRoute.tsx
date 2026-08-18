@@ -38,6 +38,10 @@ const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }
   const { user, userRole, isLoading } = useAuth();
   const { isAdmin, isAdminResolved } = useAdminRole();
   const location = useLocation();
+  const profileState = useProfileComplete(
+    require === 'freelancer' || require === 'buyer' ? require : null
+  );
+
 
   // 1. Session still resolving → render nothing private.
   if (isLoading) return <Spinner />;
