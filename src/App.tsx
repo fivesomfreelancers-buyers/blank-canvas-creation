@@ -57,6 +57,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import FounderDashboard from "./pages/founder/FounderDashboard";
 import TermsOfService from "./pages/legal/TermsOfService";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
+import DeleteAccount from "./pages/DeleteAccount";
+
 import { ThemeProvider } from "./components/ThemeProvider";
 import PresenceProvider from "./components/presence/PresenceProvider";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
@@ -147,6 +149,10 @@ const App = () => (
               {/* Legal Routes */}
               <Route path="/legal/terms" element={<TermsOfService />} />
               <Route path="/legal/privacy" element={<PrivacyPolicy />} />
+
+              {/* Public account/data deletion request page (Google Play requirement) */}
+              <Route path="/delete-account" element={<DeleteAccount />} />
+
 
               {/* Admin Routes */}
               <Route path="/admin/*" element={<AdminDashboard />} />

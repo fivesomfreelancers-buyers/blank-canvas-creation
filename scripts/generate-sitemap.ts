@@ -32,6 +32,7 @@ const staticEntries: SitemapEntry[] = [
   { path: "/register/freelancer", changefreq: "yearly", priority: "0.4" },
   { path: "/legal/terms", changefreq: "yearly", priority: "0.3" },
   { path: "/legal/privacy", changefreq: "yearly", priority: "0.3" },
+  { path: "/delete-account", changefreq: "yearly", priority: "0.3" },
 ];
 
 async function rest<T>(path: string): Promise<T[]> {
