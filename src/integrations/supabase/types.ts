@@ -842,6 +842,33 @@ export type Database = {
           },
         ]
       }
+      message_translations: {
+        Row: {
+          created_at: string
+          id: string
+          lang: string
+          source_hash: string
+          source_text: string
+          translated_text: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lang: string
+          source_hash: string
+          source_text: string
+          translated_text: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lang?: string
+          source_hash?: string
+          source_text?: string
+          translated_text?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           attachment_url: string | null
@@ -1127,6 +1154,7 @@ export type Database = {
           last_seen: string | null
           location: string | null
           member_since: string | null
+          preferred_language: string
           professional_title: string | null
           profile_image_url: string | null
           role: Database["public"]["Enums"]["app_role"]
@@ -1145,6 +1173,7 @@ export type Database = {
           last_seen?: string | null
           location?: string | null
           member_since?: string | null
+          preferred_language?: string
           professional_title?: string | null
           profile_image_url?: string | null
           role?: Database["public"]["Enums"]["app_role"]
@@ -1163,6 +1192,7 @@ export type Database = {
           last_seen?: string | null
           location?: string | null
           member_since?: string | null
+          preferred_language?: string
           professional_title?: string | null
           profile_image_url?: string | null
           role?: Database["public"]["Enums"]["app_role"]
