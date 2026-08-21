@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Trash2, ShieldAlert, Mail, Loader2, CheckCircle2, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import { Footer } from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
