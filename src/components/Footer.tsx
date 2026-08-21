@@ -126,6 +126,12 @@ export const Footer: React.FC = () => {
                   Privacy Policy
                 </Link>
               </li>
+              <li>
+                <Link to="/delete-account" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                  Delete Account
+                </Link>
+              </li>
+
             </ul>
           </div>
           
