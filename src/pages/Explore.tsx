@@ -29,8 +29,6 @@ const Explore = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const gigsPerPage = 18;
 
-  const [allGigs, setAllGigs] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 500]);
   const [selectedRating, setSelectedRating] = useState(0);
@@ -39,105 +37,27 @@ const Explore = () => {
   const categories = [{ slug: 'all', name: 'All Categories' }, ...CATEGORIES.map(c => ({ slug: c.slug, name: c.name }))];
   const activeCategory = getCategoryBySlug(selectedCategory);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data: gigsData } = await supabase
-          .from('gigs')
-          .select(`*, freelancers ( user_id, rating, is_verified, has_blue_tick, is_featured, completed_orders, ranking_score, vip_tier, vip_expires_at )`)
-          .eq('status', 'active');
+  const { gigs: currentGigs, total, loading } = useGigSearch({
+    query: searchQuery,
+    category: selectedCategory,
+    subcategory: selectedSubcategory,
+    minPrice: priceRange[0] > 0 ? priceRange[0] : null,
+    maxPrice: priceRange[1] < 500 ? priceRange[1] : null,
+    minRating: isTopRated ? 4.8 : selectedRating > 0 ? selectedRating : null,
+    page: currentPage,
+    pageSize: gigsPerPage,
+  });
 
-        const formattedGigs = await Promise.all((gigsData || []).map(async (gig: any) => {
-          const { data: profile } = await (supabase as any)
-            .from('public_profiles')
-            .select('full_name, profile_image_url')
-            .eq('id', gig.freelancers?.user_id)
-            .maybeSingle() as { data: any };
-
-          const { data: reviews } = await (supabase as any)
-            .from('public_gig_reviews')
-            .select('rating')
-            .eq('gig_id', gig.id);
-
-          const avgRating = reviews && reviews.length > 0
-            ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-            : 0;
-
-          return {
-            id: gig.id,
-            slug: gig.slug,
-            title: gig.title,
-            freelancer: profile?.full_name || 'Anonymous',
-            freelancerId: gig.freelancer_id,
-            freelancerAvatar: profile?.profile_image_url || '',
-            isVerified: !!gig.freelancers?.is_verified,
-            hasBlueTick: !!gig.freelancers?.has_blue_tick,
-            isFeatured: !!gig.freelancers?.is_featured,
-            completedOrders: gig.freelancers?.completed_orders || 0,
-            rankingScore: gig.freelancers?.ranking_score || 0,
-            vipTierRaw: gig.freelancers?.vip_tier,
-            vipExpiresAt: gig.freelancers?.vip_expires_at,
-            rating: avgRating,
-            reviews: reviews?.length || 0,
-            price: Number(gig.base_price),
-            image: gig.thumbnail_url || gig.images?.[0] || '',
-            category: gig.category_slug || '',
-            subcategory: gig.subcategory_slug || '',
-          };
-        }));
-
-        // Priority sort: verified/blue-tick → weekly winners (is_featured) → high completed orders → ranking score
-        formattedGigs.sort((a, b) => {
-          const score = (g: any) =>
-            (g.hasBlueTick || g.isVerified ? 1000 : 0) +
-            (g.isFeatured ? 500 : 0) +
-            Math.min(g.completedOrders, 200) +
-            g.rankingScore * 0.1;
-          return score(b) - score(a);
-        });
-
-        setAllGigs(formattedGigs);
-
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  // Sync URL params
+  // Keep the URL in sync with the active search + filters (shareable links)
   useEffect(() => {
     const params: Record<string, string> = {};
+    if (searchQuery.trim()) params.q = searchQuery.trim();
     if (selectedCategory !== 'all') params.category = selectedCategory;
     if (selectedSubcategory !== 'all') params.subcategory = selectedSubcategory;
     setSearchParams(params, { replace: true });
-  }, [selectedCategory, selectedSubcategory, setSearchParams]);
+  }, [searchQuery, selectedCategory, selectedSubcategory, setSearchParams]);
 
-  const filteredGigs = allGigs.filter(gig => {
-    if (selectedCategory !== 'all' && gig.category !== selectedCategory) return false;
-    if (selectedSubcategory !== 'all' && gig.subcategory !== selectedSubcategory) return false;
-    return true;
-  });
-
-  const searchFilteredGigs = searchQuery 
-    ? filteredGigs.filter(gig => 
-        gig.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        gig.freelancer.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : filteredGigs;
-
-  const finalFilteredGigs = searchFilteredGigs.filter(gig => {
-    if (gig.price < priceRange[0] || gig.price > priceRange[1]) return false;
-    if (selectedRating > 0 && gig.rating < selectedRating) return false;
-    if (isTopRated && gig.rating < 4.8) return false;
-    return true;
-  });
-
-  const totalPages = Math.ceil(finalFilteredGigs.length / gigsPerPage);
-  const startIndex = (currentPage - 1) * gigsPerPage;
-  const currentGigs = finalFilteredGigs.slice(startIndex, startIndex + gigsPerPage);
+  const totalPages = Math.ceil(total / gigsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -155,6 +75,7 @@ const Explore = () => {
     setCurrentPage(1);
     setIsFiltersOpen(false);
   };
+
 
   return (
     <div className="min-h-screen transition-colors duration-300 bg-background">
