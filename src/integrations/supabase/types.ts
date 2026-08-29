@@ -1887,10 +1887,60 @@ export type Database = {
         Args: { _order_id: string }
         Returns: boolean
       }
+      search_gig_tags: {
+        Args: { p_limit?: number; p_query?: string }
+        Returns: {
+          gig_count: number
+          tag: string
+        }[]
+      }
+      search_gigs: {
+        Args: {
+          p_category?: string
+          p_limit?: number
+          p_location?: string
+          p_max_price?: number
+          p_min_price?: number
+          p_min_rating?: number
+          p_offset?: number
+          p_query?: string
+          p_subcategory?: string
+        }
+        Returns: {
+          avg_rating: number
+          base_price: number
+          category_slug: string
+          completed_orders: number
+          delivery_time_days: number
+          freelancer_avatar: string
+          freelancer_id: string
+          freelancer_location: string
+          freelancer_name: string
+          freelancer_username: string
+          gig_id: string
+          gig_slug: string
+          gig_tags: string[]
+          gig_title: string
+          has_blue_tick: boolean
+          images: string[]
+          is_featured: boolean
+          is_online: boolean
+          is_verified: boolean
+          relevance: number
+          review_count: number
+          subcategory_slug: string
+          thumbnail_url: string
+          total_count: number
+          vip_expires_at: string
+          vip_tier: string
+        }[]
+      }
       shares_order_with_freelancer: {
         Args: { _freelancer_id: string; _viewer: string }
         Returns: boolean
       }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
       slugify: { Args: { _txt: string }; Returns: string }
       sync_profile_role: { Args: { _user_id: string }; Returns: undefined }
       touch_last_seen: { Args: never; Returns: undefined }
