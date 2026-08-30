@@ -18,6 +18,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { gigPath } from '@/lib/urls';
 import { CATEGORIES, getCategoryBySlug } from '@/lib/categories';
 import { useSearchParams } from 'react-router-dom';
+import { useGigSearch } from '@/hooks/useGigSearch';
 
 const Explore = () => {
   const { theme } = useTheme();
@@ -100,7 +101,7 @@ const Explore = () => {
             <h1 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Explore Services</h1>
             <p className="text-lg text-muted-foreground">Discover talented freelancers ready to help grow your business</p>
             <p className="text-sm mt-2 text-muted-foreground">
-              {loading ? 'Loading...' : `Showing ${currentGigs.length} of ${finalFilteredGigs.length} gigs`}
+              {loading ? 'Loading...' : `Showing ${currentGigs.length} of ${total} gigs`}
             </p>
           </div>
 
