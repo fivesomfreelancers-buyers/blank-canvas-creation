@@ -6,7 +6,7 @@
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 
-const BASE_URL = "https://blank-canvas-creation-7035.lovable.app";
+const BASE_URL = "https://fivesom.net";
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? "";
 const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? "";
@@ -27,9 +27,11 @@ const staticEntries: SitemapEntry[] = [
   { path: "/docs", changefreq: "monthly", priority: "0.7" },
   { path: "/vip", changefreq: "monthly", priority: "0.6" },
   { path: "/about", changefreq: "monthly", priority: "0.6" },
+  { path: "/login", changefreq: "yearly", priority: "0.5" },
   { path: "/register", changefreq: "yearly", priority: "0.5" },
   { path: "/register/buyer", changefreq: "yearly", priority: "0.4" },
   { path: "/register/freelancer", changefreq: "yearly", priority: "0.4" },
+  { path: "/forgot-password", changefreq: "yearly", priority: "0.3" },
   { path: "/legal/terms", changefreq: "yearly", priority: "0.3" },
   { path: "/legal/privacy", changefreq: "yearly", priority: "0.3" },
   { path: "/delete-account", changefreq: "yearly", priority: "0.3" },
