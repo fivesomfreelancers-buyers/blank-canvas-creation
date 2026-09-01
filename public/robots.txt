@@ -17,9 +17,8 @@ Disallow: /select-role
 Disallow: /become-buyer
 Disallow: /become-freelancer
 Disallow: /complete-profile
-Disallow: /reset-password
 Disallow: /forgot-password
-Disallow: /login
+Disallow: /reset-password
 Disallow: /buyer/
 Disallow: /freelancer/dashboard
 Disallow: /freelancer/gigs
@@ -97,4 +96,4 @@ Allow: /
 User-agent: DuckAssistBot
 Allow: /
 
-Sitemap: https://blank-canvas-creation-7035.lovable.app/sitemap.xml
+Sitemap: https://fivesom.net/sitemap.xml
