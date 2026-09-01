@@ -19,7 +19,6 @@ Disallow: /become-freelancer
 Disallow: /complete-profile
 Disallow: /forgot-password
 Disallow: /reset-password
-Disallow: /forgot-password
 Disallow: /buyer/
 Disallow: /freelancer/dashboard
 Disallow: /freelancer/gigs
