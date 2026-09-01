@@ -5,8 +5,12 @@ import { Footer } from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Users, Globe, Linkedin, Instagram, Facebook, Twitter } from 'lucide-react';
+import { Users, Globe, Linkedin, Instagram, Facebook, Twitter, ShieldCheck, Target, Eye, Sparkles, Briefcase } from 'lucide-react';
 import { safeExternalUrl } from '@/lib/safeUrl';
+import {
+  aboutHero, aboutStory, aboutMission, aboutVision, aboutWhatWeDo,
+  aboutAudiences, aboutEscrow, aboutCompanyDetails, aboutTeamSection,
+} from '@/content/about';
 
 export interface TeamMember {
   id: string;
@@ -74,8 +78,8 @@ const About = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="About FIVESOM — The team behind the marketplace"
-        description="Meet the founders and team building FIVESOM, the freelance marketplace for Somalia and the Horn of Africa."
+        title="About FIVESOM — Where African talent meets global opportunity"
+        description="FIVESOM is a global freelancing marketplace connecting skilled African freelancers with clients worldwide. Learn about our story, mission, vision and secure escrow payments."
         canonical="/about"
       />
       <Navbar />
@@ -83,15 +87,131 @@ const About = () => {
       <main className="flex-1">
         <section className="border-b border-border bg-gradient-to-b from-primary/5 to-transparent">
           <div className="container mx-auto px-4 py-14 sm:py-20 text-center max-w-3xl">
-            <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-foreground">About FIVESOM</h1>
-            <p className="mt-4 text-muted-foreground text-base sm:text-lg">
-              We are building the trusted marketplace where Somali talent meets global opportunity.
-            </p>
+            <span className="inline-block rounded-full border border-border px-3 py-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              {aboutHero.eyebrow}
+            </span>
+            <h1 className="mt-5 text-3xl sm:text-5xl font-bold tracking-tight text-foreground">{aboutHero.title}</h1>
+            <p className="mt-5 text-muted-foreground text-base sm:text-lg leading-relaxed">{aboutHero.intro}</p>
           </div>
         </section>
 
+        {/* Story */}
+        <section className="container mx-auto px-4 py-12 sm:py-16 max-w-3xl">
+          <h2 className="text-xl sm:text-2xl font-semibold text-foreground">{aboutStory.title}</h2>
+          <div className="mt-4 space-y-4">
+            {aboutStory.body.map((para, i) => (
+              <p key={i} className="text-muted-foreground leading-relaxed">{para}</p>
+            ))}
+          </div>
+        </section>
+
+        {/* Mission & Vision */}
+        <section className="border-y border-border bg-muted/30">
+          <div className="container mx-auto px-4 py-12 sm:py-16 grid gap-6 md:grid-cols-2">
+            {[{ ...aboutMission, Icon: Target }, { ...aboutVision, Icon: Eye }].map(({ title, body, Icon }) => (
+              <Card key={title} className="h-full">
+                <CardContent className="p-7">
+                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <h2 className="mt-4 text-lg sm:text-xl font-semibold text-foreground">{title}</h2>
+                  <p className="mt-3 text-muted-foreground leading-relaxed">{body}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* What we do */}
         <section className="container mx-auto px-4 py-12 sm:py-16">
-          <h2 className="text-xl sm:text-2xl font-semibold text-foreground mb-8 text-center">Our Team</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-foreground text-center">{aboutWhatWeDo.title}</h2>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {aboutWhatWeDo.items.map((item) => (
+              <Card key={item.title} className="h-full transition-shadow hover:shadow-lg">
+                <CardContent className="p-6">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  <h3 className="mt-3 font-semibold text-foreground">{item.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.body}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* Freelancers & clients */}
+        <section className="border-y border-border bg-muted/30">
+          <div className="container mx-auto px-4 py-12 sm:py-16 grid gap-6 md:grid-cols-2">
+            {aboutAudiences.map((a) => (
+              <Card key={a.title} className="h-full">
+                <CardContent className="p-7">
+                  <div className="flex items-center gap-3">
+                    <Briefcase className="h-5 w-5 text-primary" />
+                    <h2 className="text-lg sm:text-xl font-semibold text-foreground">{a.title}</h2>
+                  </div>
+                  <p className="mt-3 text-muted-foreground leading-relaxed">{a.body}</p>
+                  <ul className="mt-4 space-y-2">
+                    {a.points.map((p) => (
+                      <li key={p} className="flex gap-2 text-sm text-muted-foreground">
+                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* Escrow */}
+        <section className="container mx-auto px-4 py-12 sm:py-16">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="mx-auto h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <ShieldCheck className="h-5 w-5 text-primary" />
+            </div>
+            <h2 className="mt-4 text-xl sm:text-2xl font-semibold text-foreground">{aboutEscrow.title}</h2>
+            <p className="mt-3 text-muted-foreground">{aboutEscrow.intro}</p>
+          </div>
+          <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {aboutEscrow.steps.map((step, i) => (
+              <li key={step.title}>
+                <Card className="h-full">
+                  <CardContent className="p-5">
+                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                      {i + 1}
+                    </span>
+                    <h3 className="mt-3 text-sm font-semibold text-foreground">{step.title}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{step.body}</p>
+                  </CardContent>
+                </Card>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-6 text-xs text-muted-foreground text-center max-w-2xl mx-auto">{aboutEscrow.note}</p>
+        </section>
+
+        {/* Company details */}
+        {aboutCompanyDetails.filter((d) => d.value).length > 0 && (
+          <section className="border-y border-border bg-muted/30">
+            <div className="container mx-auto px-4 py-12 sm:py-16 max-w-3xl">
+              <h2 className="text-xl sm:text-2xl font-semibold text-foreground">Company details</h2>
+              <dl className="mt-6 divide-y divide-border rounded-lg border border-border bg-card">
+                {aboutCompanyDetails.filter((d) => d.value).map((d) => (
+                  <div key={d.label} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 px-5 py-4">
+                    <dt className="text-sm font-medium text-muted-foreground sm:w-40 shrink-0">{d.label}</dt>
+                    <dd className="text-sm text-foreground break-words">{d.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </section>
+        )}
+
+        <section className="container mx-auto px-4 py-12 sm:py-16">
+          <div className="text-center mb-8">
+            <h2 className="text-xl sm:text-2xl font-semibold text-foreground">{aboutTeamSection.title}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{aboutTeamSection.intro}</p>
+          </div>
 
           {loading ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -109,10 +229,8 @@ const About = () => {
                 <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-muted flex items-center justify-center">
                   <Users className="h-6 w-6 text-muted-foreground" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground">About FIVESOM</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Our team information will appear here soon.
-                </p>
+                <h3 className="text-lg font-semibold text-foreground">{aboutTeamSection.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{aboutTeamSection.emptyText}</p>
               </CardContent>
             </Card>
           ) : (
