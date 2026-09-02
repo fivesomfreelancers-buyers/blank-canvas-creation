@@ -13,6 +13,11 @@ const FreelancerOrders = () => {
 
   useEffect(() => {
     fetchOrders();
+    const channel = supabase
+      .channel('freelancer-orders-live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => fetchOrders())
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   const fetchOrders = async () => {
