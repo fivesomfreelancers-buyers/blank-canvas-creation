@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Search, Package, Eye, FileText, Link2, RefreshCw, Image as ImageIcon } from 'lucide-react';
+import { Search, Package, Eye, FileText, Link2, RefreshCw, Image as ImageIcon, MessageSquare, Paperclip } from 'lucide-react';
 
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 
@@ -23,6 +23,7 @@ const AdminOrders = () => {
   const [deliveries, setDeliveries] = useState<any[]>([]);
   const [requirements, setRequirements] = useState<any>(null);
   const [reqFiles, setReqFiles] = useState<any[]>([]);
+  const [orderMessages, setOrderMessages] = useState<any[]>([]);
 
   const fetch = async () => {
     setLoading(true);
@@ -41,7 +42,7 @@ const AdminOrders = () => {
           const { data: sp } = await supabase.from('profiles').select('full_name').eq('id', f.data.user_id).maybeSingle();
           sn = sp?.full_name || 'Fivesom User';
         }
-        return { ...o, buyer_name: b.data?.full_name, seller_name: sn, gig_title: g.data?.title };
+        return { ...o, buyer_name: b.data?.full_name, seller_name: sn, seller_user_id: f.data?.user_id, gig_title: g.data?.title };
       })
     );
     setOrders(enriched);
@@ -65,11 +66,29 @@ const AdminOrders = () => {
     setDeliveries([]);
     setRequirements(null);
     setReqFiles([]);
-    const [delRes, reqRes] = await Promise.all([
+    setOrderMessages([]);
+    const conversationPromise = o.seller_user_id
+      ? supabase
+          .from('conversations')
+          .select('id')
+          .eq('buyer_id', o.buyer_id)
+          .eq('freelancer_id', o.seller_user_id)
+          .maybeSingle()
+      : Promise.resolve({ data: null, error: null });
+    const [delRes, reqRes, convRes] = await Promise.all([
       (supabase as any).from('order_deliveries').select('*').eq('order_id', o.id).order('delivered_at', { ascending: false }),
       supabase.from('order_requirements').select('*').eq('order_id', o.id).maybeSingle(),
+      conversationPromise,
     ]);
     setDeliveries(delRes.data || []);
+    if (convRes.data?.id) {
+      const { data: chatRows } = await supabase
+        .from('messages')
+        .select('id, sender_id, receiver_id, message, attachment_url, created_at')
+        .eq('conversation_id', convRes.data.id)
+        .order('created_at', { ascending: true });
+      setOrderMessages(chatRows || []);
+    }
     if (reqRes.data) {
       setRequirements(reqRes.data);
       const { data: files } = await supabase
@@ -211,6 +230,47 @@ const AdminOrders = () => {
                             {reqFiles.map((f: any) => <AttachmentPreview key={f.id} url={f.file_url} />)}
                           </div>
                         )}
+                      </div>
+                    )}
+                  </section>
+
+                  {/* Buyer and freelancer conversation */}
+                  <section>
+                    <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                      <MessageSquare className="h-4 w-4" /> Buyer & Freelancer Messages ({orderMessages.length})
+                    </h4>
+                    {orderMessages.length === 0 ? (
+                      <p className="text-sm text-muted-foreground italic">No messages exchanged yet.</p>
+                    ) : (
+                      <div className="max-h-80 overflow-y-auto space-y-2 rounded-lg border border-border bg-muted/20 p-3">
+                        {orderMessages.map((message: any) => {
+                          const fromBuyer = message.sender_id === viewing.buyer_id;
+                          return (
+                            <div key={message.id} className={`flex ${fromBuyer ? 'justify-start' : 'justify-end'}`}>
+                              <div className={`max-w-[85%] min-w-0 rounded-lg border px-3 py-2 ${
+                                fromBuyer
+                                  ? 'border-primary/20 bg-primary/10'
+                                  : 'border-border bg-card'
+                              }`}>
+                                <p className="mb-1 text-[11px] font-medium text-muted-foreground">
+                                  {fromBuyer ? viewing.buyer_name : viewing.seller_name}
+                                </p>
+                                {message.message && <p className="chat-text text-sm">{message.message}</p>}
+                                {message.attachment_url && (
+                                  <AttachmentPreview url={message.attachment_url} />
+                                )}
+                                {!message.message && !message.attachment_url && (
+                                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                                    <Paperclip className="h-3 w-3" /> Attachment
+                                  </p>
+                                )}
+                                <p className="mt-1 text-[10px] text-muted-foreground">
+                                  {new Date(message.created_at).toLocaleString()}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
                   </section>
