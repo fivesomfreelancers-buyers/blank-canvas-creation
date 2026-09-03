@@ -85,10 +85,21 @@ export default {
 						height: '0'
 					}
 				}
+				},
+				'marquee-left': {
+					from: { transform: 'translateX(0)' },
+					to: { transform: 'translateX(-50%)' }
+				},
+				'fade-in-up': {
+					from: { opacity: '0', transform: 'translateY(12px)' },
+					to: { opacity: '1', transform: 'translateY(0)' }
+				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'marquee-left': 'marquee-left 60s linear infinite',
+				'fade-in-up': 'fade-in-up 0.5s ease-out both'
 			}
 		}
 	},
