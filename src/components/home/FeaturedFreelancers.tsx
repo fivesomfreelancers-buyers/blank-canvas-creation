@@ -21,6 +21,7 @@ interface FreelancerCard {
   completedOrders: number;
   rating: number;
   reviews: number;
+  isOnline: boolean;
   services: string[];
 }
 
@@ -43,6 +44,7 @@ const dedupe = (gigs: SearchGigResult[]): FreelancerCard[] => {
       completedOrders: g.completedOrders,
       rating: g.rating,
       reviews: g.reviews,
+      isOnline: g.isOnline,
       services: [g.title],
     });
   }
@@ -108,6 +110,12 @@ const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
                       {f.name}
                       {f.hasBlueTick && <BlueTickBadge size="sm" />}
                     </h3>
+                    <span className="inline-flex items-center gap-1.5 text-xs mt-0.5">
+                      <span className={`inline-block w-2 h-2 rounded-full ${f.isOnline ? 'bg-green-500' : 'bg-muted-foreground/40'}`} />
+                      <span className={f.isOnline ? 'text-green-600 dark:text-green-400 font-medium' : 'text-muted-foreground'}>
+                        {f.isOnline ? 'Online' : 'Offline'}
+                      </span>
+                    </span>
                     {f.location && (
                       <p className="text-xs text-muted-foreground inline-flex items-center gap-1 mt-0.5">
                         <MapPin className="w-3 h-3" aria-hidden /> {f.location}
