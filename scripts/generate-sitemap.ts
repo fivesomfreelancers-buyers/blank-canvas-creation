@@ -27,6 +27,7 @@ const staticEntries: SitemapEntry[] = [
   { path: "/docs", changefreq: "monthly", priority: "0.7" },
   { path: "/vip", changefreq: "monthly", priority: "0.6" },
   { path: "/about", changefreq: "monthly", priority: "0.6" },
+  { path: "/blog", changefreq: "weekly", priority: "0.8" },
   { path: "/login", changefreq: "yearly", priority: "0.5" },
   { path: "/register", changefreq: "yearly", priority: "0.5" },
   { path: "/register/buyer", changefreq: "yearly", priority: "0.4" },
@@ -59,8 +60,22 @@ async function dynamicEntries(): Promise<SitemapEntry[]> {
     "gigs?select=slug,updated_at,freelancer_id&status=eq.active&slug=not.is.null&limit=5000",
   );
 
+  const posts = await rest<{ slug: string; updated_at: string | null }>(
+    "blog_posts?select=slug,updated_at&status=eq.published&limit=5000",
+  );
+
   const entries: SitemapEntry[] = [];
   const activeFreelancerIds = new Set<string>();
+
+  for (const post of posts) {
+    if (!post.slug) continue;
+    entries.push({
+      path: `/blog/${encodeURIComponent(post.slug)}`,
+      lastmod: post.updated_at ? post.updated_at.slice(0, 10) : undefined,
+      changefreq: "monthly",
+      priority: "0.7",
+    });
+  }
 
   for (const gig of gigs) {
     if (!gig.slug) continue;
