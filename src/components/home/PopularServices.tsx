@@ -8,8 +8,8 @@ import {
   Smartphone,
   PenTool,
   LayoutTemplate,
-  Megaphone,
-  Languages,
+  Clapperboard,
+  TrendingUp,
   ArrowRight,
 } from 'lucide-react';
 
