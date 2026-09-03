@@ -342,14 +342,14 @@ const FreelancerProfilePage = () => {
             {gigs.length === 0 ? (
               <Card><CardContent className="p-8 text-center text-muted-foreground">No services listed yet</CardContent></Card>
             ) : (
-              <div className="grid gap-6 sm:grid-cols-2">
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {gigs.map((gig) => (
-                  <Card key={gig.id} className="hover:shadow-lg transition-shadow">
+                  <Card key={gig.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                     {gig.images?.[0] && (
-                      <img src={gig.images[0]} alt={gig.title} className="w-full h-48 object-cover rounded-t-lg" />
+                      <img src={gig.images[0]} alt={gig.title} className="w-full aspect-[4/3] object-cover" />
                     )}
                     <CardContent className="p-4">
-                      <h3 className="font-semibold text-foreground mb-2">{gig.title}</h3>
+                      <h3 className="font-semibold text-foreground mb-2 text-sm line-clamp-2 min-h-[2.5rem]">{gig.title}</h3>
                       <div className="flex items-center justify-between">
                         <span className="text-lg font-bold text-primary">${Number(gig.base_price).toFixed(0)}</span>
                         <span className="text-sm text-muted-foreground">{gig.delivery_time_days} days</span>
