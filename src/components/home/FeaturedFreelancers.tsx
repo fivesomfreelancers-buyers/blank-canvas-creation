@@ -52,8 +52,7 @@ const dedupe = (gigs: SearchGigResult[]): FreelancerCard[] => {
         Number(b.hasBlueTick) - Number(a.hasBlueTick) ||
         Number(b.isVerified) - Number(a.isVerified) ||
         b.completedOrders - a.completedOrders,
-    )
-    .slice(0, 6);
+    );
 };
 
 const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {

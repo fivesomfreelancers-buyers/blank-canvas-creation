@@ -18,7 +18,7 @@ import { useGigSearch } from '@/hooks/useGigSearch';
 import { useHomeStats } from '@/hooks/useHomeStats';
 
 const Index = () => {
-  const { gigs, loading } = useGigSearch({ pageSize: 12 });
+  const { gigs, loading } = useGigSearch({ pageSize: 48 });
   const { activeGigs, freelancers } = useHomeStats();
 
   return (
