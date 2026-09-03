@@ -12,9 +12,9 @@ const prettyCategory = (slug: string) =>
 const GigCard: React.FC<{ gig: SearchGigResult }> = ({ gig }) => (
   <Link
     to={gigHref(gig)}
-    className="group w-[270px] sm:w-[300px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border hover:border-primary/50 hover:shadow-xl transition-all"
+    className="group flex flex-col w-[270px] sm:w-[300px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border hover:border-primary/50 hover:shadow-xl transition-all"
   >
-    <div className="aspect-[4/3] bg-muted overflow-hidden">
+    <div className="w-full aspect-[4/3] bg-muted overflow-hidden">
       {gig.image ? (
         <img
           src={gig.image}
@@ -157,7 +157,7 @@ const LiveGigsMarquee: React.FC<Props> = ({ gigs, loading }) => {
         >
           <ul className="flex gap-5 w-max animate-marquee-left group-hover:[animation-play-state:paused] motion-reduce:animate-none motion-reduce:overflow-x-auto">
             {track.map((gig, i) => (
-              <li key={`${gig.id}-${i}`} aria-hidden={i >= gigs.length}>
+              <li key={`${gig.id}-${i}`} className="shrink-0" aria-hidden={i >= gigs.length}>
                 <GigCard gig={gig} />
               </li>
             ))}
