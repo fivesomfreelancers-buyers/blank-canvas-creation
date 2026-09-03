@@ -21,8 +21,38 @@ const FreelancerOrderDetails = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (orderId) fetchOrderDetails();
+    if (!orderId) return;
+    fetchOrderDetails();
+
+    const channel = supabase
+      .channel(`freelancer-order-${orderId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'order_requirements', filter: `order_id=eq.${orderId}` }, () => fetchRequirements())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'order_requirement_files' }, () => fetchRequirements())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` }, () => fetchOrderDetails())
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
   }, [orderId]);
+
+  const fetchRequirements = async () => {
+    if (!orderId) return;
+    const { data: reqData } = await supabase
+      .from('order_requirements')
+      .select('*')
+      .eq('order_id', orderId)
+      .maybeSingle();
+    setRequirements(reqData || null);
+    if (reqData) {
+      const { data: files } = await supabase
+        .from('order_requirement_files')
+        .select('*')
+        .eq('order_requirement_id', reqData.id);
+      setReqFiles(files || []);
+    } else {
+      setReqFiles([]);
+    }
+  };
+
 
   const fetchOrderDetails = async () => {
     try {
