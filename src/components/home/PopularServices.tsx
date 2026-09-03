@@ -73,14 +73,14 @@ const SERVICES: ServiceCategory[] = [
   {
     slug: 'motion-graphics',
     title: 'Motion Graphics',
-    icon: Megaphone,
+    icon: Clapperboard,
     what:
       'Animated logos, intros, explainer videos and animated ads — including typography, character and UI animation for social media and campaigns.',
   },
   {
     slug: 'graphic-design',
     title: 'Marketing Graphics',
-    icon: Languages,
+    icon: TrendingUp,
     what:
       'Social media posts, thumbnails, banners, packaging and print material designed to keep one consistent brand look across every channel.',
   },
