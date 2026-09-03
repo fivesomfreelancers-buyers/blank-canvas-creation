@@ -45,6 +45,7 @@ const GigCard: React.FC<{ gig: SearchGigResult }> = ({ gig }) => (
             alt={gig.freelancer}
             loading="lazy"
             className="w-7 h-7 rounded-full object-cover"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
           />
         ) : (
           <div className="w-7 h-7 rounded-full bg-primary/15 text-primary text-xs font-bold flex items-center justify-center">

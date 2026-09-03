@@ -87,6 +87,7 @@ const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
                       alt={f.name}
                       loading="lazy"
                       className="w-14 h-14 rounded-full object-cover"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                     />
                   ) : (
                     <div className="w-14 h-14 rounded-full bg-primary/15 text-primary font-bold text-lg flex items-center justify-center">
