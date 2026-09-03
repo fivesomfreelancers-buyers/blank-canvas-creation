@@ -52,8 +52,8 @@ const EscrowSection: React.FC = () => (
         sides still cannot agree, the order can be escalated and the FIVESOM support team reviews the
         order, the requirements and the delivered files before deciding how the escrowed funds are
         handled.{' '}
-        <Link to="/trust-safety" className="text-primary underline">
-          Read about trust &amp; safety
+        <Link to="/how-it-works" className="text-primary underline">
+          See the full order flow
         </Link>
         .
       </div>

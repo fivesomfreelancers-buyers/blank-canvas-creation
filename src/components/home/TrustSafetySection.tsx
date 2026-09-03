@@ -90,15 +90,15 @@ const TrustSafetySection: React.FC = () => (
 
       <p className="text-sm text-muted-foreground mt-8">
         More detail in our{' '}
-        <Link to="/trust-safety" className="text-primary underline">
-          trust &amp; safety guide
+        <Link to="/docs" className="text-primary underline">
+          documentation
         </Link>
         ,{' '}
-        <Link to="/terms" className="text-primary underline">
+        <Link to="/legal/terms" className="text-primary underline">
           terms of service
         </Link>{' '}
         and{' '}
-        <Link to="/privacy" className="text-primary underline">
+        <Link to="/legal/privacy" className="text-primary underline">
           privacy policy
         </Link>
         .

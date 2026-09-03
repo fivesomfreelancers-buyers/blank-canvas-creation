@@ -71,18 +71,18 @@ const SERVICES: ServiceCategory[] = [
       'Interface design and clickable prototypes for apps and dashboards — wireframes, design systems and screens ready for a developer to build.',
   },
   {
-    slug: 'digital-marketing',
-    title: 'Digital Marketing',
+    slug: 'motion-graphics',
+    title: 'Motion Graphics',
     icon: Megaphone,
     what:
-      'Social media management, paid ad campaigns, SEO and email marketing, with reporting so you can see what each campaign delivered.',
+      'Animated logos, intros, explainer videos and animated ads — including typography, character and UI animation for social media and campaigns.',
   },
   {
-    slug: 'translation',
-    title: 'Translation & Voice-over',
+    slug: 'graphic-design',
+    title: 'Marketing Graphics',
     icon: Languages,
     what:
-      'Somali, English and Arabic translation, subtitling, transcription and voice-over recordings for video, apps and business documents.',
+      'Social media posts, thumbnails, banners, packaging and print material designed to keep one consistent brand look across every channel.',
   },
 ];
 
