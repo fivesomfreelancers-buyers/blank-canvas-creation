@@ -59,46 +59,73 @@ const AdminOrders = () => {
   }, []);
 
 
-  const openOrder = async (o: any) => {
+  const loadRequirements = async (orderIdToLoad: string) => {
+    const { data: req } = await supabase.from('order_requirements').select('*').eq('order_id', orderIdToLoad).maybeSingle();
+    setRequirements(req || null);
+    if (req) {
+      const { data: files } = await supabase
+        .from('order_requirement_files')
+        .select('*')
+        .eq('order_requirement_id', req.id);
+      setReqFiles(files || []);
+    } else {
+      setReqFiles([]);
+    }
+  };
 
+  // Realtime requirements/files updates while an order is open
+  useEffect(() => {
+    if (!viewing?.id) return;
+    const orderIdOpen = viewing.id;
+    const channel = supabase
+      .channel(`admin-order-req-${orderIdOpen}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'order_requirements', filter: `order_id=eq.${orderIdOpen}` }, () => loadRequirements(orderIdOpen))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'order_requirement_files' }, () => loadRequirements(orderIdOpen))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'order_deliveries', filter: `order_id=eq.${orderIdOpen}` }, async () => {
+        const { data } = await (supabase as any).from('order_deliveries').select('*').eq('order_id', orderIdOpen).order('delivered_at', { ascending: false });
+        setDeliveries(data || []);
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [viewing?.id]);
+
+  const openOrder = async (o: any) => {
     setViewing(o);
     setViewLoading(true);
     setDeliveries([]);
     setRequirements(null);
     setReqFiles([]);
     setOrderMessages([]);
-    const conversationPromise = o.seller_user_id
-      ? supabase
-          .from('conversations')
-          .select('id')
-          .eq('buyer_id', o.buyer_id)
-          .eq('freelancer_id', o.seller_user_id)
-          .maybeSingle()
-      : Promise.resolve({ data: null, error: null });
-    const [delRes, reqRes, convRes] = await Promise.all([
-      (supabase as any).from('order_deliveries').select('*').eq('order_id', o.id).order('delivered_at', { ascending: false }),
-      supabase.from('order_requirements').select('*').eq('order_id', o.id).maybeSingle(),
-      conversationPromise,
-    ]);
-    setDeliveries(delRes.data || []);
-    if (convRes.data?.id) {
-      const { data: chatRows } = await supabase
-        .from('messages')
-        .select('id, sender_id, receiver_id, message, attachment_url, created_at')
-        .eq('conversation_id', convRes.data.id)
-        .order('created_at', { ascending: true });
-      setOrderMessages(chatRows || []);
+    try {
+      const conversationPromise = o.seller_user_id
+        ? supabase
+            .from('conversations')
+            .select('id')
+            .eq('buyer_id', o.buyer_id)
+            .eq('freelancer_id', o.seller_user_id)
+            .maybeSingle()
+        : Promise.resolve({ data: null, error: null });
+      const [delRes, convRes] = await Promise.all([
+        (supabase as any).from('order_deliveries').select('*').eq('order_id', o.id).order('delivered_at', { ascending: false }),
+        conversationPromise,
+      ]);
+      setDeliveries(delRes.data || []);
+      if (convRes.data?.id) {
+        const { data: chatRows } = await supabase
+          .from('messages')
+          .select('id, sender_id, receiver_id, message, attachment_url, created_at')
+          .eq('conversation_id', convRes.data.id)
+          .order('created_at', { ascending: true });
+        setOrderMessages(chatRows || []);
+      }
+      await loadRequirements(o.id);
+    } catch (err) {
+      console.error('Failed to load order details:', err);
+    } finally {
+      setViewLoading(false);
     }
-    if (reqRes.data) {
-      setRequirements(reqRes.data);
-      const { data: files } = await supabase
-        .from('order_requirement_files')
-        .select('*')
-        .eq('order_requirement_id', reqRes.data.id);
-      setReqFiles(files || []);
-    }
-    setViewLoading(false);
   };
+
 
   const filtered = orders.filter((o) => {
     const s = search.toLowerCase();
