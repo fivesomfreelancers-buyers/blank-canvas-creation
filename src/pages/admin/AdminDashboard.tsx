@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard, Users, Trophy, DollarSign, Scale, LogOut, Shield, Sparkles,
   ShieldCheck, Package, MessageSquare, CreditCard, Wallet, Star, FolderTree,
-  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag, Megaphone, Headphones, Crown, BadgeCheck, Briefcase,
+  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag, Megaphone, Headphones, Newspaper, Crown, BadgeCheck, Briefcase,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -38,6 +38,7 @@ import AdminBlueTick from './AdminBlueTick';
 import AdminSomAdz from './AdminSomAdz';
 import AdminGigs from './AdminGigs';
 import AdminAboutTeam from './AdminAboutTeam';
+import AdminBlog from './AdminBlog';
 import { useAdminBadges, type AdminBadgeKey } from '@/hooks/useAdminBadges';
 import { useTheme } from '@/components/ThemeProvider';
 
@@ -62,6 +63,7 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
   { label: 'Fivesom Channels', items: [
     { key: 'fivesom_support', label: 'Fivesom Support', icon: Headphones },
     { key: 'fivesom_news', label: 'Fivesom News', icon: Megaphone },
+    { key: 'blog', label: 'Blog / CMS', icon: Newspaper },
     { key: 'somadz', label: 'Fivesom Ads', icon: Sparkles },
   ]},
   { label: 'Trust & Safety', items: [
@@ -137,6 +139,7 @@ const AdminDashboardInner = () => {
       case 'notifications': return <AdminNotifications />;
       case 'ranking': return <AdminRanking />;
       case 'logs': return <AdminLogs />;
+      case 'blog': return <AdminBlog />;
       case 'about_team': return <AdminAboutTeam />;
       case 'settings': return <AdminSettings />;
       default: return <AdminOverview />;

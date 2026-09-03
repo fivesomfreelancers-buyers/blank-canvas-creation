@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard, ShieldCheck, Package, MessageSquare, Headphones, Megaphone,
-  Flag, Trophy, Scale, Crown, LogOut, Bell, Briefcase, Users,
+  Flag, Trophy, Scale, Crown, LogOut, Bell, Briefcase, Users, Newspaper,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -31,11 +31,12 @@ import AdminDisputes from '@/pages/admin/AdminDisputes';
 import AdminGigs from '@/pages/admin/AdminGigs';
 import AdminUsers from '@/pages/admin/AdminUsers';
 import AdminAboutTeam from '@/pages/admin/AdminAboutTeam';
+import AdminBlog from '@/pages/admin/AdminBlog';
 
 type TabKey =
   | 'overview' | 'verifications' | 'orders' | 'chats'
   | 'fivesom_support' | 'fivesom_news' | 'reports' | 'ranking' | 'disputes'
-  | 'gigs' | 'users' | 'about_team';
+  | 'gigs' | 'users' | 'about_team' | 'blog';
 
 const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'overview', label: 'Dashboard', icon: LayoutDashboard },
@@ -46,6 +47,7 @@ const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'chats', label: 'Live Chat', icon: MessageSquare },
   { key: 'fivesom_support', label: 'Fivesom Support', icon: Headphones, badge: 'fivesom_support' },
   { key: 'fivesom_news', label: 'Fivesom News', icon: Megaphone },
+  { key: 'blog', label: 'Blog / CMS', icon: Newspaper },
   { key: 'reports', label: 'User Reports', icon: Flag, badge: 'reports' },
   { key: 'ranking', label: 'Ranking', icon: Trophy },
   { key: 'disputes', label: 'Disputes', icon: Scale, badge: 'disputes' },
@@ -64,6 +66,7 @@ const titles: Record<TabKey, string> = {
   reports: 'User Reports',
   ranking: 'Ranking',
   disputes: 'Disputes',
+  blog: 'Blog / CMS',
   about_team: 'About / Team',
 };
 
@@ -113,6 +116,7 @@ const FounderDashboardInner = () => {
       case 'reports': return <AdminReports />;
       case 'ranking': return <AdminRanking />;
       case 'disputes': return <AdminDisputes />;
+      case 'blog': return <AdminBlog />;
       case 'about_team': return <AdminAboutTeam />;
       default: return <AdminOverview />;
     }
