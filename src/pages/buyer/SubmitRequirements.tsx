@@ -86,51 +86,85 @@ const SubmitRequirements = () => {
         validLinks.push(safe);
       }
 
-      // Create order requirements record
-      const { data: reqData, error: reqError } = await supabase
+      // Create or update the order requirements record (one per order)
+      const { data: existing } = await supabase
         .from('order_requirements')
-        .insert({
-          order_id: orderId,
-          instructions: instructions.trim() || null,
-          external_links: validLinks.length > 0 ? validLinks : [],
-        })
-        .select()
-        .single();
+        .select('id')
+        .eq('order_id', orderId)
+        .maybeSingle();
 
-      if (reqError) throw reqError;
+      let requirementId = existing?.id as string | undefined;
 
-      // Upload files to storage and save records
-      if (uploadedFiles.length > 0) {
-        for (const file of uploadedFiles) {
-          const filePath = `${orderId}/${Date.now()}-${file.name}`;
-          const { error: uploadError } = await supabase.storage
-            .from('order-requirements')
-            .upload(filePath, file);
+      if (requirementId) {
+        const { error: updErr } = await supabase
+          .from('order_requirements')
+          .update({
+            instructions: instructions.trim() || null,
+            external_links: validLinks,
+          })
+          .eq('id', requirementId);
+        if (updErr) throw updErr;
+      } else {
+        const { data: reqData, error: reqError } = await supabase
+          .from('order_requirements')
+          .insert({
+            order_id: orderId,
+            instructions: instructions.trim() || null,
+            external_links: validLinks,
+          })
+          .select('id')
+          .single();
+        if (reqError) throw reqError;
+        requirementId = reqData.id;
+      }
 
-          if (uploadError) {
-            console.error('File upload error:', uploadError);
-            continue;
-          }
+      // Upload files to private storage and save metadata rows
+      const failed: string[] = [];
+      for (const file of uploadedFiles) {
+        const filePath = `${orderId}/${Date.now()}-${file.name}`;
+        const { error: uploadError } = await supabase.storage
+          .from('order-requirements')
+          .upload(filePath, file, { contentType: file.type || undefined });
 
-          const { data: { publicUrl } } = supabase.storage
-            .from('order-requirements')
-            .getPublicUrl(filePath);
+        if (uploadError) {
+          console.error('File upload error:', uploadError);
+          failed.push(file.name);
+          continue;
+        }
 
-          await supabase.from('order_requirement_files').insert({
-            order_requirement_id: reqData.id,
-            file_url: publicUrl,
-            file_name: file.name,
-            file_size: file.size,
-            file_type: file.type,
-          });
+        const { data: { publicUrl } } = supabase.storage
+          .from('order-requirements')
+          .getPublicUrl(filePath);
+
+        const { error: fileErr } = await supabase.from('order_requirement_files').insert({
+          order_requirement_id: requirementId!,
+          file_url: publicUrl,
+          file_name: file.name,
+          file_size: file.size,
+          file_type: file.type,
+        });
+
+        if (fileErr) {
+          console.error('File record error:', fileErr);
+          failed.push(file.name);
+          await supabase.storage.from('order-requirements').remove([filePath]);
         }
       }
 
       // Update order status to in_progress
       await supabase.from('orders').update({ status: 'in_progress' }).eq('id', orderId);
 
-      toast({ title: "Requirements Submitted! 🎉", description: "The freelancer can now start working on your project." });
+      if (failed.length > 0) {
+        toast({
+          title: 'Some files failed to upload',
+          description: `${failed.join(', ')} could not be attached. Your instructions were saved — please try re-uploading those files.`,
+          variant: 'destructive',
+        });
+      } else {
+        toast({ title: "Requirements Submitted! 🎉", description: "The freelancer can now start working on your project." });
+      }
       navigate(`/buyer/orders/${orderId}`, { replace: true });
+
     } catch (error) {
       console.error('Error submitting requirements:', error);
       toast({ title: "Error", description: "Failed to submit requirements. Please try again.", variant: "destructive" });
