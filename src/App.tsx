@@ -10,6 +10,8 @@ import GigDetails from "./pages/GigDetails";
 import HowItWorks from "./pages/HowItWorks";
 import Docs from "./pages/Docs";
 import About from "./pages/About";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import Vip from "./pages/Vip";
 import VipCheckout from "./pages/VipCheckout";
 import Login from "./pages/Login";
@@ -84,6 +86,8 @@ const App = () => (
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/docs" element={<Docs />} />
               <Route path="/about" element={<About />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/vip" element={<Vip />} />
               <Route path="/vip-checkout" element={<VipCheckout />} />
               <Route path="/login" element={<Login />} />
