@@ -59,10 +59,11 @@ const dedupe = (gigs: SearchGigResult[]): FreelancerCard[] => {
 const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
   const freelancers = dedupe(gigs);
   if (loading || freelancers.length === 0) return null;
+  const track = [...freelancers, ...freelancers];
 
   return (
-    <section aria-labelledby="freelancers-heading" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <section aria-labelledby="freelancers-heading" className="py-16 sm:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mb-12">
           <h2 id="freelancers-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
             Freelancers selling on FIVESOM
@@ -73,9 +74,18 @@ const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
           </p>
         </div>
 
-        <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {freelancers.map((f) => (
-            <li key={f.id}>
+      </div>
+
+      <div
+        className="group relative overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(90deg, transparent, black 6%, black 94%, transparent)',
+          WebkitMaskImage: 'linear-gradient(90deg, transparent, black 6%, black 94%, transparent)',
+        }}
+      >
+        <ul className="flex gap-5 w-max px-4 sm:px-6 lg:px-8 animate-marquee-left group-hover:[animation-play-state:paused] motion-reduce:animate-none motion-reduce:overflow-x-auto">
+          {track.map((f, idx) => (
+            <li key={`${f.id}-${idx}`} className="w-[280px] sm:w-[320px] shrink-0" aria-hidden={idx >= freelancers.length}>
               <Link
                 to={f.username ? `/freelancer/${f.username}` : `/profile/${f.id}`}
                 className="group h-full flex flex-col rounded-2xl border border-border bg-card p-6 hover:border-primary/50 hover:shadow-lg transition-all"
