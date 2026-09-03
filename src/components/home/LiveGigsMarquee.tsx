@@ -52,7 +52,7 @@ const GigCard: React.FC<{ gig: SearchGigResult }> = ({ gig }) => (
           </div>
         )}
         <span className="text-xs text-muted-foreground truncate">{gig.freelancer}</span>
-        {gig.isVerified && <VerifiedBadge size="sm" />}
+        {gig.isVerified && <VerifiedBadge size="sm" showLabel={false} />}
       </div>
 
       <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
