@@ -39,8 +39,6 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({ chat, heightClass = 'h-
             fileInputRef={chat.fileInputRef}
             handleSend={chat.handleSend}
             handleImageUpload={chat.handleImageUpload}
-        deleteAttachment={chat.deleteAttachment}
-        replaceAttachment={chat.replaceAttachment}
             deleteAttachment={chat.deleteAttachment}
             replaceAttachment={chat.replaceAttachment}
             onBack={chat.clearSelection}
