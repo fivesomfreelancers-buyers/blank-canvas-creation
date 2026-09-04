@@ -9,9 +9,9 @@ interface ToolIconProps {
 }
 
 /**
- * Renders a bundled tool logo as a CSS mask tinted with `currentColor`,
- * so it stays visible on any theme and can never appear as a broken image.
- * Falls back to a compact initial badge when a logo is unavailable.
+ * Renders a bundled tool logo as a real image on a neutral light plate,
+ * so brand marks stay legible on dark themes instead of showing as blank
+ * white squares. Falls back to a compact initial badge when no logo exists.
  */
 const ToolIcon: React.FC<ToolIconProps> = ({ slug, name, className }) => {
   const url = softwareLogo(slug);
@@ -33,19 +33,16 @@ const ToolIcon: React.FC<ToolIconProps> = ({ slug, name, className }) => {
   return (
     <span
       aria-hidden
-      className={cn('inline-block flex-shrink-0 bg-current', className)}
-      style={{
-        maskImage: `url(${url})`,
-        WebkitMaskImage: `url(${url})`,
-        maskRepeat: 'no-repeat',
-        WebkitMaskRepeat: 'no-repeat',
-        maskPosition: 'center',
-        WebkitMaskPosition: 'center',
-        maskSize: 'contain',
-        WebkitMaskSize: 'contain',
-      }}
-    />
+      className={cn(
+        'inline-flex flex-shrink-0 items-center justify-center rounded-[3px] p-[2px]',
+        className,
+      )}
+      style={{ backgroundColor: 'hsl(var(--tool-logo-bg))' }}
+    >
+      <img src={url} alt="" loading="lazy" className="h-full w-full object-contain" />
+    </span>
   );
 };
+
 
 export default ToolIcon;
