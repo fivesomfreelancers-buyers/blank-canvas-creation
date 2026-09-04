@@ -1901,6 +1901,7 @@ export type Database = {
     }
     Functions: {
       accept_order_delivery: { Args: { _order_id: string }; Returns: undefined }
+      admin_delete_news: { Args: { _broadcast_id: string }; Returns: number }
       admin_delete_orders: { Args: { _ids: string[] }; Returns: number }
       admin_get_profiles: {
         Args: { _ids: string[] }
@@ -1938,6 +1939,10 @@ export type Database = {
           _tier: Database["public"]["Enums"]["vip_tier"]
           _user_id: string
         }
+        Returns: undefined
+      }
+      admin_update_news: {
+        Args: { _attachment_url?: string; _body: string; _broadcast_id: string }
         Returns: undefined
       }
       bootstrap_system_conversations: {
@@ -2009,6 +2014,20 @@ export type Database = {
           username: string
         }[]
       }
+      list_news_broadcasts: {
+        Args: never
+        Returns: {
+          attachment_url: string
+          audience: string
+          body: string
+          created_at: string
+          created_by: string
+          delivered: number
+          id: string
+          read_count: number
+          updated_at: string
+        }[]
+      }
       news_audience_matches: {
         Args: { _audience: string; _user_id: string }
         Returns: boolean
@@ -2016,6 +2035,10 @@ export type Database = {
       order_is_freelancer_visible: {
         Args: { _order_id: string }
         Returns: boolean
+      }
+      publish_news: {
+        Args: { _attachment_url?: string; _audience?: string; _body: string }
+        Returns: Json
       }
       search_gig_tags: {
         Args: { p_limit?: number; p_query?: string }
