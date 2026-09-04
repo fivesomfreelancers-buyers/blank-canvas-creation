@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import BlueTickApply from '@/components/freelancer/BlueTickApply';
+import ToolIcon from '@/components/ToolIcon';
 import { FREELANCER_PUBLIC_COLUMNS } from '@/lib/freelancerEarnings';
 import {
   CATEGORIES, SOFTWARE_CATALOG, EXPERIENCE_OPTIONS, EDUCATION_OPTIONS, toolsForCategories, searchTools, SoftwareDef,
