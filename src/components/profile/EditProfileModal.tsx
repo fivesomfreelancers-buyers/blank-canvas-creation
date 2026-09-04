@@ -10,7 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Camera, X, Loader2, Plus } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import { SOFTWARE_CATALOG, SoftwareDef, softwareLogo } from '@/lib/verificationCatalog';
+import { SOFTWARE_CATALOG, SoftwareDef, findTool } from '@/lib/verificationCatalog';
+import ToolIcon from '@/components/ToolIcon';
 
 interface EditProfileModalProps {
   open: boolean;
@@ -71,7 +72,7 @@ const EditProfileModal = ({ open, onClose, profile, freelancerData, userId, onSa
   };
 
   const addTool = (slug: string) => {
-    const def = SOFTWARE_CATALOG.find(t => t.slug === slug);
+    const def = findTool(slug);
     if (!def || tools.some(t => t.slug === slug)) return;
     setTools([...tools, def]);
     setToolPicker('');
@@ -207,8 +208,8 @@ const EditProfileModal = ({ open, onClose, profile, freelancerData, userId, onSa
             <Label>Software & Tools</Label>
             <div className="flex flex-wrap gap-2 mb-2">
               {tools.map(t => (
-                <div key={t.slug} className="flex items-center gap-1.5 px-2 py-1 rounded-full border bg-background text-xs">
-                  <img src={softwareLogo(t.slug)} alt={t.name} className="w-3.5 h-3.5" />
+                <div key={t.slug} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-border bg-background text-xs text-foreground/90 hover:border-primary/50 transition-colors">
+                  <ToolIcon slug={t.slug} name={t.name} className="w-3.5 h-3.5" />
                   <span>{t.name}</span>
                   <button onClick={() => setTools(tools.filter(x => x.slug !== t.slug))}><X className="w-3 h-3" /></button>
                 </div>
@@ -218,7 +219,9 @@ const EditProfileModal = ({ open, onClose, profile, freelancerData, userId, onSa
               <SelectTrigger><SelectValue placeholder="Add a tool..." /></SelectTrigger>
               <SelectContent className="max-h-64">
                 {SOFTWARE_CATALOG.filter(s => !tools.some(t => t.slug === s.slug)).map(s => (
-                  <SelectItem key={s.slug} value={s.slug}>{s.name}</SelectItem>
+                  <SelectItem key={s.slug} value={s.slug}>
+                    <span className="flex items-center gap-2"><ToolIcon slug={s.slug} name={s.name} className="w-4 h-4" />{s.name}</span>
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>

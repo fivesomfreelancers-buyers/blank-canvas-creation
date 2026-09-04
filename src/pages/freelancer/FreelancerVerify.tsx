@@ -14,9 +14,10 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import BlueTickApply from '@/components/freelancer/BlueTickApply';
+import ToolIcon from '@/components/ToolIcon';
 import { FREELANCER_PUBLIC_COLUMNS } from '@/lib/freelancerEarnings';
 import {
-  CATEGORIES, SOFTWARE_CATALOG, EXPERIENCE_OPTIONS, EDUCATION_OPTIONS, softwareLogo, SoftwareDef,
+  CATEGORIES, SOFTWARE_CATALOG, EXPERIENCE_OPTIONS, EDUCATION_OPTIONS, toolsForCategories, searchTools, SoftwareDef,
 } from '@/lib/verificationCatalog';
 
 type Status = 'none' | 'pending' | 'approved' | 'rejected';
@@ -65,6 +66,7 @@ const FreelancerVerify: React.FC = () => {
   // Step 6
   const [selectedTools, setSelectedTools] = useState<SoftwareDef[]>([]);
   const [toolSearch, setToolSearch] = useState('');
+  const [showAllTools, setShowAllTools] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -170,9 +172,12 @@ const FreelancerVerify: React.FC = () => {
     );
   };
 
-  const filteredTools = SOFTWARE_CATALOG.filter(t =>
-    t.name.toLowerCase().includes(toolSearch.toLowerCase())
+  // Tools -> Skills -> Categories: suggest the software used in the chosen category first.
+  const categoryTools = React.useMemo(
+    () => (showAllTools ? SOFTWARE_CATALOG : toolsForCategories(selectedCategory ? [selectedCategory] : [])),
+    [selectedCategory, showAllTools],
   );
+  const filteredTools = React.useMemo(() => searchTools(categoryTools, toolSearch), [categoryTools, toolSearch]);
 
   const validateStep = (s: number): boolean => {
     if (s === 1) {
@@ -591,7 +596,7 @@ const FreelancerVerify: React.FC = () => {
                     <div className="flex flex-wrap gap-2">
                       {selectedTools.map(t => (
                         <Badge key={t.slug} variant="secondary" className="gap-1.5 py-1 pr-1">
-                          <img src={softwareLogo(t.slug)} alt="" className="w-4 h-4" />
+                          <ToolIcon slug={t.slug} name={t.name} className="w-4 h-4" />
                           {t.name}
                           <button onClick={() => toggleTool(t)}><X className="w-3 h-3" /></button>
                         </Badge>
@@ -599,7 +604,18 @@ const FreelancerVerify: React.FC = () => {
                     </div>
                   </div>
                 )}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-96 overflow-y-auto">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-xs text-muted-foreground">
+                    {showAllTools
+                      ? 'Showing every tool on FIVESOM.'
+                      : `Recommended tools for ${CATEGORIES.find(c => c.id === selectedCategory)?.name || 'your category'}.`}
+                  </p>
+                  <Button type="button" variant="outline" size="sm" className="h-7 text-xs"
+                    onClick={() => setShowAllTools(v => !v)}>
+                    {showAllTools ? 'Show category tools' : 'Show all tools'}
+                  </Button>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-96 overflow-y-auto pr-1">
                   {filteredTools.map(t => {
                     const active = !!selectedTools.find(x => x.slug === t.slug);
                     return (
@@ -607,7 +623,7 @@ const FreelancerVerify: React.FC = () => {
                         className={`flex items-center gap-2 p-2.5 rounded-lg border text-sm transition-colors ${
                           active ? 'border-primary bg-primary/10' : 'border-border hover:bg-accent'
                         }`}>
-                        <img src={softwareLogo(t.slug)} alt="" className="w-5 h-5 flex-shrink-0" />
+                        <ToolIcon slug={t.slug} name={t.name} className="w-5 h-5" />
                         <span className="truncate">{t.name}</span>
                       </button>
                     );
