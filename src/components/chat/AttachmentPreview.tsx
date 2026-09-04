@@ -1,6 +1,22 @@
-import React, { useState } from 'react';
-import { FileText, Download, Lock, ZoomIn, X, Eye } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { FileText, Download, Lock, ZoomIn, X, Eye, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { useSignedAttachmentUrl } from '@/hooks/useSignedAttachmentUrl';
 import SmartImage from '@/components/media/SmartImage';
 import SmartVideo from '@/components/media/SmartVideo';
@@ -36,6 +52,11 @@ interface Props {
   isOwn?: boolean;
   allowDownload?: boolean;
   lockedHint?: string;
+  /** Show edit/delete controls (only for attachments the viewer is allowed to manage). */
+  canManage?: boolean;
+  onDelete?: () => void | Promise<unknown>;
+  onReplace?: (file: File) => void | Promise<unknown>;
+  managing?: boolean;
 }
 
 /** Repeated diagonal "Fivesom" watermark overlay shown on previews before payment release. */
@@ -61,32 +82,109 @@ const Watermark: React.FC = () => (
   </div>
 );
 
-const AttachmentPreview: React.FC<Props> = ({ url, isOwn, allowDownload = true, lockedHint }) => {
+const AttachmentPreview: React.FC<Props> = ({
+  url,
+  isOwn,
+  allowDownload = true,
+  lockedHint,
+  canManage = false,
+  onDelete,
+  onReplace,
+  managing = false,
+}) => {
   const signedUrl = useSignedAttachmentUrl(url);
   const kind = getKind(url);
   const name = getFileName(url);
   const ext = (name.split('.').pop() || '').toUpperCase();
   const [zoomOpen, setZoomOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const replaceInputRef = useRef<HTMLInputElement>(null);
 
-  const ActionButton = () =>
-    allowDownload ? (
-      <Button
-        asChild
-        variant={isOwn ? 'secondary' : 'outline'}
-        size="sm"
-        className="flex-shrink-0"
-      >
-        <a href={signedUrl} target="_blank" rel="noopener noreferrer" download={name} aria-label="Download">
-          <Download className="w-4 h-4 mr-2" />
-          Download
-        </a>
-      </Button>
-    ) : (
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-        <Lock className="w-3.5 h-3.5" />
-        <span>{lockedHint || 'Locked'}</span>
-      </div>
-    );
+  const showManage = canManage && (!!onDelete || !!onReplace);
+
+  const ManageMenu = () => (
+    <>
+      <input
+        ref={replaceInputRef}
+        type="file"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          e.target.value = '';
+          if (file && onReplace) onReplace(file);
+        }}
+      />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 flex-shrink-0"
+            disabled={managing}
+            aria-label="Attachment options"
+          >
+            <MoreVertical className="w-4 h-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-44">
+          {onReplace && (
+            <DropdownMenuItem onClick={() => replaceInputRef.current?.click()}>
+              <Pencil className="w-4 h-4 mr-2" /> Replace file
+            </DropdownMenuItem>
+          )}
+          {onDelete && (
+            <DropdownMenuItem
+              className="text-destructive focus:text-destructive"
+              onClick={() => setConfirmOpen(true)}
+            >
+              <Trash2 className="w-4 h-4 mr-2" /> Delete
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this attachment?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This permanently removes the file from the conversation and from storage. This action
+              cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => onDelete?.()}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
+
+  const ActionButton = () => (
+    <div className="flex items-center gap-1 flex-shrink-0">
+      {allowDownload ? (
+        <Button asChild variant={isOwn ? 'secondary' : 'outline'} size="sm">
+          <a href={signedUrl} target="_blank" rel="noopener noreferrer" download={name} aria-label="Download">
+            <Download className="w-4 h-4 mr-2" />
+            Download
+          </a>
+        </Button>
+      ) : (
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Lock className="w-3.5 h-3.5" />
+          <span>{lockedHint || 'Locked'}</span>
+        </div>
+      )}
+      {showManage && <ManageMenu />}
+    </div>
+  );
+
 
   if (kind === 'image') {
     return (

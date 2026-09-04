@@ -288,6 +288,23 @@ export function useConversations() {
         }
         fetchConversations();
       })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'system_messages' }, (payload) => {
+        const m: any = payload.new;
+        setMessages(prev => prev.map(p => (p.id === m.id
+          ? { ...p, message: m.body, attachment_url: m.attachment_url, is_read: !!m.is_read_user }
+          : p)));
+        fetchConversations();
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'system_messages' }, (payload) => {
+        const old: any = payload.old;
+        setMessages(prev => prev.filter(p => p.id !== old.id));
+        fetchConversations();
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, (payload) => {
+        const old: any = payload.old;
+        setMessages(prev => prev.filter(p => p.id !== old.id));
+        fetchConversations();
+      })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'conversations' }, () => {
         fetchConversations();
       })
@@ -466,10 +483,86 @@ export function useConversations() {
     }
   }, [currentUserId, selectedConversationId, selectedPartnerId, selectedKind, fetchConversations]);
 
+  /** Best-effort removal of the stored object behind a deleted/replaced attachment. */
+  const removeStoredFile = useCallback(async (ref: any) => {
+    if (!ref?.bucket || !ref?.path) return;
+    try {
+      await supabase.storage.from(ref.bucket).remove([ref.path]);
+    } catch (err) {
+      console.warn('storage cleanup failed', err);
+    }
+  }, []);
+
+  /** Permanently removes an attachment the current user sent (or an admin owns). */
+  const deleteAttachment = useCallback(async (messageId: string): Promise<boolean> => {
+    const rpc = selectedKind === 'dm' ? 'delete_message_attachment' : 'delete_system_message_attachment';
+    const { data, error } = await (supabase as any).rpc(rpc, { _message_id: messageId });
+    if (error) {
+      toast.error('Could not delete attachment', { description: error.message });
+      return false;
+    }
+    await removeStoredFile((data as any)?.file);
+    setMessages(prev => prev.map(m =>
+      m.id === messageId ? { ...m, attachment_url: null, message: '🗑️ Attachment deleted' } : m
+    ));
+    fetchConversations();
+    toast.success('Attachment deleted');
+    return true;
+  }, [selectedKind, removeStoredFile, fetchConversations]);
+
+  /** Replaces an already-sent attachment with a newly uploaded file. */
+  const replaceAttachment = useCallback(async (messageId: string, file: File): Promise<boolean> => {
+    if (!currentUserId || !selectedConversationId) return false;
+    const MAX_ATTACHMENT_BYTES = 50 * 1024 * 1024;
+    if (file.size > MAX_ATTACHMENT_BYTES) {
+      toast.error('File too large (max 50MB)');
+      return false;
+    }
+    try {
+      setUploadingImage(true);
+      const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase();
+      const folder = selectedKind === 'dm' ? selectedConversationId : currentUserId;
+      const filePath = `${folder}/${crypto.randomUUID()}.${fileExt}`;
+      const { error: uploadError } = await supabase.storage
+        .from('message-attachments')
+        .upload(filePath, file, { contentType: file.type || undefined });
+      if (uploadError) throw uploadError;
+      const { data: { publicUrl } } = supabase.storage.from('message-attachments').getPublicUrl(filePath);
+
+      const mime = file.type || '';
+      const label = mime.startsWith('image/')
+        ? 'Sent an image'
+        : mime.startsWith('video/')
+          ? 'Sent a video'
+          : `Sent a document: ${file.name}`;
+
+      const rpc = selectedKind === 'dm' ? 'replace_message_attachment' : 'replace_system_message_attachment';
+      const { data, error } = await (supabase as any).rpc(rpc, {
+        _message_id: messageId,
+        _url: publicUrl,
+        _label: label,
+      });
+      if (error) throw error;
+      await removeStoredFile((data as any)?.file);
+      setMessages(prev => prev.map(m =>
+        m.id === messageId ? { ...m, attachment_url: publicUrl, message: label } : m
+      ));
+      fetchConversations();
+      toast.success('Attachment replaced');
+      return true;
+    } catch (err: any) {
+      toast.error('Could not replace attachment', { description: err?.message });
+      return false;
+    } finally {
+      setUploadingImage(false);
+    }
+  }, [currentUserId, selectedConversationId, selectedKind, removeStoredFile, fetchConversations]);
+
   const selectedConvo = conversations.find(c => c.conversationId === selectedConversationId);
   const filteredConvos = conversations.filter(c =>
     c.partnerName.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
 
   return {
     conversations: filteredConvos,
@@ -495,6 +588,8 @@ export function useConversations() {
 
     handleSend,
     handleImageUpload,
+    deleteAttachment,
+    replaceAttachment,
     fetchConversations,
     getOrCreateConversation,
   };

@@ -30,6 +30,10 @@ interface ChatAreaProps {
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleSend: () => void;
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  /** Remove an attachment the current user sent */
+  deleteAttachment?: (messageId: string) => void | Promise<unknown>;
+  /** Replace an attachment the current user sent */
+  replaceAttachment?: (messageId: string, file: File) => void | Promise<unknown>;
   /** Shown on mobile to return to the conversation list */
   onBack?: () => void;
 }
@@ -78,6 +82,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   fileInputRef,
   handleSend,
   handleImageUpload,
+  deleteAttachment,
+  replaceAttachment,
   onBack,
 }) => {
   const getInitials = (name: string) =>
@@ -185,7 +191,14 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                         >
                           <p className="chat-text">{msg.message}</p>
                           {msg.attachment_url && (
-                            <AttachmentPreview url={msg.attachment_url} isOwn={isMine} />
+                            <AttachmentPreview
+                              url={msg.attachment_url}
+                              isOwn={isMine}
+                              canManage={isMine && !isSystem}
+                              managing={uploadingImage}
+                              onDelete={deleteAttachment ? () => deleteAttachment(msg.id) : undefined}
+                              onReplace={replaceAttachment ? (file) => replaceAttachment(msg.id, file) : undefined}
+                            />
                           )}
                           <span className={`mt-1 flex items-center justify-end gap-1 text-[10px] ${isMine ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                             {timeLabel(msg.created_at)}
