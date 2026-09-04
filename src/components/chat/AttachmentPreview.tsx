@@ -52,6 +52,11 @@ interface Props {
   isOwn?: boolean;
   allowDownload?: boolean;
   lockedHint?: string;
+  /** Show edit/delete controls (only for attachments the viewer is allowed to manage). */
+  canManage?: boolean;
+  onDelete?: () => void | Promise<unknown>;
+  onReplace?: (file: File) => void | Promise<unknown>;
+  managing?: boolean;
 }
 
 /** Repeated diagonal "Fivesom" watermark overlay shown on previews before payment release. */
