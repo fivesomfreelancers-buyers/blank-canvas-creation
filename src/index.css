@@ -34,6 +34,10 @@
 
     --radius: 0.5rem;
 
+    /* Neutral light plate behind brand tool logos so they stay legible in both themes */
+    --tool-logo-bg: 0 0% 100%;
+
+
     --sidebar-background: 0 0% 98%;
 
     --sidebar-foreground: 240 5.3% 26.1%;

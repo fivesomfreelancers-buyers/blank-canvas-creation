@@ -81,7 +81,6 @@ export const SOFTWARE_CATALOG: SoftwareDef[] = [
   { name: 'Notion', slug: 'notion', categories: [C, U, DEV] },
   { name: 'Grammarly', slug: 'grammarly', categories: [C] },
   { name: 'Obsidian', slug: 'obsidian', categories: [C] },
-  { name: 'Google Translate', slug: 'googletranslate', categories: [C] },
   { name: 'Semrush', slug: 'semrush', categories: [C, W] },
   { name: 'Google Analytics', slug: 'googleanalytics', categories: [C, W, DEV] },
   { name: 'ChatGPT / OpenAI', slug: 'openai', categories: [C, DEV] },
