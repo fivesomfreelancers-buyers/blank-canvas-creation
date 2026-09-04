@@ -173,9 +173,9 @@ const FreelancerProfileCard: React.FC<Props> = ({ freelancerId, userId, hidePort
           <p className="text-sm font-semibold flex items-center gap-1.5 mb-2"><Wrench className="w-4 h-4" /> Software & Tools</p>
           <div className="flex flex-wrap gap-2">
             {tools.map(t => (
-              <div key={t.slug} className="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-background text-xs">
-                <img src={softwareLogo(t.slug)} alt={t.name} className="w-4 h-4" />
-                <span>{t.name}</span>
+              <div key={t.slug} className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-background text-xs text-foreground/90 hover:border-primary/50 hover:text-primary transition-colors">
+                <ToolIcon slug={t.slug} name={t.name} className="w-4 h-4" />
+                <span className="font-medium">{t.name}</span>
               </div>
             ))}
           </div>
