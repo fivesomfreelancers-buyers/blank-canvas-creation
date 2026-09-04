@@ -571,6 +571,8 @@ export function useConversations() {
 
     handleSend,
     handleImageUpload,
+    deleteAttachment,
+    replaceAttachment,
     fetchConversations,
     getOrCreateConversation,
   };
