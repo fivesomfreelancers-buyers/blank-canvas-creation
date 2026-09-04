@@ -18,7 +18,7 @@ import { resolveVipTier, getVipTheme } from '@/lib/vipTheme';
 import { useTheme } from '@/components/ThemeProvider';
 import ReportDialog from '@/components/ReportDialog';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
-import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
+import { SoftwareDef } from '@/lib/verificationCatalog';
 import { supabase } from '@/integrations/supabase/client';
 import { getOrCreateConversation, inboxPath } from '@/lib/conversations';
 import { useAuth } from '@/hooks/useAuth';
