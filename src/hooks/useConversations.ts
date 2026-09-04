@@ -288,6 +288,23 @@ export function useConversations() {
         }
         fetchConversations();
       })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'system_messages' }, (payload) => {
+        const m: any = payload.new;
+        setMessages(prev => prev.map(p => (p.id === m.id
+          ? { ...p, message: m.body, attachment_url: m.attachment_url, is_read: !!m.is_read_user }
+          : p)));
+        fetchConversations();
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'system_messages' }, (payload) => {
+        const old: any = payload.old;
+        setMessages(prev => prev.filter(p => p.id !== old.id));
+        fetchConversations();
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, (payload) => {
+        const old: any = payload.old;
+        setMessages(prev => prev.filter(p => p.id !== old.id));
+        fetchConversations();
+      })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'conversations' }, () => {
         fetchConversations();
       })
