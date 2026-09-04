@@ -7,7 +7,8 @@ import { Star, MapPin, Calendar, Globe, GraduationCap, Briefcase, Wrench, CheckC
 import VerifiedBadge from '@/components/VerifiedBadge';
 import BlueTickBadge from '@/components/BlueTickBadge';
 import OnlineIndicator from '@/components/presence/OnlineIndicator';
-import { softwareLogo, SoftwareDef } from '@/lib/verificationCatalog';
+import { SoftwareDef } from '@/lib/verificationCatalog';
+import ToolIcon from '@/components/ToolIcon';
 import { supabase } from '@/integrations/supabase/client';
 import { getVipTheme, resolveVipTier } from '@/lib/vipTheme';
 import { useTheme } from '@/components/ThemeProvider';
