@@ -11,7 +11,7 @@ export const organizationSchema = {
   image: `${SITE_URL}/og-image.png`,
   description:
     'FIVESOM is a global freelance marketplace connecting buyers with verified freelancers, with escrow-protected payments and local mobile-money payouts for African and Somali talent.',
-  email: 'noreply@fivesom.net',
+  email: 'fivesomsupport@gmail.com',
   foundingDate: '2025',
   areaServed: ['Worldwide', 'Africa', 'Somalia', 'Horn of Africa'],
   knowsAbout: [
