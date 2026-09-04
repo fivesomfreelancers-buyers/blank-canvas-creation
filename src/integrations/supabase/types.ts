@@ -1967,6 +1967,14 @@ export type Database = {
         Returns: Json
       }
       delete_gig: { Args: { _gig_id: string }; Returns: Json }
+      delete_message_attachment: {
+        Args: { _message_id: string }
+        Returns: Json
+      }
+      delete_system_message_attachment: {
+        Args: { _message_id: string }
+        Returns: Json
+      }
       effective_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -2038,6 +2046,14 @@ export type Database = {
       }
       publish_news: {
         Args: { _attachment_url?: string; _audience?: string; _body: string }
+        Returns: Json
+      }
+      replace_message_attachment: {
+        Args: { _label: string; _message_id: string; _url: string }
+        Returns: Json
+      }
+      replace_system_message_attachment: {
+        Args: { _label: string; _message_id: string; _url: string }
         Returns: Json
       }
       search_gig_tags: {
