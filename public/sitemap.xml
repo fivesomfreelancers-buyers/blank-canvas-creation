@@ -134,11 +134,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/amar-hassen-mohammednur</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fivesom.net/freelancer/najiib-hassan</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -150,6 +145,11 @@
   </url>
   <url>
     <loc>https://fivesom.net/freelancer/sakariye-saki</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/amar-hassen-mohammednur</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
