@@ -1,6 +1,22 @@
-import React, { useState } from 'react';
-import { FileText, Download, Lock, ZoomIn, X, Eye } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { FileText, Download, Lock, ZoomIn, X, Eye, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { useSignedAttachmentUrl } from '@/hooks/useSignedAttachmentUrl';
 import SmartImage from '@/components/media/SmartImage';
 import SmartVideo from '@/components/media/SmartVideo';
