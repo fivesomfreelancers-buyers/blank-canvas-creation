@@ -34,7 +34,7 @@ export const organizationSchema = {
     {
       '@type': 'ContactPoint',
       contactType: 'customer support',
-      email: 'noreply@fivesom.net',
+      email: 'fivesomsupport@gmail.com',
       availableLanguage: ['en', 'so', 'ar'],
       url: `${SITE_URL}/support`,
     },
