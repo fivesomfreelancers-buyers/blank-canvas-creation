@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Moon, Sun } from 'lucide-react';
+import { Mail, Moon, Phone, Sun } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { Button } from './ui/button';
 import { SocialLinks }  from './SocialLinks';
 import logoLight from '@/assets/logo.png';
 import logoDark from '@/assets/logo-new.png';
+
+export const SUPPORT_EMAIL = 'fivesomsupport@gmail.com';
 
 export const Footer: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -14,8 +16,8 @@ export const Footer: React.FC = () => {
   return (
     <footer className="py-12 px-4 sm:px-6 lg:px-8 border-t border-border bg-muted/30">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+          <div className="md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
               <img 
                 src={isDarkMode ? logoLight : logoDark} 
@@ -31,6 +33,30 @@ export const Footer: React.FC = () => {
             <p className="text-sm text-muted-foreground mb-4">
               Connect with talented freelancers and grow your business with confidence.
             </p>
+
+            <div className="mb-6">
+              <h4 className="font-semibold mb-3 text-foreground">Contact Us</h4>
+              <ul className="space-y-2">
+                <li>
+                  <a href="tel:+393208057092" className="text-sm transition-colors text-muted-foreground hover:text-foreground inline-flex items-center gap-2">
+                    <Phone className="h-4 w-4" />
+                    +39 320 805 7092
+                  </a>
+                </li>
+                <li>
+                  <a href="tel:+252636371510" className="text-sm transition-colors text-muted-foreground hover:text-foreground inline-flex items-center gap-2">
+                    <Phone className="h-4 w-4" />
+                    +252 63 637 1510
+                  </a>
+                </li>
+                <li>
+                  <a href={`mailto:${SUPPORT_EMAIL}`} className="text-sm transition-colors text-muted-foreground hover:text-foreground inline-flex items-center gap-2">
+                    <Mail className="h-4 w-4" />
+                    {SUPPORT_EMAIL}
+                  </a>
+                </li>
+              </ul>
+            </div>
 
             <SocialLinks iconSize={18} showLabel />
 

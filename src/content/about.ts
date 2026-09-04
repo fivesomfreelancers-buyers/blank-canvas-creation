@@ -101,7 +101,7 @@ export const aboutCompanyDetails: { label: string; value: string }[] = [
   { label: 'Platform', value: 'FIVESOM — global freelancing marketplace' },
   { label: 'Focus', value: 'African talent, worldwide clients' },
   { label: 'Website', value: 'fivesom.net' },
-  { label: 'Contact', value: 'support@fivesom.net' },
+  { label: 'Contact', value: 'fivesomsupport@gmail.com' },
 ];
 
 export const aboutTeamSection = {
