@@ -996,6 +996,36 @@ export type Database = {
           },
         ]
       }
+      news_broadcasts: {
+        Row: {
+          attachment_url: string | null
+          audience: string
+          body: string
+          created_at: string
+          created_by: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          attachment_url?: string | null
+          audience?: string
+          body: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          attachment_url?: string | null
+          audience?: string
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       order_deliveries: {
         Row: {
           created_at: string
@@ -1431,6 +1461,7 @@ export type Database = {
           admin_id: string | null
           attachment_url: string | null
           body: string
+          broadcast_id: string | null
           conversation_id: string
           created_at: string
           id: string
@@ -1442,6 +1473,7 @@ export type Database = {
           admin_id?: string | null
           attachment_url?: string | null
           body?: string
+          broadcast_id?: string | null
           conversation_id: string
           created_at?: string
           id?: string
@@ -1453,6 +1485,7 @@ export type Database = {
           admin_id?: string | null
           attachment_url?: string | null
           body?: string
+          broadcast_id?: string | null
           conversation_id?: string
           created_at?: string
           id?: string
@@ -1461,6 +1494,13 @@ export type Database = {
           sender_type?: Database["public"]["Enums"]["system_sender_type"]
         }
         Relationships: [
+          {
+            foreignKeyName: "system_messages_broadcast_id_fkey"
+            columns: ["broadcast_id"]
+            isOneToOne: false
+            referencedRelation: "news_broadcasts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "system_messages_conversation_id_fkey"
             columns: ["conversation_id"]
@@ -1969,6 +2009,10 @@ export type Database = {
           username: string
         }[]
       }
+      news_audience_matches: {
+        Args: { _audience: string; _user_id: string }
+        Returns: boolean
+      }
       order_is_freelancer_visible: {
         Args: { _order_id: string }
         Returns: boolean
@@ -2028,6 +2072,7 @@ export type Database = {
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       slugify: { Args: { _txt: string }; Returns: string }
+      storage_ref_from_url: { Args: { _url: string }; Returns: Json }
       sync_profile_role: { Args: { _user_id: string }; Returns: undefined }
       touch_last_seen: { Args: never; Returns: undefined }
       user_owns_support_ticket: {
