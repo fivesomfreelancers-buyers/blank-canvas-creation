@@ -59,7 +59,9 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import FounderDashboard from "./pages/founder/FounderDashboard";
 import TermsOfService from "./pages/legal/TermsOfService";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
+import CookiePolicy from "./pages/legal/CookiePolicy";
 import DeleteAccount from "./pages/DeleteAccount";
+import CookieConsentManager from "@/components/cookies/CookieConsentManager";
 
 import { ThemeProvider } from "./components/ThemeProvider";
 import PresenceProvider from "./components/presence/PresenceProvider";
