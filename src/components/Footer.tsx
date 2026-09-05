@@ -6,6 +6,7 @@ import { Button } from './ui/button';
 import { SocialLinks }  from './SocialLinks';
 import logoLight from '@/assets/logo.png';
 import logoDark from '@/assets/logo-new.png';
+import { openCookiePreferences } from '@/lib/cookieConsent';
 
 export const SUPPORT_EMAIL = 'fivesomsupport@gmail.com';
 
