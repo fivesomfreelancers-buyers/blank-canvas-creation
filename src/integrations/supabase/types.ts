@@ -2014,6 +2014,7 @@ export type Database = {
         Args: { _freelancer_id: string }
         Returns: boolean
       }
+      is_official_attachment: { Args: { _name: string }; Returns: boolean }
       is_public_profile: { Args: { _id: string }; Returns: boolean }
       list_founders: {
         Args: never

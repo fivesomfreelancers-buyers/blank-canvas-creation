@@ -51,6 +51,8 @@ interface Props {
   url: string;
   isOwn?: boolean;
   allowDownload?: boolean;
+  /** Hide the download control entirely (e.g. official announcements). */
+  hideDownload?: boolean;
   lockedHint?: string;
   /** Show edit/delete controls (only for attachments the viewer is allowed to manage). */
   canManage?: boolean;
@@ -86,6 +88,7 @@ const AttachmentPreview: React.FC<Props> = ({
   url,
   isOwn,
   allowDownload = true,
+  hideDownload = false,
   lockedHint,
   canManage = false,
   onDelete,
@@ -174,7 +177,7 @@ const AttachmentPreview: React.FC<Props> = ({
 
   const ActionButton = () => (
     <div className="flex items-center gap-1 flex-shrink-0">
-      {allowDownload ? (
+      {hideDownload ? null : allowDownload ? (
         <Button asChild variant={isOwn ? 'secondary' : 'outline'} size="sm">
           <a href={signedUrl} target="_blank" rel="noopener noreferrer" download={name} aria-label="Download">
             <Download className="w-4 h-4 mr-2" />
