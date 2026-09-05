@@ -51,6 +51,8 @@ interface Props {
   url: string;
   isOwn?: boolean;
   allowDownload?: boolean;
+  /** Hide the download control entirely (e.g. official announcements). */
+  hideDownload?: boolean;
   lockedHint?: string;
   /** Show edit/delete controls (only for attachments the viewer is allowed to manage). */
   canManage?: boolean;
