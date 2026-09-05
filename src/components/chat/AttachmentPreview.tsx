@@ -88,6 +88,7 @@ const AttachmentPreview: React.FC<Props> = ({
   url,
   isOwn,
   allowDownload = true,
+  hideDownload = false,
   lockedHint,
   canManage = false,
   onDelete,
