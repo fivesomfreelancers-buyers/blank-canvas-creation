@@ -8,6 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { MessageSquare, Eye, Paperclip, Shield, Search, AlertCircle, RefreshCw } from 'lucide-react';
 import SecureFileLink from '@/components/media/SecureFileLink';
+import MessageActions from '@/components/chat/MessageActions';
+import { deleteChatMessage } from '@/lib/deleteMessage';
+import { toast } from 'sonner';
 
 interface Person {
   id: string;
@@ -147,7 +150,7 @@ const AdminChats = () => {
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
-  // Realtime: any new/updated message or conversation refreshes the monitor.
+  // Realtime: any new/updated/deleted message or conversation refreshes the monitor.
   useEffect(() => {
     const channel = supabase
       .channel('admin-chat-monitor')
@@ -157,11 +160,29 @@ const AdminChats = () => {
         if (payload.eventType === 'INSERT' && m?.conversation_id && m.conversation_id === openId) {
           setMessages((prev) => (prev.some((p) => p.id === m.id) ? prev : [...prev, m]));
         }
+        if (payload.eventType === 'DELETE') {
+          const oldId = (payload.old as any)?.id;
+          if (oldId) setMessages((prev) => prev.filter((p) => p.id !== oldId));
+        }
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'conversations' }, () => fetchAll())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [fetchAll, openId]);
+
+  /** Staff moderation: permanently remove a message (and its file) for both users. */
+  const moderateDelete = useCallback(async (m: Msg) => {
+    const previous = messages;
+    setMessages((prev) => prev.filter((p) => p.id !== m.id));
+    try {
+      await deleteChatMessage('dm', m.id);
+      toast.success('Message removed');
+      fetchAll();
+    } catch (err: any) {
+      setMessages(previous);
+      toast.error('Could not remove message', { description: err?.message });
+    }
+  }, [messages, fetchAll]);
 
   // Load the full history of the opened conversation.
   useEffect(() => {
@@ -307,7 +328,7 @@ const AdminChats = () => {
                     <span className="text-purple-500">{open.freelancer.name}</span>
                   </DialogTitle>
                   <p className="text-[11px] text-muted-foreground flex items-center gap-1">
-                    <Shield className="h-3 w-3" /> Read-only admin view · {messages.length} messages
+                    <Shield className="h-3 w-3" /> Admin monitor · {messages.length} messages
                   </p>
                 </div>
               </DialogHeader>
@@ -372,9 +393,16 @@ const AdminChats = () => {
                               </SecureFileLink>
                             )}
                           </div>
-                          <span className="mt-0.5 px-1 text-[10px] text-muted-foreground">
+                          <span className="mt-0.5 px-1 text-[10px] text-muted-foreground flex items-center gap-1">
                             {formatTime(m.created_at)}
                             {m.is_read === false && ' · unread'}
+                            <MessageActions
+                              onDelete={() => moderateDelete(m)}
+                              moderation
+                              title="Remove this message?"
+                              description="Staff moderation: the message (and any file) is permanently removed for both users. This cannot be undone."
+                              className="h-5 w-5"
+                            />
                           </span>
                         </div>
                         {!fromBuyer && (

@@ -1966,11 +1966,14 @@ export type Database = {
         }
         Returns: Json
       }
+      delete_dispute_message: { Args: { _message_id: string }; Returns: Json }
       delete_gig: { Args: { _gig_id: string }; Returns: Json }
+      delete_message: { Args: { _message_id: string }; Returns: Json }
       delete_message_attachment: {
         Args: { _message_id: string }
         Returns: Json
       }
+      delete_system_message: { Args: { _message_id: string }; Returns: Json }
       delete_system_message_attachment: {
         Args: { _message_id: string }
         Returns: Json

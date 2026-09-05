@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { moderateText, moderateImageFile, recordStrike, isChatBlocked } from '@/lib/chatModeration';
 import { getOrCreateConversation as createConversation } from '@/lib/conversations';
 import { useTypingIndicator } from '@/hooks/useTypingIndicator';
+import { deleteChatMessage, removeStoredFile } from '@/lib/deleteMessage';
 
 
 export type ConversationKind = 'dm' | 'support' | 'news';
@@ -483,32 +484,35 @@ export function useConversations() {
     }
   }, [currentUserId, selectedConversationId, selectedPartnerId, selectedKind, fetchConversations]);
 
-  /** Best-effort removal of the stored object behind a deleted/replaced attachment. */
-  const removeStoredFile = useCallback(async (ref: any) => {
-    if (!ref?.bucket || !ref?.path) return;
+  /**
+   * Permanently deletes a message the current user sent (text, image, video,
+   * file or link). The backend re-validates ownership, removes the row, and the
+   * stored file is cleaned up; realtime then removes it for the other side.
+   */
+  const deleteMessage = useCallback(async (messageId: string): Promise<boolean> => {
+    const kind = selectedKind;
+    const previous = messages;
+    // Optimistic removal — restored if the backend refuses.
+    setMessages(prev => prev.filter(m => m.id !== messageId));
     try {
-      await supabase.storage.from(ref.bucket).remove([ref.path]);
-    } catch (err) {
-      console.warn('storage cleanup failed', err);
-    }
-  }, []);
-
-  /** Permanently removes an attachment the current user sent (or an admin owns). */
-  const deleteAttachment = useCallback(async (messageId: string): Promise<boolean> => {
-    const rpc = selectedKind === 'dm' ? 'delete_message_attachment' : 'delete_system_message_attachment';
-    const { data, error } = await (supabase as any).rpc(rpc, { _message_id: messageId });
-    if (error) {
-      toast.error('Could not delete attachment', { description: error.message });
+      const result = await deleteChatMessage(kind, messageId);
+      if (!result.deleted) {
+        // Already gone (deleted elsewhere) — keep it removed locally.
+        fetchConversations();
+        return true;
+      }
+      fetchConversations();
+      toast.success('Message deleted');
+      return true;
+    } catch (err: any) {
+      setMessages(previous);
+      toast.error('Could not delete message', { description: err?.message });
       return false;
     }
-    await removeStoredFile((data as any)?.file);
-    setMessages(prev => prev.map(m =>
-      m.id === messageId ? { ...m, attachment_url: null, message: '🗑️ Attachment deleted' } : m
-    ));
-    fetchConversations();
-    toast.success('Attachment deleted');
-    return true;
-  }, [selectedKind, removeStoredFile, fetchConversations]);
+  }, [selectedKind, messages, fetchConversations]);
+
+  /** Backwards-compatible alias: deleting an attachment removes its message. */
+  const deleteAttachment = deleteMessage;
 
   /** Replaces an already-sent attachment with a newly uploaded file. */
   const replaceAttachment = useCallback(async (messageId: string, file: File): Promise<boolean> => {
@@ -556,7 +560,7 @@ export function useConversations() {
     } finally {
       setUploadingImage(false);
     }
-  }, [currentUserId, selectedConversationId, selectedKind, removeStoredFile, fetchConversations]);
+  }, [currentUserId, selectedConversationId, selectedKind, fetchConversations]);
 
   const selectedConvo = conversations.find(c => c.conversationId === selectedConversationId);
   const filteredConvos = conversations.filter(c =>
@@ -588,6 +592,7 @@ export function useConversations() {
 
     handleSend,
     handleImageUpload,
+    deleteMessage,
     deleteAttachment,
     replaceAttachment,
     fetchConversations,
