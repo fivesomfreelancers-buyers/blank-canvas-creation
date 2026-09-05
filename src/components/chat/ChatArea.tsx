@@ -207,6 +207,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                             <AttachmentPreview
                               url={msg.attachment_url}
                               isOwn={isMine}
+                              hideDownload={isNews}
                               canManage={canDelete}
                               managing={uploadingImage}
                               onDelete={canDelete ? () => removeMessage!(msg.id) : undefined}
