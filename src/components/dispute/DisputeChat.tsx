@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Send, Shield, Loader2, Paperclip, ScaleIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
+import MessageActions from '@/components/chat/MessageActions';
+import { deleteChatMessage } from '@/lib/deleteMessage';
 import { moderateText, moderateImageFile, recordStrike, isChatBlocked } from '@/lib/chatModeration';
 
 interface DisputeChatProps {
@@ -94,10 +96,28 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
         (payload) => {
           setMessages((prev) => prev.some(m => m.id === (payload.new as any).id) ? prev : [...prev, payload.new as DisputeMessage]);
         })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'dispute_messages' },
+        (payload) => {
+          const oldId = (payload.old as any)?.id;
+          if (oldId) setMessages((prev) => prev.filter(m => m.id !== oldId));
+        })
       .subscribe();
 
     return () => { active = false; supabase.removeChannel(channel); };
   }, [disputeId]);
+
+  /** Sender-only deletion; the backend re-validates ownership. */
+  const deleteMessage = async (m: DisputeMessage) => {
+    const previous = messages;
+    setMessages((prev) => prev.filter(x => x.id !== m.id));
+    try {
+      await deleteChatMessage('dispute', m.id);
+      toast({ title: 'Message deleted' });
+    } catch (err: any) {
+      setMessages(previous);
+      toast({ title: 'Could not delete message', description: err?.message, variant: 'destructive' });
+    }
+  };
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages.length]);
 
@@ -214,7 +234,13 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
             messages.map((m) => {
               const mine = m.sender_id === userId;
               return (
-                <div key={m.id} className={`flex w-full min-w-0 ${mine ? 'justify-end' : 'justify-start'}`}>
+                <div key={m.id} className={`group flex w-full min-w-0 items-start gap-1 ${mine ? 'justify-end' : 'justify-start'}`}>
+                  {mine && (
+                    <MessageActions
+                      onDelete={() => deleteMessage(m)}
+                      className="mt-1 opacity-70 md:opacity-0 md:group-hover:opacity-100 data-[state=open]:opacity-100"
+                    />
+                  )}
                   <div className={`max-w-[85%] sm:max-w-[78%] min-w-0 rounded-2xl px-3 py-2 text-sm chat-text ${mine ? 'bg-primary text-primary-foreground rounded-br-md' : 'bg-muted rounded-bl-md'}`}>
                     <div className="flex items-center gap-1 mb-1">
                       <Badge variant="outline" className={`text-[10px] py-0 px-1.5 capitalize ${roleStyles[m.sender_role]}`}>
@@ -223,7 +249,14 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
                     </div>
                     {m.body && <p className="chat-text">{m.body}</p>}
 
-                    {m.attachment_url && <AttachmentPreview url={m.attachment_url} isOwn={mine} />}
+                    {m.attachment_url && (
+                      <AttachmentPreview
+                        url={m.attachment_url}
+                        isOwn={mine}
+                        canManage={mine}
+                        onDelete={mine ? () => deleteMessage(m) : undefined}
+                      />
+                    )}
                     <p className={`text-[10px] mt-1 ${mine ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                       {new Date(m.created_at).toLocaleString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' })}
                     </p>

@@ -98,6 +98,7 @@ const AttachmentPreview: React.FC<Props> = ({
   const ext = (name.split('.').pop() || '').toUpperCase();
   const [zoomOpen, setZoomOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const replaceInputRef = useRef<HTMLInputElement>(null);
 
   const showManage = canManage && (!!onDelete || !!onReplace);
@@ -143,22 +144,27 @@ const AttachmentPreview: React.FC<Props> = ({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+      <AlertDialog open={confirmOpen} onOpenChange={(v) => !deleting && setConfirmOpen(v)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this attachment?</AlertDialogTitle>
+            <AlertDialogTitle>Delete this file?</AlertDialogTitle>
             <AlertDialogDescription>
-              This permanently removes the file from the conversation and from storage. This action
-              cannot be undone.
+              The file and its message are permanently removed from the conversation for everyone,
+              and the file is deleted from storage. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
             <AlertDialogAction
+              disabled={deleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              onClick={() => onDelete?.()}
+              onClick={async (e) => {
+                e.preventDefault();
+                setDeleting(true);
+                try { await onDelete?.(); } finally { setDeleting(false); setConfirmOpen(false); }
+              }}
             >
-              Delete
+              {deleting ? 'Deleting…' : 'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

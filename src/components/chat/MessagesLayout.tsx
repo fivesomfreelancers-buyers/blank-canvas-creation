@@ -39,7 +39,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({ chat, heightClass = 'h-
             fileInputRef={chat.fileInputRef}
             handleSend={chat.handleSend}
             handleImageUpload={chat.handleImageUpload}
-            deleteAttachment={chat.deleteAttachment}
+            deleteMessage={chat.deleteMessage}
             replaceAttachment={chat.replaceAttachment}
             onBack={chat.clearSelection}
           />
@@ -80,7 +80,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({ chat, heightClass = 'h-
         fileInputRef={chat.fileInputRef}
         handleSend={chat.handleSend}
         handleImageUpload={chat.handleImageUpload}
-        deleteAttachment={chat.deleteAttachment}
+        deleteMessage={chat.deleteMessage}
         replaceAttachment={chat.replaceAttachment}
       />
     </div>

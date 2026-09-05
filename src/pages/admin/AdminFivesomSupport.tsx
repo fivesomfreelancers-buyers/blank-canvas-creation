@@ -10,6 +10,8 @@ import { Send, Search, Paperclip, Loader2 } from 'lucide-react';
 import supportLogo from '@/assets/fivesom-support-logo.png';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import AutoGrowTextarea from '@/components/chat/AutoGrowTextarea';
+import MessageActions from '@/components/chat/MessageActions';
+import { deleteChatMessage } from '@/lib/deleteMessage';
 
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -123,11 +125,14 @@ const AdminFivesomSupport: React.FC = () => {
     const ch = supabase
       .channel('admin-support-rt')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'system_messages' }, async (p: any) => {
-        if (selected && p.new?.conversation_id === selected.id) {
-          await fetchMessages(selected.id);
-        } else {
-          fetchConvos();
+        const cid = p.new?.conversation_id || p.old?.conversation_id;
+        if (p.eventType === 'DELETE' && p.old?.id) {
+          setMessages(prev => prev.filter(m => m.id !== p.old.id));
         }
+        if (selected && cid === selected.id) {
+          await fetchMessages(selected.id);
+        }
+        fetchConvos();
       })
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'system_conversations' }, () => {
         fetchConvos();
@@ -135,6 +140,20 @@ const AdminFivesomSupport: React.FC = () => {
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [selected?.id]);
+
+  /** Staff deletion — removes the message (and its file) for the user too. */
+  const deleteMessage = async (m: SysMsg) => {
+    const previous = messages;
+    setMessages(prev => prev.filter(x => x.id !== m.id));
+    try {
+      await deleteChatMessage('support', m.id);
+      toast.success('Message deleted');
+      fetchConvos();
+    } catch (err: any) {
+      setMessages(previous);
+      toast.error('Could not delete message', { description: err?.message });
+    }
+  };
 
   useEffect(() => { if (selected) fetchMessages(selected.id); }, [selected?.id]);
 
@@ -254,13 +273,33 @@ const AdminFivesomSupport: React.FC = () => {
                 {messages.map(m => {
                   const mine = m.sender_type !== 'user';
                   return (
-                    <div key={m.id} className={`flex w-full min-w-0 ${mine ? 'justify-end' : 'justify-start'}`}>
+                    <div key={m.id} className={`group flex w-full min-w-0 items-start gap-1 ${mine ? 'justify-end' : 'justify-start'}`}>
+                      {mine && (
+                        <MessageActions
+                          onDelete={() => deleteMessage(m)}
+                          className="mt-1 opacity-70 md:opacity-0 md:group-hover:opacity-100 data-[state=open]:opacity-100"
+                        />
+                      )}
                       <div className={`max-w-[85%] sm:max-w-[75%] min-w-0 px-3 py-2 rounded-2xl text-sm chat-text ${mine ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'}`}>
                         {m.sender_type === 'system' && <p className="text-[10px] opacity-70 mb-0.5">SYSTEM</p>}
                         <p className="chat-text">{m.body}</p>
-                        {m.attachment_url && <AttachmentPreview url={m.attachment_url} isOwn={mine} />}
+                        {m.attachment_url && (
+                          <AttachmentPreview
+                            url={m.attachment_url}
+                            isOwn={mine}
+                            canManage
+                            onDelete={() => deleteMessage(m)}
+                          />
+                        )}
                         <p className={`text-[10px] mt-1 ${mine ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>{new Date(m.created_at).toLocaleString()}</p>
                       </div>
+                      {!mine && (
+                        <MessageActions
+                          onDelete={() => deleteMessage(m)}
+                          moderation
+                          className="mt-1 opacity-70 md:opacity-0 md:group-hover:opacity-100 data-[state=open]:opacity-100"
+                        />
+                      )}
                     </div>
                   );
                 })}
