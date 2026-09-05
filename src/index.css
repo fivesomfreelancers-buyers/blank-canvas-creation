@@ -121,6 +121,45 @@
   }
 }
 
+/* ---- Global dark/light theme sweep transition ---- */
+@layer base {
+  /* Fallback for browsers without the View Transitions API: soft cross-fade. */
+  html {
+    transition: background-color 320ms ease, color 320ms ease;
+  }
+
+  /* Avoid a per-element animation storm; the sweep handles the visual change. */
+  ::view-transition-group(root) {
+    animation-duration: 620ms;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  /* Old snapshot stays put underneath while the new theme is clipped over it. */
+  ::view-transition-old(root) {
+    z-index: 0;
+  }
+
+  ::view-transition-new(root) {
+    z-index: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      transition: none;
+    }
+    ::view-transition-group(root),
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none !important;
+    }
+  }
+}
+
 @layer utilities {
   .no-scrollbar {
     -ms-overflow-style: none;
