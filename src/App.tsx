@@ -155,6 +155,8 @@ const App = () => (
               {/* Legal Routes */}
               <Route path="/legal/terms" element={<TermsOfService />} />
               <Route path="/legal/privacy" element={<PrivacyPolicy />} />
+              <Route path="/legal/cookies" element={<CookiePolicy />} />
+
 
               {/* Public account/data deletion request page (Google Play requirement) */}
               <Route path="/delete-account" element={<DeleteAccount />} />
