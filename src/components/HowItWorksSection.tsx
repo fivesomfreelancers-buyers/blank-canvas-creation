@@ -13,7 +13,7 @@ const HowItWorksSection = () => {
       stepNumber: 1,
       icon: Search,
       title: 'Find Your Perfect Freelancer',
-      description: 'Browse thousands of verified freelancers across categories and choose the right expert for your task.',
+      description: 'Connect with skilled professionals who can bring your ideas to life. Explore services, compare skills, and choose the right freelancer for your project — all in one trusted place.',
       image: howItWorksImage1,
       color: 'from-blue-400 to-cyan-500'
     },
