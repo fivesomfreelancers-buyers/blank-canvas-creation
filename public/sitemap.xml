@@ -71,6 +71,11 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://fivesom.net/legal/cookies</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://fivesom.net/delete-account</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -113,7 +118,7 @@
   </url>
   <url>
     <loc>https://fivesom.net/gig/professional-graphic-designer-creative-modern-designs-creative-graphic</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -139,6 +144,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fivesom.net/freelancer/aden-asmar</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fivesom.net/freelancer/hafsa-hassan-ahmed</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -155,11 +165,6 @@
   </url>
   <url>
     <loc>https://fivesom.net/freelancer/asmahodandev</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/aden-asmar</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
