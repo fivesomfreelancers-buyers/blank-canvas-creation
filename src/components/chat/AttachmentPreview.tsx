@@ -177,7 +177,7 @@ const AttachmentPreview: React.FC<Props> = ({
 
   const ActionButton = () => (
     <div className="flex items-center gap-1 flex-shrink-0">
-      {allowDownload ? (
+      {hideDownload ? null : allowDownload ? (
         <Button asChild variant={isOwn ? 'secondary' : 'outline'} size="sm">
           <a href={signedUrl} target="_blank" rel="noopener noreferrer" download={name} aria-label="Download">
             <Download className="w-4 h-4 mr-2" />
