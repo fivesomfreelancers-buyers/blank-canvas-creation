@@ -59,7 +59,9 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import FounderDashboard from "./pages/founder/FounderDashboard";
 import TermsOfService from "./pages/legal/TermsOfService";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
+import CookiePolicy from "./pages/legal/CookiePolicy";
 import DeleteAccount from "./pages/DeleteAccount";
+import CookieConsentManager from "@/components/cookies/CookieConsentManager";
 
 import { ThemeProvider } from "./components/ThemeProvider";
 import PresenceProvider from "./components/presence/PresenceProvider";
@@ -153,6 +155,8 @@ const App = () => (
               {/* Legal Routes */}
               <Route path="/legal/terms" element={<TermsOfService />} />
               <Route path="/legal/privacy" element={<PrivacyPolicy />} />
+              <Route path="/legal/cookies" element={<CookiePolicy />} />
+
 
               {/* Public account/data deletion request page (Google Play requirement) */}
               <Route path="/delete-account" element={<DeleteAccount />} />
@@ -169,6 +173,7 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <CookieConsentManager />
           </BrowserRouter>
         </TooltipProvider>
         </PresenceProvider>

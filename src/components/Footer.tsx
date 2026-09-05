@@ -6,6 +6,7 @@ import { Button } from './ui/button';
 import { SocialLinks }  from './SocialLinks';
 import logoLight from '@/assets/logo.png';
 import logoDark from '@/assets/logo-new.png';
+import { openCookiePreferences } from '@/lib/cookieConsent';
 
 export const SUPPORT_EMAIL = 'fivesomsupport@gmail.com';
 
@@ -153,10 +154,25 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/legal/cookies" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                  Cookie Policy
+                </Link>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={openCookiePreferences}
+                  className="text-sm text-left transition-colors text-muted-foreground hover:text-foreground"
+                >
+                  Cookie Settings
+                </button>
+              </li>
+              <li>
                 <Link to="/delete-account" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
                   Delete Account
                 </Link>
               </li>
+
 
             </ul>
           </div>
