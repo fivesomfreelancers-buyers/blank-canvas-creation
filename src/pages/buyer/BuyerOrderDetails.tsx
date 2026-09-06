@@ -36,6 +36,28 @@ const BuyerOrderDetails = () => {
     if (orderId) fetchOrder();
   }, [orderId]);
 
+  // Live updates: new deliveries and order status changes appear instantly.
+  useEffect(() => {
+    if (!orderId) return;
+    const channel = supabase
+      .channel(`buyer-order-${orderId}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'order_deliveries', filter: `order_id=eq.${orderId}` },
+        () => fetchOrder(),
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` },
+        () => fetchOrder(),
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [orderId]);
+
+
   const fetchOrder = async () => {
     try {
       const { data: orderData, error } = await supabase
