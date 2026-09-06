@@ -68,9 +68,13 @@ const GigDetails = () => {
 
       
 
-      const { data: reviews } = await (supabase as any).from('public_gig_reviews').select('rating, comment, created_at').eq('gig_id', id);
+      const { data: reviews } = await (supabase as any).from('public_gig_reviews').select('rating, comment, created_at, reviewer_name, reviewer_image').eq('gig_id', id);
 
-      const reviewsWithNames = (reviews || []).map((review) => ({ ...review, buyerName: 'Anonymous Buyer' }));
+      const reviewsWithNames = (reviews || []).map((review: any) => ({
+        ...review,
+        buyerName: review.reviewer_name || 'Anonymous Buyer',
+        buyerImage: review.reviewer_image || null,
+      }));
 
       const avgRating = reviews && reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
 
