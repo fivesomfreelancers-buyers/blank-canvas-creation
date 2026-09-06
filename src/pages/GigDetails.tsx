@@ -68,9 +68,13 @@ const GigDetails = () => {
 
       
 
-      const { data: reviews } = await (supabase as any).from('public_gig_reviews').select('rating, comment, created_at').eq('gig_id', id);
+      const { data: reviews } = await (supabase as any).from('public_gig_reviews').select('rating, comment, created_at, reviewer_name, reviewer_image').eq('gig_id', id);
 
-      const reviewsWithNames = (reviews || []).map((review) => ({ ...review, buyerName: 'Anonymous Buyer' }));
+      const reviewsWithNames = (reviews || []).map((review: any) => ({
+        ...review,
+        buyerName: review.reviewer_name || 'Anonymous Buyer',
+        buyerImage: review.reviewer_image || null,
+      }));
 
       const avgRating = reviews && reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
 
@@ -314,17 +318,28 @@ const GigDetails = () => {
                       <div className="space-y-4">
                         {gig.reviews.map((review: any, idx: number) => (
                           <div key={idx} className="border-b border-border pb-4">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="font-medium text-sm">{review.buyerName}</span>
-                              <span className="text-xs text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</span>
+                            <div className="flex items-start gap-3">
+                              <Avatar className="w-9 h-9 shrink-0">
+                                <AvatarImage src={review.buyerImage || ''} className="object-cover" />
+                                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                                  {(review.buyerName || 'B').charAt(0).toUpperCase()}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between mb-2 gap-2">
+                                  <span className="font-medium text-sm">{review.buyerName}</span>
+                                  <span className="text-xs text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</span>
+                                </div>
+                                <div className="flex items-center mb-2">
+                                  {[1,2,3,4,5].map((star) => (
+                                    <Star key={star} className={`w-4 h-4 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} />
+                                  ))}
+                                </div>
+                                {review.comment && <p className="text-muted-foreground text-sm whitespace-pre-wrap">{review.comment}</p>}
+                              </div>
                             </div>
-                            <div className="flex items-center mb-2">
-                              {[1,2,3,4,5].map((star) => (
-                                <Star key={star} className={`w-4 h-4 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} />
-                              ))}
-                            </div>
-                            {review.comment && <p className="text-muted-foreground text-sm">{review.comment}</p>}
                           </div>
+
                         ))}
                       </div>
                     ) : (
