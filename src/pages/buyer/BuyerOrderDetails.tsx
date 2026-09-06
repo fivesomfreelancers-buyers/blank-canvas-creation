@@ -36,6 +36,28 @@ const BuyerOrderDetails = () => {
     if (orderId) fetchOrder();
   }, [orderId]);
 
+  // Live updates: new deliveries and order status changes appear instantly.
+  useEffect(() => {
+    if (!orderId) return;
+    const channel = supabase
+      .channel(`buyer-order-${orderId}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'order_deliveries', filter: `order_id=eq.${orderId}` },
+        () => fetchOrder(),
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` },
+        () => fetchOrder(),
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [orderId]);
+
+
   const fetchOrder = async () => {
     try {
       const { data: orderData, error } = await supabase
@@ -84,7 +106,9 @@ const BuyerOrderDetails = () => {
       const { error } = await (supabase as any).rpc('accept_order_delivery', { _order_id: orderId });
       if (error) throw error;
       setOrder((prev: any) => ({ ...prev, status: 'completed', payment_status: 'released' }));
+      await fetchOrder();
       setShowFeedbackModal(true);
+
       toast({ title: "Delivery Accepted! 🎉", description: "Payment has been released to the freelancer." });
     } catch (error: any) {
       toast({ title: "Error", description: error?.message || "Failed to accept delivery.", variant: "destructive" });
