@@ -106,7 +106,9 @@ const BuyerOrderDetails = () => {
       const { error } = await (supabase as any).rpc('accept_order_delivery', { _order_id: orderId });
       if (error) throw error;
       setOrder((prev: any) => ({ ...prev, status: 'completed', payment_status: 'released' }));
+      await fetchOrder();
       setShowFeedbackModal(true);
+
       toast({ title: "Delivery Accepted! 🎉", description: "Payment has been released to the freelancer." });
     } catch (error: any) {
       toast({ title: "Error", description: error?.message || "Failed to accept delivery.", variant: "destructive" });
