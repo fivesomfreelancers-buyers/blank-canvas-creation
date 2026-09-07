@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { compressImage } from '@/lib/imageCompress';
 import Navbar from '@/components/Navbar';
 
 const AVAILABLE_LANGUAGES = [
@@ -114,11 +115,12 @@ const CompleteProfile = () => {
     let profileImageUrl = existingAvatar;
 
     if (formData.profileImage) {
-      const fileExt = formData.profileImage.name.split('.').pop();
+      const optimized = await compressImage(formData.profileImage, { maxDimension: 800 });
+      const fileExt = optimized.name.split('.').pop();
       const fileName = `${user.id}/avatar.${fileExt}`;
       const { error: uploadError } = await supabase.storage
         .from('profile-images')
-        .upload(fileName, formData.profileImage, { upsert: true });
+        .upload(fileName, optimized, { upsert: true, contentType: optimized.type });
 
       if (!uploadError) {
         const { data: publicUrl } = supabase.storage.from('profile-images').getPublicUrl(fileName);

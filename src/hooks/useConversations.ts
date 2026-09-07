@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { compressImage } from '@/lib/imageCompress';
 import supportLogoAsset from '@/assets/fivesom-support-logo.png';
 import newsLogoAsset from '@/assets/fivesom-news-logo.png';
 import { toast } from 'sonner';
@@ -440,6 +441,7 @@ export function useConversations() {
         }
       }
 
+      file = await compressImage(file);
       const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase();
       // DM attachments live in the conversation folder so BOTH participants are
       // allowed to sign/download them. Support uploads stay under the user id.

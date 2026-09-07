@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Trash2, Upload, ImageIcon, Video, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { compressImage } from '@/lib/imageCompress';
 import { toast } from '@/hooks/use-toast';
 
 interface PortfolioItem {
@@ -65,9 +66,10 @@ const PortfolioManager: React.FC<Props> = ({ freelancerId, isVerified = false })
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not signed in');
-      const ext = file.name.split('.').pop();
+      const optimized = mediaType === 'image' ? await compressImage(file) : file;
+      const ext = optimized.name.split('.').pop();
       const path = `${user.id}/${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage.from('verification-portfolio').upload(path, file, { upsert: false });
+      const { error: upErr } = await supabase.storage.from('verification-portfolio').upload(path, optimized, { upsert: false, contentType: optimized.type });
       if (upErr) throw upErr;
       const { data: pub } = supabase.storage.from('verification-portfolio').getPublicUrl(path);
       const nextPos = items.length;

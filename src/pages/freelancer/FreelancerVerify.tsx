@@ -13,6 +13,7 @@ import {
   Briefcase, GraduationCap, Wrench, Image as ImageIcon, Video, X, Plus, Search,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { compressImage } from '@/lib/imageCompress';
 import BlueTickApply from '@/components/freelancer/BlueTickApply';
 import ToolIcon from '@/components/ToolIcon';
 import { FREELANCER_PUBLIC_COLUMNS } from '@/lib/freelancerEarnings';
@@ -119,8 +120,9 @@ const FreelancerVerify: React.FC = () => {
   }, []);
 
   const uploadProfilePhoto = async (file: File) => {
-    const path = `${userId}/avatar-${Date.now()}-${file.name}`;
-    const { error } = await supabase.storage.from('profile-images').upload(path, file, { upsert: true });
+    const optimized = await compressImage(file, { maxDimension: 800 });
+    const path = `${userId}/avatar-${Date.now()}-${optimized.name}`;
+    const { error } = await supabase.storage.from('profile-images').upload(path, optimized, { upsert: true, contentType: optimized.type });
     if (error) { toast({ title: 'Upload failed', description: error.message, variant: 'destructive' }); return; }
     const { data } = supabase.storage.from('profile-images').getPublicUrl(path);
     setProfileImageUrl(data.publicUrl);
@@ -244,9 +246,9 @@ const FreelancerVerify: React.FC = () => {
 
       const safeName = (n: string) => n.replace(/[^a-zA-Z0-9._-]+/g, '-');
       for (let i = 0; i < portfolioImages.length; i++) {
-        const f = portfolioImages[i];
+        const f = await compressImage(portfolioImages[i]);
         const path = `${userId}/portfolio-${Date.now()}-${i}-${safeName(f.name)}`;
-        const { error } = await supabase.storage.from('verification-portfolio').upload(path, f);
+        const { error } = await supabase.storage.from('verification-portfolio').upload(path, f, { contentType: f.type });
         if (error) throw new Error(`Portfolio image ${i + 1} upload failed: ${error.message}`);
         const { data } = supabase.storage.from('verification-portfolio').getPublicUrl(path);
         portfolioRows.push({ freelancer_id: freelancerId, media_url: data.publicUrl, media_type: 'image', position: i });

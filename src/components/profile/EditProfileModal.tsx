@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Camera, X, Loader2, Plus } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { compressImage } from '@/lib/imageCompress';
 import { toast } from '@/hooks/use-toast';
 import { SOFTWARE_CATALOG, SoftwareDef, findTool } from '@/lib/verificationCatalog';
 import ToolIcon from '@/components/ToolIcon';
@@ -51,9 +52,10 @@ const EditProfileModal = ({ open, onClose, profile, freelancerData, userId, onSa
     }
     setUploading(true);
     try {
-      const ext = file.name.split('.').pop();
+      const optimized = await compressImage(file, { maxDimension: 800 });
+      const ext = optimized.name.split('.').pop();
       const path = `${userId}/avatar.${ext}`;
-      const { error: uploadErr } = await supabase.storage.from('profile-images').upload(path, file, { upsert: true });
+      const { error: uploadErr } = await supabase.storage.from('profile-images').upload(path, optimized, { upsert: true, contentType: optimized.type });
       if (uploadErr) throw uploadErr;
       const { data: { publicUrl } } = supabase.storage.from('profile-images').getPublicUrl(path);
       setImageUrl(`${publicUrl}?t=${Date.now()}`);

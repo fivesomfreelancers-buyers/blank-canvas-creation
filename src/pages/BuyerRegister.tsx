@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { compressImage } from '@/lib/imageCompress';
 import Navbar from '@/components/Navbar';
 import SEO from '@/components/SEO';
 
@@ -36,12 +37,13 @@ const BuyerRegister = () => {
 
   const uploadProfileImage = async (userId: string, file: File): Promise<string | null> => {
     try {
-      const fileExt = file.name.split('.').pop();
+      const optimized = await compressImage(file, { maxDimension: 800 });
+      const fileExt = optimized.name.split('.').pop();
       const fileName = `${userId}/avatar.${fileExt}`;
-      
+
       const { error: uploadError } = await supabase.storage
         .from('profile-images')
-        .upload(fileName, file, { upsert: true });
+        .upload(fileName, optimized, { upsert: true, contentType: optimized.type });
 
       if (uploadError) {
         console.error('Profile image upload error:', uploadError);

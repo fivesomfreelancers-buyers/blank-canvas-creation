@@ -8,6 +8,7 @@ import PricingPackages from '@/components/gig/PricingPackages';
 import GigDescription from '@/components/gig/GigDescription';
 import GalleryPublish from '@/components/gig/GalleryPublish';
 import { supabase } from '@/integrations/supabase/client';
+import { compressImage, compressImages } from '@/lib/imageCompress';
 
 export interface GigData {
   title: string;
@@ -174,17 +175,19 @@ const CreateGig = () => {
 
       // Video cover image first — it becomes the gig thumbnail and video poster
       if (gigData.videoThumbnail) {
-        const tExt = gigData.videoThumbnail.name.split('.').pop();
+        const thumb = await compressImage(gigData.videoThumbnail);
+        const tExt = thumb.name.split('.').pop();
         const tName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${tExt}`;
-        const { error: tErr } = await supabase.storage.from('gig-images').upload(tName, gigData.videoThumbnail);
+        const { error: tErr } = await supabase.storage.from('gig-images').upload(tName, thumb, { contentType: thumb.type });
         if (tErr) console.error('Video thumbnail upload error:', tErr);
         else imageUrls.push(supabase.storage.from('gig-images').getPublicUrl(tName).data.publicUrl);
       }
 
-      for (const imageFile of gigData.images) {
+      const optimizedImages = await compressImages(gigData.images);
+      for (const imageFile of optimizedImages) {
         const fileExt = imageFile.name.split('.').pop();
         const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-        const { error: uploadError } = await supabase.storage.from('gig-images').upload(fileName, imageFile);
+        const { error: uploadError } = await supabase.storage.from('gig-images').upload(fileName, imageFile, { contentType: imageFile.type });
         if (uploadError) { console.error('Image upload error:', uploadError); continue; }
         const { data: publicUrl } = supabase.storage.from('gig-images').getPublicUrl(fileName);
         imageUrls.push(publicUrl.publicUrl);
