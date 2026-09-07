@@ -441,15 +441,15 @@ export function useConversations() {
         }
       }
 
-      file = await compressImage(file);
-      const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase();
+      const upload = await compressImage(file);
+      const fileExt = (upload.name.split('.').pop() || 'bin').toLowerCase();
       // DM attachments live in the conversation folder so BOTH participants are
       // allowed to sign/download them. Support uploads stay under the user id.
       const folder = selectedKind === 'dm' ? selectedConversationId : currentUserId;
       const filePath = `${folder}/${crypto.randomUUID()}.${fileExt}`;
       const { error: uploadError } = await supabase.storage
         .from('message-attachments')
-        .upload(filePath, file, { contentType: file.type || undefined });
+        .upload(filePath, upload, { contentType: upload.type || undefined });
       if (uploadError) throw uploadError;
       const { data: { publicUrl } } = supabase.storage.from('message-attachments').getPublicUrl(filePath);
 
