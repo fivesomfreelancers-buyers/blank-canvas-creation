@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { CheckCircle, XCircle, Eye, ShieldCheck, Clock } from 'lucide-react';
 import { toast } from 'sonner';
+import ToolIcon from '@/components/ToolIcon';
 
 interface VDoc {
   id: string;
@@ -156,7 +157,7 @@ const AdminVerifications = () => {
                   <div><p className="text-xs font-semibold text-muted-foreground mb-1">SKILLS</p><div className="flex flex-wrap gap-1">{open.freelancer.skills.map(s => <Badge key={s} variant="secondary">{s}</Badge>)}</div></div>
                 )}
                 {Array.isArray(open.freelancer?.software_tools) && open.freelancer!.software_tools.length > 0 && (
-                  <div><p className="text-xs font-semibold text-muted-foreground mb-1">SOFTWARE</p><div className="flex flex-wrap gap-1">{(open.freelancer!.software_tools as any[]).map((s, i) => <Badge key={i} variant="outline">{typeof s === 'string' ? s : (s?.name || s?.label || s?.id || 'Tool')}</Badge>)}</div></div>
+                  <div><p className="text-xs font-semibold text-muted-foreground mb-1">SOFTWARE</p><div className="flex flex-wrap gap-1">{(open.freelancer!.software_tools as any[]).map((s, i) => { const name = typeof s === 'string' ? s : (s?.name || s?.slug || 'Tool'); const slug = typeof s === 'string' ? s : (s?.slug || ''); return <Badge key={i} variant="outline" className="gap-1 pl-1"><ToolIcon slug={slug} name={name} className="w-4 h-4" />{name}</Badge>; })}</div></div>
                 )}
                 {open.freelancer?.bio && <div><p className="text-xs font-semibold text-muted-foreground mb-1">BIO</p><p className="text-sm text-foreground">{open.freelancer.bio}</p></div>}
                 <div>
