@@ -102,10 +102,14 @@ const FreelancerProfilePage = () => {
       if (gigIds.length > 0) {
         const { data: reviewsData } = await (supabase as any)
           .from('public_gig_reviews')
-          .select('rating, comment, created_at')
+          .select('rating, comment, created_at, reviewer_name, reviewer_image')
           .in('gig_id', gigIds);
 
-        allReviews = (reviewsData || []).map((r) => ({ ...r, buyerName: 'Anonymous' }));
+        allReviews = (reviewsData || []).map((r: any) => ({
+          ...r,
+          buyerName: r.reviewer_name || 'Anonymous Buyer',
+          buyerImage: r.reviewer_image || null,
+        }));
       }
 
       const avgRating = allReviews.length > 0
