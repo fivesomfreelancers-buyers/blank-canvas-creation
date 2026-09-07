@@ -45,8 +45,12 @@ const AdminVerifications = () => {
       ]);
       let portfolio: any[] = [];
       if (freelancerRes.data?.id) {
-        const { data: p } = await supabase.from('freelancer_portfolio').select('media_url, media_type').eq('freelancer_id', freelancerRes.data.id);
+        const { data: p } = await supabase.from('freelancer_portfolio').select('media_url, media_type, position').eq('freelancer_id', freelancerRes.data.id).order('position', { ascending: true });
         portfolio = p || [];
+      }
+      // Fallback: snapshot saved with the request itself
+      if (portfolio.length === 0 && Array.isArray(d.professional_info?.portfolio)) {
+        portfolio = d.professional_info.portfolio;
       }
       return { ...d, profile: profileRes.data, freelancer: freelancerRes.data, portfolio };
     }));
@@ -169,13 +173,23 @@ const AdminVerifications = () => {
                   )}
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-muted-foreground mb-2">PORTFOLIO ({open.portfolio?.length || 0})</p>
+                  <p className="text-xs font-semibold text-muted-foreground mb-2">
+                    PORTFOLIO ({open.portfolio?.filter(p => p.media_type !== 'video').length || 0} images · {open.portfolio?.filter(p => p.media_type === 'video').length || 0} video)
+                  </p>
                   {open.portfolio && open.portfolio.length > 0 ? (
-                    <div className="grid grid-cols-3 gap-2">
-                      {open.portfolio.map((p, i) => (
-                        p.media_type === 'video'
-                          ? <video key={i} src={p.media_url} controls className="rounded-lg w-full h-24 object-cover" />
-                          : <SmartImage key={i} src={p.media_url} alt="Portfolio item" wrapperClassName="rounded-lg w-full h-24" className="w-full h-full object-cover" showRetry />
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-3 gap-2">
+                        {open.portfolio.filter(p => p.media_type !== 'video').map((p, i) => (
+                          <a key={i} href={p.media_url} target="_blank" rel="noopener noreferrer" className="block group" title="Open full size">
+                            <SmartImage src={p.media_url} alt={`Portfolio image ${i + 1}`} wrapperClassName="rounded-lg w-full h-36 bg-muted overflow-hidden group-hover:ring-2 ring-primary" className="w-full h-full object-cover" showRetry />
+                          </a>
+                        ))}
+                      </div>
+                      {open.portfolio.filter(p => p.media_type === 'video').map((p, i) => (
+                        <div key={`v-${i}`} className="space-y-1">
+                          <video src={p.media_url} controls preload="metadata" playsInline className="rounded-lg w-full max-h-72 bg-black" />
+                          <a href={p.media_url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline">Open / download video</a>
+                        </div>
                       ))}
                     </div>
                   ) : (
