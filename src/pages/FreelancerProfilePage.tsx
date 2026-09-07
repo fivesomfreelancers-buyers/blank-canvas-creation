@@ -102,10 +102,14 @@ const FreelancerProfilePage = () => {
       if (gigIds.length > 0) {
         const { data: reviewsData } = await (supabase as any)
           .from('public_gig_reviews')
-          .select('rating, comment, created_at')
+          .select('rating, comment, created_at, reviewer_name, reviewer_image')
           .in('gig_id', gigIds);
 
-        allReviews = (reviewsData || []).map((r) => ({ ...r, buyerName: 'Anonymous' }));
+        allReviews = (reviewsData || []).map((r: any) => ({
+          ...r,
+          buyerName: r.reviewer_name || 'Anonymous Buyer',
+          buyerImage: r.reviewer_image || null,
+        }));
       }
 
       const avgRating = allReviews.length > 0
@@ -375,15 +379,26 @@ const FreelancerProfilePage = () => {
                 {reviews.map((review, idx) => (
                   <Card key={idx}>
                     <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium">{review.buyerName}</span>
-                        <span className="text-xs text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</span>
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <Avatar className="w-9 h-9 flex-shrink-0">
+                            <AvatarImage src={review.buyerImage || ''} className="object-cover" />
+                            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+                              {(review.buyerName || 'A').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="min-w-0">
+                            <span className="font-medium block truncate">{review.buyerName}</span>
+                            <div className="flex items-center">
+                              {[1,2,3,4,5].map((star) => (
+                                <Star key={star} className={`w-4 h-4 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <span className="text-xs text-muted-foreground flex-shrink-0">{new Date(review.created_at).toLocaleDateString()}</span>
                       </div>
-                      <div className="flex items-center mb-2">
-                        {[1,2,3,4,5].map((star) => (
-                          <Star key={star} className={`w-4 h-4 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} />
-                        ))}
-                      </div>
+
                       {review.comment && <p className="text-muted-foreground">{review.comment}</p>}
                     </CardContent>
                   </Card>
