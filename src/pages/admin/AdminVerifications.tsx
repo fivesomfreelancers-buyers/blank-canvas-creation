@@ -156,7 +156,7 @@ const AdminVerifications = () => {
                   <div><p className="text-xs font-semibold text-muted-foreground mb-1">SKILLS</p><div className="flex flex-wrap gap-1">{open.freelancer.skills.map(s => <Badge key={s} variant="secondary">{s}</Badge>)}</div></div>
                 )}
                 {Array.isArray(open.freelancer?.software_tools) && open.freelancer!.software_tools.length > 0 && (
-                  <div><p className="text-xs font-semibold text-muted-foreground mb-1">SOFTWARE</p><div className="flex flex-wrap gap-1">{(open.freelancer!.software_tools as any[]).map((s, i) => <Badge key={i} variant="outline">{String(s)}</Badge>)}</div></div>
+                  <div><p className="text-xs font-semibold text-muted-foreground mb-1">SOFTWARE</p><div className="flex flex-wrap gap-1">{(open.freelancer!.software_tools as any[]).map((s, i) => <Badge key={i} variant="outline">{typeof s === 'string' ? s : (s?.name || s?.label || s?.id || 'Tool')}</Badge>)}</div></div>
                 )}
                 {open.freelancer?.bio && <div><p className="text-xs font-semibold text-muted-foreground mb-1">BIO</p><p className="text-sm text-foreground">{open.freelancer.bio}</p></div>}
                 <div>
@@ -167,18 +167,21 @@ const AdminVerifications = () => {
                       : <SmartImage src={open.document_url} alt="Verification document" wrapperClassName="w-full h-64 rounded-lg bg-muted" className="w-full h-full object-contain" showRetry />
                   )}
                 </div>
-                {open.portfolio && open.portfolio.length > 0 && (
-                  <div>
-                    <p className="text-xs font-semibold text-muted-foreground mb-2">PORTFOLIO ({open.portfolio.length})</p>
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground mb-2">PORTFOLIO ({open.portfolio?.length || 0})</p>
+                  {open.portfolio && open.portfolio.length > 0 ? (
                     <div className="grid grid-cols-3 gap-2">
                       {open.portfolio.map((p, i) => (
                         p.media_type === 'video'
                           ? <video key={i} src={p.media_url} controls className="rounded-lg w-full h-24 object-cover" />
-                          : <SmartImage key={i} src={p.media_url} alt="Portfolio item" wrapperClassName="rounded-lg w-full h-24" className="w-full h-full object-cover" />
+                          : <SmartImage key={i} src={p.media_url} alt="Portfolio item" wrapperClassName="rounded-lg w-full h-24" className="w-full h-full object-cover" showRetry />
                       ))}
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No portfolio media submitted (expected 3 images + 1 video).</p>
+                  )}
+                </div>
+
                 <div className="flex gap-2 pt-2">
                   <Button onClick={() => updateStatus(open, 'approved')} className="flex-1"><CheckCircle className="h-4 w-4 mr-1" /> Approve & Verify</Button>
                   <Button onClick={() => updateStatus(open, 'rejected', 'Documents insufficient')} variant="destructive" className="flex-1"><XCircle className="h-4 w-4 mr-1" /> Reject</Button>
