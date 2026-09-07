@@ -156,7 +156,7 @@ const AdminVerifications = () => {
                   <div><p className="text-xs font-semibold text-muted-foreground mb-1">SKILLS</p><div className="flex flex-wrap gap-1">{open.freelancer.skills.map(s => <Badge key={s} variant="secondary">{s}</Badge>)}</div></div>
                 )}
                 {Array.isArray(open.freelancer?.software_tools) && open.freelancer!.software_tools.length > 0 && (
-                  <div><p className="text-xs font-semibold text-muted-foreground mb-1">SOFTWARE</p><div className="flex flex-wrap gap-1">{(open.freelancer!.software_tools as any[]).map((s, i) => <Badge key={i} variant="outline">{String(s)}</Badge>)}</div></div>
+                  <div><p className="text-xs font-semibold text-muted-foreground mb-1">SOFTWARE</p><div className="flex flex-wrap gap-1">{(open.freelancer!.software_tools as any[]).map((s, i) => <Badge key={i} variant="outline">{typeof s === 'string' ? s : (s?.name || s?.label || s?.id || 'Tool')}</Badge>)}</div></div>
                 )}
                 {open.freelancer?.bio && <div><p className="text-xs font-semibold text-muted-foreground mb-1">BIO</p><p className="text-sm text-foreground">{open.freelancer.bio}</p></div>}
                 <div>
