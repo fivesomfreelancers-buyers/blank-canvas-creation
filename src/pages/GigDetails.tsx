@@ -44,8 +44,7 @@ const GigDetails = () => {
   const [gigId, setGigId] = useState<string | null>(null);
   
 
-  useEffect(() => {
-    const fetchGig = async () => {
+  const fetchGig = React.useCallback(async () => {
       if (!slug) return;
 
       // Public URLs are slug based. Legacy UUID links keep working and are
@@ -64,11 +63,22 @@ const GigDetails = () => {
         navigate(gigPath(gigData as any), { replace: true });
       }
 
-      const { data: profile } = await (supabase as any).from('public_profiles').select('full_name, profile_image_url, languages, username').eq('id', gigData.freelancers?.user_id).single();
+      const freelancerRowId = gigData.freelancers?.id;
 
-      
+      // Everything below is independent — fetch it all at once instead of
+      // chaining six round-trips.
+      const [profileRes, reviewsRes, pkgRes, faqRes, mediaRes] = await Promise.all([
+        (supabase as any).from('public_profiles').select('full_name, profile_image_url, languages, username').eq('id', gigData.freelancers?.user_id).maybeSingle(),
+        (supabase as any).from('public_gig_reviews').select('rating, comment, created_at, reviewer_name, reviewer_image').eq('gig_id', id),
+        supabase.from('gig_packages').select('*').eq('gig_id', id).eq('is_active', true).order('price', { ascending: true }),
+        freelancerRowId
+          ? supabase.from('freelancer_faqs').select('*').eq('freelancer_id', freelancerRowId)
+          : Promise.resolve({ data: [] as any[] }),
+        supabase.from('gig_media').select('*').eq('gig_id', id).order('created_at', { ascending: true }),
+      ]);
 
-      const { data: reviews } = await (supabase as any).from('public_gig_reviews').select('rating, comment, created_at, reviewer_name, reviewer_image').eq('gig_id', id);
+      const profile = profileRes?.data;
+      const reviews = reviewsRes?.data as any[] | null;
 
       const reviewsWithNames = (reviews || []).map((review: any) => ({
         ...review,
@@ -76,19 +86,16 @@ const GigDetails = () => {
         buyerImage: review.reviewer_image || null,
       }));
 
-      const avgRating = reviews && reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
+      const avgRating = reviews && reviews.length > 0 ? reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length : 0;
 
-      const { data: pkgData } = await supabase.from('gig_packages').select('*').eq('gig_id', id).eq('is_active', true).order('price', { ascending: true });
+      const pkgData = pkgRes?.data as any[] | null;
       setPackages(pkgData || []);
       if (pkgData && pkgData.length > 0) setSelectedPackage(pkgData[0].package_type);
 
-      if (gigData.freelancers?.id) {
-        const { data: faqData } = await supabase.from('freelancer_faqs').select('*').eq('freelancer_id', gigData.freelancers.id);
-        setFaqs(faqData || []);
-      }
+      setFaqs((faqRes as any)?.data || []);
 
-      // Load gig media (videos + documents)
-      const { data: mediaData } = await supabase.from('gig_media').select('*').eq('gig_id', id).order('created_at', { ascending: true });
+      // Gig media (videos + documents)
+      const mediaData = (mediaRes as any)?.data as any[] | null;
       const vid = (mediaData || []).find((m: any) => m.file_type === 'video');
       setVideoUrl(vid ? vid.file_url : null);
       setDocs((mediaData || [])
@@ -113,19 +120,26 @@ const GigDetails = () => {
         vipTier: resolveVipTier(gigData.freelancers?.vip_tier, gigData.freelancers?.vip_expires_at),
       });
       setLoading(false);
-    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
 
+  // Load once per gig URL (previously this ran twice because the effect
+  // depended on state it set itself).
+  useEffect(() => {
+    setLoading(true);
     fetchGig();
+  }, [fetchGig]);
 
-    // Realtime: refresh when a new review is added for this gig
+  // Realtime: refresh when a new review is added for this gig
+  useEffect(() => {
     if (!gigId) return;
     const channel = supabase
       .channel(`gig-${gigId}-reviews`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'gig_reviews', filter: `gig_id=eq.${gigId}` }, () => fetchGig())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug, gigId]);
+  }, [gigId, fetchGig]);
+
 
   const handleContact = async () => {
     if (!user) { toast({ title: "Please log in", description: "You need to be logged in to contact a freelancer.", variant: "destructive" }); return; }
