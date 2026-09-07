@@ -1,74 +1,92 @@
+import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+
+// The homepage stays in the main bundle so the first paint is instant.
 import Index from "./pages/Index";
-import Explore from "./pages/Explore";
-import GigDetails from "./pages/GigDetails";
-import HowItWorks from "./pages/HowItWorks";
-import Docs from "./pages/Docs";
-import About from "./pages/About";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import Vip from "./pages/Vip";
-import VipCheckout from "./pages/VipCheckout";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
 
-import BuyerRegister from "./pages/BuyerRegister";
-import FreelancerRegister from "./pages/FreelancerRegister";
-import AuthCallback from "./pages/AuthCallback";
-import RoleSelection from "./pages/RoleSelection";
-import UpgradeRole from "./pages/UpgradeRole";
-import CompleteProfile from "./pages/CompleteProfile";
-import CreateGig from "./pages/CreateGig";
-import FreelancerDashboard from "./pages/FreelancerDashboard";
-import BuyerDashboard from "./pages/BuyerDashboard";
-import FreelancerGigs from "./pages/freelancer/FreelancerGigs";
-import FreelancerOrders from "./pages/freelancer/FreelancerOrders";
-import FreelancerMessages from "./pages/freelancer/FreelancerMessages";
-import FreelancerDeliverWork from "./pages/freelancer/FreelancerDeliverWork";
-import DeliverySuccess from "./pages/freelancer/DeliverySuccess";
-import FreelancerOrderDetails from "./pages/freelancer/FreelancerOrderDetails";
-import FreelancerWallet from "./pages/freelancer/FreelancerWallet";
-import FreelancerWithdraw from "./pages/freelancer/FreelancerWithdraw";
-import FreelancerPayouts from "./pages/freelancer/FreelancerPayouts";
-import FreelancerHelp from "./pages/freelancer/FreelancerHelp";
-import FreelancerSettings from "./pages/freelancer/FreelancerSettings";
-import FreelancerProfile from "./pages/freelancer/FreelancerProfile";
-import FreelancerVerify from "./pages/freelancer/FreelancerVerify";
-import FreelancerProfilePage from "./pages/FreelancerProfilePage";
-import BuyerBrowse from "./pages/buyer/BuyerBrowse";
-import BuyerOrders from "./pages/buyer/BuyerOrders";
-import BuyerMessages from "./pages/buyer/BuyerMessages";
-import BuyerPayments from "./pages/buyer/BuyerPayments";
-import BuyerHelp from "./pages/buyer/BuyerHelp";
-import BuyerSettings from "./pages/buyer/BuyerSettings";
-import BuyerOrderDetails from "./pages/buyer/BuyerOrderDetails";
-import SubmitRequirements from "./pages/buyer/SubmitRequirements";
-import PaymentSuccess from "./pages/buyer/PaymentSuccess";
-import PaymentPage from "./pages/PaymentPage";
-import NotFound from "./pages/NotFound";
-import MessagesRedirect from "./pages/MessagesRedirect";
-import Inbox from "./pages/Inbox";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import FounderDashboard from "./pages/founder/FounderDashboard";
-import TermsOfService from "./pages/legal/TermsOfService";
-import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
-import CookiePolicy from "./pages/legal/CookiePolicy";
-import DeleteAccount from "./pages/DeleteAccount";
+// Everything else is code-split: a visitor only downloads the page they open.
+const Explore = lazy(() => import("./pages/Explore"));
+const GigDetails = lazy(() => import("./pages/GigDetails"));
+const HowItWorks = lazy(() => import("./pages/HowItWorks"));
+const Docs = lazy(() => import("./pages/Docs"));
+const About = lazy(() => import("./pages/About"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const Vip = lazy(() => import("./pages/Vip"));
+const VipCheckout = lazy(() => import("./pages/VipCheckout"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const BuyerRegister = lazy(() => import("./pages/BuyerRegister"));
+const FreelancerRegister = lazy(() => import("./pages/FreelancerRegister"));
+const AuthCallback = lazy(() => import("./pages/AuthCallback"));
+const RoleSelection = lazy(() => import("./pages/RoleSelection"));
+const UpgradeRole = lazy(() => import("./pages/UpgradeRole"));
+const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
+const CreateGig = lazy(() => import("./pages/CreateGig"));
+const FreelancerDashboard = lazy(() => import("./pages/FreelancerDashboard"));
+const BuyerDashboard = lazy(() => import("./pages/BuyerDashboard"));
+const FreelancerGigs = lazy(() => import("./pages/freelancer/FreelancerGigs"));
+const FreelancerOrders = lazy(() => import("./pages/freelancer/FreelancerOrders"));
+const FreelancerMessages = lazy(() => import("./pages/freelancer/FreelancerMessages"));
+const FreelancerDeliverWork = lazy(() => import("./pages/freelancer/FreelancerDeliverWork"));
+const DeliverySuccess = lazy(() => import("./pages/freelancer/DeliverySuccess"));
+const FreelancerOrderDetails = lazy(() => import("./pages/freelancer/FreelancerOrderDetails"));
+const FreelancerWallet = lazy(() => import("./pages/freelancer/FreelancerWallet"));
+const FreelancerWithdraw = lazy(() => import("./pages/freelancer/FreelancerWithdraw"));
+const FreelancerPayouts = lazy(() => import("./pages/freelancer/FreelancerPayouts"));
+const FreelancerHelp = lazy(() => import("./pages/freelancer/FreelancerHelp"));
+const FreelancerSettings = lazy(() => import("./pages/freelancer/FreelancerSettings"));
+const FreelancerProfile = lazy(() => import("./pages/freelancer/FreelancerProfile"));
+const FreelancerVerify = lazy(() => import("./pages/freelancer/FreelancerVerify"));
+const FreelancerProfilePage = lazy(() => import("./pages/FreelancerProfilePage"));
+const BuyerBrowse = lazy(() => import("./pages/buyer/BuyerBrowse"));
+const BuyerOrders = lazy(() => import("./pages/buyer/BuyerOrders"));
+const BuyerMessages = lazy(() => import("./pages/buyer/BuyerMessages"));
+const BuyerPayments = lazy(() => import("./pages/buyer/BuyerPayments"));
+const BuyerHelp = lazy(() => import("./pages/buyer/BuyerHelp"));
+const BuyerSettings = lazy(() => import("./pages/buyer/BuyerSettings"));
+const BuyerOrderDetails = lazy(() => import("./pages/buyer/BuyerOrderDetails"));
+const SubmitRequirements = lazy(() => import("./pages/buyer/SubmitRequirements"));
+const PaymentSuccess = lazy(() => import("./pages/buyer/PaymentSuccess"));
+const PaymentPage = lazy(() => import("./pages/PaymentPage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const MessagesRedirect = lazy(() => import("./pages/MessagesRedirect"));
+const Inbox = lazy(() => import("./pages/Inbox"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const FounderDashboard = lazy(() => import("./pages/founder/FounderDashboard"));
+const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
+const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"));
+const CookiePolicy = lazy(() => import("./pages/legal/CookiePolicy"));
+const DeleteAccount = lazy(() => import("./pages/DeleteAccount"));
+
 import CookieConsentManager from "@/components/cookies/CookieConsentManager";
-
 import { ThemeProvider } from "./components/ThemeProvider";
 import PresenceProvider from "./components/presence/PresenceProvider";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
+
+const RouteFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="h-8 w-8 rounded-full border-2 border-muted border-t-primary animate-spin" />
+  </div>
+);
 
 const App = () => (
   <ThemeProvider>
@@ -81,6 +99,7 @@ const App = () => (
           <Sonner />
 
           <BrowserRouter>
+            <Suspense fallback={<RouteFallback />}>
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/explore" element={<Explore />} />
@@ -106,8 +125,6 @@ const App = () => (
               {/* Universal inbox — works for every signed-in role */}
               <Route path="/inbox" element={<ProtectedRoute require="authenticated"><Inbox /></ProtectedRoute>} />
 
-
-
               <Route path="/select-role" element={<ProtectedRoute require="authenticated"><RoleSelection /></ProtectedRoute>} />
               <Route path="/become-buyer" element={<ProtectedRoute><UpgradeRole role="buyer" /></ProtectedRoute>} />
               <Route path="/become-freelancer" element={<ProtectedRoute><UpgradeRole role="freelancer" /></ProtectedRoute>} />
@@ -116,10 +133,10 @@ const App = () => (
               <Route path="/buyer/payment-success" element={<ProtectedRoute require="authenticated"><PaymentSuccess /></ProtectedRoute>} />
               <Route path="/create-gig" element={<ProtectedRoute require="authenticated"><CreateGig /></ProtectedRoute>} />
               <Route path="/edit-gig/:gigId" element={<ProtectedRoute require="authenticated"><CreateGig /></ProtectedRoute>} />
-              
+
               {/* Public Freelancer Profile Routes (slug based) */}
               <Route path="/profile/:freelancerId" element={<FreelancerProfilePage />} />
-              
+
               {/* Freelancer Routes */}
               <Route path="/freelancer/dashboard" element={<ProtectedRoute require="freelancer"><FreelancerDashboard /></ProtectedRoute>} />
               <Route path="/freelancer/gigs" element={<ProtectedRoute require="freelancer"><FreelancerGigs /></ProtectedRoute>} />
@@ -135,7 +152,7 @@ const App = () => (
               <Route path="/freelancer/settings" element={<ProtectedRoute require="freelancer"><FreelancerSettings /></ProtectedRoute>} />
               <Route path="/freelancer/profile" element={<ProtectedRoute require="freelancer"><FreelancerProfile /></ProtectedRoute>} />
               <Route path="/freelancer/verify" element={<ProtectedRoute require="freelancer"><FreelancerVerify /></ProtectedRoute>} />
-              
+
               {/* Public freelancer profile — MUST stay after the static /freelancer/* routes */}
               <Route path="/freelancer/:username" element={<FreelancerProfilePage />} />
 
@@ -151,16 +168,14 @@ const App = () => (
               <Route path="/buyer/orders/:orderId" element={<ProtectedRoute require="buyer"><BuyerOrderDetails /></ProtectedRoute>} />
               <Route path="/buyer/order/:orderId/requirements" element={<ProtectedRoute require="buyer"><SubmitRequirements /></ProtectedRoute>} />
               <Route path="/buyer/orders/:orderId/requirements" element={<ProtectedRoute require="buyer"><SubmitRequirements /></ProtectedRoute>} />
-              
+
               {/* Legal Routes */}
               <Route path="/legal/terms" element={<TermsOfService />} />
               <Route path="/legal/privacy" element={<PrivacyPolicy />} />
               <Route path="/legal/cookies" element={<CookiePolicy />} />
 
-
               {/* Public account/data deletion request page (Google Play requirement) */}
               <Route path="/delete-account" element={<DeleteAccount />} />
-
 
               {/* Admin Routes */}
               <Route path="/admin/*" element={<AdminDashboard />} />
@@ -169,10 +184,10 @@ const App = () => (
               <Route path="/founders" element={<FounderDashboard />} />
               <Route path="/founders/*" element={<FounderDashboard />} />
 
-              
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </Suspense>
             <CookieConsentManager />
           </BrowserRouter>
         </TooltipProvider>
