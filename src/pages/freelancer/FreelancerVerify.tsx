@@ -242,29 +242,29 @@ const FreelancerVerify: React.FC = () => {
       // clear existing portfolio for this freelancer to avoid duplicates on resubmit
       await (supabase as any).from('freelancer_portfolio').delete().eq('freelancer_id', freelancerId);
 
+      const safeName = (n: string) => n.replace(/[^a-zA-Z0-9._-]+/g, '-');
       for (let i = 0; i < portfolioImages.length; i++) {
         const f = portfolioImages[i];
-        const path = `${userId}/portfolio-${Date.now()}-${i}-${f.name}`;
+        const path = `${userId}/portfolio-${Date.now()}-${i}-${safeName(f.name)}`;
         const { error } = await supabase.storage.from('verification-portfolio').upload(path, f);
-        if (!error) {
-          const { data } = supabase.storage.from('verification-portfolio').getPublicUrl(path);
-          portfolioRows.push({ freelancer_id: freelancerId, media_url: data.publicUrl, media_type: 'image', position: i });
-        }
+        if (error) throw new Error(`Portfolio image ${i + 1} upload failed: ${error.message}`);
+        const { data } = supabase.storage.from('verification-portfolio').getPublicUrl(path);
+        portfolioRows.push({ freelancer_id: freelancerId, media_url: data.publicUrl, media_type: 'image', position: i });
       }
       if (portfolioVideo) {
-        const path = `${userId}/portfolio-video-${Date.now()}-${portfolioVideo.name}`;
+        const path = `${userId}/portfolio-video-${Date.now()}-${safeName(portfolioVideo.name)}`;
         const { error } = await supabase.storage.from('verification-portfolio').upload(path, portfolioVideo);
-        if (!error) {
-          const { data } = supabase.storage.from('verification-portfolio').getPublicUrl(path);
-          portfolioRows.push({ freelancer_id: freelancerId, media_url: data.publicUrl, media_type: 'video', position: 99 });
-        }
+        if (error) throw new Error(`Portfolio video upload failed: ${error.message}`);
+        const { data } = supabase.storage.from('verification-portfolio').getPublicUrl(path);
+        portfolioRows.push({ freelancer_id: freelancerId, media_url: data.publicUrl, media_type: 'video', position: 99 });
       }
       if (portfolioRows.length > 0) {
-        await (supabase as any).from('freelancer_portfolio').insert(portfolioRows);
+        const { error: pErr } = await (supabase as any).from('freelancer_portfolio').insert(portfolioRows);
+        if (pErr) throw new Error(`Saving portfolio failed: ${pErr.message}`);
       }
 
-      // 4. Create verification request
-      await supabase.from('verification_documents').insert({
+      // 4. Create verification request (portfolio snapshot stored alongside so reviewers always see it)
+      const { error: vErr } = await supabase.from('verification_documents').insert({
         user_id: userId,
         document_type: 'id',
         document_url: profileImageUrl || 'profile-verification',
@@ -276,9 +276,11 @@ const FreelancerVerify: React.FC = () => {
           years_experience: yearsExperience,
           education_level: educationLevel,
           software_tools: selectedTools,
+          portfolio: portfolioRows.map(r => ({ media_url: r.media_url, media_type: r.media_type, position: r.position })),
         },
         personal_info: { full_name: fullName, location, languages },
       } as any);
+      if (vErr) throw new Error(`Submitting request failed: ${vErr.message}`);
 
       setStatus('pending');
       toast({ title: '✅ Submitted', description: 'Your verification is under review (24h).' });
