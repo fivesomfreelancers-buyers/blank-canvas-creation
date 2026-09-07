@@ -60,44 +60,41 @@ const BuyerOrderDetails = () => {
 
   const fetchOrder = async () => {
     try {
-      const { data: orderData, error } = await supabase
-        .from('orders')
-        .select('*, gigs(title, thumbnail_url)')
-        .eq('id', orderId)
-        .single();
+      // Order + deliveries in parallel — no waiting in a chain.
+      const [orderRes, deliveryRes] = await Promise.all([
+        supabase.from('orders').select('*, gigs(title, thumbnail_url)').eq('id', orderId).maybeSingle(),
+        supabase.from('order_deliveries').select('*').eq('order_id', orderId!).order('delivered_at', { ascending: false }),
+      ]);
 
-      if (error) throw error;
+      if (orderRes.error) throw orderRes.error;
+      const orderData = orderRes.data as any;
+      if (!orderData) { setLoading(false); return; }
       setOrder(orderData);
+      setDeliveries(deliveryRes.data || []);
+      setLoading(false);
 
-      // Fetch freelancer profile via freelancers table
+      // Seller identity is secondary — load it after the page is usable.
       const { data: freelancer } = await supabase
         .from('freelancers')
         .select('user_id')
         .eq('id', orderData.freelancer_id)
-        .single();
+        .maybeSingle();
 
       if (freelancer) {
         const { data: profile } = await (supabase as any)
           .from('public_profiles')
           .select('full_name, profile_image_url')
           .eq('id', freelancer.user_id)
-          .single();
+          .maybeSingle();
         setFreelancerProfile(profile);
       }
-
-      // Fetch deliveries
-      const { data: deliveryData } = await supabase
-        .from('order_deliveries')
-        .select('*')
-        .eq('order_id', orderId!)
-        .order('delivered_at', { ascending: false });
-      setDeliveries(deliveryData || []);
     } catch (err) {
       console.error('Error fetching order:', err);
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleAcceptDelivery = async () => {
     if (!orderId) return;
