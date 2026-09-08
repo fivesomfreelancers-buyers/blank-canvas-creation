@@ -217,12 +217,15 @@ const AttachmentPreview: React.FC<Props> = ({
               <ZoomIn className="w-6 h-6 text-white drop-shadow" />
             </div>
           </div>
-          <div className="mt-2 flex items-center justify-between gap-3">
-            {!hideDownload && (
-              <p className="text-xs text-muted-foreground truncate max-w-[170px]">{name}</p>
-            )}
-            <ActionButton />
-          </div>
+          {(!hideDownload || showManage) && (
+            <div className="mt-2 flex items-center justify-between gap-3">
+              {!hideDownload && (
+                <p className="text-xs text-muted-foreground truncate max-w-[170px]">{name}</p>
+              )}
+              <ActionButton />
+            </div>
+          )}
+
 
         </div>
 
