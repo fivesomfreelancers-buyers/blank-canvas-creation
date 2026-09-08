@@ -3,11 +3,14 @@ import { Crown, Gem, type LucideIcon } from 'lucide-react';
 export type VipTier = 'golden' | 'platinum' | null;
 export type ThemeMode = 'light' | 'dark';
 
-export const NORMAL_GIG_LIMIT = 1;
+/** Every freelancer gets exactly 2 gig slots — VIP included. */
+export const GIG_LIMIT = 2;
+export const NORMAL_GIG_LIMIT = GIG_LIMIT;
 export const VIP_GIG_LIMITS: Record<'golden' | 'platinum', number> = {
-  golden: 2,
-  platinum: 3,
+  golden: GIG_LIMIT,
+  platinum: GIG_LIMIT,
 };
+
 
 export interface VipTheme {
   tier: 'golden' | 'platinum';
