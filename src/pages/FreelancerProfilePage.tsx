@@ -35,6 +35,8 @@ const FreelancerProfilePage = () => {
   const [profileData, setProfileData] = useState<any>(null);
   const [gigs, setGigs] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
+  const [gigStats, setGigStats] = useState<Record<string, { avg_rating: number; review_count: number }>>({});
+
   const [portfolio, setPortfolio] = useState<{ media_url: string; media_type: 'image' | 'video' }[]>([]);
   const [loading, setLoading] = useState(true);
   const [contactMessage, setContactMessage] = useState('');
