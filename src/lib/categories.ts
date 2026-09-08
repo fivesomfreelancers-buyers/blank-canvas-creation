@@ -69,6 +69,13 @@ export const CATEGORIES: CategoryDef[] = [
       { slug: 'social-media-copy', name: 'Social Media Copy' },
       { slug: 'website-copy', name: 'Website Copy' },
       { slug: 'translation', name: 'Translation' },
+      { slug: 'book-writing', name: 'Book Writing' },
+      { slug: 'kids-book-writing', name: 'Kids Book Writing' },
+      { slug: 'story-book-writing', name: 'Story Book Writing' },
+      { slug: 'ebook-writing', name: 'eBook Writing' },
+      { slug: 'islamic-book-writing', name: 'Islamic / Religious Book Writing' },
+      { slug: 'poetry-writing', name: 'Poetry Writing' },
+      { slug: 'book-editing-proofreading', name: 'Book Editing & Proofreading' },
     ],
   },
   {
