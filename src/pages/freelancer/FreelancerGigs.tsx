@@ -57,11 +57,12 @@ const FreelancerGigs = () => {
 
   const handleCreateNewGig = () => {
     if (hasReachedLimit) {
-      toast({ title: "You've reached your gig limit", description: vipTier ? "Your VIP gig limit is full. Delete a gig or upgrade your VIP plan." : "Please delete an existing gig or upgrade to VIP to add a new one.", variant: "destructive" });
+      toast({ title: "You've reached your gig limit", description: `Every freelancer can publish a maximum of ${gigLimit} gigs. Delete one of your gigs to create a new one.`, variant: "destructive" });
       return;
     }
     navigate('/create-gig');
   };
+
 
   const toggleVip = async (gig: any) => {
     if (!vipTier) {
@@ -119,14 +120,14 @@ const FreelancerGigs = () => {
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
-            <div className="text-muted-foreground">{activeGigsUsed} / {gigLimit} active gigs used</div>
-            {vipTier && (
-              <Badge variant="outline" className="border-primary/40 bg-primary/10 text-foreground shadow-sm">
-                {vipTier === 'platinum' ? <Gem className="w-3.5 h-3.5 mr-1 text-primary" /> : <Crown className="w-3.5 h-3.5 mr-1 text-primary" />}
-                VIP Gigs: {activeGigsUsed} / {gigLimit} · {remainingGigs} left
+            <div className="text-muted-foreground">My Gigs: {activeGigsUsed} / {gigLimit} slots used</div>
+            {hasReachedLimit && (
+              <Badge variant="outline" className="border-destructive/40 bg-destructive/10 text-foreground">
+                All {gigLimit} gig slots are full
               </Badge>
             )}
           </div>
+
 
           {loading ? (
             <div className="text-center py-12 text-muted-foreground">Loading gigs...</div>
