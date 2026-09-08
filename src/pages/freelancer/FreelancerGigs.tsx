@@ -6,7 +6,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Eye, Edit, Trash2, Plus, Briefcase, Crown, Gem, Loader2 } from 'lucide-react';
+import { Eye, Edit, Trash2, Plus, Briefcase, Crown, Loader2, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,10 +21,10 @@ const FreelancerGigs = () => {
   const [vipTier, setVipTier] = useState<'golden' | 'platinum' | null>(null);
   const [pendingDelete, setPendingDelete] = useState<{ id: string; title: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [stats, setStats] = useState<Record<string, { avg_rating: number; review_count: number }>>({});
 
   const gigLimit = getGigLimitForVipTier(vipTier);
   const activeGigsUsed = gigs.filter(g => g.status === 'active').length;
-  const remainingGigs = Math.max(gigLimit - activeGigsUsed, 0);
   const hasReachedLimit = activeGigsUsed >= gigLimit;
 
   useEffect(() => { fetchGigs(); }, []);
@@ -48,6 +48,18 @@ const FreelancerGigs = () => {
         .order('created_at', { ascending: false });
       if (error) throw error;
       setGigs(gigsData || []);
+
+      // Per-gig rating + review count (each gig keeps its own reviews)
+      const ids = (gigsData || []).map((g: any) => g.id);
+      if (ids.length) {
+        const { data: statRows } = await (supabase as any)
+          .from('public_gig_rating_stats')
+          .select('gig_id, avg_rating, review_count')
+          .in('gig_id', ids);
+        setStats(Object.fromEntries((statRows || []).map((r: any) => [r.gig_id, { avg_rating: Number(r.avg_rating) || 0, review_count: Number(r.review_count) || 0 }])));
+      } else {
+        setStats({});
+      }
     } catch (error) {
       console.error('Error fetching gigs:', error);
     } finally {
@@ -149,6 +161,12 @@ const FreelancerGigs = () => {
                         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:space-x-4 mt-2">
                           <span className="text-xl sm:text-2xl font-bold text-green-600">${Number(gig.base_price).toFixed(2)}</span>
                           <span className="text-sm text-muted-foreground">{gig.delivery_time_days} days delivery</span>
+                          <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                            {stats[gig.id]?.review_count
+                              ? <>{stats[gig.id].avg_rating.toFixed(1)} ({stats[gig.id].review_count} review{stats[gig.id].review_count === 1 ? '' : 's'})</>
+                              : <>No reviews yet</>}
+                          </span>
                         </div>
                       </div>
                       <Badge variant={gig.status === 'active' ? 'default' : 'secondary'} className="w-fit">{gig.status}</Badge>
