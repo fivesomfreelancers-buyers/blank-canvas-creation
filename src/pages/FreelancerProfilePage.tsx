@@ -35,6 +35,8 @@ const FreelancerProfilePage = () => {
   const [profileData, setProfileData] = useState<any>(null);
   const [gigs, setGigs] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
+  const [gigStats, setGigStats] = useState<Record<string, { avg_rating: number; review_count: number }>>({});
+
   const [portfolio, setPortfolio] = useState<{ media_url: string; media_type: 'image' | 'video' }[]>([]);
   const [loading, setLoading] = useState(true);
   const [contactMessage, setContactMessage] = useState('');
@@ -100,10 +102,21 @@ const FreelancerProfilePage = () => {
       const gigIds = (gigsData || []).map(g => g.id);
       let allReviews: any[] = [];
       if (gigIds.length > 0) {
-        const { data: reviewsData } = await (supabase as any)
-          .from('public_gig_reviews')
-          .select('rating, comment, created_at, reviewer_name, reviewer_image')
-          .in('gig_id', gigIds);
+        const [{ data: reviewsData }, { data: statRows }] = await Promise.all([
+          (supabase as any)
+            .from('public_gig_reviews')
+            .select('gig_id, rating, comment, created_at, reviewer_name, reviewer_image')
+            .in('gig_id', gigIds),
+          (supabase as any)
+            .from('public_gig_rating_stats')
+            .select('gig_id, avg_rating, review_count')
+            .in('gig_id', gigIds),
+        ]);
+
+        setGigStats(Object.fromEntries((statRows || []).map((r: any) => [r.gig_id, {
+          avg_rating: Number(r.avg_rating) || 0,
+          review_count: Number(r.review_count) || 0,
+        }])));
 
         allReviews = (reviewsData || []).map((r: any) => ({
           ...r,
@@ -359,6 +372,12 @@ const FreelancerProfilePage = () => {
                       )}
                       <CardContent className="p-4">
                         <h3 className="font-semibold text-foreground mb-2 text-sm line-clamp-2 min-h-[2.5rem]">{gig.title}</h3>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
+                          <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                          {gigStats[gig.id]?.review_count
+                            ? <span>{gigStats[gig.id].avg_rating.toFixed(1)} ({gigStats[gig.id].review_count})</span>
+                            : <span>New</span>}
+                        </div>
                         <div className="flex items-center justify-between">
                           <span className="text-lg font-bold text-primary">${Number(gig.base_price).toFixed(0)}</span>
                           <span className="text-sm text-muted-foreground">{gig.delivery_time_days} days</span>

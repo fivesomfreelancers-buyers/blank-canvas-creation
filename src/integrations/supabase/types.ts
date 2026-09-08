@@ -746,6 +746,13 @@ export type Database = {
             referencedRelation: "gigs"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "gig_media_gig_id_fkey"
+            columns: ["gig_id"]
+            isOneToOne: false
+            referencedRelation: "public_gig_rating_stats"
+            referencedColumns: ["gig_id"]
+          },
         ]
       }
       gig_packages: {
@@ -793,6 +800,13 @@ export type Database = {
             referencedRelation: "gigs"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "gig_packages_gig_id_fkey"
+            columns: ["gig_id"]
+            isOneToOne: false
+            referencedRelation: "public_gig_rating_stats"
+            referencedColumns: ["gig_id"]
+          },
         ]
       }
       gig_reviews: {
@@ -830,6 +844,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "gigs"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gig_reviews_gig_id_fkey"
+            columns: ["gig_id"]
+            isOneToOne: false
+            referencedRelation: "public_gig_rating_stats"
+            referencedColumns: ["gig_id"]
           },
           {
             foreignKeyName: "gig_reviews_order_id_fkey"
@@ -1222,6 +1243,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "gigs"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_gig_id_fkey"
+            columns: ["gig_id"]
+            isOneToOne: false
+            referencedRelation: "public_gig_rating_stats"
+            referencedColumns: ["gig_id"]
           },
         ]
       }
@@ -1830,6 +1858,14 @@ export type Database = {
         }
         Relationships: []
       }
+      public_gig_rating_stats: {
+        Row: {
+          avg_rating: number | null
+          gig_id: string | null
+          review_count: number | null
+        }
+        Relationships: []
+      }
       public_gig_reviews: {
         Row: {
           comment: string | null
@@ -1847,6 +1883,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "gigs"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gig_reviews_gig_id_fkey"
+            columns: ["gig_id"]
+            isOneToOne: false
+            referencedRelation: "public_gig_rating_stats"
+            referencedColumns: ["gig_id"]
           },
         ]
       }
