@@ -218,9 +218,12 @@ const AttachmentPreview: React.FC<Props> = ({
             </div>
           </div>
           <div className="mt-2 flex items-center justify-between gap-3">
-            <p className="text-xs text-muted-foreground truncate max-w-[170px]">{name}</p>
+            {!hideDownload && (
+              <p className="text-xs text-muted-foreground truncate max-w-[170px]">{name}</p>
+            )}
             <ActionButton />
           </div>
+
         </div>
 
         {zoomOpen && (
