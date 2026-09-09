@@ -28,6 +28,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { unreadCount } = useUnreadMessages();
   const { newOrderCount } = useNewOrders();
+  const { newDeliveryCount } = useNewDeliveries();
   const { isAdmin } = useAdminRole();
   const [profile, setProfile] = useState<{ full_name: string; profile_image_url: string | null } | null>(null);
 
