@@ -73,23 +73,38 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarItems.map((item) => (
+              {sidebarItems.map((item) => {
+                const count = item.key === 'orders' ? newOrderCount : item.key === 'messages' ? unreadCount : 0;
+                return (
                 <SidebarMenuItem key={item.key}>
                   <SidebarMenuButton asChild>
                     <button 
-                      onClick={() => setActiveSection(item.key)}
+                      onClick={() => {
+                        if (item.key === 'orders') markSeen();
+                        setActiveSection(item.key);
+                      }}
                       className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-colors ${
                         activeSection === item.key 
                           ? 'bg-primary text-primary-foreground' 
                           : 'text-foreground hover:bg-accent'
                       }`}
                     >
-                      <item.icon className="w-5 h-5" />
-                      <span>{item.title}</span>
+                      <span className="relative flex items-center">
+                        <item.icon className="w-5 h-5" />
+                        {count > 0 && (
+                          <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-background" />
+                        )}
+                      </span>
+                      <span className="flex-1 text-left">{item.title}</span>
+                      {count > 0 && (
+                        <span className="min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none">
+                          {count > 99 ? '99+' : count}
+                        </span>
+                      )}
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              ))}
+              );})}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
