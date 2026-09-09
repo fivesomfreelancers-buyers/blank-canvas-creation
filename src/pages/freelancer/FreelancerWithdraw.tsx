@@ -253,7 +253,6 @@ const FreelancerWithdraw = () => {
       if (error) throw error;
 
       toast({
-      toast({
         variant: 'success',
         duration: 9000,
         title: (
