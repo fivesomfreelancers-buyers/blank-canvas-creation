@@ -61,6 +61,7 @@ export async function ensurePaidOrder({ admin, meta, paymentIntentId, sessionId 
   if (!m.gig_id || !m.buyer_id || !m.freelancer_id) return null;
 
   const amount = Number(m.amount_usd ?? 0);
+  const serviceFee = Number(m.service_fee_usd ?? 1);
   const { data: created, error } = await admin
     .from("orders")
     .insert({
@@ -68,7 +69,9 @@ export async function ensurePaidOrder({ admin, meta, paymentIntentId, sessionId 
       freelancer_id: m.freelancer_id,
       gig_id: m.gig_id,
       amount: amount,
+      buyer_service_fee: Number.isFinite(serviceFee) ? Math.max(0, Math.min(serviceFee, amount)) : 0,
       status: "pending",
+
       payment_method: "stripe",
       payment_status: "paid",
       package_name: m.package_name ?? null,
