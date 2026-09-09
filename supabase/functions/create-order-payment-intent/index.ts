@@ -119,6 +119,7 @@ serve(async (req) => {
         freelancer_id: gig.freelancer_id,
         package_name: pkg.name,
         amount_usd: String(totalUsd),
+        service_fee_usd: String(SERVICE_FEE_USD),
         payout_mode: payoutMode,
       },
     };

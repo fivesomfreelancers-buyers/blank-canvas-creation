@@ -11,13 +11,19 @@ const AdminPayments = () => {
 
   useEffect(() => {
     (async () => {
-      const { data: orders } = await supabase.from('orders').select('amount, status, created_at');
+      const { data: orders } = await supabase.from('orders').select('amount, buyer_service_fee, freelancer_earnings, status, created_at');
       const o = orders || [];
-      const total = o.filter(x => x.status === 'completed').reduce((s, x) => s + Number(x.amount), 0);
+      const completedOrders = o.filter(x => x.status === 'completed');
+      const total = completedOrders.reduce((s, x) => s + Number(x.amount), 0);
       const processing = o.filter(x => x.status === 'in_progress' || x.status === 'delivered').reduce((s, x) => s + Number(x.amount), 0);
-      const completed = o.filter(x => x.status === 'completed').length;
+      const completed = completedOrders.length;
       const refunded = o.filter(x => x.status === 'cancelled').reduce((s, x) => s + Number(x.amount), 0);
-      const fees = total * 0.1;
+      // Fivesom keeps every buyer service fee plus 15% of the seller's gig earnings.
+      const fees = completedOrders.reduce(
+        (s, x) => s + Number(x.buyer_service_fee || 0) + Number(x.freelancer_earnings || 0) * 0.15,
+        0,
+      );
+
 
       const days: any[] = [];
       const now = new Date();
@@ -38,7 +44,7 @@ const AdminPayments = () => {
   const cards = [
     { label: 'Total Revenue', value: `$${stats.total.toFixed(2)}`, icon: DollarSign, c: 'green' },
     { label: 'Processing (Escrow)', value: `$${stats.processing.toFixed(2)}`, icon: TrendingUp, c: 'yellow' },
-    { label: 'Platform Fees (10%)', value: `$${stats.fees.toFixed(2)}`, icon: CreditCard, c: 'blue' },
+    { label: 'Platform Fees', value: `$${stats.fees.toFixed(2)}`, icon: CreditCard, c: 'blue' },
     { label: 'Refunded', value: `$${stats.refunded.toFixed(2)}`, icon: RefreshCcw, c: 'red' },
   ];
 

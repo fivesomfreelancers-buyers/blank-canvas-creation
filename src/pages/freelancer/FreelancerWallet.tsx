@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { DollarSign, TrendingUp, Clock, ArrowUpRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchTotalEarnings } from '@/lib/freelancerEarnings';
+import { sumFreelancerEarnings, withdrawalBreakdown, FIVESOM_FEE_PERCENT } from '@/lib/orderAmounts';
+
 
 const FreelancerWallet = () => {
   const navigate = useNavigate();
@@ -38,7 +40,7 @@ const FreelancerWallet = () => {
         // Pending earnings = money still in escrow (order paid, not yet accepted).
         const { data: orders } = await supabase
           .from('orders')
-          .select('amount, status')
+          .select('amount, buyer_service_fee, freelancer_earnings, status')
           .eq('freelancer_id', freelancer?.id || '');
 
         const { data: withdrawals } = await supabase
@@ -47,15 +49,19 @@ const FreelancerWallet = () => {
           .eq('freelancer_id', freelancer?.id || '')
           .order('requested_at', { ascending: false });
 
-        const pendingEarnings = orders
-          ?.filter(o => o.status === 'pending' || o.status === 'in_progress' || o.status === 'delivered')
-          .reduce((sum, o) => sum + Number(o.amount), 0) || 0;
+        // Pending earnings exclude the buyer service fee — that belongs to Fivesom.
+        const pendingEarnings = sumFreelancerEarnings(
+          (orders || []).filter(
+            (o) => o.status === 'pending' || o.status === 'in_progress' || o.status === 'delivered'
+          ) as any
+        );
 
         setEarnings({
           available: Math.max(0, Number(wallet?.balance || 0)),
           pending: pendingEarnings,
           total: await fetchTotalEarnings(freelancer?.id),
         });
+
 
         setTransactions(withdrawals || []);
       } catch (error) {
@@ -138,22 +144,28 @@ const FreelancerWallet = () => {
               <div className="space-y-1 text-sm">
                 <p className="text-muted-foreground">
                   Available balance:{' '}
-                  <span className="font-bold text-green-600">${earnings.available.toFixed(2)}</span>
+                  <span className="font-bold text-green-600">
+                    ${withdrawalBreakdown(earnings.available).gross.toFixed(2)}
+                  </span>
                 </p>
                 <p className="text-muted-foreground">
-                  Fivesom fee (15%):{' '}
+                  Fivesom fee ({FIVESOM_FEE_PERCENT}%):{' '}
                   <span className="font-medium text-foreground">
-                    -${(earnings.available * 0.15).toFixed(2)}
+                    -${withdrawalBreakdown(earnings.available).fee.toFixed(2)}
                   </span>
                 </p>
                 <p className="text-muted-foreground">
                   Final withdraw amount:{' '}
                   <span className="font-semibold text-foreground">
-                    ${(earnings.available * 0.85).toFixed(2)}
+                    ${withdrawalBreakdown(earnings.available).net.toFixed(2)}
                   </span>
                 </p>
                 <p className="text-xs text-muted-foreground pt-1">Minimum withdrawal: $20.00</p>
+                <p className="text-xs text-muted-foreground">
+                  Your earnings show the gig price only — the $1 buyer service fee goes to Fivesom.
+                </p>
               </div>
+
               <Button
                 className="flex items-center space-x-2"
                 onClick={() => navigate('/freelancer/wallet/withdraw')}
