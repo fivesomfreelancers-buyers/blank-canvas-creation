@@ -43,6 +43,7 @@ import BuyerOrders from './buyer/BuyerOrders';
 import BuyerMessages from './buyer/BuyerMessages';
 import BuyerHelp from './buyer/BuyerHelp';
 import BuyerSettings from './buyer/BuyerSettings';
+import { useNewDeliveries } from '@/hooks/useNewDeliveries';
 
 const sidebarItems = [
   { title: "Dashboard", icon: Home, key: "dashboard" },
