@@ -57,10 +57,10 @@ const DeliverySuccess = () => {
     );
   }
 
-  const buyer = data?.order?.buyer;
+  const buyer = data?.buyer;
   const delivery = data?.delivery;
   const order = data?.order;
-  const buyerName = buyer?.full_name || 'Buyer';
+  const buyerName = buyer?.full_name || buyer?.username || 'Buyer';
   const initials = buyerName.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
   const createdAt = delivery?.created_at ? new Date(delivery.created_at) : new Date();
 
