@@ -1171,7 +1171,9 @@ export type Database = {
         Row: {
           amount: number
           buyer_id: string
+          buyer_service_fee: number
           created_at: string | null
+          freelancer_earnings: number | null
           freelancer_id: string
           gig_id: string | null
           id: string
@@ -1189,7 +1191,9 @@ export type Database = {
         Insert: {
           amount?: number
           buyer_id: string
+          buyer_service_fee?: number
           created_at?: string | null
+          freelancer_earnings?: number | null
           freelancer_id: string
           gig_id?: string | null
           id?: string
@@ -1207,7 +1211,9 @@ export type Database = {
         Update: {
           amount?: number
           buyer_id?: string
+          buyer_service_fee?: number
           created_at?: string | null
+          freelancer_earnings?: number | null
           freelancer_id?: string
           gig_id?: string | null
           id?: string
