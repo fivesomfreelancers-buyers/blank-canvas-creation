@@ -113,19 +113,46 @@ const FreelancerOrders = () => {
         ) : (
           <div className="grid gap-6">
             {orders.map((order: any) => (
-              <Card key={order.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate(`/freelancer/order/${order.id}`)}>
+              <Card
+                key={order.id}
+                className={`transition-shadow cursor-pointer border ${
+                  order.is_delivered
+                    ? 'border-green-500/40 shadow-[0_0_0_3px_hsl(142_70%_45%/0.12)] hover:shadow-[0_0_0_4px_hsl(142_70%_45%/0.18)]'
+                    : 'border-red-500/50 shadow-[0_0_0_3px_hsl(0_84%_60%/0.15)] hover:shadow-[0_0_0_4px_hsl(0_84%_60%/0.22)]'
+                }`}
+                onClick={() => navigate(`/freelancer/order/${order.id}`)}
+              >
                 <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-xl">{order.gigs?.title || 'Order'}</CardTitle>
-                      <p className="mt-1 text-muted-foreground">Ordered by: {order.buyer_name || 'Buyer'}</p>
-                      <p className="text-sm text-muted-foreground">Order Date: {new Date(order.created_at).toLocaleDateString()}</p>
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="flex items-start gap-3 min-w-0">
+                      <Avatar className="w-11 h-11 shrink-0">
+                        <AvatarImage src={order.buyer_avatar || undefined} alt={order.buyer_name || 'Buyer'} className="object-cover" />
+                        <AvatarFallback>
+                          {(order.buyer_name || 'B').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0">
+                        <CardTitle className="text-xl truncate">{order.gigs?.title || 'Order'}</CardTitle>
+                        <p className="mt-1 text-muted-foreground truncate">Ordered by: {order.buyer_name || 'Buyer'}</p>
+                        <p className="text-sm text-muted-foreground">Order Date: {new Date(order.created_at).toLocaleDateString()}</p>
+                      </div>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right shrink-0">
                       <div className="text-2xl font-bold text-green-600 mb-2">${Number(order.amount).toFixed(2)}</div>
-                      <Badge className={getStatusColor(order.status)}>
-                        {order.status}
-                      </Badge>
+                      <div className="flex flex-col items-end gap-2">
+                        <Badge className={getStatusColor(order.status)}>
+                          {order.status}
+                        </Badge>
+                        <Badge
+                          className={
+                            order.is_delivered
+                              ? 'bg-green-500/15 text-green-600 border-0 hover:bg-green-500/20'
+                              : 'bg-red-500/15 text-red-600 border-0 hover:bg-red-500/20'
+                          }
+                        >
+                          {order.is_delivered ? 'Work delivered' : 'Not delivered yet'}
+                        </Badge>
+                      </div>
                     </div>
                   </div>
                 </CardHeader>
