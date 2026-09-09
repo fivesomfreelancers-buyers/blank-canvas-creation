@@ -99,6 +99,14 @@ const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSect
                     >
                       <item.icon className="w-4 h-4" />
                       <span>{item.title}</span>
+                      {item.key === 'orders' && newDeliveryCount > 0 && (
+                        <span className="ml-auto flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
+                          <span className="min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none">
+                            {newDeliveryCount > 99 ? '99+' : newDeliveryCount}
+                          </span>
+                        </span>
+                      )}
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
