@@ -7,6 +7,7 @@ import { Logo } from './Logo';
 import { useAuth } from '@/hooks/useAuth';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useNewOrders } from '@/hooks/useNewOrders';
+import { useNewDeliveries } from '@/hooks/useNewDeliveries';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -27,6 +28,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { unreadCount } = useUnreadMessages();
   const { newOrderCount } = useNewOrders();
+  const { newDeliveryCount } = useNewDeliveries();
   const { isAdmin } = useAdminRole();
   const [profile, setProfile] = useState<{ full_name: string; profile_image_url: string | null } | null>(null);
 
@@ -114,8 +116,22 @@ const Navbar = () => {
                       </span>
                     )}
                   </Link>
+                 )}
+                {userRole === 'buyer' && (
+                  <Link
+                    to="/buyer/orders"
+                    aria-label="My orders"
+                    className="relative p-2 rounded-full hover:bg-accent transition-colors"
+                  >
+                    <ShoppingBag className="h-5 w-5" />
+                    {newDeliveryCount > 0 && (
+                      <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none ring-2 ring-background">
+                        {newDeliveryCount > 99 ? '99+' : newDeliveryCount}
+                      </span>
+                    )}
+                  </Link>
                 )}
-                <Link
+                 <Link
                   to={messagesPath}
                   aria-label="Messages"
                   className="relative p-2 rounded-full hover:bg-accent transition-colors"

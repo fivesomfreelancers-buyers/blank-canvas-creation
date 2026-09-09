@@ -43,6 +43,7 @@ import BuyerOrders from './buyer/BuyerOrders';
 import BuyerMessages from './buyer/BuyerMessages';
 import BuyerHelp from './buyer/BuyerHelp';
 import BuyerSettings from './buyer/BuyerSettings';
+import { useNewDeliveries } from '@/hooks/useNewDeliveries';
 
 const sidebarItems = [
   { title: "Dashboard", icon: Home, key: "dashboard" },
@@ -63,6 +64,12 @@ interface ProfileData {
 
 const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSection: string; setActiveSection: (section: string) => void; profile: ProfileData | null }) => {
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'B';
+  const { newDeliveryCount, markSeen } = useNewDeliveries();
+
+  React.useEffect(() => {
+    if (activeSection === 'orders') markSeen();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeSection]);
 
   return (
     <Sidebar>
@@ -93,6 +100,14 @@ const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSect
                     >
                       <item.icon className="w-4 h-4" />
                       <span>{item.title}</span>
+                      {item.key === 'orders' && newDeliveryCount > 0 && (
+                        <span className="ml-auto flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
+                          <span className="min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none">
+                            {newDeliveryCount > 99 ? '99+' : newDeliveryCount}
+                          </span>
+                        </span>
+                      )}
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
