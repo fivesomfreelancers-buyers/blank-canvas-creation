@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { DollarSign, ArrowUpRight, ArrowDownRight, Search, Filter } from 'lucide-react';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { fetchTotalEarnings } from '@/lib/freelancerEarnings';
 
 interface EscrowOrder {
   id: string;

@@ -44,7 +44,7 @@ const AdminPayments = () => {
   const cards = [
     { label: 'Total Revenue', value: `$${stats.total.toFixed(2)}`, icon: DollarSign, c: 'green' },
     { label: 'Processing (Escrow)', value: `$${stats.processing.toFixed(2)}`, icon: TrendingUp, c: 'yellow' },
-    { label: 'Platform Fees (10%)', value: `$${stats.fees.toFixed(2)}`, icon: CreditCard, c: 'blue' },
+    { label: 'Platform Fees', value: `$${stats.fees.toFixed(2)}`, icon: CreditCard, c: 'blue' },
     { label: 'Refunded', value: `$${stats.refunded.toFixed(2)}`, icon: RefreshCcw, c: 'red' },
   ];
 
