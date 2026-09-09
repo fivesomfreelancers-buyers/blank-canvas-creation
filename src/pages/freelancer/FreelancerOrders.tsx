@@ -44,17 +44,31 @@ const FreelancerOrders = () => {
       // Fetch buyer profiles manually since there's no direct FK
       if (ordersData && ordersData.length > 0) {
         const buyerIds = [...new Set(ordersData.map(o => o.buyer_id))];
-        const { data: profiles } = await (supabase as any)
-          .from('public_profiles')
-          .select('id, full_name')
-          .in('id', buyerIds);
-        
-        const profileMap = new Map((profiles as any[] | null)?.map((p: any) => [p.id, p.full_name]) || []);
-        
-        const enrichedOrders = ordersData.map(order => ({
-          ...order,
-          buyer_name: profileMap.get(order.buyer_id) || 'Buyer'
-        }));
+        const orderIds = ordersData.map(o => o.id);
+
+        const [{ data: profiles }, { data: deliveries }] = await Promise.all([
+          (supabase as any)
+            .from('public_profiles')
+            .select('id, full_name, username, profile_image_url')
+            .in('id', buyerIds),
+          supabase
+            .from('order_deliveries')
+            .select('order_id')
+            .in('order_id', orderIds),
+        ]);
+
+        const profileMap = new Map((profiles as any[] | null)?.map((p: any) => [p.id, p]) || []);
+        const deliveredSet = new Set((deliveries as any[] | null)?.map((d: any) => d.order_id) || []);
+
+        const enrichedOrders = ordersData.map(order => {
+          const p: any = profileMap.get(order.buyer_id);
+          return {
+            ...order,
+            buyer_name: p?.full_name || p?.username || 'Buyer',
+            buyer_avatar: p?.profile_image_url || null,
+            is_delivered: deliveredSet.has(order.id) || order.status === 'completed' || order.status === 'delivered',
+          };
+        });
         setOrders(enrichedOrders as any);
       } else {
         setOrders([]);
