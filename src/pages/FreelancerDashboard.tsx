@@ -30,6 +30,8 @@ import FreelancerProfile from './freelancer/FreelancerProfile';
 import FreelancerVerify from './freelancer/FreelancerVerify';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import DisputeChat from '@/components/dispute/DisputeChat';
+import { useNewOrders } from '@/hooks/useNewOrders';
+import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 
 interface UserProfile {
   full_name: string;
