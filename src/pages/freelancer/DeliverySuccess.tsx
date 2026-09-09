@@ -87,7 +87,7 @@ const DeliverySuccess = () => {
             {/* Buyer */}
             <div className="flex items-center gap-4 pb-4 border-b border-border">
               <Avatar className="w-14 h-14">
-                <AvatarImage src={buyer?.avatar_url || undefined} alt={buyerName} />
+                <AvatarImage src={buyer?.profile_image_url || undefined} alt={buyerName} className="object-cover" />
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
