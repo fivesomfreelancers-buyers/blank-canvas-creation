@@ -21,7 +21,7 @@ const DeliverySuccess = () => {
       if (!orderId) return;
       const { data: order } = await supabase
         .from('orders')
-        .select('*, gigs(title), buyer:profiles!orders_buyer_id_fkey(full_name, avatar_url)')
+        .select('*, gigs(title)')
         .eq('id', orderId)
         .maybeSingle();
 
@@ -33,7 +33,17 @@ const DeliverySuccess = () => {
         .limit(1)
         .maybeSingle();
 
-      setData({ order, delivery });
+      let buyer: any = null;
+      if (order?.buyer_id) {
+        const { data: p } = await (supabase as any)
+          .from('public_profiles')
+          .select('id, full_name, username, profile_image_url')
+          .eq('id', order.buyer_id)
+          .maybeSingle();
+        buyer = p;
+      }
+
+      setData({ order, delivery, buyer });
       setLoading(false);
     };
     load();
@@ -47,10 +57,10 @@ const DeliverySuccess = () => {
     );
   }
 
-  const buyer = data?.order?.buyer;
+  const buyer = data?.buyer;
   const delivery = data?.delivery;
   const order = data?.order;
-  const buyerName = buyer?.full_name || 'Buyer';
+  const buyerName = buyer?.full_name || buyer?.username || 'Buyer';
   const initials = buyerName.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
   const createdAt = delivery?.created_at ? new Date(delivery.created_at) : new Date();
 
@@ -77,7 +87,7 @@ const DeliverySuccess = () => {
             {/* Buyer */}
             <div className="flex items-center gap-4 pb-4 border-b border-border">
               <Avatar className="w-14 h-14">
-                <AvatarImage src={buyer?.avatar_url || undefined} alt={buyerName} />
+                <AvatarImage src={buyer?.profile_image_url || undefined} alt={buyerName} className="object-cover" />
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
