@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, ArrowRight, ShieldCheck, Globe2, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import TypingHeadline from './TypingHeadline';
 
 const POPULAR = [
   'Logo Design',
@@ -34,11 +35,18 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
           Global freelance marketplace with an African heart
         </div>
 
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold leading-tight text-foreground mb-5">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold leading-tight text-foreground mb-5 min-h-[2.4em] sm:min-h-[2.3em]">
           Hire skilled freelancers.{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">
-            Turn your skills into income.
-          </span>
+          <TypingHeadline
+            className="text-primary"
+            phrases={[
+              'Turn your skills into income.',
+              'Find clients and grow your career.',
+              'Work with clients worldwide.',
+              'Build your freelance business.',
+              'Get paid for your skills.',
+            ]}
+          />
         </h1>
 
         <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
