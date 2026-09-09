@@ -38,7 +38,7 @@ const FreelancerWallet = () => {
         // Pending earnings = money still in escrow (order paid, not yet accepted).
         const { data: orders } = await supabase
           .from('orders')
-          .select('amount, status')
+          .select('amount, buyer_service_fee, freelancer_earnings, status')
           .eq('freelancer_id', freelancer?.id || '');
 
         const { data: withdrawals } = await supabase
@@ -47,15 +47,19 @@ const FreelancerWallet = () => {
           .eq('freelancer_id', freelancer?.id || '')
           .order('requested_at', { ascending: false });
 
-        const pendingEarnings = orders
-          ?.filter(o => o.status === 'pending' || o.status === 'in_progress' || o.status === 'delivered')
-          .reduce((sum, o) => sum + Number(o.amount), 0) || 0;
+        // Pending earnings exclude the buyer service fee — that belongs to Fivesom.
+        const pendingEarnings = sumFreelancerEarnings(
+          (orders || []).filter(
+            (o) => o.status === 'pending' || o.status === 'in_progress' || o.status === 'delivered'
+          ) as any
+        );
 
         setEarnings({
           available: Math.max(0, Number(wallet?.balance || 0)),
           pending: pendingEarnings,
           total: await fetchTotalEarnings(freelancer?.id),
         });
+
 
         setTransactions(withdrawals || []);
       } catch (error) {
