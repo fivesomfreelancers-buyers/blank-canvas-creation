@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Moon, Sun, Menu, X, User, LogOut, Settings, LayoutDashboard, MessageSquare, Shield } from 'lucide-react';
+import { Moon, Sun, Menu, X, User, LogOut, Settings, LayoutDashboard, MessageSquare, Shield, ShoppingBag } from 'lucide-react';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { Logo } from './Logo';
 import { useAuth } from '@/hooks/useAuth';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
+import { useNewOrders } from '@/hooks/useNewOrders';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -25,6 +26,7 @@ const Navbar = () => {
   const { user, userRole, signOut } = useAuth();
   const navigate = useNavigate();
   const { unreadCount } = useUnreadMessages();
+  const { newOrderCount } = useNewOrders();
   const { isAdmin } = useAdminRole();
   const [profile, setProfile] = useState<{ full_name: string; profile_image_url: string | null } | null>(null);
 
@@ -99,6 +101,20 @@ const Navbar = () => {
                   </Link>
                 )}
                 <NotificationBell />
+                {userRole === 'freelancer' && (
+                  <Link
+                    to="/freelancer/orders"
+                    aria-label="Orders received"
+                    className="relative p-2 rounded-full hover:bg-accent transition-colors"
+                  >
+                    <ShoppingBag className="h-5 w-5" />
+                    {newOrderCount > 0 && (
+                      <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none ring-2 ring-background">
+                        {newOrderCount > 99 ? '99+' : newOrderCount}
+                      </span>
+                    )}
+                  </Link>
+                )}
                 <Link
                   to={messagesPath}
                   aria-label="Messages"
