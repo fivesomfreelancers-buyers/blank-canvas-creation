@@ -21,7 +21,7 @@ const DeliverySuccess = () => {
       if (!orderId) return;
       const { data: order } = await supabase
         .from('orders')
-        .select('*, gigs(title), buyer:profiles!orders_buyer_id_fkey(full_name, avatar_url)')
+        .select('*, gigs(title)')
         .eq('id', orderId)
         .maybeSingle();
 
@@ -33,7 +33,17 @@ const DeliverySuccess = () => {
         .limit(1)
         .maybeSingle();
 
-      setData({ order, delivery });
+      let buyer: any = null;
+      if (order?.buyer_id) {
+        const { data: p } = await (supabase as any)
+          .from('public_profiles')
+          .select('id, full_name, username, profile_image_url')
+          .eq('id', order.buyer_id)
+          .maybeSingle();
+        buyer = p;
+      }
+
+      setData({ order, delivery, buyer });
       setLoading(false);
     };
     load();
