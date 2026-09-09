@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, ArrowRight, ShieldCheck, Globe2, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import TypingHeadline from './TypingHeadline';
 
 const POPULAR = [
   'Logo Design',
