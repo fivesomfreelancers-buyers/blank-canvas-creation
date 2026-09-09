@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { DollarSign, TrendingUp, Clock, ArrowUpRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchTotalEarnings } from '@/lib/freelancerEarnings';
+import { sumFreelancerEarnings, withdrawalBreakdown, FIVESOM_FEE_PERCENT } from '@/lib/orderAmounts';
+
 
 const FreelancerWallet = () => {
   const navigate = useNavigate();
