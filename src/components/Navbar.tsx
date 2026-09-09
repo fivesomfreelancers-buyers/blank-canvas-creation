@@ -7,6 +7,7 @@ import { Logo } from './Logo';
 import { useAuth } from '@/hooks/useAuth';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useNewOrders } from '@/hooks/useNewOrders';
+import { useNewDeliveries } from '@/hooks/useNewDeliveries';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
