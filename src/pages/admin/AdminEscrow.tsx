@@ -77,16 +77,15 @@ const AdminEscrow = () => {
       .eq('id', order.id);
     if (orderErr) { toast.error('Failed to release'); return; }
 
-    const { data: freelancer } = await supabase.from('freelancers').select('user_id, completed_orders, ranking_score').eq('id', order.freelancer_id).maybeSingle();
-    const priorEarnings = await fetchTotalEarnings(order.freelancer_id);
-    if (freelancer?.user_id) {
-      const { data: wallet } = await supabase.from('wallets').select('id, balance').eq('user_id', freelancer.user_id).maybeSingle();
-      if (wallet) {
-        await supabase.from('wallets').update({ balance: Number(wallet.balance || 0) + Number(order.amount) }).eq('id', wallet.id);
-      }
+    // The wallet credit and lifetime earnings are handled by the database on completion,
+    // using the gig price only (the $1 buyer service fee stays with Fivesom).
+    const { data: freelancer } = await supabase
+      .from('freelancers')
+      .select('ranking_score')
+      .eq('id', order.freelancer_id)
+      .maybeSingle();
+    if (freelancer) {
       await supabase.from('freelancers').update({
-        completed_orders: (freelancer.completed_orders || 0) + 1,
-        total_earnings: priorEarnings + Number(order.amount),
         ranking_score: Number(freelancer.ranking_score || 0) + 10,
       }).eq('id', order.freelancer_id);
     }
@@ -94,6 +93,7 @@ const AdminEscrow = () => {
     toast.success('Funds released to seller!');
     fetchOrders();
   };
+
 
   const handleRefund = async (order: EscrowOrder) => {
     const { error } = await supabase
