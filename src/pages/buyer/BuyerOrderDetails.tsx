@@ -315,15 +315,28 @@ const BuyerOrderDetails = () => {
                       {delivery.delivery_link && (
                         <div>
                           {order.status === 'completed' ? (
-                            <Button size="sm" variant="outline" onClick={() => openSafeUrl(delivery.delivery_link)}>
-                              <ExternalLink className="w-4 h-4 mr-2" />
-                              Open Link
+                            <Button
+                              size="lg"
+                              className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 text-base font-semibold shadow-lg shadow-primary/25"
+                              onClick={() => openSafeUrl(delivery.delivery_link)}
+                            >
+                              <ExternalLink className="w-5 h-5 mr-2" />
+                              Open Delivery Link
                             </Button>
                           ) : (
-                            <div className="inline-flex items-center gap-2 text-xs text-muted-foreground border rounded-md px-3 py-2">
-                              <Link2 className="w-3.5 h-3.5" />
-                              Link unlocks after you accept the delivery
-                            </div>
+                            <Button
+                              size="lg"
+                              disabled
+                              className="w-full sm:w-auto bg-primary/80 text-primary-foreground text-base font-semibold shadow-lg shadow-primary/20 disabled:opacity-100 cursor-not-allowed"
+                            >
+                              <Lock className="w-5 h-5 mr-2" />
+                              Delivery Link — Locked
+                            </Button>
+                          )}
+                          {order.status !== 'completed' && (
+                            <p className="mt-2 text-xs text-muted-foreground">
+                              A link was sent with your delivery. Accept the delivery to unlock it.
+                            </p>
                           )}
                         </div>
                       )}
