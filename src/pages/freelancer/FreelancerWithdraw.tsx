@@ -253,8 +253,16 @@ const FreelancerWithdraw = () => {
       if (error) throw error;
 
       toast({
-        title: 'Withdrawal Request Submitted',
-        description: `Your request for $${withdrawAmount.toFixed(2)} has been sent to the admin for processing. You will receive $${amountAfterFee.toFixed(2)} after the 15% Fivesom fee.`,
+      toast({
+        variant: 'success',
+        duration: 9000,
+        title: (
+          <span className="flex items-center gap-2">
+            <Hourglass className="w-4 h-4 animate-pulse" />
+            Withdrawal Request Received — Please Wait
+          </span>
+        ),
+        description: `Thank you! Your withdrawal request for $${withdrawAmount.toFixed(2)} has been received and is now waiting for approval. Once it is approved, your money will reach you within 5 to 10 days. You will get $${amountAfterFee.toFixed(2)} after the 15% Fivesom fee.`,
       });
       navigate('/freelancer/wallet');
     } catch (err: any) {
