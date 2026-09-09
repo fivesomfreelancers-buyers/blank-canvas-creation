@@ -62,10 +62,12 @@ const HowItWorks = () => {
       <header className="pt-24 pb-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-            
+            How FIVESOM Works
           </h1>
           <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-            
+            Buyers browse gigs, pay securely into escrow, and receive the completed
+            work. Freelancers publish gigs, deliver the order, and get paid once the
+            buyer accepts the delivery — every step protected by FIVESOM escrow.
           </p>
         </div>
       </header>
