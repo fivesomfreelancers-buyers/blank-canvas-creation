@@ -63,6 +63,12 @@ interface ProfileData {
 
 const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSection: string; setActiveSection: (section: string) => void; profile: ProfileData | null }) => {
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'B';
+  const { newDeliveryCount, markSeen } = useNewDeliveries();
+
+  React.useEffect(() => {
+    if (activeSection === 'orders') markSeen();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeSection]);
 
   return (
     <Sidebar>
