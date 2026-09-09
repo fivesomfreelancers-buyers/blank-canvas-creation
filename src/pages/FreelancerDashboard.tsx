@@ -40,6 +40,8 @@ interface UserProfile {
 const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userProfile }: { 
   activeSection: string; setActiveSection: (section: string) => void; isVerified: boolean; userProfile: UserProfile | null 
 }) => {
+  const { newOrderCount, markSeen } = useNewOrders();
+  const { unreadCount } = useUnreadMessages();
   const sidebarItems = [
     { title: "Dashboard", icon: Home, key: "dashboard" },
     { title: "My Gigs", icon: Briefcase, key: "gigs" },
