@@ -8,8 +8,11 @@ export interface PaymentOrderMeta {
   freelancer_id?: string;
   package_name?: string;
   amount_usd?: string;
+  /** Buyer service fee included in amount_usd. Belongs to Fivesom, never to the seller. */
+  service_fee_usd?: string;
   payout_mode?: string;
 }
+
 
 interface EnsureArgs {
   admin: any;
