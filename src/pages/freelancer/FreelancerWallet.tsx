@@ -144,22 +144,28 @@ const FreelancerWallet = () => {
               <div className="space-y-1 text-sm">
                 <p className="text-muted-foreground">
                   Available balance:{' '}
-                  <span className="font-bold text-green-600">${earnings.available.toFixed(2)}</span>
+                  <span className="font-bold text-green-600">
+                    ${withdrawalBreakdown(earnings.available).gross.toFixed(2)}
+                  </span>
                 </p>
                 <p className="text-muted-foreground">
-                  Fivesom fee (15%):{' '}
+                  Fivesom fee ({FIVESOM_FEE_PERCENT}%):{' '}
                   <span className="font-medium text-foreground">
-                    -${(earnings.available * 0.15).toFixed(2)}
+                    -${withdrawalBreakdown(earnings.available).fee.toFixed(2)}
                   </span>
                 </p>
                 <p className="text-muted-foreground">
                   Final withdraw amount:{' '}
                   <span className="font-semibold text-foreground">
-                    ${(earnings.available * 0.85).toFixed(2)}
+                    ${withdrawalBreakdown(earnings.available).net.toFixed(2)}
                   </span>
                 </p>
                 <p className="text-xs text-muted-foreground pt-1">Minimum withdrawal: $20.00</p>
+                <p className="text-xs text-muted-foreground">
+                  Your earnings show the gig price only — the $1 buyer service fee goes to Fivesom.
+                </p>
               </div>
+
               <Button
                 className="flex items-center space-x-2"
                 onClick={() => navigate('/freelancer/wallet/withdraw')}
