@@ -116,8 +116,22 @@ const Navbar = () => {
                       </span>
                     )}
                   </Link>
+                 )}
+                {userRole === 'buyer' && (
+                  <Link
+                    to="/buyer/orders"
+                    aria-label="My orders"
+                    className="relative p-2 rounded-full hover:bg-accent transition-colors"
+                  >
+                    <ShoppingBag className="h-5 w-5" />
+                    {newDeliveryCount > 0 && (
+                      <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none ring-2 ring-background">
+                        {newDeliveryCount > 99 ? '99+' : newDeliveryCount}
+                      </span>
+                    )}
+                  </Link>
                 )}
-                <Link
+                 <Link
                   to={messagesPath}
                   aria-label="Messages"
                   className="relative p-2 rounded-full hover:bg-accent transition-colors"
