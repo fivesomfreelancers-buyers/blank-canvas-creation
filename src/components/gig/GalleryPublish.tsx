@@ -291,7 +291,7 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
       </div>
 
       {/* Publish Summary */}
-      <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg p-6 border border-cyan-200">
+      <div className="bg-primary/5 rounded-lg p-6 border border-primary/30 text-foreground">
         <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center">
           <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
           Ready to Publish
