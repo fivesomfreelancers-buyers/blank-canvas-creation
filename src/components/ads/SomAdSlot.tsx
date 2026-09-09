@@ -30,7 +30,7 @@ const sizeClass: Record<string, string> = {
 /** Minimum seconds an ad must be visible before it can be closed. */
 const MIN_VISIBLE_SECONDS = 30;
 /** Rotation interval between multiple ads in the same placement. */
-const ROTATE_MS = 30_000;
+const ROTATE_MS = 2_000;
 
 export function SomAdCreative({ ad, className }: { ad: SomAd; className?: string }) {
   const handleClick = () => {
@@ -132,14 +132,14 @@ export default function SomAdSlot({ placement, viewerRole, className, children }
     return () => window.clearInterval(id);
   }, [loading, ads.length, closed]);
 
-  // Rotate between multiple ads every 30s.
+  // Rotate between multiple ads automatically (restarts after manual selection).
   useEffect(() => {
     if (ads.length < 2 || closed) return;
     const id = window.setInterval(() => {
       setIndex((i) => (i + 1) % ads.length);
     }, ROTATE_MS);
     return () => window.clearInterval(id);
-  }, [ads.length, closed]);
+  }, [ads.length, closed, index]);
 
   useEffect(() => {
     if (index >= ads.length) setIndex(0);
@@ -152,7 +152,7 @@ export default function SomAdSlot({ placement, viewerRole, className, children }
 
   return (
     <div className={cn('relative w-full', className)} style={{ aspectRatio: PLACEMENT_ASPECT[placement] }}>
-      <SomAdCreative key={ad.id} ad={ad} />
+      <SomAdCreative key={ad.id} ad={ad} className="animate-fade-in" />
 
       {/* Close / countdown control */}
       <button
