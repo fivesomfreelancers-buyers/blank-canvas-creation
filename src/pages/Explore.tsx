@@ -243,41 +243,6 @@ const Explore = () => {
             </div>
           )}
 
-          {/* Category landing pages — crawlable entry points for every service */}
-          <section aria-labelledby="browse-categories" className="mt-16">
-            <h2 id="browse-categories" className="text-xl sm:text-2xl font-bold text-foreground mb-2">
-              Browse services by category
-            </h2>
-            <p className="text-sm text-muted-foreground mb-5">
-              Each category has its own page with the gigs, prices and answers to common questions.
-            </p>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {CATEGORIES.map((c) => (
-                <div key={c.slug} className="rounded-2xl border border-border bg-card p-5">
-                  <h3 className="font-semibold text-foreground mb-3">
-                    <Link to={`/services/${c.slug}`} className="hover:text-primary transition-colors">
-                      {c.name} services
-                    </Link>
-                  </h3>
-                  <ul className="flex flex-wrap gap-1.5">
-                    {c.subcategories.slice(0, 6).map((sub) => (
-                      <li key={sub.slug}>
-                        <Link
-                          to={`/services/${c.slug}/${sub.slug}`}
-                          className="inline-flex px-2.5 py-1 rounded-full text-[11px] bg-muted/70 text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
-                        >
-                          {sub.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-            <Link to="/services" className="inline-flex mt-6 text-sm font-semibold text-primary">
-              See all FIVESOM services
-            </Link>
-          </section>
         </div>
       </div>
     </div>
