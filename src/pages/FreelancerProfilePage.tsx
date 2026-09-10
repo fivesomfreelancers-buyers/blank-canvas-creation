@@ -10,7 +10,7 @@ import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import { Textarea } from '@/components/ui/textarea';
 import { Star, MapPin, Calendar, MessageSquare, CheckCircle, Globe, GraduationCap, Briefcase, Wrench } from 'lucide-react';
 import Navbar from '@/components/Navbar';
-import SEO from '@/components/SEO';
+import SEO, { absoluteSeoUrl, SITE_URL } from '@/components/SEO';
 import FreelancerFAQDisplay from '@/components/faq/FreelancerFAQDisplay';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import VipBadge from '@/components/VipBadge';
@@ -232,31 +232,39 @@ const FreelancerProfilePage = () => {
         canonical={freelancerPath({ username: profileData.username, id: profileData.id })}
         type="profile"
         image={profileData.imageUrl || undefined}
-        jsonLd={{
-          '@context': 'https://schema.org',
-          '@type': 'ProfilePage',
-          mainEntity: {
+        jsonLd={(() => {
+          const profileUrl = absoluteSeoUrl(
+            freelancerPath({ username: profileData.username, id: profileData.id })
+          );
+          const person: Record<string, unknown> = {
             '@type': 'Person',
+            '@id': `${profileUrl}#person`,
             name: profileData.name,
+            url: profileUrl,
+            mainEntityOfPage: { '@id': `${profileUrl}#profilepage` },
             ...(profileData.professional_title ? { jobTitle: profileData.professional_title } : {}),
-            ...(profileData.imageUrl ? { image: profileData.imageUrl } : {}),
+            ...(profileData.imageUrl ? { image: absoluteSeoUrl(profileData.imageUrl) } : {}),
             ...(profileData.bio ? { description: profileData.bio } : {}),
             ...(profileData.location && profileData.location !== 'Not specified'
               ? { address: { '@type': 'PostalAddress', addressLocality: profileData.location } }
               : {}),
             ...(profileData.languages?.length ? { knowsLanguage: profileData.languages } : {}),
-            url: freelancerPath({ username: profileData.username, id: profileData.id }),
-            ...(profileData.totalReviews > 0
-              ? {
-                  aggregateRating: {
-                    '@type': 'AggregateRating',
-                    ratingValue: Number(profileData.avgRating || 0).toFixed(1),
-                    reviewCount: profileData.totalReviews,
-                  },
-                }
-              : {}),
-          },
-        }}
+            ...(profileData.skills?.length ? { knowsAbout: profileData.skills } : {}),
+            worksFor: { '@type': 'Organization', name: 'FIVESOM', url: `${SITE_URL}/` },
+          };
+          return {
+            '@context': 'https://schema.org',
+            '@type': 'ProfilePage',
+            '@id': `${profileUrl}#profilepage`,
+            url: profileUrl,
+            name: seoTitle,
+            description: seoDescription,
+            inLanguage: 'en',
+            isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+            mainEntity: person,
+          };
+        })()}
+
       />
       <Navbar />
       <div className="max-w-6xl mx-auto px-4 py-8 pt-24">

@@ -36,11 +36,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/login</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://fivesom.net/register</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
@@ -54,11 +49,6 @@
     <loc>https://fivesom.net/register/freelancer</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/forgot-password</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
   </url>
   <url>
     <loc>https://fivesom.net/legal/terms</loc>
@@ -177,17 +167,17 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/sakariye-saki</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fivesom.net/freelancer/asmahodandev</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fivesom.net/freelancer/yahya-abdi</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/sakariye-saki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

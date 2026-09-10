@@ -15,7 +15,7 @@ import VerifiedBadge from '@/components/VerifiedBadge';
 import BlueTickBadge from '@/components/BlueTickBadge';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import ReportDialog from '@/components/ReportDialog';
-import SEO from '@/components/SEO';
+import SEO, { absoluteSeoUrl, SITE_URL } from '@/components/SEO';
 import SomAdSlot from '@/components/ads/SomAdSlot';
 import { supabase } from '@/integrations/supabase/client';
 import { getOrCreateConversation, inboxPath } from '@/lib/conversations';
@@ -205,40 +205,92 @@ const GigDetails = () => {
         canonical={gigPath(gig)}
         type="product"
         image={images[0]}
-        jsonLd={[
-          {
+        jsonLd={(() => {
+          const gigUrl = absoluteSeoUrl(gigPath(gig));
+          const absImages = images.map((img: string) => absoluteSeoUrl(img));
+          const realReviews = (gig.reviews || []).filter((r: any) => r && r.rating);
+          const reviewCount = gig.totalReviews || realReviews.length;
+
+          const product: Record<string, unknown> = {
             '@context': 'https://schema.org',
             '@type': 'Product',
+            '@id': `${gigUrl}#product`,
             name: gig.title,
+            url: gigUrl,
             description: (gig.description || '').toString().slice(0, 500),
-            image: images,
+            ...(absImages.length ? { image: absImages } : {}),
+            ...(gig.freelancerName ? { brand: { '@type': 'Brand', name: gig.freelancerName } } : {}),
             offers: {
               '@type': 'Offer',
-              price: Number(gig.base_price || 0),
+              url: gigUrl,
+              price: Number(gig.base_price || 0).toFixed(2),
               priceCurrency: 'USD',
               availability: 'https://schema.org/InStock',
+              ...(gig.freelancerName
+                ? {
+                    seller: {
+                      '@type': 'Person',
+                      name: gig.freelancerName,
+                      ...(gig.freelancerUsername || gig.freelancerId
+                        ? {
+                            url: absoluteSeoUrl(
+                              freelancerPath({ username: gig.freelancerUsername, id: gig.freelancerId })
+                            ),
+                          }
+                        : {}),
+                    },
+                  }
+                : {}),
             },
-            ...(gig.freelancerName ? {
-              brand: { '@type': 'Brand', name: gig.freelancerName },
-              provider: {
-                '@type': 'Person',
-                name: gig.freelancerName,
-                ...(gig.freelancerImageUrl ? { image: gig.freelancerImageUrl } : {}),
-                ...(gig.freelancerUsername || gig.freelancerId ? { url: freelancerPath({ username: gig.freelancerUsername, id: gig.freelancerId }) } : {}),
+          };
+
+          // Ratings and reviews are only emitted when genuine reviews exist.
+          if (reviewCount > 0 && gig.rating > 0) {
+            product.aggregateRating = {
+              '@type': 'AggregateRating',
+              ratingValue: Number(gig.rating).toFixed(1),
+              reviewCount,
+              bestRating: 5,
+              worstRating: 1,
+            };
+          }
+          if (realReviews.length > 0) {
+            product.review = realReviews.slice(0, 20).map((r: any) => ({
+              '@type': 'Review',
+              reviewRating: {
+                '@type': 'Rating',
+                ratingValue: Number(r.rating),
+                bestRating: 5,
+                worstRating: 1,
               },
-            } : {}),
-            ...(gig.rating ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: gig.rating, reviewCount: gig.reviewCount || 1 } } : {}),
-          },
-          ...(faqs && faqs.length > 0 ? [{
-            '@context': 'https://schema.org',
-            '@type': 'FAQPage',
-            mainEntity: faqs.map((f: any) => ({
-              '@type': 'Question',
-              name: f.question,
-              acceptedAnswer: { '@type': 'Answer', text: f.answer },
-            })),
-          }] : []),
-        ]}
+              author: { '@type': 'Person', name: r.buyerName || 'Anonymous Buyer' },
+              ...(r.created_at ? { datePublished: String(r.created_at).slice(0, 10) } : {}),
+              ...(r.comment ? { reviewBody: String(r.comment).slice(0, 800) } : {}),
+              publisher: { '@type': 'Organization', name: 'FIVESOM', url: `${SITE_URL}/` },
+            }));
+          }
+
+          return [
+            product,
+            ...(faqs && faqs.length > 0
+              ? [
+                  {
+                    '@context': 'https://schema.org',
+                    '@type': 'FAQPage',
+                    '@id': `${gigUrl}#faq`,
+                    mainEntity: faqs
+                      .filter((f: any) => f?.question && f?.answer)
+                      .map((f: any) => ({
+                        '@type': 'Question',
+                        name: f.question,
+                        acceptedAnswer: { '@type': 'Answer', text: f.answer },
+                      })),
+                  },
+                ]
+              : []),
+          ];
+        })()}
+
       />
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-8 pt-24">
