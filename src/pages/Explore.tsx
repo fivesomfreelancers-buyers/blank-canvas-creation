@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import Navbar from '../components/Navbar';
-import SEO from '../components/SEO';
+import SEO, { SITE_URL } from '../components/SEO';
 import { useTheme } from '../components/ThemeProvider';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -87,11 +87,14 @@ const Explore = () => {
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
+          '@id': `${SITE_URL}/explore#collectionpage`,
           name: 'Explore Freelance Services & Gigs',
           description: 'Browse gigs from verified Somali freelancers on FIVESOM.',
-          url: '/explore',
-          isPartOf: { '@type': 'WebSite', name: 'FIVESOM', url: '/' },
+          url: `${SITE_URL}/explore`,
+          inLanguage: 'en',
+          isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
         }}
+
       />
       <Navbar />
       
