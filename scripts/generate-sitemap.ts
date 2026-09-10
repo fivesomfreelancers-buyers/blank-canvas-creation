@@ -5,6 +5,7 @@
 
 import { writeFileSync } from "fs";
 import { resolve } from "path";
+import { CATEGORIES } from "../src/lib/categories";
 
 const BASE_URL = "https://fivesom.net";
 
