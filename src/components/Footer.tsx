@@ -104,7 +104,7 @@ export const Footer: React.FC = () => {
                 { name: 'Web Development', slug: 'web-development' },
               ].map((item) => (
                 <li key={item.slug}>
-                  <Link to={`/explore?category=${item.slug}`} className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                  <Link to={`/services/${item.slug}`} className="text-sm transition-colors text-muted-foreground hover:text-foreground">
                     {item.name}
                   </Link>
                 </li>
