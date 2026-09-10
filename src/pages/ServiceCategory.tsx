@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import { Footer } from '@/components/Footer';
 import SEO, { SITE_URL } from '@/components/SEO';
 import GigCard from '@/components/gig/GigCard';
 import { Button } from '@/components/ui/button';
