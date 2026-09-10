@@ -11,6 +11,8 @@ import Index from "./pages/Index";
 
 // Everything else is code-split: a visitor only downloads the page they open.
 const Explore = lazy(() => import("./pages/Explore"));
+const Services = lazy(() => import("./pages/Services"));
+const ServiceCategory = lazy(() => import("./pages/ServiceCategory"));
 const GigDetails = lazy(() => import("./pages/GigDetails"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
 const Docs = lazy(() => import("./pages/Docs"));
@@ -103,6 +105,9 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/explore" element={<Explore />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/services/:categorySlug" element={<ServiceCategory />} />
+              <Route path="/services/:categorySlug/:subcategorySlug" element={<ServiceCategory />} />
               <Route path="/gig/:slug" element={<GigDetails />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/docs" element={<Docs />} />

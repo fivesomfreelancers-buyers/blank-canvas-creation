@@ -5,6 +5,7 @@
 
 import { writeFileSync } from "fs";
 import { resolve } from "path";
+import { CATEGORIES } from "../src/lib/categories";
 
 const BASE_URL = "https://fivesom.net";
 
@@ -23,6 +24,7 @@ interface SitemapEntry {
 const staticEntries: SitemapEntry[] = [
   { path: "/", changefreq: "daily", priority: "1.0" },
   { path: "/explore", changefreq: "daily", priority: "0.9" },
+  { path: "/services", changefreq: "weekly", priority: "0.9" },
   { path: "/how-it-works", changefreq: "monthly", priority: "0.7" },
   { path: "/docs", changefreq: "monthly", priority: "0.7" },
   { path: "/vip", changefreq: "monthly", priority: "0.6" },
@@ -39,6 +41,17 @@ const staticEntries: SitemapEntry[] = [
   { path: "/legal/cookies", changefreq: "yearly", priority: "0.3" },
   { path: "/delete-account", changefreq: "yearly", priority: "0.3" },
 ];
+
+// Dedicated SEO landing pages: one per category and one per service type,
+// straight from the app's single source of truth for categories.
+const categoryEntries: SitemapEntry[] = CATEGORIES.flatMap((c) => [
+  { path: `/services/${c.slug}`, changefreq: "daily" as const, priority: "0.8" },
+  ...c.subcategories.map((s) => ({
+    path: `/services/${c.slug}/${s.slug}`,
+    changefreq: "weekly" as const,
+    priority: "0.7",
+  })),
+]);
 
 async function rest<T>(path: string): Promise<T[]> {
   if (!SUPABASE_URL || !SUPABASE_KEY) return [];
@@ -145,6 +158,6 @@ function generateSitemap(entries: SitemapEntry[]) {
   ].join("\n");
 }
 
-const entries = [...staticEntries, ...(await dynamicEntries())];
+const entries = [...staticEntries, ...categoryEntries, ...(await dynamicEntries())];
 writeFileSync(resolve("public/sitemap.xml"), generateSitemap(entries));
 console.log(`sitemap.xml written (${entries.length} entries)`);

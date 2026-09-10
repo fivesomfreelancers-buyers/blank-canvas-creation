@@ -158,7 +158,7 @@ const FeaturedCategories = () => {
                 {/* Category Card */}
                 <div className="flex-1 lg:max-w-md">
                   <Link
-                    to={`/explore?category=${category.id}`}
+                    to={`/services/${category.id}`}
                     className="group block backdrop-blur-lg rounded-3xl p-8 transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-card/70 border border-border hover:bg-card/90"
                   >
                     <div className={`w-20 h-20 rounded-3xl bg-gradient-to-r ${category.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
