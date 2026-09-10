@@ -41,14 +41,12 @@ const staticEntries: SitemapEntry[] = [
   { path: "/delete-account", changefreq: "yearly", priority: "0.3" },
 ];
 
-// Dedicated SEO landing pages: one per category and one per service type.
-// Slugs mirror src/lib/categories.ts (kept in sync manually — both lists are static).
-const CATEGORY_TREE: { slug: string; subcategories: string[] }[] = CATEGORY_SLUGS;
-
-const categoryEntries: SitemapEntry[] = CATEGORY_TREE.flatMap((c) => [
+// Dedicated SEO landing pages: one per category and one per service type,
+// straight from the app's single source of truth for categories.
+const categoryEntries: SitemapEntry[] = CATEGORIES.flatMap((c) => [
   { path: `/services/${c.slug}`, changefreq: "daily" as const, priority: "0.8" },
   ...c.subcategories.map((s) => ({
-    path: `/services/${c.slug}/${s}`,
+    path: `/services/${c.slug}/${s.slug}`,
     changefreq: "weekly" as const,
     priority: "0.7",
   })),
