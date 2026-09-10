@@ -28,11 +28,12 @@ const staticEntries: SitemapEntry[] = [
   { path: "/vip", changefreq: "monthly", priority: "0.6" },
   { path: "/about", changefreq: "monthly", priority: "0.6" },
   { path: "/blog", changefreq: "weekly", priority: "0.8" },
-  { path: "/login", changefreq: "yearly", priority: "0.5" },
+  // /login and /forgot-password are intentionally excluded: they are noindex
+  // and/or disallowed in robots.txt, so listing them would be a conflict.
   { path: "/register", changefreq: "yearly", priority: "0.5" },
   { path: "/register/buyer", changefreq: "yearly", priority: "0.4" },
   { path: "/register/freelancer", changefreq: "yearly", priority: "0.4" },
-  { path: "/forgot-password", changefreq: "yearly", priority: "0.3" },
+
   { path: "/legal/terms", changefreq: "yearly", priority: "0.3" },
   { path: "/legal/privacy", changefreq: "yearly", priority: "0.3" },
   { path: "/legal/cookies", changefreq: "yearly", priority: "0.3" },
