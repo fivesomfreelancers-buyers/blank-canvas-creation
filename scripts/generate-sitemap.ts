@@ -17,6 +17,7 @@ interface SitemapEntry {
   lastmod?: string;
   changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
   priority?: string;
+  images?: { loc: string; title: string }[];
 }
 
 // Public, indexable routes only. Dashboards, admin, founders, messages,
@@ -25,7 +26,17 @@ const staticEntries: SitemapEntry[] = [
   { path: "/", changefreq: "daily", priority: "1.0" },
   { path: "/explore", changefreq: "daily", priority: "0.9" },
   { path: "/services", changefreq: "weekly", priority: "0.9" },
-  { path: "/how-it-works", changefreq: "monthly", priority: "0.7" },
+  {
+    path: "/how-it-works",
+    changefreq: "monthly",
+    priority: "0.7",
+    images: [
+      { loc: "/__l5e/assets-v1/f11bf4c6-7de2-4db1-8c37-62a45fb36ba4/find-perfect-freelancer.webp", title: "Find the perfect freelancer on FIVESOM" },
+      { loc: "/__l5e/assets-v1/2ee34113-fc7a-42d8-aa26-a3e42dac38eb/collaborate-securely.webp", title: "Collaborate securely on FIVESOM" },
+      { loc: "/__l5e/assets-v1/47e48472-dddd-4b75-97b4-4ce4c54ff64c/secure-escrow-payment.webp", title: "FIVESOM secure escrow payment process" },
+      { loc: "/__l5e/assets-v1/0ee75bb9-f00e-442e-a442-e64275b630ab/release-payment.webp", title: "Release payment after delivery on FIVESOM" },
+    ],
+  },
   { path: "/docs", changefreq: "monthly", priority: "0.7" },
   { path: "/vip", changefreq: "monthly", priority: "0.6" },
   { path: "/about", changefreq: "monthly", priority: "0.6" },
@@ -144,6 +155,12 @@ function generateSitemap(entries: SitemapEntry[]) {
         e.lastmod ? `    <lastmod>${e.lastmod}</lastmod>` : null,
         e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
         e.priority ? `    <priority>${e.priority}</priority>` : null,
+        ...(e.images || []).flatMap((image) => [
+          `    <image:image>`,
+          `      <image:loc>${BASE_URL}${image.loc}</image:loc>`,
+          `      <image:title>${image.title}</image:title>`,
+          `    </image:image>`,
+        ]),
         `  </url>`,
       ]
         .filter(Boolean)
@@ -152,7 +169,7 @@ function generateSitemap(entries: SitemapEntry[]) {
 
   return [
     `<?xml version="1.0" encoding="UTF-8"?>`,
-    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">`,
     ...urls,
     `</urlset>`,
   ].join("\n");
