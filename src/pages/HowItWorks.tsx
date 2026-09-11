@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import type { LucideIcon } from 'lucide-react';
 import {
   ArrowRight,
   BadgeCheck,
@@ -28,8 +29,6 @@ import findFreelancerAsset from '@/assets/how-it-works/find-perfect-freelancer.w
 import collaborateAsset from '@/assets/how-it-works/collaborate-securely.webp.asset.json';
 import escrowAsset from '@/assets/how-it-works/secure-escrow-payment.webp.asset.json';
 import releaseAsset from '@/assets/how-it-works/release-payment.webp.asset.json';
-
-type IconType = React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
 
 const JOURNEY = ['Discover', 'Choose', 'Pay', 'Collaborate', 'Work', 'Deliver', 'Review', 'Complete', 'Earn', 'Grow'];
 
@@ -184,7 +183,7 @@ const SectionHeading = ({ label, title, text }: { label: string; title: string; 
   </div>
 );
 
-const NumberedIcon = ({ number, icon: Icon }: { number: number; icon: IconType }) => (
+const NumberedIcon = ({ number, icon: Icon }: { number: number; icon: LucideIcon }) => (
   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-primary/30 bg-primary/10 text-primary">
     <Icon className="h-5 w-5" aria-hidden />
     <span className="sr-only">Step {number}</span>
