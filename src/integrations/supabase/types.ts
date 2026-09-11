@@ -247,46 +247,117 @@ export type Database = {
           },
         ]
       }
+      blue_tick_action_history: {
+        Row: {
+          action: string
+          actor_id: string
+          application_id: string | null
+          created_at: string
+          id: string
+          metadata: Json
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          actor_id: string
+          application_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          application_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blue_tick_action_history_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "blue_tick_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blue_tick_applications: {
         Row: {
           admin_notes: string | null
           created_at: string
+          eligibility_snapshot: Json
           experience: string | null
           freelancer_id: string
           id: string
+          identity_verified: boolean
+          liveness_status: string
+          more_info_request: string | null
+          persona_inquiry_id: string | null
           portfolio_links: string[] | null
+          project_summary: string | null
           reason: string
+          rejection_reason: string | null
           reviewed_at: string | null
           reviewed_by: string | null
+          social_links: Json
+          specialties: string[]
           status: string
+          submitted_at: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           admin_notes?: string | null
           created_at?: string
+          eligibility_snapshot?: Json
           experience?: string | null
           freelancer_id: string
           id?: string
+          identity_verified?: boolean
+          liveness_status?: string
+          more_info_request?: string | null
+          persona_inquiry_id?: string | null
           portfolio_links?: string[] | null
-          reason: string
+          project_summary?: string | null
+          reason?: string
+          rejection_reason?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          social_links?: Json
+          specialties?: string[]
           status?: string
+          submitted_at?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           admin_notes?: string | null
           created_at?: string
+          eligibility_snapshot?: Json
           experience?: string | null
           freelancer_id?: string
           id?: string
+          identity_verified?: boolean
+          liveness_status?: string
+          more_info_request?: string | null
+          persona_inquiry_id?: string | null
           portfolio_links?: string[] | null
+          project_summary?: string | null
           reason?: string
+          rejection_reason?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          social_links?: Json
+          specialties?: string[]
           status?: string
+          submitted_at?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -1616,6 +1687,51 @@ export type Database = {
         }
         Relationships: []
       }
+      user_warnings: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          issued_by: string
+          reason: string
+          removal_reason: string | null
+          removed_at: string | null
+          removed_by: string | null
+          severity: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          issued_by: string
+          reason: string
+          removal_reason?: string | null
+          removed_at?: string | null
+          removed_by?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          issued_by?: string
+          reason?: string
+          removal_reason?: string | null
+          removed_at?: string | null
+          removed_by?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       verification_documents: {
         Row: {
           document_type: string
@@ -1974,11 +2090,28 @@ export type Database = {
         Args: { _application_id?: string; _notes?: string; _user_id: string }
         Returns: undefined
       }
+      admin_issue_user_warning: {
+        Args: {
+          _expires_at?: string
+          _reason: string
+          _severity?: string
+          _user_id: string
+        }
+        Returns: string
+      }
       admin_reject_blue_tick: {
         Args: { _application_id: string; _notes?: string }
         Returns: undefined
       }
+      admin_remove_user_warning: {
+        Args: { _reason: string; _warning_id: string }
+        Returns: undefined
+      }
       admin_remove_vip: { Args: { _user_id: string }; Returns: undefined }
+      admin_request_blue_tick_info: {
+        Args: { _application_id: string; _reason: string }
+        Returns: undefined
+      }
       admin_revoke_blue_tick: {
         Args: { _reason?: string; _user_id: string }
         Returns: undefined
@@ -2033,6 +2166,7 @@ export type Database = {
       }
       expire_vip_memberships: { Args: never; Returns: number }
       freelancer_privileged_snapshot: { Args: { _id: string }; Returns: Json }
+      get_blue_tick_eligibility: { Args: { _user_id?: string }; Returns: Json }
       get_freelancer_earnings: {
         Args: { _ids?: string[] }
         Returns: {
@@ -2109,6 +2243,15 @@ export type Database = {
         Args: { _label: string; _message_id: string; _url: string }
         Returns: Json
       }
+      save_blue_tick_application_draft: {
+        Args: {
+          _experience?: string
+          _project_summary?: string
+          _social_links?: Json
+          _specialties?: string[]
+        }
+        Returns: string
+      }
       search_gig_tags: {
         Args: { p_limit?: number; p_query?: string }
         Returns: {
@@ -2165,6 +2308,10 @@ export type Database = {
       show_trgm: { Args: { "": string }; Returns: string[] }
       slugify: { Args: { _txt: string }; Returns: string }
       storage_ref_from_url: { Args: { _url: string }; Returns: Json }
+      submit_blue_tick_application: {
+        Args: { _application_id: string }
+        Returns: undefined
+      }
       sync_profile_role: { Args: { _user_id: string }; Returns: undefined }
       touch_last_seen: { Args: never; Returns: undefined }
       user_owns_support_ticket: {
