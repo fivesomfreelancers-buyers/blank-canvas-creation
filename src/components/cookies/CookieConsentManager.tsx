@@ -12,21 +12,6 @@ import {
 } from '@/lib/cookieConsent';
 import CookiePreferencesDialog from './CookiePreferencesDialog';
 
-const ADSENSE_SRC =
-  'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8975138647500349';
-
-/** Loads advertising scripts only after marketing consent is granted. */
-function syncMarketingScripts() {
-  if (!isAllowed('marketing')) return;
-  if (document.querySelector('script[data-consent="marketing-adsense"]')) return;
-  const script = document.createElement('script');
-  script.src = ADSENSE_SRC;
-  script.async = true;
-  script.crossOrigin = 'anonymous';
-  script.dataset.consent = 'marketing-adsense';
-  document.head.appendChild(script);
-}
-
 /**
  * Global cookie consent UI: first-visit banner + preferences panel.
  * Mounted once in App so it appears on every route, desktop and mobile.
@@ -37,7 +22,6 @@ const CookieConsentManager: React.FC = () => {
 
   const refresh = useCallback(() => {
     setShowBanner(getConsent() === null);
-    syncMarketingScripts();
   }, []);
 
   useEffect(() => {
