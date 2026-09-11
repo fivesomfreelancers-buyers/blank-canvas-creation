@@ -22,7 +22,6 @@ const CookieConsentManager: React.FC = () => {
 
   const refresh = useCallback(() => {
     setShowBanner(getConsent() === null);
-    syncMarketingScripts();
   }, []);
 
   useEffect(() => {
