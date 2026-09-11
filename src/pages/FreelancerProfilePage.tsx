@@ -257,7 +257,6 @@ const FreelancerProfilePage = () => {
             '@id': `${profileUrl}#person`,
             name: profileData.name,
             url: profileUrl,
-            mainEntityOfPage: { '@id': `${profileUrl}#profilepage` },
             ...(profileData.professional_title ? { jobTitle: profileData.professional_title } : {}),
             ...(profileData.imageUrl ? { image: absoluteSeoUrl(profileData.imageUrl) } : {}),
             ...(profileData.bio ? { description: profileData.bio } : {}),
@@ -266,18 +265,35 @@ const FreelancerProfilePage = () => {
               : {}),
             ...(profileData.languages?.length ? { knowsLanguage: profileData.languages } : {}),
             ...(profileData.skills?.length ? { knowsAbout: profileData.skills } : {}),
-            worksFor: { '@type': 'Organization', name: 'FIVESOM', url: `${SITE_URL}/` },
+            worksFor: { '@id': `${SITE_URL}/#organization` },
           };
           return {
             '@context': 'https://schema.org',
-            '@type': 'ProfilePage',
-            '@id': `${profileUrl}#profilepage`,
-            url: profileUrl,
-            name: seoTitle,
-            description: seoDescription,
-            inLanguage: 'en',
-            isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
-            mainEntity: person,
+            '@graph': [
+              {
+                '@type': 'ProfilePage',
+                '@id': `${profileUrl}#profilepage`,
+                url: profileUrl,
+                name: seoTitle,
+                description: seoDescription,
+                inLanguage: 'en',
+                isPartOf: { '@id': `${SITE_URL}/#website` },
+                mainEntity: { '@id': `${profileUrl}#person` },
+              },
+              person,
+              {
+                '@type': 'Organization',
+                '@id': `${SITE_URL}/#organization`,
+                name: 'FIVESOM',
+                url: `${SITE_URL}/`,
+              },
+              {
+                '@type': 'WebSite',
+                '@id': `${SITE_URL}/#website`,
+                name: 'FIVESOM',
+                url: `${SITE_URL}/`,
+              },
+            ],
           };
         })()}
 
