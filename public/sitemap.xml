@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://fivesom.net/</loc>
     <changefreq>daily</changefreq>
@@ -19,6 +19,22 @@
     <loc>https://fivesom.net/how-it-works</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://fivesom.net/__l5e/assets-v1/a52235d0-b81c-4993-9159-e22439347881/find-perfect-freelancer.webp</image:loc>
+      <image:title>Find the perfect freelancer on FIVESOM</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://fivesom.net/__l5e/assets-v1/daddac23-4294-40a0-bf7e-213f1e1d66db/collaborate-securely.webp</image:loc>
+      <image:title>Collaborate securely on FIVESOM</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://fivesom.net/__l5e/assets-v1/80377886-c140-4346-b719-8611e37a3158/secure-escrow-payment.webp</image:loc>
+      <image:title>FIVESOM secure escrow payment process</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://fivesom.net/__l5e/assets-v1/74833a09-e51d-469b-986f-b8400db4a35a/release-payment.webp</image:loc>
+      <image:title>Release payment after delivery on FIVESOM</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://fivesom.net/docs</loc>
@@ -568,12 +584,12 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/najiib-hassan</loc>
+    <loc>https://fivesom.net/freelancer/aden-asmar</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/aden-asmar</loc>
+    <loc>https://fivesom.net/freelancer/najiib-hassan</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
