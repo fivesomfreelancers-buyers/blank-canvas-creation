@@ -34,6 +34,7 @@ const FreelancerProfilePage = () => {
   const { theme: mode } = useTheme();
   const [profileData, setProfileData] = useState<any>(null);
   const [gigs, setGigs] = useState<any[]>([]);
+  const [gigMedia, setGigMedia] = useState<Record<string, { image?: string; video?: string }>>({});
   const [reviews, setReviews] = useState<any[]>([]);
   const [gigStats, setGigStats] = useState<Record<string, { avg_rating: number; review_count: number }>>({});
 
@@ -100,6 +101,21 @@ const FreelancerProfilePage = () => {
 
       // Fetch reviews for all gigs
       const gigIds = (gigsData || []).map(g => g.id);
+
+      // Fetch gig media (used as a preview when a gig has no images, e.g. video gigs)
+      if (gigIds.length > 0) {
+        const { data: mediaRows } = await (supabase as any)
+          .from('gig_media')
+          .select('gig_id, file_url, file_type')
+          .in('gig_id', gigIds);
+        const map: Record<string, { image?: string; video?: string }> = {};
+        (mediaRows || []).forEach((m: any) => {
+          const entry = map[m.gig_id] || (map[m.gig_id] = {});
+          if (m.file_type === 'video') entry.video = entry.video || m.file_url;
+          else if (m.file_type === 'image') entry.image = entry.image || m.file_url;
+        });
+        setGigMedia(map);
+      }
       let allReviews: any[] = [];
       if (gigIds.length > 0) {
         const [{ data: reviewsData }, { data: statRows }] = await Promise.all([
@@ -375,9 +391,29 @@ const FreelancerProfilePage = () => {
                     className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
                   >
                     <Card className="overflow-hidden h-full cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all">
-                      {gig.images?.[0] && (
-                        <img src={gig.images[0]} alt={gig.title} className="w-full aspect-[4/3] object-cover" />
-                      )}
+                      {(() => {
+                        const image = gig.thumbnail_url || gig.images?.[0] || gigMedia[gig.id]?.image;
+                        const video = gigMedia[gig.id]?.video;
+                        if (image) {
+                          return <img src={image} alt={gig.title} loading="lazy" className="w-full aspect-[4/3] object-cover" />;
+                        }
+                        if (video) {
+                          return (
+                            <video
+                              src={video}
+                              muted
+                              playsInline
+                              preload="metadata"
+                              className="w-full aspect-[4/3] object-cover bg-muted"
+                            />
+                          );
+                        }
+                        return (
+                          <div className="w-full aspect-[4/3] bg-muted flex items-center justify-center">
+                            <span className="text-xs text-muted-foreground">No preview</span>
+                          </div>
+                        );
+                      })()}
                       <CardContent className="p-4">
                         <h3 className="font-semibold text-foreground mb-2 text-sm line-clamp-2 min-h-[2.5rem]">{gig.title}</h3>
                         <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
