@@ -261,8 +261,8 @@ const FreelancerWithdraw = () => {
             <Hourglass className="w-4 h-4 mt-0.5 shrink-0 animate-pulse" />
             <span>
               Thank you! Your withdrawal request for ${withdrawAmount.toFixed(2)} has been received
-              and is waiting for approval. Once it is approved, your money will reach you within 5 to
-              10 days. You will get ${amountAfterFee.toFixed(2)} after the 15% Fivesom fee.
+              and is waiting for approval. Once it is approved, your money will reach you within 1–2
+              weeks. You will get ${amountAfterFee.toFixed(2)} after the 15% Fivesom fee.
             </span>
           </span>
         ),
