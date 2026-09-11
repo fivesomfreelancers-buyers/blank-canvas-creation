@@ -6,8 +6,6 @@ import {
   BriefcaseBusiness,
   Check,
   CheckCircle2,
-  CircleDollarSign,
-  Clock3,
   FileCheck2,
   IdCard,
   Laptop,
@@ -17,7 +15,6 @@ import {
   Search,
   ShieldCheck,
   Sparkles,
-  Star,
   Upload,
   UserRoundCheck,
   WalletCards,
@@ -438,7 +435,7 @@ const HowItWorks = () => {
                 <BriefcaseBusiness className="h-7 w-7 text-primary" aria-hidden />
                 <h3 className="mt-5 text-xl font-bold text-foreground">Application information</h3>
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  Explain why your work qualifies, and optionally add years of experience, notable projects, specialization, and portfolio links. Relevant supported social or professional links can help Admin understand your work.
+                  Explain why your work qualifies, and optionally add years of experience, notable projects, specialization, and portfolio links. Relevant links such as TikTok, Instagram, Facebook, and other supported professional or social profiles can help Admin understand your work.
                 </p>
               </article>
               <article className="bg-card p-7">
