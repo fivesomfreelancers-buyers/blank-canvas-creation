@@ -34,6 +34,7 @@ const FreelancerProfilePage = () => {
   const { theme: mode } = useTheme();
   const [profileData, setProfileData] = useState<any>(null);
   const [gigs, setGigs] = useState<any[]>([]);
+  const [gigMedia, setGigMedia] = useState<Record<string, { image?: string; video?: string }>>({});
   const [reviews, setReviews] = useState<any[]>([]);
   const [gigStats, setGigStats] = useState<Record<string, { avg_rating: number; review_count: number }>>({});
 
