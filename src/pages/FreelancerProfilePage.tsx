@@ -391,9 +391,29 @@ const FreelancerProfilePage = () => {
                     className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
                   >
                     <Card className="overflow-hidden h-full cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all">
-                      {gig.images?.[0] && (
-                        <img src={gig.images[0]} alt={gig.title} className="w-full aspect-[4/3] object-cover" />
-                      )}
+                      {(() => {
+                        const image = gig.thumbnail_url || gig.images?.[0] || gigMedia[gig.id]?.image;
+                        const video = gigMedia[gig.id]?.video;
+                        if (image) {
+                          return <img src={image} alt={gig.title} loading="lazy" className="w-full aspect-[4/3] object-cover" />;
+                        }
+                        if (video) {
+                          return (
+                            <video
+                              src={video}
+                              muted
+                              playsInline
+                              preload="metadata"
+                              className="w-full aspect-[4/3] object-cover bg-muted"
+                            />
+                          );
+                        }
+                        return (
+                          <div className="w-full aspect-[4/3] bg-muted flex items-center justify-center">
+                            <span className="text-xs text-muted-foreground">No preview</span>
+                          </div>
+                        );
+                      })()}
                       <CardContent className="p-4">
                         <h3 className="font-semibold text-foreground mb-2 text-sm line-clamp-2 min-h-[2.5rem]">{gig.title}</h3>
                         <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
