@@ -30,6 +30,11 @@ import collaborateAsset from '@/assets/how-it-works/collaborate-securely.webp.as
 import escrowAsset from '@/assets/how-it-works/secure-escrow-payment.webp.asset.json';
 import releaseAsset from '@/assets/how-it-works/release-payment.webp.asset.json';
 
+// Lovable CDN assets are served from the project preview origin. Using that
+// absolute origin keeps images available on the custom domain and crawlable.
+const IMAGE_ORIGIN = 'https://id-preview--a04b010f-bbe6-48c6-afb1-7f7fee82c826.lovable.app';
+const publicImageUrl = (path: string) => `${IMAGE_ORIGIN}${path}`;
+
 const JOURNEY = ['Discover', 'Choose', 'Pay', 'Collaborate', 'Work', 'Deliver', 'Review', 'Complete', 'Earn', 'Grow'];
 
 const CORE_STEPS = [
@@ -44,7 +49,7 @@ const CORE_STEPS = [
       'Compare package prices, included work, revisions, genuine ratings, and buyer reviews.',
       'Choose the best match and start the order securely through FIVESOM.',
     ],
-    image: findFreelancerAsset.url,
+    image: publicImageUrl(findFreelancerAsset.url),
     width: 918,
     height: 769,
     alt: 'Buyer comparing FIVESOM freelancer profiles, ratings, and professional services',
@@ -61,7 +66,7 @@ const CORE_STEPS = [
       'The freelancer receives the order, reviews the brief, and communicates with the buyer through FIVESOM.',
       'The freelancer completes the project and submits the finished work through the delivery system for buyer review.',
     ],
-    image: collaborateAsset.url,
+    image: publicImageUrl(collaborateAsset.url),
     width: 1152,
     height: 768,
     alt: 'Buyer and freelancer collaborating through secure FIVESOM messages and shared project files',
@@ -78,7 +83,7 @@ const CORE_STEPS = [
       'The buyer reviews the delivery before the payment-release process begins.',
       'The Buyer Service Fee belongs to FIVESOM and is never counted as freelancer earnings.',
     ],
-    image: escrowAsset.url,
+    image: publicImageUrl(escrowAsset.url),
     width: 1365,
     height: 768,
     alt: 'FIVESOM escrow payment flow securing an order between a buyer and freelancer',
@@ -95,7 +100,7 @@ const CORE_STEPS = [
       'After acceptance, eligible Gig earnings move to the freelancer wallet under FIVESOM payment rules.',
       'The freelancer can request a withdrawal when eligible; unresolved work can follow the revision or dispute process instead.',
     ],
-    image: releaseAsset.url,
+    image: publicImageUrl(releaseAsset.url),
     width: 1365,
     height: 768,
     alt: 'Buyer accepting delivered work so eligible freelancer earnings can be released on FIVESOM',
@@ -205,7 +210,7 @@ const HowItWorks = () => {
       about: { '@id': `${SITE_URL}/#organization` },
       primaryImageOfPage: {
         '@type': 'ImageObject',
-        url: `${SITE_URL}${findFreelancerAsset.url}`,
+        url: publicImageUrl(findFreelancerAsset.url),
         width: 918,
         height: 769,
       },
@@ -222,7 +227,7 @@ const HowItWorks = () => {
         title="How Fivesom Works | Hire Freelancers & Grow Your Skills"
         description="Learn how buyers hire freelancers and how freelancers create Gigs, complete orders, get verified, and earn securely through Fivesom."
         canonical="/how-it-works"
-        image={findFreelancerAsset.url}
+        image={publicImageUrl(findFreelancerAsset.url)}
         jsonLd={schemas}
       />
       <Navbar />
@@ -309,7 +314,7 @@ const HowItWorks = () => {
                           height={step.height}
                           loading={index === 0 ? 'eager' : 'lazy'}
                           fetchPriority={index === 0 ? 'high' : 'auto'}
-                          className="aspect-[16/10] w-full object-cover"
+                          className="aspect-[16/10] w-full bg-muted/20 object-contain"
                         />
                       </div>
                       <figcaption className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">

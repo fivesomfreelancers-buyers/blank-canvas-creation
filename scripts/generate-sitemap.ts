@@ -8,6 +8,7 @@ import { resolve } from "path";
 import { CATEGORIES } from "../src/lib/categories";
 
 const BASE_URL = "https://fivesom.net";
+const HOW_IT_WORKS_IMAGE_ORIGIN = "https://id-preview--a04b010f-bbe6-48c6-afb1-7f7fee82c826.lovable.app";
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? "";
 const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? "";
@@ -31,10 +32,10 @@ const staticEntries: SitemapEntry[] = [
     changefreq: "monthly",
     priority: "0.7",
     images: [
-      { loc: "/__l5e/assets-v1/a52235d0-b81c-4993-9159-e22439347881/find-perfect-freelancer.webp", title: "Find the perfect freelancer on FIVESOM" },
-      { loc: "/__l5e/assets-v1/daddac23-4294-40a0-bf7e-213f1e1d66db/collaborate-securely.webp", title: "Collaborate securely on FIVESOM" },
-      { loc: "/__l5e/assets-v1/80377886-c140-4346-b719-8611e37a3158/secure-escrow-payment.webp", title: "FIVESOM secure escrow payment process" },
-      { loc: "/__l5e/assets-v1/74833a09-e51d-469b-986f-b8400db4a35a/release-payment.webp", title: "Release payment after delivery on FIVESOM" },
+      { loc: `${HOW_IT_WORKS_IMAGE_ORIGIN}/__l5e/assets-v1/a52235d0-b81c-4993-9159-e22439347881/find-perfect-freelancer.webp`, title: "Find the perfect freelancer on FIVESOM" },
+      { loc: `${HOW_IT_WORKS_IMAGE_ORIGIN}/__l5e/assets-v1/daddac23-4294-40a0-bf7e-213f1e1d66db/collaborate-securely.webp`, title: "Collaborate securely on FIVESOM" },
+      { loc: `${HOW_IT_WORKS_IMAGE_ORIGIN}/__l5e/assets-v1/80377886-c140-4346-b719-8611e37a3158/secure-escrow-payment.webp`, title: "FIVESOM secure escrow payment process" },
+      { loc: `${HOW_IT_WORKS_IMAGE_ORIGIN}/__l5e/assets-v1/74833a09-e51d-469b-986f-b8400db4a35a/release-payment.webp`, title: "Release payment after delivery on FIVESOM" },
     ],
   },
   { path: "/docs", changefreq: "monthly", priority: "0.7" },
@@ -157,7 +158,7 @@ function generateSitemap(entries: SitemapEntry[]) {
         e.priority ? `    <priority>${e.priority}</priority>` : null,
         ...(e.images || []).flatMap((image) => [
           `    <image:image>`,
-          `      <image:loc>${BASE_URL}${image.loc}</image:loc>`,
+          `      <image:loc>${/^https?:\/\//i.test(image.loc) ? image.loc : `${BASE_URL}${image.loc}`}</image:loc>`,
           `      <image:title>${image.title}</image:title>`,
           `    </image:image>`,
         ]),
