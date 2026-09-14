@@ -30,6 +30,7 @@ import FreelancerProfile from './freelancer/FreelancerProfile';
 import FreelancerVerify from './freelancer/FreelancerVerify';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import DisputeChat from '@/components/dispute/DisputeChat';
+import BlueTickCard from '@/components/freelancer/BlueTickCard';
 import { useNewOrders } from '@/hooks/useNewOrders';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 
@@ -39,8 +40,8 @@ interface UserProfile {
   profile_image_url: string | null;
 }
 
-const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userProfile }: { 
-  activeSection: string; setActiveSection: (section: string) => void; isVerified: boolean; userProfile: UserProfile | null 
+const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userProfile, userId }: { 
+  activeSection: string; setActiveSection: (section: string) => void; isVerified: boolean; userProfile: UserProfile | null; userId: string | null
 }) => {
   const { newOrderCount, markSeen } = useNewOrders();
   const { unreadCount } = useUnreadMessages();
@@ -108,6 +109,11 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <BlueTickCard userId={userId} onOpen={() => setActiveSection('verify')} />
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <div className="p-4 border-t">
@@ -136,6 +142,7 @@ const FreelancerDashboard = () => {
   const [verificationStatus, setVerificationStatus] = useState<'none' | 'pending' | 'approved' | 'rejected' | 'removed'>('none');
   const [removalInfo, setRemovalInfo] = useState<{ at: string | null; reason: string | null } | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [stats, setStats] = useState({ totalGigs: 0, activeOrders: 0, pendingEarnings: 0, completedOrders: 0 });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [revisionRequests, setRevisionRequests] = useState<any[]>([]);
@@ -146,6 +153,7 @@ const FreelancerDashboard = () => {
     const loadDashboardData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
+      setUserId(user.id);
 
       // Fetch profile
       const { data: profileData } = await supabase
@@ -647,7 +655,7 @@ const FreelancerDashboard = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <FreelancerSidebar activeSection={activeSection} setActiveSection={setActiveSection} isVerified={isVerified} userProfile={userProfile} />
+        <FreelancerSidebar activeSection={activeSection} setActiveSection={setActiveSection} isVerified={isVerified} userProfile={userProfile} userId={userId} />
         <SidebarInset>
           <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
             <SidebarTrigger className="-ml-1" />
