@@ -30,6 +30,7 @@ import FreelancerProfile from './freelancer/FreelancerProfile';
 import FreelancerVerify from './freelancer/FreelancerVerify';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import DisputeChat from '@/components/dispute/DisputeChat';
+import BlueTickCard from '@/components/freelancer/BlueTickCard';
 import { useNewOrders } from '@/hooks/useNewOrders';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 
@@ -39,8 +40,8 @@ interface UserProfile {
   profile_image_url: string | null;
 }
 
-const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userProfile }: { 
-  activeSection: string; setActiveSection: (section: string) => void; isVerified: boolean; userProfile: UserProfile | null 
+const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userProfile, userId }: { 
+  activeSection: string; setActiveSection: (section: string) => void; isVerified: boolean; userProfile: UserProfile | null; userId: string | null
 }) => {
   const { newOrderCount, markSeen } = useNewOrders();
   const { unreadCount } = useUnreadMessages();
