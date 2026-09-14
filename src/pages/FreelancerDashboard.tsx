@@ -108,6 +108,11 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <BlueTickCard userId={userId} onOpen={() => setActiveSection('verify')} />
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <div className="p-4 border-t">
