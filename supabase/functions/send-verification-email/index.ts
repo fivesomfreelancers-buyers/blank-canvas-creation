@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
         return json({ error: "No Fivesom account uses this email address yet. Please sign up first." }, 404);
       }
       console.error("generateLink failed:", message);
-      return json({ error: message }, 400);
+      return json({ error: "Could not send the verification email. Please try again." }, 400);
     }
 
     const confirmUrl = link.properties.action_link as string;
@@ -130,10 +130,7 @@ Deno.serve(async (req) => {
     const providerText = await res.text();
     if (!res.ok) {
       console.error(`Resend rejected verification email [${res.status}]: ${providerText}`);
-      return json(
-        { error: "The email provider rejected the message", status: res.status, details: providerText },
-        res.status,
-      );
+      return json({ error: "The email provider rejected the message" }, 502);
     }
 
     let providerId: string | null = null;
