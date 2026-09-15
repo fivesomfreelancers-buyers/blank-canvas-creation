@@ -16,6 +16,10 @@ type App = {
   id: string; user_id: string; freelancer_id: string;
   reason: string; experience: string | null; portfolio_links: string[];
   status: string; admin_notes: string | null;
+  specialties: string[] | null; project_summary: string | null;
+  social_links: Record<string, string> | null;
+  id_front_url: string | null; id_back_url: string | null; selfie_url: string | null;
+  submitted_at: string | null;
   created_at: string;
   profile?: { full_name: string | null; email: string | null; profile_image_url: string | null } | null;
   stats?: { orders: number; rating: number; last_seen: string | null; is_verified: boolean; has_blue_tick: boolean };
