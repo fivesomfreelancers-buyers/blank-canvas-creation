@@ -225,9 +225,12 @@ const AdminBlueTick: React.FC = () => {
                   <Textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Internal notes / reason for rejection" />
                 </div>
                 {selected.status === 'pending' && (
-                  <div className="flex gap-2 pt-2 border-t">
+                  <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t">
                     <Button className="flex-1 bg-[#1d9bf0] hover:bg-[#1a8cd8] text-white" disabled={busy === selected.id} onClick={() => approve(selected)}>
                       <Check className="w-4 h-4 mr-1" /> Approve & Grant Tick
+                    </Button>
+                    <Button variant="outline" className="flex-1" disabled={busy === selected.id} onClick={() => requestChanges(selected)}>
+                      <MessageSquare className="w-4 h-4 mr-1" /> Changes required
                     </Button>
                     <Button variant="destructive" className="flex-1" disabled={busy === selected.id} onClick={() => reject(selected)}>
                       <X className="w-4 h-4 mr-1" /> Reject
