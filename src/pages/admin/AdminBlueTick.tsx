@@ -197,13 +197,29 @@ const AdminBlueTick: React.FC = () => {
                   <div><p className="text-muted-foreground text-xs">Verified</p><p className="font-medium">{selected.stats?.is_verified ? 'Yes' : 'No'}</p></div>
                   <div><p className="text-muted-foreground text-xs">Last active</p><p className="font-medium">{selected.stats?.last_seen ? new Date(selected.stats.last_seen).toLocaleDateString() : '—'}</p></div>
                 </div>
-                <div><p className="text-xs uppercase text-muted-foreground mb-1">Reason</p><p className="text-sm whitespace-pre-wrap">{selected.reason}</p></div>
+                {selected.specialties?.length ? (
+                  <div><p className="text-xs uppercase text-muted-foreground mb-1">Specialties</p>
+                    <div className="flex flex-wrap gap-1.5">{selected.specialties.map((s) => <Badge key={s} variant="outline" className="text-[#1d9bf0] border-[#1d9bf0]/40">{s}</Badge>)}</div>
+                  </div>
+                ) : null}
+                {selected.project_summary && (<div><p className="text-xs uppercase text-muted-foreground mb-1">Best work summary</p><p className="text-sm whitespace-pre-wrap">{selected.project_summary}</p></div>)}
                 {selected.experience && (<div><p className="text-xs uppercase text-muted-foreground mb-1">Experience</p><p className="text-sm whitespace-pre-wrap">{selected.experience}</p></div>)}
-                {selected.portfolio_links?.length > 0 && (
-                  <div><p className="text-xs uppercase text-muted-foreground mb-1">Portfolio</p>
-                    <ul className="space-y-1">{selected.portfolio_links.map((l, i) => <li key={i}><a href={l} target="_blank" rel="noreferrer" className="text-[#1d9bf0] hover:underline text-sm break-all">{l}</a></li>)}</ul>
+                {selected.social_links && Object.keys(selected.social_links).length > 0 && (
+                  <div><p className="text-xs uppercase text-muted-foreground mb-1">Links</p>
+                    <ul className="space-y-1">{Object.entries(selected.social_links).map(([k, l]) => (
+                      <li key={k} className="text-sm"><span className="capitalize text-muted-foreground mr-2">{k}</span>
+                        <a href={l} target="_blank" rel="noreferrer" className="text-[#1d9bf0] hover:underline break-all">{l}</a></li>
+                    ))}</ul>
                   </div>
                 )}
+                <div>
+                  <p className="text-xs uppercase text-muted-foreground mb-2">Identity & face verification</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <SignedDoc label="ID front" url={selected.id_front_url} />
+                    <SignedDoc label="ID back" url={selected.id_back_url} />
+                    <SignedDoc label="Selfie" url={selected.selfie_url} />
+                  </div>
+                </div>
                 <div>
                   <p className="text-xs uppercase text-muted-foreground mb-1">Admin notes (optional)</p>
                   <Textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Internal notes / reason for rejection" />
