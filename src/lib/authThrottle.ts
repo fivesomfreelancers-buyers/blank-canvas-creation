@@ -14,7 +14,14 @@ const COOLDOWNS = [30, 60, 300, 900, 1800];
 
 const load = (): Record<string, Attempt> => {
   try {
-    return JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+    const data: Record<string, Attempt> = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+    // Purge legacy records that stored the raw email address in the key.
+    let dirty = false;
+    for (const key of Object.keys(data)) {
+      if (key.includes('@')) { delete data[key]; dirty = true; }
+    }
+    if (dirty) localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    return data;
   } catch {
     return {};
   }
@@ -28,8 +35,22 @@ const save = (data: Record<string, Attempt>) => {
   }
 };
 
+// Identifiers (email addresses, including admin ones) must never be written to
+// browser storage in readable form — the throttle only needs a stable opaque
+// fingerprint, so store a non-reversible hash instead.
+const fingerprint = (value: string): string => {
+  const s = value.trim().toLowerCase();
+  let h1 = 0x811c9dc5;
+  let h2 = 0x1000193;
+  for (let i = 0; i < s.length; i++) {
+    h1 = ((h1 ^ s.charCodeAt(i)) * 0x01000193) >>> 0;
+    h2 = ((h2 + s.charCodeAt(i) * 31) ^ (h2 << 5)) >>> 0;
+  }
+  return `${h1.toString(36)}${h2.toString(36)}`;
+};
+
 const keyFor = (action: string, identifier: string) =>
-  `${action}:${identifier.trim().toLowerCase()}`;
+  `${action}:${fingerprint(identifier)}`;
 
 /** Seconds the caller must wait, or 0 when the attempt is allowed. */
 export const authCooldownRemaining = (action: string, identifier: string): number => {
