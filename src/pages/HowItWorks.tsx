@@ -50,7 +50,7 @@ const CORE_STEPS = [
       'Compare package prices, included work, revisions, genuine ratings, and buyer reviews.',
       'Choose the best match and start the order securely through FIVESOM.',
     ],
-    image: publicImageUrl(findFreelancerAsset.url),
+    image: HOW_IT_WORKS_IMAGES.findFreelancer,
     width: 918,
     height: 769,
     alt: 'Buyer comparing FIVESOM freelancer profiles, ratings, and professional services',
@@ -67,7 +67,7 @@ const CORE_STEPS = [
       'The freelancer receives the order, reviews the brief, and communicates with the buyer through FIVESOM.',
       'The freelancer completes the project and submits the finished work through the delivery system for buyer review.',
     ],
-    image: publicImageUrl(collaborateAsset.url),
+    image: HOW_IT_WORKS_IMAGES.collaborate,
     width: 1152,
     height: 768,
     alt: 'Buyer and freelancer collaborating through secure FIVESOM messages and shared project files',
@@ -84,7 +84,7 @@ const CORE_STEPS = [
       'The buyer reviews the delivery before the payment-release process begins.',
       'The Buyer Service Fee belongs to FIVESOM and is never counted as freelancer earnings.',
     ],
-    image: publicImageUrl(escrowAsset.url),
+    image: HOW_IT_WORKS_IMAGES.escrow,
     width: 1365,
     height: 768,
     alt: 'FIVESOM escrow payment flow securing an order between a buyer and freelancer',
@@ -101,7 +101,7 @@ const CORE_STEPS = [
       'After acceptance, eligible Gig earnings move to the freelancer wallet under FIVESOM payment rules.',
       'The freelancer can request a withdrawal when eligible; unresolved work can follow the revision or dispute process instead.',
     ],
-    image: publicImageUrl(releaseAsset.url),
+    image: HOW_IT_WORKS_IMAGES.release,
     width: 1365,
     height: 768,
     alt: 'Buyer accepting delivered work so eligible freelancer earnings can be released on FIVESOM',
@@ -211,10 +211,11 @@ const HowItWorks = () => {
       about: { '@id': `${SITE_URL}/#organization` },
       primaryImageOfPage: {
         '@type': 'ImageObject',
-        url: publicImageUrl(findFreelancerAsset.url),
+        url: absoluteImageUrl(HOW_IT_WORKS_IMAGES.findFreelancer),
         width: 918,
         height: 769,
       },
+      image: Object.values(HOW_IT_WORKS_IMAGES).map((path) => absoluteImageUrl(path)),
     },
     breadcrumbSchema([
       { name: 'Home', path: '/' },
@@ -228,7 +229,7 @@ const HowItWorks = () => {
         title="How Fivesom Works | Hire Freelancers & Grow Your Skills"
         description="Learn how buyers hire freelancers and how freelancers create Gigs, complete orders, get verified, and earn securely through Fivesom."
         canonical="/how-it-works"
-        image={publicImageUrl(findFreelancerAsset.url)}
+        image={absoluteImageUrl(HOW_IT_WORKS_IMAGES.findFreelancer)}
         jsonLd={schemas}
       />
       <Navbar />
