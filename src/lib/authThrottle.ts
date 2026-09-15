@@ -14,7 +14,14 @@ const COOLDOWNS = [30, 60, 300, 900, 1800];
 
 const load = (): Record<string, Attempt> => {
   try {
-    return JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+    const data: Record<string, Attempt> = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+    // Purge legacy records that stored the raw email address in the key.
+    let dirty = false;
+    for (const key of Object.keys(data)) {
+      if (key.includes('@')) { delete data[key]; dirty = true; }
+    }
+    if (dirty) localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    return data;
   } catch {
     return {};
   }
