@@ -1,5 +1,5 @@
-import React from 'react';
-import { CheckCircle2, Circle, Loader2, ShieldAlert, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { CheckCircle2, ChevronDown, Circle, Loader2, ShieldAlert, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BlueTickBadge from '@/components/BlueTickBadge';
 import { BLUE_TICK_TARGETS, useBlueTickEligibility } from '@/hooks/useBlueTickEligibility';
@@ -32,6 +32,7 @@ const Row = ({ ok, label, value, progress }: { ok: boolean; label: string; value
 /** Compact, realtime Blue Tick eligibility card for the freelancer dashboard sidebar. */
 const BlueTickCard: React.FC<Props> = ({ userId, onOpen, compact = true }) => {
   const { eligibility: e, application, loading } = useBlueTickEligibility(userId);
+  const [open, setOpen] = useState(false);
 
   if (loading || !e) {
     return (
@@ -75,13 +76,21 @@ const BlueTickCard: React.FC<Props> = ({ userId, onOpen, compact = true }) => {
 
   return (
     <div className={cn('m-2 rounded-xl border border-border bg-card/70 p-3 space-y-3', compact ? '' : 'p-4')}>
-      <div className="flex items-center gap-2">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="w-full flex items-center gap-2 text-left"
+      >
         <BlueTickBadge size="md" />
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold leading-tight">Blue Tick Eligibility</p>
-          <p className="text-[11px] text-muted-foreground leading-tight">Complete all requirements to apply.</p>
+          <p className="text-[11px] text-muted-foreground leading-tight">
+            {e.requirements_complete} / {e.requirements_total} complete — tap to {open ? 'hide' : 'see'} details
+          </p>
         </div>
-      </div>
+        <ChevronDown className={cn('w-4 h-4 text-muted-foreground shrink-0 transition-transform', open && 'rotate-180')} />
+      </button>
 
       <div>
         <div className="flex items-center justify-between text-[11px] mb-1">
@@ -93,6 +102,7 @@ const BlueTickCard: React.FC<Props> = ({ userId, onOpen, compact = true }) => {
         </div>
       </div>
 
+      {open && (<>
       <ul className="space-y-2">
         <Row ok={e.identity_verified} label="Identity verified" value={e.identity_verified ? 'Verified' : 'Not verified'} />
         <Row ok={e.member_days >= BLUE_TICK_TARGETS.memberDays} label="Account age" value={`${e.member_days} / ${BLUE_TICK_TARGETS.memberDays}d`} progress={e.member_days / BLUE_TICK_TARGETS.memberDays} />
@@ -129,6 +139,7 @@ const BlueTickCard: React.FC<Props> = ({ userId, onOpen, compact = true }) => {
       >
         {pending ? 'View application' : !e.identity_verified ? 'Complete identity verification' : e.eligible ? 'Apply for Blue Tick' : 'View progress'}
       </Button>
+      </>)}
     </div>
   );
 };
