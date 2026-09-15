@@ -97,7 +97,7 @@ serve(async (req) => {
     );
   } catch (error) {
     console.error("stripe-connect-status error:", error);
-    return new Response(JSON.stringify({ error: (error as Error).message }), {
+    return new Response(JSON.stringify({ error: "Request could not be completed. Please try again." }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
