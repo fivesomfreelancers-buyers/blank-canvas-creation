@@ -119,7 +119,7 @@ const AdminBlueTick: React.FC = () => {
     const info = notes.trim() || prompt('What does the freelancer need to correct?') || '';
     if (!info.trim()) return toast.error('Please describe what needs correcting');
     setBusy(a.id);
-    const { error } = await (supabase as any).rpc('admin_request_blue_tick_info', { _application_id: a.id, _message: info });
+    const { error } = await (supabase as any).rpc('admin_request_blue_tick_info', { _application_id: a.id, _reason: info });
     setBusy(null);
     if (error) return toast.error(error.message);
     toast.success('Changes requested');
