@@ -66,10 +66,10 @@ const Register = () => {
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName.trim() || !email.trim() || password.length < 6) {
+    if (!fullName.trim() || !email.trim() || password.length < 8) {
       toast({
         title: 'Sign Up Failed',
-        description: 'Enter your name, a valid email, and a password (min 6 characters).',
+        description: 'Enter your name, a valid email, and a password (min 8 characters).',
         variant: 'destructive',
       });
       return;
@@ -194,10 +194,10 @@ const Register = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="h-12 pl-10"
-                      placeholder="At least 6 characters"
+                      placeholder="At least 8 characters"
                       autoComplete="new-password"
                       required
-                      minLength={6}
+                      minLength={8}
                     />
                   </div>
                 </div>

@@ -62,8 +62,8 @@ const FreelancerRegister = () => {
       toast({ title: "Password Mismatch", description: "Please ensure both passwords match.", variant: "destructive" });
       return;
     }
-    if (formData.password.length < 6) {
-      toast({ title: "Password Too Short", description: "Password must be at least 6 characters long.", variant: "destructive" });
+    if (formData.password.length < 8) {
+      toast({ title: "Password Too Short", description: "Password must be at least 8 characters long.", variant: "destructive" });
       return;
     }
     if (formData.shortBio.length < 50) {
