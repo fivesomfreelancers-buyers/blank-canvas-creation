@@ -39,7 +39,7 @@ export interface BlueTickApplication {
 export const BLUE_TICK_TARGETS = {
   memberDays: 40,
   completedOrders: 10,
-  earnings: 50,
+  earnings: 100,
   rating: 4.5,
   maxWarnings: 3,
 };
