@@ -20,19 +20,19 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://id-preview--a04b010f-bbe6-48c6-afb1-7f7fee82c826.lovable.app/__l5e/assets-v1/a52235d0-b81c-4993-9159-e22439347881/find-perfect-freelancer.webp</image:loc>
+      <image:loc>https://fivesom.net/images/how-it-works/find-perfect-freelancer.webp</image:loc>
       <image:title>Find the perfect freelancer on FIVESOM</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://id-preview--a04b010f-bbe6-48c6-afb1-7f7fee82c826.lovable.app/__l5e/assets-v1/daddac23-4294-40a0-bf7e-213f1e1d66db/collaborate-securely.webp</image:loc>
+      <image:loc>https://fivesom.net/images/how-it-works/collaborate-securely.webp</image:loc>
       <image:title>Collaborate securely on FIVESOM</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://id-preview--a04b010f-bbe6-48c6-afb1-7f7fee82c826.lovable.app/__l5e/assets-v1/80377886-c140-4346-b719-8611e37a3158/secure-escrow-payment.webp</image:loc>
+      <image:loc>https://fivesom.net/images/how-it-works/secure-escrow-payment.webp</image:loc>
       <image:title>FIVESOM secure escrow payment process</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://id-preview--a04b010f-bbe6-48c6-afb1-7f7fee82c826.lovable.app/__l5e/assets-v1/74833a09-e51d-469b-986f-b8400db4a35a/release-payment.webp</image:loc>
+      <image:loc>https://fivesom.net/images/how-it-works/release-payment.webp</image:loc>
       <image:title>Release payment after delivery on FIVESOM</image:title>
     </image:image>
   </url>
@@ -506,18 +506,50 @@
     <lastmod>2026-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c5da8d75-6765-424c-9174-cb4021c78a5e/1786552899173-m9d1le.jpeg</image:loc>
+      <image:title>I will design a modern, minimalist logo in Figma for your brand.</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c5da8d75-6765-424c-9174-cb4021c78a5e/1786552925058-a5e01j.jpeg</image:loc>
+      <image:title>I will design a modern, minimalist logo in Figma for your brand. - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c5da8d75-6765-424c-9174-cb4021c78a5e/1786552947146-ww59cg.jpeg</image:loc>
+      <image:title>I will design a modern, minimalist logo in Figma for your brand. - preview 3</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://fivesom.net/gig/i-will-build-a-modern-and-responsive-website-for-your-business</loc>
     <lastmod>2026-08-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/7dba76f2-cf57-4342-a50e-cd0146d07f37/1786370554624-l7bxod.png</image:loc>
+      <image:title>I will build a modern and responsive website for your business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/7dba76f2-cf57-4342-a50e-cd0146d07f37/1786370555375-wo6awvi.png</image:loc>
+      <image:title>I will build a modern and responsive website for your business - preview 2</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://fivesom.net/gig/waxaan-kuu-dhisayaa-website-casri-ah-oo-ganacsi-online-ah</loc>
     <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1786378887087-vccw95.png</image:loc>
+      <image:title>Waxaan Kuu Dhisayaa Website Casri ah oo Ganacsi Online ah</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1786378887756-va2tr8.png</image:loc>
+      <image:title>Waxaan Kuu Dhisayaa Website Casri ah oo Ganacsi Online ah - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1786378888351-c37x4.png</image:loc>
+      <image:title>Waxaan Kuu Dhisayaa Website Casri ah oo Ganacsi Online ah - preview 3</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://fivesom.net/gig/waxaan-muuqaladada-ka-dhigi-doona-mid-soo-jiidaso-leh</loc>
@@ -530,42 +562,114 @@
     <lastmod>2026-08-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/346f1311-d0ec-4ebb-844b-26b4dbf65a92/1786814572548-si1lhk.jpg</image:loc>
+      <image:title>I will design a professional yt thumbnail</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/346f1311-d0ec-4ebb-844b-26b4dbf65a92/1786814573167-2ec5m27.png</image:loc>
+      <image:title>I will design a professional yt thumbnail - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/346f1311-d0ec-4ebb-844b-26b4dbf65a92/1786814574660-zeepnw.png</image:loc>
+      <image:title>I will design a professional yt thumbnail - preview 3</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://fivesom.net/gig/your-dream-website-starts-here-i-design-modern-websites-that-help-your</loc>
     <lastmod>2026-08-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bcec03f1-057f-4403-aa0b-1861d6db9e70/1787243444348-5j3j1r.jpg</image:loc>
+      <image:title>Your dream website starts here. I design modern websites that help your business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bcec03f1-057f-4403-aa0b-1861d6db9e70/1787243447214-sjb968.jpg</image:loc>
+      <image:title>Your dream website starts here. I design modern websites that help your business - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bcec03f1-057f-4403-aa0b-1861d6db9e70/1787243449285-a42gwi.jpg</image:loc>
+      <image:title>Your dream website starts here. I design modern websites that help your business - preview 3</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://fivesom.net/gig/i-will-build-a-professional-modern-responsive-website-or-web-applicati</loc>
     <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1406bd2d-4808-4397-934e-5eb23598f3db/1788438046827-qf5yyh.png</image:loc>
+      <image:title>I will build a professional modern responsive website or web application</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1406bd2d-4808-4397-934e-5eb23598f3db/1788438050936-gaangb.png</image:loc>
+      <image:title>I will build a professional modern responsive website or web application - preview 2</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://fivesom.net/gig/professional-graphic-designer-creative-modern-designs-creative-graphic</loc>
     <lastmod>2026-09-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/756dc8cd-c34e-4569-bea0-21ec5a5e3473/1788701314916-r1plgl.png</image:loc>
+      <image:title>Professional Graphic Designer | Creative &amp; Modern Designs Creative  logo design</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/756dc8cd-c34e-4569-bea0-21ec5a5e3473/1788701369499-53t3v.png</image:loc>
+      <image:title>Professional Graphic Designer | Creative &amp; Modern Designs Creative  logo design - preview 2</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://fivesom.net/gig/creative-logo-design-for-your-brand</loc>
     <lastmod>2026-09-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/756dc8cd-c34e-4569-bea0-21ec5a5e3473/1788861857316-bz74bz.png</image:loc>
+      <image:title>Creative Logo Design for Your Brand</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/756dc8cd-c34e-4569-bea0-21ec5a5e3473/1788861858455-rkjqr.png</image:loc>
+      <image:title>Creative Logo Design for Your Brand - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/756dc8cd-c34e-4569-bea0-21ec5a5e3473/1788861859204-v25m6o.png</image:loc>
+      <image:title>Creative Logo Design for Your Brand - preview 3</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://fivesom.net/gig/i-will-create-a-professional-business-website-using-html-css-and-javas</loc>
     <lastmod>2026-09-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/791dd3c5-9750-4cef-92fa-f6aa9a42f941/1788866220424-xie677.webp</image:loc>
+      <image:title>I will create a professional business website using HTML CSS and JavaScript</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://fivesom.net/gig/waxaan-kuu-qoraa-sheekooyin-carruur-oo-kobciya-aqoonta-iyo-maskaxda-da</loc>
     <lastmod>2026-09-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873362319-3ql9u.webp</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873363228-3osdtf.webp</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11 - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873363468-yt7m6j.webp</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11 - preview 3</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873363700-jpgq1u.webp</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11 - preview 4</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://fivesom.net/gig/i-will-create-professional-and-engaging-videos-for-your-brand</loc>

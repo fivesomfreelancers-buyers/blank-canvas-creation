@@ -25,15 +25,16 @@ import { Footer } from '@/components/Footer';
 import SEO, { SITE_URL } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { breadcrumbSchema } from '@/lib/seo/schemas';
-import findFreelancerAsset from '@/assets/how-it-works/find-perfect-freelancer.webp.asset.json';
-import collaborateAsset from '@/assets/how-it-works/collaborate-securely.webp.asset.json';
-import escrowAsset from '@/assets/how-it-works/secure-escrow-payment.webp.asset.json';
-import releaseAsset from '@/assets/how-it-works/release-payment.webp.asset.json';
+// Served from FIVESOM's own domain (public/images) so Google Images can index
+// them together with the page instead of a separate preview origin.
+const HOW_IT_WORKS_IMAGES = {
+  findFreelancer: '/images/how-it-works/find-perfect-freelancer.webp',
+  collaborate: '/images/how-it-works/collaborate-securely.webp',
+  escrow: '/images/how-it-works/secure-escrow-payment.webp',
+  release: '/images/how-it-works/release-payment.webp',
+} as const;
+const absoluteImageUrl = (path: string) => `${SITE_URL}${path}`;
 
-// Lovable CDN assets are served from the project preview origin. Using that
-// absolute origin keeps images available on the custom domain and crawlable.
-const IMAGE_ORIGIN = 'https://id-preview--a04b010f-bbe6-48c6-afb1-7f7fee82c826.lovable.app';
-const publicImageUrl = (path: string) => `${IMAGE_ORIGIN}${path}`;
 
 const JOURNEY = ['Discover', 'Choose', 'Pay', 'Collaborate', 'Work', 'Deliver', 'Review', 'Complete', 'Earn', 'Grow'];
 
@@ -49,7 +50,7 @@ const CORE_STEPS = [
       'Compare package prices, included work, revisions, genuine ratings, and buyer reviews.',
       'Choose the best match and start the order securely through FIVESOM.',
     ],
-    image: publicImageUrl(findFreelancerAsset.url),
+    image: HOW_IT_WORKS_IMAGES.findFreelancer,
     width: 918,
     height: 769,
     alt: 'Buyer comparing FIVESOM freelancer profiles, ratings, and professional services',
@@ -66,7 +67,7 @@ const CORE_STEPS = [
       'The freelancer receives the order, reviews the brief, and communicates with the buyer through FIVESOM.',
       'The freelancer completes the project and submits the finished work through the delivery system for buyer review.',
     ],
-    image: publicImageUrl(collaborateAsset.url),
+    image: HOW_IT_WORKS_IMAGES.collaborate,
     width: 1152,
     height: 768,
     alt: 'Buyer and freelancer collaborating through secure FIVESOM messages and shared project files',
@@ -83,7 +84,7 @@ const CORE_STEPS = [
       'The buyer reviews the delivery before the payment-release process begins.',
       'The Buyer Service Fee belongs to FIVESOM and is never counted as freelancer earnings.',
     ],
-    image: publicImageUrl(escrowAsset.url),
+    image: HOW_IT_WORKS_IMAGES.escrow,
     width: 1365,
     height: 768,
     alt: 'FIVESOM escrow payment flow securing an order between a buyer and freelancer',
@@ -100,7 +101,7 @@ const CORE_STEPS = [
       'After acceptance, eligible Gig earnings move to the freelancer wallet under FIVESOM payment rules.',
       'The freelancer can request a withdrawal when eligible; unresolved work can follow the revision or dispute process instead.',
     ],
-    image: publicImageUrl(releaseAsset.url),
+    image: HOW_IT_WORKS_IMAGES.release,
     width: 1365,
     height: 768,
     alt: 'Buyer accepting delivered work so eligible freelancer earnings can be released on FIVESOM',
@@ -210,10 +211,11 @@ const HowItWorks = () => {
       about: { '@id': `${SITE_URL}/#organization` },
       primaryImageOfPage: {
         '@type': 'ImageObject',
-        url: publicImageUrl(findFreelancerAsset.url),
+        url: absoluteImageUrl(HOW_IT_WORKS_IMAGES.findFreelancer),
         width: 918,
         height: 769,
       },
+      image: Object.values(HOW_IT_WORKS_IMAGES).map((path) => absoluteImageUrl(path)),
     },
     breadcrumbSchema([
       { name: 'Home', path: '/' },
@@ -227,7 +229,7 @@ const HowItWorks = () => {
         title="How Fivesom Works | Hire Freelancers & Grow Your Skills"
         description="Learn how buyers hire freelancers and how freelancers create Gigs, complete orders, get verified, and earn securely through Fivesom."
         canonical="/how-it-works"
-        image={publicImageUrl(findFreelancerAsset.url)}
+        image={absoluteImageUrl(HOW_IT_WORKS_IMAGES.findFreelancer)}
         jsonLd={schemas}
       />
       <Navbar />

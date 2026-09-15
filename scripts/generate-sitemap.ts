@@ -8,7 +8,6 @@ import { resolve } from "path";
 import { CATEGORIES } from "../src/lib/categories";
 
 const BASE_URL = "https://fivesom.net";
-const HOW_IT_WORKS_IMAGE_ORIGIN = "https://id-preview--a04b010f-bbe6-48c6-afb1-7f7fee82c826.lovable.app";
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? "";
 const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? "";
@@ -32,10 +31,10 @@ const staticEntries: SitemapEntry[] = [
     changefreq: "monthly",
     priority: "0.7",
     images: [
-      { loc: `${HOW_IT_WORKS_IMAGE_ORIGIN}/__l5e/assets-v1/a52235d0-b81c-4993-9159-e22439347881/find-perfect-freelancer.webp`, title: "Find the perfect freelancer on FIVESOM" },
-      { loc: `${HOW_IT_WORKS_IMAGE_ORIGIN}/__l5e/assets-v1/daddac23-4294-40a0-bf7e-213f1e1d66db/collaborate-securely.webp`, title: "Collaborate securely on FIVESOM" },
-      { loc: `${HOW_IT_WORKS_IMAGE_ORIGIN}/__l5e/assets-v1/80377886-c140-4346-b719-8611e37a3158/secure-escrow-payment.webp`, title: "FIVESOM secure escrow payment process" },
-      { loc: `${HOW_IT_WORKS_IMAGE_ORIGIN}/__l5e/assets-v1/74833a09-e51d-469b-986f-b8400db4a35a/release-payment.webp`, title: "Release payment after delivery on FIVESOM" },
+      { loc: "/images/how-it-works/find-perfect-freelancer.webp", title: "Find the perfect freelancer on FIVESOM" },
+      { loc: "/images/how-it-works/collaborate-securely.webp", title: "Collaborate securely on FIVESOM" },
+      { loc: "/images/how-it-works/secure-escrow-payment.webp", title: "FIVESOM secure escrow payment process" },
+      { loc: "/images/how-it-works/release-payment.webp", title: "Release payment after delivery on FIVESOM" },
     ],
   },
   { path: "/docs", changefreq: "monthly", priority: "0.7" },
@@ -65,6 +64,15 @@ const categoryEntries: SitemapEntry[] = CATEGORIES.flatMap((c) => [
   })),
 ]);
 
+function escapeXml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
 async function rest<T>(path: string): Promise<T[]> {
   if (!SUPABASE_URL || !SUPABASE_KEY) return [];
   try {
@@ -83,8 +91,15 @@ async function rest<T>(path: string): Promise<T[]> {
 }
 
 async function dynamicEntries(): Promise<SitemapEntry[]> {
-  const gigs = await rest<{ slug: string | null; updated_at: string | null; freelancer_id: string }>(
-    "gigs?select=slug,updated_at,freelancer_id&status=eq.active&slug=not.is.null&limit=5000",
+  const gigs = await rest<{
+    slug: string | null;
+    title: string | null;
+    updated_at: string | null;
+    freelancer_id: string;
+    thumbnail_url: string | null;
+    images: string[] | null;
+  }>(
+    "gigs?select=slug,title,updated_at,freelancer_id,thumbnail_url,images&status=eq.active&slug=not.is.null&limit=5000",
   );
 
   const posts = await rest<{ slug: string; updated_at: string | null }>(
@@ -107,11 +122,24 @@ async function dynamicEntries(): Promise<SitemapEntry[]> {
   for (const gig of gigs) {
     if (!gig.slug) continue;
     activeFreelancerIds.add(gig.freelancer_id);
+    // Gig gallery images are listed with the Gig URL so Google Images can index
+    // the real service previews (max 10 per URL, absolute public storage URLs).
+    const gigTitle = (gig.title || "FIVESOM service").trim();
+    const gigImages = [gig.thumbnail_url, ...(gig.images || [])]
+      .filter((url): url is string => typeof url === "string" && /^https?:\/\//i.test(url))
+      .filter((url, i, all) => all.indexOf(url) === i)
+      .slice(0, 10)
+      .map((url, i) => ({
+        loc: url,
+        title: escapeXml(i === 0 ? gigTitle : `${gigTitle} - preview ${i + 1}`),
+      }));
+
     entries.push({
       path: `/gig/${encodeURIComponent(gig.slug)}`,
       lastmod: gig.updated_at ? gig.updated_at.slice(0, 10) : undefined,
       changefreq: "weekly",
       priority: "0.8",
+      images: gigImages,
     });
   }
 
@@ -158,7 +186,7 @@ function generateSitemap(entries: SitemapEntry[]) {
         e.priority ? `    <priority>${e.priority}</priority>` : null,
         ...(e.images || []).flatMap((image) => [
           `    <image:image>`,
-          `      <image:loc>${/^https?:\/\//i.test(image.loc) ? image.loc : `${BASE_URL}${image.loc}`}</image:loc>`,
+          `      <image:loc>${escapeXml(/^https?:\/\//i.test(image.loc) ? image.loc : `${BASE_URL}${image.loc}`)}</image:loc>`,
           `      <image:title>${image.title}</image:title>`,
           `    </image:image>`,
         ]),
