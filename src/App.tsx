@@ -73,6 +73,7 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import PresenceProvider from "./components/presence/PresenceProvider";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import DevToolsGuard from "@/components/security/DevToolsGuard";
 
 const queryClient = new QueryClient({
   defaultOptions: {
