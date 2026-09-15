@@ -25,15 +25,16 @@ import { Footer } from '@/components/Footer';
 import SEO, { SITE_URL } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { breadcrumbSchema } from '@/lib/seo/schemas';
-import findFreelancerAsset from '@/assets/how-it-works/find-perfect-freelancer.webp.asset.json';
-import collaborateAsset from '@/assets/how-it-works/collaborate-securely.webp.asset.json';
-import escrowAsset from '@/assets/how-it-works/secure-escrow-payment.webp.asset.json';
-import releaseAsset from '@/assets/how-it-works/release-payment.webp.asset.json';
+// Served from FIVESOM's own domain (public/images) so Google Images can index
+// them together with the page instead of a separate preview origin.
+const HOW_IT_WORKS_IMAGES = {
+  findFreelancer: '/images/how-it-works/find-perfect-freelancer.webp',
+  collaborate: '/images/how-it-works/collaborate-securely.webp',
+  escrow: '/images/how-it-works/secure-escrow-payment.webp',
+  release: '/images/how-it-works/release-payment.webp',
+} as const;
+const absoluteImageUrl = (path: string) => `${SITE_URL}${path}`;
 
-// Lovable CDN assets are served from the project preview origin. Using that
-// absolute origin keeps images available on the custom domain and crawlable.
-const IMAGE_ORIGIN = 'https://id-preview--a04b010f-bbe6-48c6-afb1-7f7fee82c826.lovable.app';
-const publicImageUrl = (path: string) => `${IMAGE_ORIGIN}${path}`;
 
 const JOURNEY = ['Discover', 'Choose', 'Pay', 'Collaborate', 'Work', 'Deliver', 'Review', 'Complete', 'Earn', 'Grow'];
 
