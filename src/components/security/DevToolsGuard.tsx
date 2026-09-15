@@ -104,7 +104,7 @@ const DevToolsGuard: React.FC = () => {
       <div className="min-h-full w-full flex items-start">
         {/* Left-aligned challenge panel, Fiverr style */}
         <div className="w-full max-w-xl px-6 py-10 sm:px-12 sm:py-14 text-left">
-          <Logo className="h-8 w-auto" />
+          <Logo className="!h-9" linkTo="" />
 
           <h1 className="mt-14 text-2xl font-bold text-foreground">It needs a human touch</h1>
           <p className="mt-2 text-muted-foreground">
