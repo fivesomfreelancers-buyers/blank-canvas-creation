@@ -143,6 +143,6 @@ Deno.serve(async (req) => {
     return json({ sent: true, to: rawEmail, provider_id: providerId });
   } catch (err) {
     console.error("send-verification-email error:", err);
-    return json({ error: err instanceof Error ? err.message : "Unexpected error" }, 500);
+    return json({ error: "Unexpected error" }, 500);
   }
 });

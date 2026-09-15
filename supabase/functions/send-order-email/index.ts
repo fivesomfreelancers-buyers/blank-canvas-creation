@@ -146,6 +146,6 @@ Deno.serve(async (req) => {
     return json({ sent: true, id: (sent as any)?.id ?? null });
   } catch (err) {
     console.error("send-order-email error:", err);
-    return json({ error: err instanceof Error ? err.message : "Unexpected error" }, 500);
+    return json({ error: "Unexpected error" }, 500);
   }
 });
