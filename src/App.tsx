@@ -99,6 +99,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <DevToolsGuard />
 
           <BrowserRouter>
             <Suspense fallback={<RouteFallback />}>
