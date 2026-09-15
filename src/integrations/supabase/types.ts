@@ -296,6 +296,8 @@ export type Database = {
           experience: string | null
           freelancer_id: string
           id: string
+          id_back_url: string | null
+          id_front_url: string | null
           identity_verified: boolean
           liveness_status: string
           more_info_request: string | null
@@ -306,6 +308,7 @@ export type Database = {
           rejection_reason: string | null
           reviewed_at: string | null
           reviewed_by: string | null
+          selfie_url: string | null
           social_links: Json
           specialties: string[]
           status: string
@@ -320,6 +323,8 @@ export type Database = {
           experience?: string | null
           freelancer_id: string
           id?: string
+          id_back_url?: string | null
+          id_front_url?: string | null
           identity_verified?: boolean
           liveness_status?: string
           more_info_request?: string | null
@@ -330,6 +335,7 @@ export type Database = {
           rejection_reason?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          selfie_url?: string | null
           social_links?: Json
           specialties?: string[]
           status?: string
@@ -344,6 +350,8 @@ export type Database = {
           experience?: string | null
           freelancer_id?: string
           id?: string
+          id_back_url?: string | null
+          id_front_url?: string | null
           identity_verified?: boolean
           liveness_status?: string
           more_info_request?: string | null
@@ -354,6 +362,7 @@ export type Database = {
           rejection_reason?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          selfie_url?: string | null
           social_links?: Json
           specialties?: string[]
           status?: string
@@ -2243,15 +2252,28 @@ export type Database = {
         Args: { _label: string; _message_id: string; _url: string }
         Returns: Json
       }
-      save_blue_tick_application_draft: {
-        Args: {
-          _experience?: string
-          _project_summary?: string
-          _social_links?: Json
-          _specialties?: string[]
-        }
-        Returns: string
-      }
+      save_blue_tick_application_draft:
+        | {
+            Args: {
+              _experience?: string
+              _project_summary?: string
+              _social_links?: Json
+              _specialties?: string[]
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              _experience?: string
+              _id_back_url?: string
+              _id_front_url?: string
+              _project_summary?: string
+              _selfie_url?: string
+              _social_links?: Json
+              _specialties?: string[]
+            }
+            Returns: string
+          }
       search_gig_tags: {
         Args: { p_limit?: number; p_query?: string }
         Returns: {
