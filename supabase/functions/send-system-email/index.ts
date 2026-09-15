@@ -107,7 +107,7 @@ Deno.serve(async (req) => {
     if (!res.ok) {
       const details = await res.text();
       console.error(`Resend request failed [${res.status}]: ${details}`);
-      return json({ error: "Email provider request failed", status: res.status, details }, res.status);
+      return json({ error: "Email provider request failed" }, 502);
     }
 
     const sent = await res.json().catch(() => ({}));
