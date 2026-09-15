@@ -115,6 +115,16 @@ const AdminBlueTick: React.FC = () => {
     toast.success('Application rejected');
     setSelected(null); setNotes(''); load();
   };
+  const requestChanges = async (a: App) => {
+    const info = notes.trim() || prompt('What does the freelancer need to correct?') || '';
+    if (!info.trim()) return toast.error('Please describe what needs correcting');
+    setBusy(a.id);
+    const { error } = await (supabase as any).rpc('admin_request_blue_tick_info', { _application_id: a.id, _message: info });
+    setBusy(null);
+    if (error) return toast.error(error.message);
+    toast.success('Changes requested');
+    setSelected(null); setNotes(''); load();
+  };
   const revoke = async (userId: string) => {
     const reason = prompt('Reason for removing Blue Tick?');
     if (!reason) return;
