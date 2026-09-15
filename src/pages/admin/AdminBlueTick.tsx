@@ -8,9 +8,34 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Search, Check, X, ShieldOff } from 'lucide-react';
+import { Loader2, Search, Check, X, ShieldOff, MessageSquare, FileImage } from 'lucide-react';
 import { toast } from 'sonner';
 import BlueTickBadge from '@/components/BlueTickBadge';
+import { useSignedAttachmentUrl } from '@/hooks/useSignedAttachmentUrl';
+
+const SignedDoc: React.FC<{ label: string; url: string | null }> = ({ label, url }) => {
+  const signed = useSignedAttachmentUrl(url);
+  if (!url) {
+    return (
+      <div className="rounded-lg border border-dashed p-3 text-center text-xs text-muted-foreground">
+        <FileImage className="w-4 h-4 mx-auto mb-1 opacity-60" />
+        {label}<br />Not provided
+      </div>
+    );
+  }
+  return (
+    <a href={signed || undefined} target="_blank" rel="noreferrer" className="block group">
+      <div className="aspect-[4/3] rounded-lg overflow-hidden border bg-muted">
+        {signed ? (
+          <img src={signed} alt={label} className="w-full h-full object-cover group-hover:opacity-90 transition-opacity" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center"><Loader2 className="w-4 h-4 animate-spin text-muted-foreground" /></div>
+        )}
+      </div>
+      <p className="mt-1 text-xs text-center text-muted-foreground group-hover:text-foreground">{label}</p>
+    </a>
+  );
+};
 
 type App = {
   id: string; user_id: string; freelancer_id: string;
