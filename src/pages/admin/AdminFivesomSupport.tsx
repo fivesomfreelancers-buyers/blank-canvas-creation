@@ -45,7 +45,7 @@ const AdminFivesomSupport: React.FC = () => {
   const [selected, setSelected] = useState<SupportConvo | null>(null);
   const [messages, setMessages] = useState<SysMsg[]>([]);
   const [reply, setReply] = useState(() => {
-    try { return localStorage.getItem('fivesom.admin.support.draft') || ''; } catch { return ''; }
+    try { return sessionStorage.getItem('fivesom.admin.support.draft') || ''; } catch { return ''; }
   });
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -97,18 +97,27 @@ const AdminFivesomSupport: React.FC = () => {
     await markRead(cid);
   };
 
+  // Legacy: internal support drafts used to persist in localStorage across
+  // sessions. Remove any leftovers — this data is session-scoped now.
+  useEffect(() => {
+    try {
+      localStorage.removeItem('fivesom.admin.support.draft');
+      localStorage.removeItem('fivesom.admin.support.convo');
+    } catch { /* ignore */ }
+  }, []);
+
   useEffect(() => { fetchConvos(); }, []);
 
   // Persist the draft reply so leaving/reloading the page never loses typed text
   useEffect(() => {
-    try { localStorage.setItem('fivesom.admin.support.draft', reply); } catch { /* ignore */ }
+    try { sessionStorage.setItem('fivesom.admin.support.draft', reply); } catch { /* ignore */ }
   }, [reply]);
 
   // Restore the last opened conversation after a refresh or tab switch
   useEffect(() => {
     if (selected || !convos.length) return;
     try {
-      const last = localStorage.getItem('fivesom.admin.support.convo');
+      const last = sessionStorage.getItem('fivesom.admin.support.convo');
       const match = last ? convos.find(c => c.id === last) : null;
       if (match) setSelected(match);
     } catch { /* ignore */ }
@@ -117,7 +126,7 @@ const AdminFivesomSupport: React.FC = () => {
 
   useEffect(() => {
     try {
-      if (selected?.id) localStorage.setItem('fivesom.admin.support.convo', selected.id);
+      if (selected?.id) sessionStorage.setItem('fivesom.admin.support.convo', selected.id);
     } catch { /* ignore */ }
   }, [selected?.id]);
 
@@ -171,7 +180,7 @@ const AdminFivesomSupport: React.FC = () => {
     });
     if (error) return toast.error(error.message);
     setReply('');
-    try { localStorage.removeItem('fivesom.admin.support.draft'); } catch { /* ignore */ }
+    try { sessionStorage.removeItem('fivesom.admin.support.draft'); } catch { /* ignore */ }
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
