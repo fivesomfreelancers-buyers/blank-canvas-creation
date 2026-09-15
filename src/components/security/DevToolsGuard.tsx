@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import Logo from '@/components/Logo';
+import { Logo } from '@/components/Logo';
 
 /**
  * Fiverr-style "It needs a human touch" gate.
