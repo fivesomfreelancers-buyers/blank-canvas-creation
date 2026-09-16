@@ -291,7 +291,7 @@ const About = () => {
                               href={href}
                               target="_blank"
                               rel="noopener noreferrer nofollow"
-                              aria-label={`${m.full_name} on ${key}`}
+                              aria-label={`${m.full_name} on ${SOCIAL_LABELS[key.toLowerCase()] ?? key}`}
                               className="h-9 w-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
                             >
                               <Icon className="h-4 w-4" />
