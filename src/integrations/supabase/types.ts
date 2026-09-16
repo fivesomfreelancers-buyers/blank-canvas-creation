@@ -292,12 +292,14 @@ export type Database = {
         Row: {
           admin_notes: string | null
           created_at: string
+          current_step: number
           eligibility_snapshot: Json
           experience: string | null
           freelancer_id: string
           id: string
           id_back_url: string | null
           id_front_url: string | null
+          id_type: string | null
           identity_verified: boolean
           liveness_status: string
           more_info_request: string | null
@@ -315,16 +317,19 @@ export type Database = {
           submitted_at: string | null
           updated_at: string
           user_id: string
+          years_experience: string | null
         }
         Insert: {
           admin_notes?: string | null
           created_at?: string
+          current_step?: number
           eligibility_snapshot?: Json
           experience?: string | null
           freelancer_id: string
           id?: string
           id_back_url?: string | null
           id_front_url?: string | null
+          id_type?: string | null
           identity_verified?: boolean
           liveness_status?: string
           more_info_request?: string | null
@@ -342,16 +347,19 @@ export type Database = {
           submitted_at?: string | null
           updated_at?: string
           user_id: string
+          years_experience?: string | null
         }
         Update: {
           admin_notes?: string | null
           created_at?: string
+          current_step?: number
           eligibility_snapshot?: Json
           experience?: string | null
           freelancer_id?: string
           id?: string
           id_back_url?: string | null
           id_front_url?: string | null
+          id_type?: string | null
           identity_verified?: boolean
           liveness_status?: string
           more_info_request?: string | null
@@ -369,6 +377,7 @@ export type Database = {
           submitted_at?: string | null
           updated_at?: string
           user_id?: string
+          years_experience?: string | null
         }
         Relationships: []
       }
@@ -2271,6 +2280,21 @@ export type Database = {
               _selfie_url?: string
               _social_links?: Json
               _specialties?: string[]
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              _current_step?: number
+              _experience?: string
+              _id_back_url?: string
+              _id_front_url?: string
+              _id_type?: string
+              _project_summary?: string
+              _selfie_url?: string
+              _social_links?: Json
+              _specialties?: string[]
+              _years_experience?: string
             }
             Returns: string
           }
