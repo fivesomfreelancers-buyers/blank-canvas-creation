@@ -5,7 +5,7 @@ import { Footer } from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Users, Globe, Linkedin, Instagram, Facebook, Twitter, ShieldCheck, Target, Eye, Sparkles, Briefcase } from 'lucide-react';
+import { Users, Globe, Linkedin, Instagram, Facebook, ShieldCheck, Target, Eye, Sparkles, Briefcase } from 'lucide-react';
 import { safeExternalUrl } from '@/lib/safeUrl';
 import {
   aboutHero, aboutStory, aboutMission, aboutVision, aboutWhatWeDo,
