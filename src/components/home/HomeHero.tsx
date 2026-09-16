@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, ArrowRight, ShieldCheck, Globe2, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import TypingHeadline from './TypingHeadline';
+import { CATEGORIES } from '@/lib/categories';
 
 const POPULAR = [
   'Logo Design',
@@ -20,6 +21,23 @@ interface HomeHeroProps {
 const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
   const [q, setQ] = useState('');
   const navigate = useNavigate();
+
+  // Rotating example service names (the 9 official categories) shown in the search box.
+  const examples = CATEGORIES.map((c) => c.name);
+  const [exampleIndex, setExampleIndex] = useState(0);
+  const [exampleVisible, setExampleVisible] = useState(true);
+
+  useEffect(() => {
+    if (examples.length < 2) return;
+    const fadeOut = window.setInterval(() => {
+      setExampleVisible(false);
+      window.setTimeout(() => {
+        setExampleIndex((i) => (i + 1) % examples.length);
+        setExampleVisible(true);
+      }, 350);
+    }, 2600);
+    return () => window.clearInterval(fadeOut);
+  }, [examples.length]);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,16 +82,31 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
             <label htmlFor="hero-search" className="sr-only">
               Search freelance services
             </label>
-            <div className="flex-1 flex items-center px-4">
+            <div className="flex-1 flex items-center px-4 relative">
               <Search className="w-5 h-5 mr-3 text-muted-foreground shrink-0" aria-hidden />
               <input
                 id="hero-search"
                 type="text"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="What service do you need? e.g. logo design"
-                className="w-full py-3.5 bg-transparent outline-none text-sm sm:text-base text-foreground placeholder:text-muted-foreground"
+                placeholder={`What service do you need? e.g. ${examples[exampleIndex]}`}
+                className="w-full py-3.5 bg-transparent outline-none text-sm sm:text-base text-foreground placeholder:text-transparent relative z-10"
               />
+              {!q && (
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute left-12 right-4 flex items-center gap-1.5 text-sm sm:text-base text-muted-foreground truncate"
+                >
+                  What service do you need? e.g.
+                  <span
+                    className={`text-primary font-medium transition-all duration-300 ${
+                      exampleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'
+                    }`}
+                  >
+                    {examples[exampleIndex]}
+                  </span>
+                </span>
+              )}
             </div>
             <button
               type="submit"
