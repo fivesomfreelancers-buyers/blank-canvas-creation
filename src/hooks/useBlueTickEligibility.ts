@@ -34,10 +34,16 @@ export interface BlueTickApplication {
   admin_notes: string | null;
   submitted_at: string | null;
   created_at: string;
+  id_type?: string | null;
+  years_experience?: string | null;
+  current_step?: number | null;
+  id_front_url?: string | null;
+  id_back_url?: string | null;
+  selfie_url?: string | null;
 }
 
 export const BLUE_TICK_TARGETS = {
-  memberDays: 40,
+  memberDays: 100,
   completedOrders: 10,
   earnings: 100,
   rating: 4.5,

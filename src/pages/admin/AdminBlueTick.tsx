@@ -44,6 +44,8 @@ type App = {
   specialties: string[] | null; project_summary: string | null;
   social_links: Record<string, string> | null;
   id_front_url: string | null; id_back_url: string | null; selfie_url: string | null;
+  id_type: string | null; years_experience: string | null;
+  liveness_status: string | null; identity_verified: boolean | null;
   submitted_at: string | null;
   created_at: string;
   profile?: { full_name: string | null; email: string | null; profile_image_url: string | null } | null;
@@ -232,28 +234,48 @@ const AdminBlueTick: React.FC = () => {
                   <div><p className="text-muted-foreground text-xs">Verified</p><p className="font-medium">{selected.stats?.is_verified ? 'Yes' : 'No'}</p></div>
                   <div><p className="text-muted-foreground text-xs">Last active</p><p className="font-medium">{selected.stats?.last_seen ? new Date(selected.stats.last_seen).toLocaleDateString() : '—'}</p></div>
                 </div>
-                {selected.specialties?.length ? (
-                  <div><p className="text-xs uppercase text-muted-foreground mb-1">Specialties</p>
-                    <div className="flex flex-wrap gap-1.5">{selected.specialties.map((s) => <Badge key={s} variant="outline" className="text-[#1d9bf0] border-[#1d9bf0]/40">{s}</Badge>)}</div>
+                <div className="rounded-lg border p-3 space-y-3">
+                  <p className="text-xs font-semibold uppercase text-[#1d9bf0]">Step 1 — Professional information</p>
+                  {selected.specialties?.length ? (
+                    <div><p className="text-xs uppercase text-muted-foreground mb-1">Specialties</p>
+                      <div className="flex flex-wrap gap-1.5">{selected.specialties.map((s) => <Badge key={s} variant="outline" className="text-[#1d9bf0] border-[#1d9bf0]/40">{s}</Badge>)}</div>
+                    </div>
+                  ) : null}
+                  <div><p className="text-xs uppercase text-muted-foreground mb-1">Years of experience</p><p className="text-sm">{selected.years_experience || '—'}</p></div>
+                  {selected.project_summary && (<div><p className="text-xs uppercase text-muted-foreground mb-1">Expertise / best work</p><p className="text-sm whitespace-pre-wrap">{selected.project_summary}</p></div>)}
+                  {selected.experience && (<div><p className="text-xs uppercase text-muted-foreground mb-1">Additional experience</p><p className="text-sm whitespace-pre-wrap">{selected.experience}</p></div>)}
+                  {selected.social_links && Object.keys(selected.social_links).length > 0 && (
+                    <div><p className="text-xs uppercase text-muted-foreground mb-1">Social links</p>
+                      <ul className="space-y-1">{Object.entries(selected.social_links).map(([k, l]) => (
+                        <li key={k} className="text-sm"><span className="capitalize text-muted-foreground mr-2">{k}</span>
+                          <a href={l} target="_blank" rel="noreferrer" className="text-[#1d9bf0] hover:underline break-all">{l}</a></li>
+                      ))}</ul>
+                    </div>
+                  )}
+                </div>
+
+                <div className="rounded-lg border p-3 space-y-3">
+                  <p className="text-xs font-semibold uppercase text-[#1d9bf0]">Step 2 — Identity information</p>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div><p className="text-muted-foreground text-xs">ID type</p><p className="font-medium">
+                      {selected.id_type === 'passport' ? 'Passport' : selected.id_type === 'national_id' ? 'National ID card' : selected.id_type === 'driving_licence' ? 'Driving licence' : '—'}
+                    </p></div>
+                    <div><p className="text-muted-foreground text-xs">Identity confirmed by freelancer</p><p className="font-medium">{selected.identity_verified ? 'Yes' : 'No'}</p></div>
                   </div>
-                ) : null}
-                {selected.project_summary && (<div><p className="text-xs uppercase text-muted-foreground mb-1">Best work summary</p><p className="text-sm whitespace-pre-wrap">{selected.project_summary}</p></div>)}
-                {selected.experience && (<div><p className="text-xs uppercase text-muted-foreground mb-1">Experience</p><p className="text-sm whitespace-pre-wrap">{selected.experience}</p></div>)}
-                {selected.social_links && Object.keys(selected.social_links).length > 0 && (
-                  <div><p className="text-xs uppercase text-muted-foreground mb-1">Links</p>
-                    <ul className="space-y-1">{Object.entries(selected.social_links).map(([k, l]) => (
-                      <li key={k} className="text-sm"><span className="capitalize text-muted-foreground mr-2">{k}</span>
-                        <a href={l} target="_blank" rel="noreferrer" className="text-[#1d9bf0] hover:underline break-all">{l}</a></li>
-                    ))}</ul>
-                  </div>
-                )}
-                <div>
-                  <p className="text-xs uppercase text-muted-foreground mb-2">Identity & face verification</p>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     <SignedDoc label="ID front" url={selected.id_front_url} />
                     <SignedDoc label="ID back" url={selected.id_back_url} />
-                    <SignedDoc label="Selfie" url={selected.selfie_url} />
                   </div>
+                  <p className="text-[11px] text-muted-foreground">Documents open through short-lived secure links, visible to authorised staff only.</p>
+                </div>
+
+                <div className="rounded-lg border p-3 space-y-3">
+                  <p className="text-xs font-semibold uppercase text-[#1d9bf0]">Step 3 — Face verification</p>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div><p className="text-muted-foreground text-xs">Status</p><p className="font-medium capitalize">{(selected.liveness_status || 'not_started').replace('_', ' ')}</p></div>
+                    <div><p className="text-muted-foreground text-xs">Submitted</p><p className="font-medium">{selected.submitted_at ? new Date(selected.submitted_at).toLocaleString() : '—'}</p></div>
+                  </div>
+                  <div className="max-w-[180px]"><SignedDoc label="Face check" url={selected.selfie_url} /></div>
                 </div>
                 <div>
                   <p className="text-xs uppercase text-muted-foreground mb-1">Admin notes (optional)</p>
