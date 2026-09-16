@@ -15,7 +15,16 @@ import { useAuth } from '@/hooks/useAuth';
 import { ArrowDown, ArrowUp, Loader2, Pencil, Plus, Trash2, Upload, Users } from 'lucide-react';
 import { sortTeam, type TeamMember } from '@/pages/About';
 
-const SOCIAL_KEYS = ['x', 'linkedin', 'instagram', 'facebook', 'website'] as const;
+// Public profile links only — no personal emails or private identifiers.
+const SOCIAL_KEYS = ['x', 'linkedin', 'instagram', 'facebook', 'tiktok'] as const;
+
+const SOCIAL_LABELS: Record<string, string> = {
+  x: 'X',
+  linkedin: 'LinkedIn',
+  instagram: 'Instagram',
+  facebook: 'Facebook',
+  tiktok: 'TikTok',
+};
 
 type FormState = {
   id?: string;
