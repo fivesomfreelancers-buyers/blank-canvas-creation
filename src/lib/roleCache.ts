@@ -43,4 +43,18 @@ export const purgeLegacyRoleCache = () => {
       /* storage unavailable — nothing to purge */
     }
   }
+
+  // Legacy login-throttle records keyed by the raw email address: rewrite the
+  // store without them so no address remains readable in browser storage.
+  try {
+    const raw = localStorage.getItem('fivesom.auth.attempts');
+    if (raw && raw.includes('@')) {
+      const data = JSON.parse(raw) as Record<string, unknown>;
+      Object.keys(data).forEach((k) => { if (k.includes('@')) delete data[k]; });
+      localStorage.setItem('fivesom.auth.attempts', JSON.stringify(data));
+    }
+  } catch {
+    /* unreadable record — drop it entirely */
+    try { localStorage.removeItem('fivesom.auth.attempts'); } catch { /* ignore */ }
+  }
 };
