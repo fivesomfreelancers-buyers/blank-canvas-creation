@@ -82,16 +82,31 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
             <label htmlFor="hero-search" className="sr-only">
               Search freelance services
             </label>
-            <div className="flex-1 flex items-center px-4">
+            <div className="flex-1 flex items-center px-4 relative">
               <Search className="w-5 h-5 mr-3 text-muted-foreground shrink-0" aria-hidden />
               <input
                 id="hero-search"
                 type="text"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="What service do you need? e.g. logo design"
-                className="w-full py-3.5 bg-transparent outline-none text-sm sm:text-base text-foreground placeholder:text-muted-foreground"
+                placeholder={`What service do you need? e.g. ${examples[exampleIndex]}`}
+                className="w-full py-3.5 bg-transparent outline-none text-sm sm:text-base text-foreground placeholder:text-transparent relative z-10"
               />
+              {!q && (
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute left-12 right-4 flex items-center gap-1.5 text-sm sm:text-base text-muted-foreground truncate"
+                >
+                  What service do you need? e.g.
+                  <span
+                    className={`text-primary font-medium transition-all duration-300 ${
+                      exampleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'
+                    }`}
+                  >
+                    {examples[exampleIndex]}
+                  </span>
+                </span>
+              )}
             </div>
             <button
               type="submit"
