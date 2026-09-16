@@ -86,15 +86,16 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
 const AdminDashboardInner = () => {
   const [activeTab, setActiveTabState] = useState<string>(() => {
     try {
+      // The open tab is remembered in the URL hash only — no admin-related key
+      // is written to browser storage.
       const hash = window.location.hash.replace('#', '');
-      return hash || localStorage.getItem('fivesom.admin.tab') || 'overview';
+      return hash || 'overview';
     } catch { return 'overview'; }
   });
 
   const setActiveTab = (key: string) => {
     setActiveTabState(key);
     try {
-      localStorage.setItem('fivesom.admin.tab', key);
       window.history.replaceState(null, '', `#${key}`);
     } catch { /* ignore */ }
   };
