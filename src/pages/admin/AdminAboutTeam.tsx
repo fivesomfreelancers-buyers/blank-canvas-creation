@@ -283,7 +283,7 @@ const AdminAboutTeam = () => {
             <div className="grid gap-3 sm:grid-cols-2">
               {SOCIAL_KEYS.map((key) => (
                 <div key={key} className="space-y-1">
-                  <Label htmlFor={`tm-${key}`} className="capitalize text-xs">{key}</Label>
+                  <Label htmlFor={`tm-${key}`} className="text-xs">{SOCIAL_LABELS[key] ?? key}</Label>
                   <Input
                     id={`tm-${key}`}
                     placeholder="https://…"
