@@ -22,6 +22,23 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
   const [q, setQ] = useState('');
   const navigate = useNavigate();
 
+  // Rotating example service names (the 9 official categories) shown in the search box.
+  const examples = CATEGORIES.map((c) => c.name);
+  const [exampleIndex, setExampleIndex] = useState(0);
+  const [exampleVisible, setExampleVisible] = useState(true);
+
+  useEffect(() => {
+    if (examples.length < 2) return;
+    const fadeOut = window.setInterval(() => {
+      setExampleVisible(false);
+      window.setTimeout(() => {
+        setExampleIndex((i) => (i + 1) % examples.length);
+        setExampleVisible(true);
+      }, 350);
+    }, 2600);
+    return () => window.clearInterval(fadeOut);
+  }, [examples.length]);
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const term = q.trim();
