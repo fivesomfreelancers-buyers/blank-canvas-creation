@@ -249,10 +249,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Cached admin/founder UI flags and internal admin state must not survive a
     // sign-out. They were never authorization (the database enforces that), but
     // they should not linger on a shared computer either.
+    clearRoleCache();
+    purgeLegacyRoleCache();
     try {
-      Object.keys(localStorage)
-        .filter((k) => k.startsWith('fivesom.isAdmin.') || k.startsWith('fivesom.isFounder.') || k.startsWith('fivesom.admin.'))
-        .forEach((k) => localStorage.removeItem(k));
       sessionStorage.removeItem('fivesom.admin.support.draft');
       sessionStorage.removeItem('fivesom.admin.support.convo');
     } catch { /* ignore */ }
