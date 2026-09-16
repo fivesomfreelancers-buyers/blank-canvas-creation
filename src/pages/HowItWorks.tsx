@@ -146,10 +146,10 @@ const VERIFICATION_STEPS = [
 
 const BLUE_TICK_REQUIREMENTS = [
   'Verified account / verified seller',
-  'Member for at least 40 days',
+  'Member for at least 100 days',
   'Active within the last 30 days',
   'At least 10 completed orders',
-  'At least $50 earned',
+  'At least $100 earned',
   'Average rating of 4.5+ stars',
   'No more than 3 warnings',
 ];
