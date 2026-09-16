@@ -5,7 +5,7 @@ import { Footer } from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Users, Globe, Linkedin, Instagram, Facebook, Twitter, ShieldCheck, Target, Eye, Sparkles, Briefcase } from 'lucide-react';
+import { Users, Globe, Linkedin, Instagram, Facebook, ShieldCheck, Target, Eye, Sparkles, Briefcase } from 'lucide-react';
 import { safeExternalUrl } from '@/lib/safeUrl';
 import {
   aboutHero, aboutStory, aboutMission, aboutVision, aboutWhatWeDo,
@@ -23,13 +23,37 @@ export interface TeamMember {
   is_active: boolean;
 }
 
+/** X (formerly Twitter) — lucide has no brand mark, so use the official glyph. */
+const XIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
+
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
+    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.27-1.33-3.55-3.84-3.64-6.38-.06-1.54.37-3.09 1.2-4.38.94-1.47 2.43-2.58 4.15-3.05 1.29-.36 2.68-.35 3.96-.03v4.04c-.71-.33-1.52-.48-2.33-.42-.77.05-1.51.34-2.08.83-.75.64-1.15 1.57-1.18 2.52-.03.93.29 1.87.89 2.56.6.68 1.46 1.1 2.37 1.17.78.06 1.58-.1 2.26-.5.69-.42 1.2-1.08 1.46-1.83.14-.37.21-.77.21-1.17V.02z" />
+  </svg>
+);
+
 const SOCIAL_ICONS: Record<string, any> = {
-  x: Twitter,
-  twitter: Twitter,
+  x: XIcon,
+  twitter: XIcon,
   linkedin: Linkedin,
   instagram: Instagram,
   facebook: Facebook,
+  tiktok: TikTokIcon,
   website: Globe,
+};
+
+const SOCIAL_LABELS: Record<string, string> = {
+  x: 'X',
+  twitter: 'X',
+  linkedin: 'LinkedIn',
+  instagram: 'Instagram',
+  facebook: 'Facebook',
+  tiktok: 'TikTok',
+  website: 'Website',
 };
 
 const socialIcon = (key: string) => SOCIAL_ICONS[key.toLowerCase()] ?? Globe;
@@ -267,7 +291,7 @@ const About = () => {
                               href={href}
                               target="_blank"
                               rel="noopener noreferrer nofollow"
-                              aria-label={`${m.full_name} on ${key}`}
+                              aria-label={`${m.full_name} on ${SOCIAL_LABELS[key.toLowerCase()] ?? key}`}
                               className="h-9 w-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
                             >
                               <Icon className="h-4 w-4" />
