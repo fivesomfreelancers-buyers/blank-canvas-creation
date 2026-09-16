@@ -44,6 +44,8 @@ type App = {
   specialties: string[] | null; project_summary: string | null;
   social_links: Record<string, string> | null;
   id_front_url: string | null; id_back_url: string | null; selfie_url: string | null;
+  id_type: string | null; years_experience: string | null;
+  liveness_status: string | null; identity_verified: boolean | null;
   submitted_at: string | null;
   created_at: string;
   profile?: { full_name: string | null; email: string | null; profile_image_url: string | null } | null;
