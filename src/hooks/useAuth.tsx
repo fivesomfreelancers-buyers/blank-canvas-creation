@@ -3,6 +3,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { ensureNormalUserRole } from '@/lib/roleUpgrade';
 import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
+import { clearRoleCache, purgeLegacyRoleCache } from '@/lib/roleCache';
 
 
 type UserRole = 'freelancer' | 'buyer' | 'user' | null;
