@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-
-const CACHE_PREFIX = 'fivesom.isFounder.';
+import { purgeLegacyRoleCache, readRoleCache, writeRoleCache } from '@/lib/roleCache';
 
 /**
  * "Is the current user a Fivesom founder?"
@@ -12,35 +11,19 @@ const CACHE_PREFIX = 'fivesom.isFounder.';
  * `true` answer from this hook only unlocks the UI — every founder query and
  * mutation is additionally authorised by RLS on the database side.
  *
- * Reliability rules (so the dashboard never remounts / "refreshes" itself):
- * - The last known answer is cached per user id, so a page refresh or a
- *   return-to-tab token refresh resolves instantly instead of showing the
- *   "Verifying founder access..." screen again.
- * - A background re-check never flips `isLoading` back to true once the answer
- *   is already known, so the dashboard subtree is never unmounted (which used
- *   to wipe the open tab, the selected conversation and unsent drafts).
- * - Only an explicit negative from the server clears a known-true value.
+ * The answer is cached in memory for the tab's lifetime only. It is never
+ * written to localStorage, so browser storage never exposes (or accepts) a
+ * privilege flag.
  */
 export function useFounderRole() {
   const { user, isLoading: authLoading } = useAuth();
-  const cacheKey = user ? `${CACHE_PREFIX}${user.id}` : null;
 
-  const [isFounder, setIsFounder] = useState<boolean | null>(() => {
-    try {
-      if (!user) return null;
-      const cached = localStorage.getItem(`${CACHE_PREFIX}${user.id}`);
-      return cached === null ? null : cached === 'true';
-    } catch {
-      return null;
-    }
-  });
+  const [isFounder, setIsFounder] = useState<boolean | null>(() =>
+    user ? readRoleCache('founder', user.id) : null
+  );
   const [isLoading, setIsLoading] = useState(isFounder === null);
   const inFlight = useRef(false);
   const lastCheckedUser = useRef<string | null>(null);
-
-  const remember = useCallback((id: string, value: boolean) => {
-    try { localStorage.setItem(`${CACHE_PREFIX}${id}`, String(value)); } catch { /* ignore */ }
-  }, []);
 
   const check = useCallback(async () => {
     if (inFlight.current) return;
@@ -66,12 +49,12 @@ export function useFounderRole() {
         } else {
           const value = (rows || []).some((r: any) => r.role === 'founder');
           setIsFounder(value);
-          remember(user.id, value);
+          writeRoleCache('founder', user.id, value);
         }
       } else {
         const value = data === true;
         setIsFounder(value);
-        remember(user.id, value);
+        writeRoleCache('founder', user.id, value);
       }
     } catch {
       if (isFounder === null) setIsFounder(null);
@@ -79,9 +62,10 @@ export function useFounderRole() {
       inFlight.current = false;
       setIsLoading(false);
     }
-  }, [user, isFounder, remember]);
+  }, [user, isFounder]);
 
   useEffect(() => {
+    purgeLegacyRoleCache();
     if (authLoading) return;
     if (!user) {
       lastCheckedUser.current = null;
@@ -93,18 +77,11 @@ export function useFounderRole() {
     // not restart the guard.
     if (lastCheckedUser.current === user.id) return;
     lastCheckedUser.current = user.id;
+    const cached = readRoleCache('founder', user.id);
+    if (cached !== null && isFounder === null) setIsFounder(cached);
     void check();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authLoading, user?.id]);
-
-  useEffect(() => {
-    if (!cacheKey) return;
-    try {
-      const cached = localStorage.getItem(cacheKey);
-      if (cached !== null && isFounder === null) setIsFounder(cached === 'true');
-    } catch { /* ignore */ }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cacheKey]);
 
   return {
     isFounder: isFounder === true,

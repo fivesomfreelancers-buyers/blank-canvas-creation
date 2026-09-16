@@ -73,9 +73,9 @@ const titles: Record<TabKey, string> = {
 const FounderDashboardInner = () => {
   const [activeTab, setActiveTabState] = useState<TabKey>(() => {
     try {
-      const hash = window.location.hash.replace('#', '') as TabKey;
-      const stored = localStorage.getItem('fivesom.founder.tab') as TabKey | null;
-      const candidate = (hash || stored) as TabKey;
+      // Remembered in the URL hash only — nothing founder-related is stored in
+      // the browser.
+      const candidate = window.location.hash.replace('#', '') as TabKey;
       return candidate && candidate in titles ? candidate : 'overview';
     } catch { return 'overview'; }
   });
@@ -83,7 +83,6 @@ const FounderDashboardInner = () => {
   const setActiveTab = (key: TabKey) => {
     setActiveTabState(key);
     try {
-      localStorage.setItem('fivesom.founder.tab', key);
       window.history.replaceState(null, '', `#${key}`);
     } catch { /* ignore */ }
   };

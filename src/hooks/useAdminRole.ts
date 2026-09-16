@@ -1,19 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-
-const CACHE_PREFIX = 'fivesom.isAdmin.';
+import { purgeLegacyRoleCache, readRoleCache, writeRoleCache } from '@/lib/roleCache';
 
 /**
  * Single source of truth for "is the current user an admin?".
  *
+ * Security model: this hook only controls what the UI *renders*. Authorization
+ * is enforced exclusively in Postgres (RLS + security-definer functions that
+ * re-check `is_admin_user(auth.uid())`). Because of that, the answer is never
+ * persisted to localStorage — it lives in memory for the tab's lifetime only,
+ * so nothing in browser storage advertises or can fake privilege status.
+ *
  * Reliability rules:
  * - Resolves through the `has_role` security-definer RPC (admin + super_admin),
- *   with a direct `user_roles` read as a fallback so a single failing path can
- *   never make the badge disappear.
- * - Retries transient failures instead of returning `false` (that false was the
- *   root cause of the badge flickering away on refresh / token refresh).
- * - Caches the last known answer per user id so a refresh renders the badge
- *   immediately instead of flashing empty while the network call is in flight.
+ *   with a direct `user_roles` read as a fallback.
+ * - Retries transient failures instead of returning `false`.
  * - Never clears a known-true value because of an error — only an explicit
  *   negative answer from the server, or a sign-out, does that.
  */
@@ -55,8 +56,9 @@ export function useAdminRole() {
       }
       setUserId(user.id);
 
-      const cached = localStorage.getItem(CACHE_PREFIX + user.id);
-      if (cached !== null && isAdmin === null) setIsAdmin(cached === 'true');
+      // In-memory only (never written to disk).
+      const cached = readRoleCache('admin', user.id);
+      if (cached !== null && isAdmin === null) setIsAdmin(cached);
 
       const result = await resolve(user.id);
       if (result === null) {
@@ -68,7 +70,7 @@ export function useAdminRole() {
         setIsAdmin((prev) => (prev === null ? false : prev));
       } else {
         setIsAdmin(result);
-        localStorage.setItem(CACHE_PREFIX + user.id, String(result));
+        writeRoleCache('admin', user.id, result);
       }
     } finally {
       setIsLoading(false);
@@ -77,6 +79,7 @@ export function useAdminRole() {
   }, [isAdmin, resolve]);
 
   useEffect(() => {
+    purgeLegacyRoleCache();
     check();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT' || !session?.user) {
