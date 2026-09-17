@@ -1,1945 +1,1085 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  Info, Workflow, UserPlus, IdCard, ShieldCheck, Briefcase, ShoppingCart,
-  MessageSquare, Wallet, ListChecks, Star, Lock, Users, Scale, Trophy,
-  BadgeCheck, LifeBuoy, HelpCircle, Globe, ArrowRight, Menu, X, CheckCircle2,
-  Lightbulb, Smartphone
+  ArrowRight,
+  BadgeCheck,
+  Banknote,
+  BookOpen,
+  BriefcaseBusiness,
+  CheckCircle2,
+  ChevronRight,
+  CreditCard,
+  FileCheck2,
+  FileText,
+  HelpCircle,
+  IdCard,
+  LifeBuoy,
+  LockKeyhole,
+  Menu,
+  MessageSquare,
+  PackageCheck,
+  RotateCcw,
+  Search,
+  ShieldCheck,
+  SlidersHorizontal,
+  Star,
+  Trophy,
+  UploadCloud,
+  UserPlus,
+  Wallet,
+  X,
+  type LucideIcon,
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
-import SEO from '@/components/SEO';
+import SEO, { SITE_URL } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Card, CardContent } from '@/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-
-// Section media — CDN-hosted assets provided by the product team
-import { howWorksPng as howWorksImg } from '@/lib/mediaUrls';
-import { escrowPng as escrowImg } from '@/lib/mediaUrls';
-import { reviewsPng as reviewsImg } from '@/lib/mediaUrls';
-import { securityPng as securityImg } from '@/lib/mediaUrls';
-import { accountMp4 as accountVid } from '@/lib/mediaUrls';
-import { gigMp4 as gigVid } from '@/lib/mediaUrls';
-import { orderingMp4 as orderingVid } from '@/lib/mediaUrls';
-import { messagingMp4 as messagingVid } from '@/lib/mediaUrls';
-import { ordersMp4 as ordersVid } from '@/lib/mediaUrls';
-import { disputeMp4 as disputeVid } from '@/lib/mediaUrls';
-import { withdrawMoneyMp4 as withdrawMoneyVid } from '@/lib/mediaUrls';
-import { buyerAcceptMp4 as buyerAcceptVid } from '@/lib/mediaUrls';
-import { docsIntroPng as docsIntroImg } from '@/lib/mediaUrls';
-import { docsProfilePng as docsProfileImg } from '@/lib/mediaUrls';
-import { docsPaymentPng as docsPaymentImg } from '@/lib/mediaUrls';
-import { docsCommunityPng as docsCommunityImg } from '@/lib/mediaUrls';
-import { docsLevelsPng as docsLevelsImg } from '@/lib/mediaUrls';
-import { docsSupportPng as docsSupportImg } from '@/lib/mediaUrls';
 import SmartVideo from '@/components/media/SmartVideo';
-import SmartImage from '@/components/media/SmartImage';
+import {
+  accountMp4 as accountVideo,
+  buyerAcceptMp4 as buyerAcceptVideo,
+  disputeMp4 as disputeVideo,
+  gigMp4 as gigVideo,
+  messagingMp4 as messagingVideo,
+  orderingMp4 as orderingVideo,
+  ordersMp4 as ordersVideo,
+  withdrawMoneyMp4 as withdrawalVideo,
+} from '@/lib/mediaUrls';
 
-// Legacy illustrations kept for the sections that still use a static image
-const imgIntro = docsIntroImg.url;
-const imgHow = howWorksImg.url;
-const imgProfile = docsProfileImg.url;
-const imgEscrow = escrowImg.url;
-const imgPayment = docsPaymentImg.url;
-const imgReviews = reviewsImg.url;
-const imgSecurity = securityImg.url;
-const imgCommunity = docsCommunityImg.url;
-const imgLevels = docsLevelsImg.url;
-const imgTick = docsLevelsImg.url;
-const imgSupport = docsSupportImg.url;
-const imgFaq = docsSupportImg.url;
+type TopicGroup =
+  | 'Getting Started'
+  | 'Freelancers'
+  | 'Buyers'
+  | 'Orders & Delivery'
+  | 'Payments & Security'
+  | 'Verification & VIP'
+  | 'Support';
 
-type Lang = 'en' | 'so' | 'ar' | 'fr';
-
-interface SectionContent {
-  title: string;
-  subtitle: string;
-  description: string[]; // paragraphs
-  steps: { title: string; body: string }[];
-  bullets: string[];
-  tip?: string;
-  faqs?: { q: string; a: string }[];
+interface TopicSection {
+  heading: string;
+  body?: string;
+  bullets?: string[];
 }
 
-interface Section {
+interface Topic {
   id: string;
-  icon: React.ElementType;
-  /** Static illustration. Omitted for text-only sections. */
-  image?: string;
-  /** Tutorial video (MP4). Takes priority over `image` when present. */
+  group: TopicGroup;
+  title: string;
+  eyebrow: string;
+  summary: string;
+  icon: LucideIcon;
   video?: string;
-  cta?: { label: Record<Lang, string>; to: string };
-  t: Record<Lang, SectionContent>;
+  videoLabel?: string;
+  cta?: { label: string; to: string };
+  sections: TopicSection[];
+  related: string[];
 }
 
-
-const SECTIONS: Section[] = [
+const TOPICS: Topic[] = [
   {
-    id: 'intro', icon: Info, image: imgIntro, cta: { label: { en: 'Explore Services', so: 'Eeg Adeegyada', ar: 'تصفح الخدمات', fr: 'Explorer les services' }, to: '/explore' },
-    t: {
-      en: {
-        title: '1. Introduction / About FIVESOM',
-        subtitle: 'A trusted Somali freelance marketplace built for the modern digital economy.',
-        description: [
-          'FIVESOM is the first professional freelance marketplace built specifically for the Somali market. It connects skilled freelancers — designers, video editors, web developers, writers and more — with clients and businesses who need quality work delivered online, safely and on time.',
-          'We built FIVESOM because young Somalis have world-class skills but lacked a local platform that understood their language, their payment methods, and the trust signals that matter in this market. International platforms often block Somali users, hold payouts, or charge unaffordable fees. FIVESOM removes those barriers.',
-          'For freelancers, FIVESOM is a way to turn skills into real income — paid in trusted local methods, with a public profile that builds reputation order after order. For clients and businesses, it is a fast, affordable way to hire vetted talent without leaving the country.',
-        ],
-        steps: [
-          { title: 'For freelancers', body: 'Create a profile, list your services as gigs, and start earning from real clients.' },
-          { title: 'For buyers', body: 'Search any service, message the freelancer, and pay safely through our escrow system.' },
-          { title: 'For businesses', body: 'Hire designers, video editors, developers and writers on demand — without long-term contracts.' },
-        ],
+    id: 'getting-started',
+    group: 'Getting Started',
+    title: 'Getting Started with FIVESOM',
+    eyebrow: 'Platform overview',
+    summary: 'Understand what FIVESOM is, who it serves, and how work moves safely from discovery to payment release.',
+    icon: BookOpen,
+    cta: { label: 'See how FIVESOM works', to: '/how-it-works' },
+    sections: [
+      {
+        heading: 'What is FIVESOM?',
+        body: 'FIVESOM is a freelance marketplace for clients and skilled freelancers. Buyers find services, freelancers publish gigs, and every paid order is tracked through the platform from requirements to delivery.',
+      },
+      {
+        heading: 'How the platform works',
         bullets: [
-          'Built for the Somali market — local language, local payments, local support.',
-          'Lower fees than international platforms.',
-          'Escrow protects every order from start to finish.',
-          'Verified freelancers with real portfolios and reviews.',
+          'A buyer finds a gig or freelancer and chooses a service package.',
+          'The buyer pays through FIVESOM so the order can be protected by escrow.',
+          'The freelancer receives the requirements, completes the work, and submits the delivery.',
+          'The buyer reviews the delivery, accepts it, requests a revision, or opens a dispute if needed.',
         ],
-        tip: 'New here? Start by exploring services to see what freelancers can do for you.',
       },
-      so: {
-        title: '1. Hordhac / Ku saabsan FIVESOM',
-        subtitle: 'Madasha ugu horeysa ee freelancing ah oo loogu talagalay suuqa Soomaalida.',
-        description: [
-          'FIVESOM waa madasha ugu horeysa ee xirfadeed ee freelance marketplace ah oo si gaar ah loogu sameeyay suuqa Soomaalida. Waxay isku xirtaa freelancers xirfad leh — designers, video editors, web developers, qoraayaal iyo kuwo kale — iyo macaamiisha iyo shirkadaha u baahan shaqo tayo leh oo si ammaan ah online ah loo geeyo.',
-          'Waxaan u dhisnay FIVESOM sababtoo ah dhalinyarada Soomaaliyeed waxay leeyihiin xirfado heer caalami ah laakiin ma haynin madal maxalli ah oo fahanta luqaddooda, hababka lacag-bixinta, iyo calaamadaha kalsoonida ee suuqan muhiimka ah. Madalaha caalamiga ah ayaa inta badan xira isticmaaleyaasha Soomaalida ah, ama hayaa lacagaha, ama qaata fees aan la awoodi karin. FIVESOM wuxuu ka saaraa caqabadahaas.',
-          'Freelancer-rada, FIVESOM waa hab xirfado loogu beddelo dakhli dhab ah — la siiyo hababka maxaliga ah ee la aamini karo, oo leh profile bulshada u furan oo dhisaya sumcad order kasta kadib. Macaamiisha iyo shirkadaha, waa hab dhakhso ah oo jaban oo lagu shaqaaleysiiyo karti la xaqiijiyay iyada oo aan dalka laga bixin.',
-        ],
-        steps: [
-          { title: 'Freelancer-rada', body: 'Samee profile, soo bandhig adeegyadaada gigs ahaan, oo ka bilow inaad lacag ka kasbato macaamiil dhab ah.' },
-          { title: 'Macaamiisha', body: 'Raadi adeeg kasta, la hadal freelancer-ka, oo si ammaan ah u bixi nidaamka escrow.' },
-          { title: 'Shirkadaha', body: 'Shaqaaleysii designers, video editors, developers iyo writers marka loo baahdo — bilaa heshiis dheer.' },
-        ],
-        bullets: [
-          'Loogu talagalay suuqa Soomaalida — luuqad maxalli, lacag maxalli, taageero maxalli.',
-          'Fees ka hooseeya madalaha caalamiga.',
-          'Escrow wuxuu ilaaliyaa order kasta bilowga ilaa dhammaadka.',
-          'Freelancers la xaqiijiyay oo leh portfolio iyo reviews dhab ah.',
-        ],
-        tip: 'Cusub halkan? Bilow inaad raadiso adeegyada si aad u aragto waxa freelancers kuu samayn karaan.',
+      {
+        heading: 'What happens next?',
+        body: 'Start by creating an account, then choose whether you want to hire freelancers, sell your skills, or do both from the same FIVESOM account.',
       },
-      ar: {
-        title: '1. مقدمة / حول FIVESOM',
-        subtitle: 'منصة عمل حر صومالية موثوقة لاقتصاد رقمي حديث.',
-        description: [
-          'FIVESOM هي أول منصة عمل حر احترافية مبنية خصيصًا للسوق الصومالي. تربط المستقلين الموهوبين — مصممين ومحرري فيديو ومطوري ويب وكتّاب — بالعملاء والشركات الذين يحتاجون عملاً عالي الجودة عبر الإنترنت بأمان وفي الوقت المحدد.',
-          'بنينا FIVESOM لأن الشباب الصومالي لديهم مهارات عالمية لكن افتقروا إلى منصة محلية تفهم لغتهم ووسائل دفعهم وعوامل الثقة المهمة في هذا السوق. المنصات الدولية غالبًا تحظر المستخدمين الصوماليين أو تحجز المدفوعات أو تفرض رسومًا باهظة. FIVESOM يزيل تلك الحواجز.',
-        ],
-        steps: [
-          { title: 'للمستقلين', body: 'أنشئ ملفًا، أدرج خدماتك، وابدأ كسب دخل حقيقي.' },
-          { title: 'للمشترين', body: 'ابحث عن أي خدمة، تحدث مع المستقل، وادفع بأمان عبر الضمان.' },
-          { title: 'للشركات', body: 'وظّف مصممين ومحررين ومطوّرين وكتّابًا حسب الطلب.' },
-        ],
-        bullets: ['مبنية للسوق الصومالي.', 'رسوم أقل من المنصات الدولية.', 'الضمان يحمي كل طلب.', 'مستقلون موثّقون بأعمال وتقييمات.'],
-        tip: 'جديد هنا؟ ابدأ بتصفح الخدمات.',
-      },
-      fr: {
-        title: '1. Introduction / À propos de FIVESOM',
-        subtitle: 'Une marketplace freelance somalienne de confiance pour l\'économie numérique moderne.',
-        description: [
-          'FIVESOM est la première marketplace freelance professionnelle conçue spécifiquement pour le marché somalien. Elle connecte des freelances qualifiés — designers, monteurs vidéo, développeurs web, rédacteurs — avec des clients et entreprises qui ont besoin de travail de qualité livré en ligne, en toute sécurité.',
-          'Nous avons créé FIVESOM parce que les jeunes Somaliens ont des compétences de classe mondiale mais manquaient d\'une plateforme locale qui comprenne leur langue, leurs moyens de paiement et les signaux de confiance qui comptent. Les plateformes internationales bloquent souvent les utilisateurs somaliens ou retiennent les paiements. FIVESOM élimine ces obstacles.',
-        ],
-        steps: [
-          { title: 'Pour les freelances', body: 'Créez un profil, publiez vos services et commencez à gagner.' },
-          { title: 'Pour les acheteurs', body: 'Cherchez un service, discutez et payez en toute sécurité.' },
-          { title: 'Pour les entreprises', body: 'Engagez des talents à la demande sans contrats longs.' },
-        ],
-        bullets: ['Conçue pour le marché somalien.', 'Frais réduits.', 'Séquestre sur chaque commande.', 'Freelances vérifiés.'],
-        tip: 'Nouveau ? Commencez par explorer les services.',
-      },
-    },
+    ],
+    related: ['creating-account', 'finding-freelancers', 'freelancer-profile'],
   },
   {
-    id: 'how-works', icon: Workflow, image: imgHow, cta: { label: { en: 'See How It Works', so: 'Arag Sida Uu U Shaqeeyo', ar: 'انظر كيف يعمل', fr: 'Voir comment ça marche' }, to: '/how-it-works' },
-    t: {
-      en: {
-        title: '2. How FIVESOM Works',
-        subtitle: 'A simple, safe flow from signup to completed order.',
-        description: [
-          'FIVESOM is built around a single goal: make it easy for buyers to hire and freelancers to get paid, with full protection at every step. Our system handles the messy parts — escrow, communication, delivery tracking, refunds — so you can focus on the work.',
-          'The full lifecycle takes you from signing up, through finding or creating a service, ordering or accepting work, communicating securely, delivering files, getting paid, and finally leaving a review that builds long-term reputation.',
-        ],
-        steps: [
-          { title: 'Sign up & choose role', body: 'Create your account in seconds with Google and pick Buyer or Freelancer.' },
-          { title: 'Discover or list services', body: 'Buyers search the marketplace; freelancers create gigs with packages and pricing.' },
-          { title: 'Order & pay into escrow', body: 'Buyers place orders, and funds are held safely in FIVESOM\'s escrow wallet.' },
-          { title: 'Communicate & deliver', body: 'Both sides chat in real time and exchange files until the work is completed.' },
-          { title: 'Approve & release payment', body: 'Once the buyer accepts the delivery, the funds are released to the freelancer\'s wallet.' },
-          { title: 'Review & grow', body: 'Buyers leave a public rating that helps freelancers level up and earn more.' },
-        ],
+    id: 'creating-account',
+    group: 'Getting Started',
+    title: 'Creating Your Account',
+    eyebrow: 'Account setup',
+    summary: 'Create a FIVESOM account, choose your role, and prepare your profile for buying or selling services.',
+    icon: UserPlus,
+    video: accountVideo.url,
+    videoLabel: 'Creating a FIVESOM account tutorial',
+    cta: { label: 'Create an account', to: '/register' },
+    sections: [
+      {
+        heading: 'What is this?',
+        body: 'Your FIVESOM account is the identity you use to buy gigs, publish services, message users, manage orders, and receive platform notifications.',
+      },
+      {
+        heading: 'Steps to create an account',
         bullets: [
-          'Every order is protected by escrow.',
-          'Real-time chat keeps both sides aligned.',
-          'Disputes can be opened at any stage if something goes wrong.',
-          'All activity is tracked in your dashboard.',
+          'Open the registration page and continue with the available sign-in option.',
+          'Choose the role you need first: buyer, freelancer, or upgrade later when needed.',
+          'Add your name, profile photo, location, and short bio so other users know who they are working with.',
+          'Review your account settings and keep your login protected.',
         ],
-        tip: 'You can switch between Buyer and Freelancer modes from your account settings.',
       },
-      so: {
-        title: '2. Sida FIVESOM U Shaqeeyo',
-        subtitle: 'Hannaan fudud oo ammaan ah laga bilaabo signup ilaa order la dhammaystiro.',
-        description: [
-          'FIVESOM waxaa lagu dhisay yool kaliya: ka dhig fudud macaamiisha inay shaqaaleeyaan iyo freelancers inay lacag helaan, oo leh ilaalin buuxda talaabo kasta. Nidaamkayaga ayaa qabta qaybaha adag — escrow, isgaarsiin, raadraaca delivery-ga, refunds — si aad ugu fiirsato shaqada.',
-          'Wareegga oo dhan wuxuu kaa kaxaynayaa diiwaangelinta, ilaa raadinta ama abuurista adeeg, dalbashada ama aqbalida shaqada, isgaarsiinta ammaan ah, geynta files-ka, helitaanka lacagta, iyo ugu dambeyntii reefaying-ga sumcad la dhiso.',
-        ],
-        steps: [
-          { title: 'Diiwaangeli & dooro doorka', body: 'Samee akoon ilbiriqsiyo Google oo dooro Macmiil ama Freelancer.' },
-          { title: 'Hel ama soo bandhig adeegyo', body: 'Macaamiisha raadiyaan suuqa; freelancers samayn gigs leh packages iyo qiimo.' },
-          { title: 'Dalbo & bixi escrow', body: 'Macaamiil dalbada, oo lacagta si ammaan ah loo hayaa wallet-ka FIVESOM.' },
-          { title: 'Isgaarsii & geyn', body: 'Labadaba waxay sheekeeyaan real-time oo wadaagaan files ilaa shaqada la dhammaystiro.' },
-          { title: 'Oggolow & sii daa lacagta', body: 'Marka macmiilku aqbalo delivery-ga, lacagta waxaa loo siinayaa wallet-ka freelancer-ka.' },
-          { title: 'Reefaay & koror', body: 'Macaamiisha waxay ka tagaan qiimayn dadweyne oo caawiya freelancers inay heerar koraan.' },
-        ],
-        bullets: [
-          'Order kasta waxaa ilaaliya escrow.',
-          'Sheekada real-time waxay isku xirtaa labadaba.',
-          'Khilaaf waa la furi karaa marka wax khaldamaan.',
-          'Dhammaan dhaqdhaqaaqa waxaa lagu raadrayn karaa dashboard-kaaga.',
-        ],
-        tip: 'Waad isku bedeli kartaa Buyer iyo Freelancer mode dejinta akoonka.',
+      {
+        heading: 'What happens next?',
+        body: 'Buyers can start browsing services immediately. Freelancers should complete their profile before publishing a gig so buyers see a professional first impression.',
       },
-      ar: {
-        title: '2. كيف يعمل FIVESOM',
-        subtitle: 'تدفق بسيط وآمن من التسجيل إلى إتمام الطلب.',
-        description: ['FIVESOM مصمم لجعل التوظيف والدفع سهلًا وآمنًا في كل خطوة.', 'تأخذك دورة الحياة الكاملة من التسجيل إلى المراجعة النهائية.'],
-        steps: [
-          { title: 'التسجيل', body: 'أنشئ حسابك واختر دورك.' },
-          { title: 'البحث أو النشر', body: 'ابحث عن خدمة أو أنشئ خدمتك.' },
-          { title: 'الدفع في الضمان', body: 'يتم حفظ الأموال بأمان.' },
-          { title: 'التواصل والتسليم', body: 'دردشة مباشرة وتبادل الملفات.' },
-          { title: 'الموافقة والإفراج', body: 'تحويل الأموال بعد القبول.' },
-          { title: 'التقييم', body: 'تقييم يبني السمعة.' },
-        ],
-        bullets: ['كل طلب محمي بالضمان.', 'دردشة فورية.', 'يمكن فتح نزاع في أي وقت.', 'كل النشاط في لوحتك.'],
-      },
-      fr: {
-        title: '2. Comment FIVESOM Fonctionne',
-        subtitle: 'Un flux simple et sûr de l\'inscription à la commande terminée.',
-        description: ['FIVESOM facilite l\'embauche et le paiement avec protection complète à chaque étape.', 'Le cycle complet va de l\'inscription jusqu\'à l\'avis final.'],
-        steps: [
-          { title: 'Inscription', body: 'Créez votre compte et choisissez votre rôle.' },
-          { title: 'Découvrir ou publier', body: 'Cherchez ou créez un service.' },
-          { title: 'Paiement en séquestre', body: 'Fonds sécurisés.' },
-          { title: 'Communication et livraison', body: 'Chat et échange de fichiers.' },
-          { title: 'Approbation', body: 'Libération des fonds après acceptation.' },
-          { title: 'Avis', body: 'L\'avis construit la réputation.' },
-        ],
-        bullets: ['Chaque commande protégée.', 'Chat temps réel.', 'Litige possible à tout moment.', 'Tout suivi dans votre tableau.'],
-      },
-    },
+    ],
+    related: ['account-security', 'freelancer-profile', 'finding-freelancers'],
   },
   {
-    id: 'account', icon: UserPlus, video: accountVid.url, cta: { label: { en: 'Create Account', so: 'Sameey Akoon', ar: 'إنشاء حساب', fr: 'Créer un compte' }, to: '/register' },
-    t: {
-      en: {
-        title: '3. Account Creation Guide',
-        subtitle: 'Set up a secure FIVESOM account in under one minute.',
-        description: [
-          'Creating an account on FIVESOM is fast, free, and secure. We use Google authentication so you don\'t have to remember another password — your account is protected by Google\'s industry-leading security.',
-          'Once you sign up, you choose a role: Buyer if you want to hire freelancers, or Freelancer if you want to offer services. You can complete additional profile details (photo, location, languages) later from your dashboard.',
-        ],
-        steps: [
-          { title: 'Click "Sign up"', body: 'On the homepage, click Sign Up at the top right.' },
-          { title: 'Continue with Google', body: 'Choose your Google account — no separate password needed.' },
-          { title: 'Choose your role', body: 'Select Buyer or Freelancer. You can add the other role later.' },
-          { title: 'Complete your profile', body: 'Add a photo, location, and short bio so others recognize you.' },
-        ],
+    id: 'account-security',
+    group: 'Getting Started',
+    title: 'Account & Security',
+    eyebrow: 'Privacy and protection',
+    summary: 'Keep your account safe and understand which information is public, private, or used only for platform security.',
+    icon: LockKeyhole,
+    cta: { label: 'Read privacy policy', to: '/legal/privacy' },
+    sections: [
+      {
+        heading: 'What is protected?',
+        body: 'FIVESOM separates public profile information from private account, payment, order, and verification data. Sensitive files such as identity documents and order attachments are not shown publicly.',
+      },
+      {
+        heading: 'How to protect your account',
         bullets: [
-          'No email/password to remember — just Google sign-in.',
-          'Choose Buyer or Freelancer (or both later).',
-          'Verified email is automatic.',
-          'You can edit your profile any time.',
+          'Use the official FIVESOM website and do not share your login session with anyone.',
+          'Keep all order communication and file exchange inside the platform.',
+          'Ignore requests to move payments or delivery outside FIVESOM.',
+          'Report suspicious profiles, fake portfolios, or payment requests immediately.',
         ],
-        tip: 'A clear profile photo and a real name dramatically increase trust and order rate.',
       },
-      so: {
-        title: '3. Hagaha Abuurista Akoonka',
-        subtitle: 'U dejinta akoon FIVESOM ammaan ah daqiiqad gudaheed.',
-        description: [
-          'Abuurista akoon FIVESOM waa dhakhso, bilaash, ammaanna. Waxaan isticmaaleyaa Google authentication si aadan u xasuusan password kale — akoonkaaga waxaa ilaaliya ammaanka Google.',
-          'Markaad signup-tid, waxaad doorataa door: Macmiil haddii aad rabto inaad shaqaaleyso freelancers, ama Freelancer haddii aad rabto inaad bixiso adeegyo. Faahfaahin profile dheeraad ah waad ku dari kartaa dashboard-ka.',
-        ],
-        steps: [
-          { title: 'Riix "Sign up"', body: 'Bogga hore, riix Sign Up koonaha sare ee bidix.' },
-          { title: 'Ku sii wad Google', body: 'Dooro akoonkaaga Google — password gaar ah looma baahna.' },
-          { title: 'Dooro doorkaaga', body: 'Dooro Macmiil ama Freelancer. Doorka kale waad ku dari kartaa hadhow.' },
-          { title: 'Dhamaystir profile', body: 'Ku dar sawir, goobta, iyo bio gaaban.' },
-        ],
-        bullets: [
-          'Email/password lama xasuusto — kaliya Google.',
-          'Dooro Macmiil ama Freelancer.',
-          'Email-ka si toos ah ayaa loo xaqiijiyay.',
-          'Waad wax ka beddeli kartaa profile-ka mar walba.',
-        ],
-        tip: 'Sawir profile cad iyo magac dhab ah waxay si weyn u kor u qaadayaan kalsoonida.',
+      {
+        heading: 'What happens next?',
+        body: 'If you notice unusual activity, contact FIVESOM Support with the account email, order ID, or gig link so the team can investigate quickly.',
       },
-      ar: {
-        title: '3. دليل إنشاء الحساب',
-        subtitle: 'أنشئ حسابك في أقل من دقيقة.',
-        description: ['نستخدم تسجيل الدخول عبر Google لأمان أعلى.', 'بعد التسجيل اختر دورك: مشتري أو مستقل.'],
-        steps: [
-          { title: 'اضغط "تسجيل"', body: 'في الصفحة الرئيسية.' },
-          { title: 'متابعة عبر Google', body: 'بدون كلمة مرور.' },
-          { title: 'اختر الدور', body: 'مشتري أو مستقل.' },
-          { title: 'أكمل الملف', body: 'صورة وموقع ونبذة.' },
-        ],
-        bullets: ['تسجيل عبر Google.', 'مشتري أو مستقل.', 'تحقق تلقائي.', 'تعديل الملف في أي وقت.'],
-        tip: 'صورة واضحة واسم حقيقي يزيدان الثقة.',
-      },
-      fr: {
-        title: '3. Création de compte',
-        subtitle: 'Créez votre compte FIVESOM en moins d\'une minute.',
-        description: ['Inscription via Google pour plus de sécurité.', 'Choisissez Acheteur ou Freelance après inscription.'],
-        steps: [
-          { title: 'Cliquez "S\'inscrire"', body: 'Sur la page d\'accueil.' },
-          { title: 'Continuer avec Google', body: 'Pas de mot de passe.' },
-          { title: 'Choisissez le rôle', body: 'Acheteur ou Freelance.' },
-          { title: 'Complétez le profil', body: 'Photo, lieu, bio.' },
-        ],
-        bullets: ['Connexion Google.', 'Acheteur ou Freelance.', 'Email vérifié.', 'Modifiable à tout moment.'],
-        tip: 'Une photo claire augmente la confiance.',
-      },
-    },
+    ],
+    related: ['privacy-trust', 'support', 'escrow-payments'],
   },
   {
-    id: 'profile', icon: IdCard, image: imgProfile, cta: { label: { en: 'Edit Profile', so: 'Wax ka Beddel Profile', ar: 'تعديل الملف', fr: 'Modifier le profil' }, to: '/freelancer/profile' },
-    t: {
-      en: {
-        title: '4. Freelancer Profile Setup',
-        subtitle: 'Your profile is your shopfront. Make it impossible to ignore.',
-        description: [
-          'Buyers decide whether to message you in seconds. A complete, professional profile dramatically increases your order rate, your prices, and your overall reputation on FIVESOM.',
-          'A great profile includes a sharp profile photo, a clear professional title, a confident bio, the right skills and languages, real portfolio samples, and an honest list of the software and tools you use. Verification adds a blue tick that signals serious professionalism.',
-        ],
-        steps: [
-          { title: 'Profile photo', body: 'Use a clean, well-lit photo of your face. Avoid logos and stock images.' },
-          { title: 'Professional title', body: 'Be specific: "Brand Logo Designer" beats "Designer".' },
-          { title: 'Bio', body: 'Write 3–5 sentences explaining what you do, who you help, and why clients choose you.' },
-          { title: 'Skills & languages', body: 'Pick the skills clients actually search for. Add every language you can work in.' },
-          { title: 'Portfolio', body: 'Upload at least 4–6 high-quality samples that prove your skills.' },
-          { title: 'Software tools', body: 'List the real tools you use (Photoshop, Figma, Premiere, etc.).' },
-        ],
+    id: 'freelancer-profile',
+    group: 'Freelancers',
+    title: 'Freelancer Profile',
+    eyebrow: 'Seller foundation',
+    summary: 'Build a profile that clearly explains your skills, experience, languages, tools, portfolio, and trust signals.',
+    icon: IdCard,
+    cta: { label: 'Edit freelancer profile', to: '/freelancer/profile' },
+    sections: [
+      {
+        heading: 'Why the profile matters',
+        body: 'Your profile is the first place buyers judge whether you look professional and trustworthy. A complete profile helps buyers understand what you do before they open a gig.',
+      },
+      {
+        heading: 'What to complete',
         bullets: [
-          'Real photo + real name = higher trust.',
-          'Specific titles convert better than generic ones.',
-          'Portfolio samples must be your own work.',
-          'Verified accounts get featured more often.',
+          'Use a clear profile photo and a professional display name.',
+          'Write a specific title such as Brand Logo Designer or React Web Developer.',
+          'Add a short bio explaining who you help and what results you deliver.',
+          'List relevant skills, languages, tools, and portfolio samples that prove your work quality.',
         ],
-        tip: 'Get verified as soon as possible — verified freelancers earn significantly more orders.',
       },
-      so: {
-        title: '4. Diyaarinta Profile-ka Freelancer',
-        subtitle: 'Profile-kaagu waa shop-front-kaaga. Ka dhig mid aan la iska indho-tiri karin.',
-        description: [
-          'Macaamiisha waxay ku go\'aansadaan inay ku la xiriiraan ilbiriqsiyo gudaha. Profile dhamaystiran oo xirfad leh ayaa si weyn u kor u qaadaya order rate, qiimaha, iyo sumcaddaada FIVESOM.',
-          'Profile fiican wuxuu leeyahay sawir profile cad, title xirfadeed, bio kalsooni leh, xirfadaha iyo luqadaha saxda ah, tusaalooyin portfolio dhab ah, iyo liis daacad ah oo software-yada aad isticmaasho. Xaqiijinta waxay ku dartaa tick buluug ah oo muujinaya xirfad.',
-        ],
-        steps: [
-          { title: 'Sawir profile', body: 'Isticmaal sawir cad oo wajigaaga muujinaya. Ka fogow logos iyo sawiro stock.' },
-          { title: 'Title xirfadeed', body: 'Noqo gaar: "Brand Logo Designer" wuu ka fiican yahay "Designer".' },
-          { title: 'Bio', body: 'Qor 3–5 sentences sharaxaya waxaad samayso, cidda aad caawiso, iyo sababta loo doorto.' },
-          { title: 'Xirfado & luqado', body: 'Dooro xirfadaha macaamiisha raadiyaan. Ku dar luqad kasta.' },
-          { title: 'Portfolio', body: 'Soo gudbi ugu yaraan 4–6 tusaale tayo sare leh.' },
-          { title: 'Software-yada', body: 'Liiska tools-ka aad isticmaasho (Photoshop, Figma, Premiere, iwm).' },
-        ],
-        bullets: [
-          'Sawir dhab + magac dhab = kalsooni sare.',
-          'Titles gaar ah way ka fiican yihiin generic.',
-          'Portfolio waa inuu shaqadaada noqdaa.',
-          'Akoonnada la xaqiijiyay waxaa lagu xushaa Featured marar badan.',
-        ],
-        tip: 'Hel xaqiijinta sida ugu dhakhsaha — freelancers la xaqiijiyay waxay helaan order badan.',
+      {
+        heading: 'What happens next?',
+        body: 'After your profile is complete, create a gig with clear packages, examples, buyer requirements, and delivery expectations.',
       },
-      ar: {
-        title: '4. إعداد ملف المستقل',
-        subtitle: 'ملفك واجهتك. اجعله لا يُنسى.',
-        description: ['المشتري يقرر في ثوانٍ. ملف احترافي يضاعف طلباتك.', 'يشمل: صورة، عنوان، نبذة، مهارات، أعمال، أدوات.'],
-        steps: [
-          { title: 'الصورة', body: 'صورة واضحة لوجهك.' },
-          { title: 'العنوان المهني', body: 'كن محددًا.' },
-          { title: 'النبذة', body: '3-5 جمل واضحة.' },
-          { title: 'المهارات واللغات', body: 'اختر بعناية.' },
-          { title: 'الأعمال', body: '4-6 نماذج على الأقل.' },
-          { title: 'الأدوات', body: 'اذكر برامجك.' },
-        ],
-        bullets: ['صورة حقيقية تبني الثقة.', 'عنوان محدد يحوّل أفضل.', 'أعمالك يجب أن تكون لك.', 'الموثّقون يحصلون على ترشيح أكثر.'],
-        tip: 'اطلب التوثيق مبكرًا.',
-      },
-      fr: {
-        title: '4. Configurer votre profil',
-        subtitle: 'Votre profil est votre vitrine.',
-        description: ['Les acheteurs décident en quelques secondes.', 'Photo, titre, bio, compétences, portfolio, outils — tout compte.'],
-        steps: [
-          { title: 'Photo', body: 'Photo claire de votre visage.' },
-          { title: 'Titre pro', body: 'Soyez précis.' },
-          { title: 'Bio', body: '3-5 phrases.' },
-          { title: 'Compétences', body: 'Choisissez avec soin.' },
-          { title: 'Portfolio', body: 'Au moins 4-6 exemples.' },
-          { title: 'Outils', body: 'Listez vos logiciels.' },
-        ],
-        bullets: ['Vraie photo = confiance.', 'Titre spécifique = meilleur taux.', 'Vos propres travaux uniquement.', 'Comptes vérifiés mis en avant.'],
-        tip: 'Demandez la vérification rapidement.',
-      },
-    },
+    ],
+    related: ['creating-gig', 'verification-blue-tick', 'earnings-fees'],
   },
   {
-    id: 'escrow', icon: ShieldCheck, image: imgEscrow,
-    t: {
-      en: {
-        title: '5. Secure Escrow',
-        subtitle: 'Your money is protected from the moment you order until the moment you accept.',
-        description: [
-          'Escrow is the heart of FIVESOM\'s trust system. When a buyer pays for an order, the funds are not sent directly to the freelancer. Instead, FIVESOM holds them in a secure escrow wallet. The freelancer can see that the money is locked in and ready, but cannot withdraw it until the buyer accepts the delivery.',
-          'This protects everyone. Buyers know that their money is safe until they actually receive what they paid for. Freelancers know that the buyer cannot disappear after the work is delivered. If anything goes wrong, the FIVESOM dispute team reviews evidence from both sides and decides fairly.',
-        ],
-        steps: [
-          { title: 'Buyer pays', body: 'Funds move from the buyer\'s payment method into FIVESOM escrow.' },
-          { title: 'Freelancer is notified', body: 'The order becomes active and the freelancer can start working.' },
-          { title: 'Work is delivered', body: 'Freelancer uploads files and marks the order as delivered.' },
-          { title: 'Buyer reviews', body: 'Buyer accepts, requests revisions, or opens a dispute.' },
-          { title: 'Funds released', body: 'On acceptance, funds move from escrow to the freelancer\'s wallet.' },
-        ],
+    id: 'creating-gig',
+    group: 'Freelancers',
+    title: 'Creating a Gig',
+    eyebrow: 'Service publishing',
+    summary: 'Turn a service into a clear offer buyers can understand, compare, purchase, and review.',
+    icon: BriefcaseBusiness,
+    video: gigVideo.url,
+    videoLabel: 'Creating a gig on FIVESOM tutorial',
+    cta: { label: 'Create a gig', to: '/create-gig' },
+    sections: [
+      {
+        heading: 'What is a gig?',
+        body: 'A gig is a packaged freelance service. It explains what you offer, which category it belongs to, what each package includes, what the buyer must provide, and how long delivery takes.',
+      },
+      {
+        heading: 'How to build a strong gig',
         bullets: [
-          'Funds locked in escrow until delivery is accepted.',
-          'Refunds possible if work is not delivered.',
-          'Disputes mediated by FIVESOM admins.',
-          'No direct money transfers between users — everything goes through escrow.',
+          'Choose the most accurate category and write a specific service title.',
+          'Explain the outcome the buyer receives, not only the task you perform.',
+          'Add Basic, Standard, and Premium packages with clear deliverables.',
+          'Collect buyer requirements up front so you can start without delays.',
+          'Use portfolio media that shows your own original work.',
         ],
-        tip: 'Never accept off-platform payments. Escrow only protects orders made through FIVESOM.',
       },
-      so: {
-        title: '5. Adeegga Escrow (Sugnaanta Lacagta)',
-        subtitle: 'Lacagtaadu way ammaan tahay laga bilaabo dalbashada ilaa aad aqbasho.',
-        description: [
-          'Escrow waa wadnaha nidaamka kalsoonida FIVESOM. Marka macmiilku bixiyo order, lacagta toos looma diro freelancer-ka. Halkii, FIVESOM wuxuu ku hayaa wallet escrow ammaan ah. Freelancer-ka wuxuu arki karaa in lacagta xidhantahay diyaarna tahay, laakiin ma soo saari karo ilaa macmiilku aqbalo delivery-ga.',
-          'Tani waxay ilaalisaa qof walba. Macaamiil waxay ogyihiin in lacagtoodu ay ammaan tahay. Freelancers waxay ogyihiin in macmiilku ku libaaxi karin shaqada kadib.',
-        ],
-        steps: [
-          { title: 'Macmiilku bixiyaa', body: 'Lacagta waxay ka guurtaa hab lacag bixineed ee macmiilka una guurtaa escrow.' },
-          { title: 'Freelancer waa la wargeliyaa', body: 'Order-ku wuxuu noqdaa active oo freelancer-ku wuxuu bilaabaa shaqada.' },
-          { title: 'Shaqada waa la geeyaa', body: 'Freelancer wuxuu soo gudbiyaa files-ka oo calaamadeeyaa delivered.' },
-          { title: 'Macmiilku eegaa', body: 'Macmiilku aqbali, codsi revision, ama furi khilaaf.' },
-          { title: 'Lacagta la sii daayo', body: 'Marka la aqbalo, lacagta waxay u guurtaa wallet-ka freelancer-ka.' },
-        ],
-        bullets: [
-          'Lacagta escrow waxaa lagu xidhaa ilaa la aqbalo.',
-          'Refund waa suurtagal haddii shaqada aan la geyn.',
-          'Khilaaf waxaa khasab ah admin-ka FIVESOM.',
-          'Lacag toos ah lama wareejiyo — kaliya escrow.',
-        ],
-        tip: 'Weligaa ha aqbalin lacag bixin platform-ka ka baxsan.',
+      {
+        heading: 'What happens next?',
+        body: 'Once published, your gig can appear in search and category pages. Keep the title, thumbnail, packages, and delivery time accurate so buyers know exactly what they are ordering.',
       },
-      ar: {
-        title: '5. الضمان الآمن',
-        subtitle: 'أموالك محمية من الطلب حتى القبول.',
-        description: ['الضمان هو قلب نظام الثقة في FIVESOM.', 'يحمي الطرفين بشكل عادل.'],
-        steps: [
-          { title: 'الدفع', body: 'تنتقل الأموال إلى الضمان.' },
-          { title: 'إشعار المستقل', body: 'يبدأ العمل.' },
-          { title: 'التسليم', body: 'رفع الملفات.' },
-          { title: 'المراجعة', body: 'قبول أو نزاع.' },
-          { title: 'الإفراج', body: 'تحويل للمحفظة.' },
-        ],
-        bullets: ['أموال مغلقة حتى القبول.', 'استرداد ممكن.', 'نزاعات بإشراف الإدارة.', 'لا تحويلات مباشرة.'],
-        tip: 'لا تقبل دفعًا خارج المنصة.',
-      },
-      fr: {
-        title: '5. Séquestre sécurisé',
-        subtitle: 'Votre argent est protégé jusqu\'à acceptation.',
-        description: ['Le séquestre est le cœur du système de confiance.', 'Il protège équitablement les deux parties.'],
-        steps: [
-          { title: 'Paiement', body: 'Fonds en séquestre.' },
-          { title: 'Notification', body: 'Début du travail.' },
-          { title: 'Livraison', body: 'Téléversement des fichiers.' },
-          { title: 'Examen', body: 'Acceptation ou litige.' },
-          { title: 'Libération', body: 'Transfert au portefeuille.' },
-        ],
-        bullets: ['Fonds verrouillés.', 'Remboursement possible.', 'Litiges arbitrés.', 'Aucun transfert direct.'],
-        tip: 'N\'acceptez jamais de paiement hors plateforme.',
-      },
-    },
+    ],
+    related: ['packages-pricing', 'order-requirements', 'delivering-order'],
   },
   {
-    id: 'gig', icon: Briefcase, video: gigVid.url, cta: { label: { en: 'Create a Gig', so: 'Samee Gig', ar: 'إنشاء خدمة', fr: 'Créer un gig' }, to: '/create-gig' },
-    t: {
-      en: {
-        title: '6. Creating a Service (Gig)',
-        subtitle: 'A great gig is the difference between zero orders and a full pipeline.',
-        description: [
-          'A gig is a packaged service you offer on FIVESOM. It tells buyers exactly what you do, what they get, how much it costs, and how long it takes. The clearer your gig, the more orders you get.',
-          'FIVESOM uses a six-step gig wizard so you can build a professional gig step by step: overview, pricing, description, requirements, gallery, and publish. You can edit any part of your gig at any time.',
-        ],
-        steps: [
-          { title: 'Overview', body: 'Pick your category and write a short, specific gig title.' },
-          { title: 'Pricing', body: 'Set Basic, Standard, and Premium packages with clear deliverables.' },
-          { title: 'Description', body: 'Explain what you do and what makes your service worth choosing.' },
-          { title: 'Requirements', body: 'List exactly what you need from buyers to start the work.' },
-          { title: 'Gallery', body: 'Upload images and videos showing your best work. The first image is the thumbnail.' },
-          { title: 'Publish', body: 'Review everything, add tags, and publish. Your gig is live instantly.' },
-        ],
+    id: 'packages-pricing',
+    group: 'Freelancers',
+    title: 'Gig Packages & Pricing',
+    eyebrow: 'Basic, Standard, Premium',
+    summary: 'Use three package tiers to make your offer easy to compare and easier for buyers to purchase.',
+    icon: SlidersHorizontal,
+    sections: [
+      {
+        heading: 'What are packages?',
+        body: 'Packages are the pricing tiers on a gig. They help buyers choose the level of service they need without negotiating every detail from zero.',
+      },
+      {
+        heading: 'How to structure packages',
         bullets: [
-          'Three pricing tiers (Basic / Standard / Premium) increase average order value.',
-          'Buyer requirements collected up front prevent revisions.',
-          'High-quality thumbnails increase clicks dramatically.',
-          'Tags help buyers find you in search.',
+          'Basic should solve the smallest version of the buyer problem.',
+          'Standard should be the best value for most buyers.',
+          'Premium should include the most complete delivery, faster turnaround, or extra deliverables.',
+          'Each tier should list delivery time, included items, revisions, and any limits clearly.',
         ],
-        tip: 'Look at top-ranked gigs in your category and study what makes them stand out.',
       },
-      so: {
-        title: '6. Abuurista Adeeg (Gig)',
-        subtitle: 'Gig fiican waa kala duwanaanta order-yaal jirin iyo pipeline buuxa.',
-        description: [
-          'Gig waa adeeg packaged ah oo aad FIVESOM ku bixiso. Wuxuu macaamiisha u sheegayaa waxa aad samayso, waxa ay helayaan, qiimaha, iyo waqtiga.',
-          'FIVESOM wuxuu isticmaalaa lix-tallaabo gig wizard si aad u dhisto gig xirfadeed: overview, qiime, sharaxaad, shuruudo, gallery, iyo publish.',
-        ],
-        steps: [
-          { title: 'Overview', body: 'Dooro qaybta oo qor gig title gaaban gaarna.' },
-          { title: 'Qiimaha', body: 'Dej Basic, Standard, Premium packages.' },
-          { title: 'Sharaxaad', body: 'Sharax waxa aad samayso.' },
-          { title: 'Shuruudo', body: 'Liiska waxa aad uga baahan tahay macaamiisha.' },
-          { title: 'Gallery', body: 'Soo gudbi sawiro iyo videos. Sawirka kowaad waa thumbnail.' },
-          { title: 'Publish', body: 'Eeg dhammaan oo daabac.' },
-        ],
-        bullets: [
-          'Saddex heer qiime waxay kor u qaadaan qiimaha order-ka.',
-          'Shuruudaha hore loo qabto waxay yareeyaan revisions.',
-          'Thumbnail tayo sare leh waxay kordhinayaan clicks.',
-          'Tags waxay caawiyaan macaamiisha inay ku helaan search.',
-        ],
-        tip: 'Eeg gigs-ka heerka sare ee qaybtaada oo baro waxa ka dhiga gaar.',
+      {
+        heading: 'What happens next?',
+        body: 'When a buyer orders a package, its price and deliverables become part of the order record. Keep package details realistic so disputes are easier to avoid.',
       },
-      ar: {
-        title: '6. إنشاء خدمة',
-        subtitle: 'خدمة رائعة = طلبات أكثر.',
-        description: ['الخدمة باقة محددة من العمل.', 'ست خطوات لإنشاء خدمة احترافية.'],
-        steps: [
-          { title: 'نظرة عامة', body: 'اختر الفئة والعنوان.' },
-          { title: 'التسعير', body: 'ثلاث باقات.' },
-          { title: 'الوصف', body: 'اشرح خدمتك.' },
-          { title: 'المتطلبات', body: 'ما تحتاجه من المشتري.' },
-          { title: 'المعرض', body: 'صور وفيديوهات.' },
-          { title: 'النشر', body: 'مراجعة ونشر.' },
-        ],
-        bullets: ['ثلاث باقات.', 'متطلبات مسبقة.', 'صور جودة عالية.', 'وسوم للبحث.'],
-        tip: 'ادرس الخدمات الناجحة.',
-      },
-      fr: {
-        title: '6. Créer un service',
-        subtitle: 'Un bon gig fait la différence.',
-        description: ['Un gig est un service packagé.', 'Six étapes pour un gig pro.'],
-        steps: [
-          { title: 'Aperçu', body: 'Catégorie et titre.' },
-          { title: 'Prix', body: 'Trois forfaits.' },
-          { title: 'Description', body: 'Expliquez votre service.' },
-          { title: 'Exigences', body: 'Ce dont vous avez besoin.' },
-          { title: 'Galerie', body: 'Images et vidéos.' },
-          { title: 'Publication', body: 'Vérification et publication.' },
-        ],
-        bullets: ['Trois forfaits.', 'Exigences claires.', 'Visuels de qualité.', 'Tags pour la recherche.'],
-        tip: 'Étudiez les gigs populaires.',
-      },
-    },
+    ],
+    related: ['creating-gig', 'buying-gig', 'earnings-fees'],
   },
   {
-    id: 'ordering', icon: ShoppingCart, video: orderingVid.url, cta: { label: { en: 'Browse Services', so: 'Eeg Adeegyada', ar: 'تصفح', fr: 'Parcourir' }, to: '/explore' },
-    t: {
-      en: {
-        title: '7. Ordering Services',
-        subtitle: 'Hire any freelancer in three simple steps — fully protected.',
-        description: [
-          'Ordering on FIVESOM is designed to be as simple as buying anything else online, with the added safety of escrow. You browse, you message, you order, you receive — and only when you are happy is the freelancer paid.',
-          'Before placing an order it is always smart to message the freelancer first. A two-minute conversation about your goals usually leads to a much better delivery.',
-        ],
-        steps: [
-          { title: 'Find a freelancer', body: 'Use the Explore page to filter by category, price, and rating.' },
-          { title: 'Message first (optional)', body: 'Discuss your project and confirm scope before paying.' },
-          { title: 'Pick a package', body: 'Choose Basic, Standard, or Premium based on what you need.' },
-          { title: 'Submit requirements', body: 'Answer the freelancer\'s questions so they can start immediately.' },
-          { title: 'Pay securely', body: 'Funds go into escrow — protected until you accept.' },
-          { title: 'Track in dashboard', body: 'Follow your order status, chat, and revisions in one place.' },
-        ],
+    id: 'finding-freelancers',
+    group: 'Buyers',
+    title: 'Finding Freelancers',
+    eyebrow: 'Search and compare',
+    summary: 'Find the right freelancer by category, gig details, reviews, portfolio quality, delivery time, and communication.',
+    icon: Search,
+    cta: { label: 'Explore services', to: '/explore' },
+    sections: [
+      {
+        heading: 'What can buyers search for?',
+        body: 'Buyers can browse FIVESOM by service category, search terms, freelancer profile, rating, package price, and delivery fit.',
+      },
+      {
+        heading: 'How to choose well',
         bullets: [
-          'Always message before ordering for complex work.',
-          'Pay only through FIVESOM — never directly.',
-          'Use the requirements form to avoid back-and-forth.',
-          'Keep all communication on platform.',
+          'Open the gig and read what each package includes before ordering.',
+          'Check portfolio samples, reviews, rating, and any verified badges.',
+          'Message the freelancer first for complex, custom, or urgent work.',
+          'Confirm the delivery format, timeline, and source files before paying.',
         ],
-        tip: 'If a freelancer asks you to pay outside FIVESOM, report them immediately.',
       },
-      so: {
-        title: '7. Dalbashada Adeegyada',
-        subtitle: 'Shaqaalee freelancer kasta saddex tallaabo — si buuxda u ilaalin.',
-        description: [
-          'Dalbashada FIVESOM waxay u dhisantahay inay u fudud tahay sida iibsiga online — laakiin leh ammaanka escrow.',
-          'Hortii order-ka, mar walba waa caqli ah inaad la hadasho freelancer-ka.',
-        ],
-        steps: [
-          { title: 'Hel freelancer', body: 'Adeegso Explore page si aad u shaandhayso.' },
-          { title: 'La hadal hortii', body: 'Ka hadal mashruuca.' },
-          { title: 'Dooro package', body: 'Basic, Standard, ama Premium.' },
-          { title: 'Soo gudbi shuruudaha', body: 'Jawaab su\'aalaha freelancer-ka.' },
-          { title: 'Si ammaan u bixi', body: 'Lacagta wuxuu galaa escrow.' },
-          { title: 'La soco', body: 'Ka raac order, chat, iyo revisions.' },
-        ],
-        bullets: [
-          'La hadal hortii shaqo adag.',
-          'Bixi kaliya FIVESOM.',
-          'Adeegso requirements form.',
-          'Sii hay isgaarsiinta platform-ka.',
-        ],
-        tip: 'Haddii freelancer ku weydiisto bixin platform ka baxsan, soo sheeg.',
+      {
+        heading: 'What happens next?',
+        body: 'After choosing a freelancer, select the package that matches your project and continue to the secure checkout.',
       },
-      ar: {
-        title: '7. طلب الخدمات',
-        subtitle: 'وظّف أي مستقل في ثلاث خطوات.',
-        description: ['الطلب بسيط وآمن.', 'تواصل قبل الطلب دائمًا.'],
-        steps: [
-          { title: 'ابحث', body: 'استخدم صفحة الاستكشاف.' },
-          { title: 'تواصل', body: 'ناقش المشروع.' },
-          { title: 'اختر باقة', body: 'حسب احتياجك.' },
-          { title: 'المتطلبات', body: 'أجب الأسئلة.' },
-          { title: 'ادفع', body: 'إلى الضمان.' },
-          { title: 'تابع', body: 'في لوحتك.' },
-        ],
-        bullets: ['تواصل قبل الطلب.', 'ادفع عبر FIVESOM فقط.', 'استخدم نموذج المتطلبات.', 'تواصل داخل المنصة.'],
-        tip: 'أبلغ عن أي طلب دفع خارجي.',
-      },
-      fr: {
-        title: '7. Commander un service',
-        subtitle: 'Engagez un freelance en trois étapes.',
-        description: ['Commander est simple et sécurisé.', 'Discutez avant de commander.'],
-        steps: [
-          { title: 'Cherchez', body: 'Page Explorer.' },
-          { title: 'Discutez', body: 'Cadrez le projet.' },
-          { title: 'Forfait', body: 'Selon le besoin.' },
-          { title: 'Exigences', body: 'Répondez aux questions.' },
-          { title: 'Payez', body: 'Vers le séquestre.' },
-          { title: 'Suivez', body: 'Dans votre tableau.' },
-        ],
-        bullets: ['Discutez avant.', 'Payez via FIVESOM uniquement.', 'Utilisez le formulaire.', 'Restez sur la plateforme.'],
-        tip: 'Signalez toute demande de paiement externe.',
-      },
-    },
+    ],
+    related: ['buying-gig', 'messaging-communication', 'reviewing-delivery'],
   },
   {
-    id: 'messaging', icon: MessageSquare, video: messagingVid.url, cta: { label: { en: 'Open Messages', so: 'Fur Fariimaha', ar: 'الرسائل', fr: 'Messages' }, to: '/buyer/messages' },
-    t: {
-      en: {
-        title: '8. Messaging & Communication',
-        subtitle: 'Real-time chat that keeps every order on track.',
-        description: [
-          'Clear communication is the single biggest predictor of a successful order. FIVESOM\'s built-in messaging gives you everything you need: real-time chat, image sharing, file attachments, emojis, typing indicators, online status, and read receipts.',
-          'All conversations are kept inside the platform so support can step in instantly if there is ever a dispute. There is no need to swap phone numbers, switch to WhatsApp, or use external email — and doing so actually weakens your protection.',
-        ],
-        steps: [
-          { title: 'Open a conversation', body: 'Click "Contact" on any gig or profile to start a chat.' },
-          { title: 'Send messages & files', body: 'Share text, images, and supported file types directly.' },
-          { title: 'See live indicators', body: 'Typing dots, online status, and read receipts.' },
-          { title: 'Stay notified', body: 'Get instant notifications when replies arrive.' },
-        ],
+    id: 'buying-gig',
+    group: 'Buyers',
+    title: 'Buying a Gig',
+    eyebrow: 'Place an order',
+    summary: 'Choose a package, pay securely, submit requirements, and track the order from your buyer dashboard.',
+    icon: CreditCard,
+    video: orderingVideo.url,
+    videoLabel: 'Ordering a service on FIVESOM tutorial',
+    cta: { label: 'Browse gigs', to: '/explore' },
+    sections: [
+      {
+        heading: 'What is buying a gig?',
+        body: 'Buying a gig means selecting a freelancer service package and creating an order through FIVESOM. The order contains the package details, payment status, requirements, delivery files, messages, and review actions.',
+      },
+      {
+        heading: 'How to place an order',
         bullets: [
-          'Real-time messaging with attachments.',
-          'Online and typing indicators built in.',
-          'Read receipts on every message.',
-          'All messages stored and reviewable by admins on dispute.',
+          'Open the gig and compare Basic, Standard, and Premium packages.',
+          'Ask questions before ordering if your project is complex.',
+          'Pay through FIVESOM so the order is protected by escrow.',
+          'Submit the requirements the freelancer needs to begin work.',
+          'Track progress from My Orders and keep messages on the platform.',
         ],
-        tip: 'Always discuss scope and timeline in writing before starting an order.',
       },
-      so: {
-        title: '8. Fariimaha & Wada Xiriirka',
-        subtitle: 'Sheeko real-time ah oo order kasta xajisa.',
-        description: [
-          'Isgaarsiin cad waa saadaalinta ugu weyn ee order guul leh. Messaging-ka FIVESOM wuxuu siiyaa wax kasta oo aad u baahan tahay: chat real-time, sawiro, files, emojis, typing indicators, online status, iyo read receipts.',
-          'Dhammaan sheekooyinka waxay ku jiraan platform-ka si support-ku u soo dhex galo haddii ay khilaaf dhacdo.',
-        ],
-        steps: [
-          { title: 'Fur sheeko', body: 'Riix "Contact" gig kasta ama profile.' },
-          { title: 'Dir fariimaha & files', body: 'Wadaag qoraal, sawiro, iyo files.' },
-          { title: 'Arag indicators', body: 'Typing, online status, read receipts.' },
-          { title: 'La soco notifications', body: 'Hel ogeysiisyo isla markaaba.' },
-        ],
-        bullets: [
-          'Real-time messaging oo leh attachments.',
-          'Online iyo typing indicators.',
-          'Read receipts.',
-          'Dhammaan messages waa la kaydiyaa.',
-        ],
-        tip: 'Mar walba ka hadal scope iyo waqtiga qoraal hortii order.',
+      {
+        heading: 'What happens next?',
+        body: 'After payment and requirements are complete, the freelancer starts work and submits the delivery inside the order page.',
       },
-      ar: {
-        title: '8. المراسلة والتواصل',
-        subtitle: 'دردشة مباشرة لإبقاء الطلب على المسار.',
-        description: ['التواصل الواضح أهم عامل للنجاح.', 'كل شيء داخل المنصة لحمايتك.'],
-        steps: [
-          { title: 'افتح محادثة', body: 'اضغط "تواصل".' },
-          { title: 'الرسائل والملفات', body: 'نص وصور وملفات.' },
-          { title: 'المؤشرات', body: 'كتابة وقراءة.' },
-          { title: 'إشعارات', body: 'فورية.' },
-        ],
-        bullets: ['دردشة مباشرة.', 'مؤشرات حية.', 'إيصالات قراءة.', 'سجل محفوظ.'],
-        tip: 'ناقش النطاق كتابيًا.',
-      },
-      fr: {
-        title: '8. Messagerie',
-        subtitle: 'Chat temps réel pour garder la commande sur les rails.',
-        description: ['La communication claire est clé.', 'Tout reste sur la plateforme pour vous protéger.'],
-        steps: [
-          { title: 'Ouvrir un chat', body: 'Cliquez "Contact".' },
-          { title: 'Messages et fichiers', body: 'Texte, images, fichiers.' },
-          { title: 'Indicateurs', body: 'Saisie, lecture, en ligne.' },
-          { title: 'Notifications', body: 'Instantanées.' },
-        ],
-        bullets: ['Chat temps réel.', 'Indicateurs en direct.', 'Accusés de lecture.', 'Historique conservé.'],
-        tip: 'Discutez du périmètre par écrit.',
-      },
-    },
+    ],
+    related: ['order-requirements', 'escrow-payments', 'reviewing-delivery'],
   },
   {
-    id: 'payment', icon: Wallet, image: imgPayment, cta: { label: { en: 'Open Wallet', so: 'Fur Wallet-ka', ar: 'المحفظة', fr: 'Portefeuille' }, to: '/freelancer/wallet' },
-    t: {
-      en: {
-        title: '9. Payment System',
-        subtitle: 'Local-first payments built for the Somali market.',
-        description: [
-          'FIVESOM supports the payment methods that Somalis actually use: mobile money (EVC Plus, ZAAD, Sahal, eDahab), local bank transfers, and cards where available. Buyers pay in the method that works for them; freelancers withdraw in the method that works for them.',
-          'All payments flow through your in-app wallet. Earnings land in your wallet automatically when an order is accepted. From the wallet, you can request a withdrawal to your preferred local method.',
-        ],
-        steps: [
-          { title: 'Buyer pays', body: 'Choose mobile money, card, or another supported method.' },
-          { title: 'Funds enter escrow', body: 'Held safely until the order is accepted.' },
-          { title: 'Earnings land in wallet', body: 'On acceptance, money moves to the freelancer\'s wallet.' },
-          { title: 'Withdraw', body: 'Request a payout to your preferred local method.' },
-        ],
+    id: 'order-requirements',
+    group: 'Buyers',
+    title: 'Order Requirements',
+    eyebrow: 'Project details',
+    summary: 'Give the freelancer the instructions, files, references, and goals needed to start correctly.',
+    icon: FileText,
+    cta: { label: 'View buyer orders', to: '/buyer/orders' },
+    sections: [
+      {
+        heading: 'What are requirements?',
+        body: 'Order requirements are the instructions and files a buyer submits after checkout. They tell the freelancer what to create, what format to deliver, and what details matter most.',
+      },
+      {
+        heading: 'What to include',
         bullets: [
-          'Local mobile money (EVC, ZAAD, Sahal, eDahab) supported.',
-          'In-app wallet for every freelancer.',
-          'Transparent platform fee shown before checkout.',
-          'Withdrawal processing typically completes within 24 hours.',
+          'A short project goal and the exact deliverable you expect.',
+          'Brand names, colors, text, files, links, dimensions, or technical notes.',
+          'Examples of what you like and what you want the freelancer to avoid.',
+          'A clear deadline if the project depends on a launch or campaign date.',
         ],
-        tip: 'Add a verified payout method early so you can withdraw the moment your first order completes.',
       },
-      so: {
-        title: '9. Nidaamka Lacag-bixinta',
-        subtitle: 'Lacag-bixin maxalli ah oo loogu talagalay suuqa Soomaalida.',
-        description: [
-          'FIVESOM wuxuu taageeraa habab lacag bixin oo Soomaalida dhab ahaan u isticmaalaan: mobile money (EVC Plus, ZAAD, Sahal, eDahab), wareejinno bangiyo maxalli, iyo cards meelaha la heli karo.',
-          'Dhammaan lacagaha waxay maraan in-app wallet. Lacagta waxay si toos ah u galaysaa wallet-kaaga marka order la aqbalo. Markaas waxaad codsan kartaa withdrawal hab aad doonto.',
-        ],
-        steps: [
-          { title: 'Macmiilku bixiyaa', body: 'Mobile money, card, ama hab kale.' },
-          { title: 'Lacagta escrow', body: 'Si ammaan ah loo hayaa.' },
-          { title: 'Lacagta wallet', body: 'Marka la aqbalo.' },
-          { title: 'Withdrawal', body: 'Codso payout.' },
-        ],
-        bullets: [
-          'Mobile money maxalli (EVC, ZAAD, Sahal, eDahab).',
-          'In-app wallet freelancer kasta.',
-          'Platform fee oo cad.',
-          'Withdrawal 24 saac gudaheed.',
-        ],
-        tip: 'Ku dar payout method oo la xaqiijiyay si aad u soo saari karto isla markaaba.',
+      {
+        heading: 'What happens next?',
+        body: 'When requirements are submitted, the order can move into active work. Missing requirements can delay the freelancer and push back delivery.',
       },
-      ar: {
-        title: '9. نظام الدفع',
-        subtitle: 'مدفوعات محلية للسوق الصومالي.',
-        description: ['ندعم EVC وZAAD وSahal وeDahab.', 'كل المدفوعات عبر محفظتك.'],
-        steps: [
-          { title: 'الدفع', body: 'وسائل متعددة.' },
-          { title: 'الضمان', body: 'حفظ آمن.' },
-          { title: 'المحفظة', body: 'بعد القبول.' },
-          { title: 'السحب', body: 'إلى وسيلتك.' },
-        ],
-        bullets: ['دعم محلي.', 'محفظة لكل مستقل.', 'رسوم واضحة.', 'سحب خلال 24 ساعة.'],
-        tip: 'أضف وسيلة سحب مبكرًا.',
-      },
-      fr: {
-        title: '9. Paiements',
-        subtitle: 'Paiements locaux pour le marché somalien.',
-        description: ['EVC, ZAAD, Sahal, eDahab supportés.', 'Tout passe par votre portefeuille.'],
-        steps: [
-          { title: 'Paiement', body: 'Méthodes multiples.' },
-          { title: 'Séquestre', body: 'Conservation sécurisée.' },
-          { title: 'Portefeuille', body: 'Après acceptation.' },
-          { title: 'Retrait', body: 'Vers votre méthode.' },
-        ],
-        bullets: ['Support local.', 'Portefeuille par freelance.', 'Frais clairs.', 'Retrait sous 24h.'],
-        tip: 'Ajoutez votre méthode de retrait tôt.',
-      },
-    },
+    ],
+    related: ['buying-gig', 'messaging-communication', 'revisions'],
   },
   {
-    id: 'orders', icon: ListChecks, video: ordersVid.url, cta: { label: { en: 'My Orders', so: 'Orders-keyga', ar: 'طلباتي', fr: 'Mes commandes' }, to: '/buyer/orders' },
-    t: {
-      en: {
-        title: '10. Order Management',
-        subtitle: 'Track every order through its full lifecycle.',
-        description: [
-          'Both buyers and freelancers get a dedicated Orders dashboard that shows every stage of every order. You always know exactly where things stand — pending requirements, in progress, delivered, in revision, completed, or cancelled.',
-          'Order pages bring all the context together: chat, files, requirements, deadlines, packages, and the action buttons relevant to your role and the current status.',
-        ],
-        steps: [
-          { title: 'Pending', body: 'Buyer is being asked for requirements.' },
-          { title: 'Active', body: 'Freelancer is working on the delivery.' },
-          { title: 'Delivered', body: 'Files are uploaded and waiting on buyer review.' },
-          { title: 'Revision', body: 'Buyer requested changes; freelancer responds.' },
-          { title: 'Completed', body: 'Buyer accepted; payment released to freelancer.' },
-          { title: 'Cancelled / Disputed', body: 'Order cancelled or admin mediation requested.' },
-        ],
+    id: 'messaging-communication',
+    group: 'Orders & Delivery',
+    title: 'Messaging & Communication',
+    eyebrow: 'Work together clearly',
+    summary: 'Use FIVESOM messages to confirm scope, share files, answer questions, and keep a protected project record.',
+    icon: MessageSquare,
+    video: messagingVideo.url,
+    videoLabel: 'FIVESOM messaging tutorial',
+    cta: { label: 'Open inbox', to: '/inbox' },
+    sections: [
+      {
+        heading: 'Why messages matter',
+        body: 'Clear written communication prevents most order problems. Messages also create a record that support can review if a dispute is opened.',
+      },
+      {
+        heading: 'Best practices',
         bullets: [
-          'Filter orders by status with one click.',
-          'Deadline countdown on every active order.',
-          'All files and chat tied to the order.',
-          'Revision history kept for transparency.',
+          'Confirm scope, timeline, file formats, and expectations before work begins.',
+          'Keep all important project decisions inside FIVESOM chat.',
+          'Use attachments and links only when they support the order.',
+          'Respond quickly and professionally, especially when revisions are requested.',
         ],
-        tip: 'Set realistic delivery times — late deliveries hurt your ranking faster than anything else.',
       },
-      so: {
-        title: '10. Maaraynta Orders',
-        subtitle: 'La soco order kasta inta uu socdo.',
-        description: [
-          'Macaamiisha iyo freelancers labadaba waxay helaan dashboard Orders gaar ah oo muujinaya tallaabo kasta.',
-          'Boggagga order waxay isu keenaan dhammaan: chat, files, shuruudaha, deadlines, packages, iyo button-yada.',
-        ],
-        steps: [
-          { title: 'Pending', body: 'Macmiilka shuruud la weydiiyay.' },
-          { title: 'Active', body: 'Freelancer wuu ka shaqaynayaa.' },
-          { title: 'Delivered', body: 'Files la geeyay, sugaya macmiilka.' },
-          { title: 'Revision', body: 'Macmiil codsaday isbeddel.' },
-          { title: 'Completed', body: 'Macmiil aqbalay; lacag la siiyay.' },
-          { title: 'Cancelled / Disputed', body: 'La cancel garay ama khilaaf.' },
-        ],
-        bullets: [
-          'Shaandhee orders riix keliya.',
-          'Deadline countdown order kasta.',
-          'Files iyo chat order.',
-          'Revision history hayey.',
-        ],
-        tip: 'Dej waqtiyo delivery oo la rumaysan karo.',
+      {
+        heading: 'What happens next?',
+        body: 'Once the freelancer has the information needed, they can complete the work and submit the delivery through the order page.',
       },
-      ar: {
-        title: '10. إدارة الطلبات',
-        subtitle: 'تتبّع كل طلب طوال دورته.',
-        description: ['لوحة طلبات مخصصة.', 'كل السياق في صفحة الطلب.'],
-        steps: [
-          { title: 'معلق', body: 'بانتظار المتطلبات.' },
-          { title: 'نشط', body: 'العمل جارٍ.' },
-          { title: 'مُسلَّم', body: 'بانتظار المراجعة.' },
-          { title: 'مراجعة', body: 'تعديلات مطلوبة.' },
-          { title: 'مكتمل', body: 'تم القبول.' },
-          { title: 'ملغي / نزاع', body: 'إلغاء أو نزاع.' },
-        ],
-        bullets: ['تصفية بنقرة.', 'عداد للموعد.', 'كل شيء مع الطلب.', 'سجل المراجعات.'],
-        tip: 'حدد مواعيد واقعية.',
-      },
-      fr: {
-        title: '10. Gestion des commandes',
-        subtitle: 'Suivez chaque commande.',
-        description: ['Tableau de commandes dédié.', 'Tout le contexte sur la page de la commande.'],
-        steps: [
-          { title: 'En attente', body: 'Exigences attendues.' },
-          { title: 'Active', body: 'Travail en cours.' },
-          { title: 'Livrée', body: 'En attente d\'examen.' },
-          { title: 'Révision', body: 'Modifications demandées.' },
-          { title: 'Terminée', body: 'Acceptée.' },
-          { title: 'Annulée / Litige', body: 'Annulation ou litige.' },
-        ],
-        bullets: ['Filtre rapide.', 'Compte à rebours.', 'Tout sur la commande.', 'Historique conservé.'],
-        tip: 'Fixez des délais réalistes.',
-      },
-    },
+    ],
+    related: ['order-requirements', 'delivering-order', 'disputes'],
   },
   {
-    id: 'reviews', icon: Star, image: imgReviews,
-    t: {
-      en: {
-        title: '11. Ratings & Reviews',
-        subtitle: 'Your reputation is built one honest review at a time.',
-        description: [
-          'After every completed order, the buyer can leave a 1–5 star rating and a written review. This rating is permanently tied to your gig and your profile, and it is one of the most important factors buyers look at before hiring.',
-          'FIVESOM actively removes fake or manipulated reviews. Trying to buy reviews, swap reviews with friends, or pressure buyers will result in penalties up to and including account suspension.',
-        ],
-        steps: [
-          { title: 'Order completes', body: 'Buyer accepts the delivery.' },
-          { title: 'Buyer rates', body: '1–5 stars plus a written review.' },
-          { title: 'Review goes public', body: 'Visible on your gig and profile.' },
-          { title: 'Reputation grows', body: 'Higher ratings unlock seller levels and visibility.' },
-        ],
+    id: 'delivering-order',
+    group: 'Orders & Delivery',
+    title: 'Delivering an Order',
+    eyebrow: 'Freelancer workflow',
+    summary: 'Submit completed work through the order page so the buyer can review it and escrow can be released after acceptance.',
+    icon: UploadCloud,
+    video: ordersVideo.url,
+    videoLabel: 'Managing and delivering orders on FIVESOM tutorial',
+    cta: { label: 'Open freelancer orders', to: '/freelancer/orders' },
+    sections: [
+      {
+        heading: 'What counts as delivery?',
+        body: 'A delivery is the completed work, message, files, links, or instructions the freelancer submits for buyer review. It should match the purchased package and the buyer requirements.',
+      },
+      {
+        heading: 'How to deliver professionally',
         bullets: [
-          'Honest 1–5 star ratings only.',
-          'Fake reviews are removed automatically and manually.',
-          'Reviews count toward your seller level.',
-          'You cannot delete a real review — only respond to it.',
+          'Review the original requirements before submitting final files.',
+          'Upload the correct files and explain what is included in the delivery message.',
+          'Mention any usage notes, file formats, or next steps the buyer needs.',
+          'Do not mark incomplete work as delivered just to stop the deadline.',
         ],
-        tip: 'Always over-deliver on the first order with a new client. The first review sets the tone for all the next ones.',
       },
-      so: {
-        title: '11. Qiimaynta & Reviews',
-        subtitle: 'Sumcaddaadu waxaa lagu dhisaa hal review oo daacad ah marka.',
-        description: [
-          'Order kasta kadib, macmiilku wuxuu ka tagi karaa qiimayn 1–5 xiddig ah iyo review. Tani waxay weligeed ku xidhan tahay gig-aaga.',
-          'FIVESOM wuxuu ka saaraa reviews been ah. Inaad iibsato reviews ama saaxiibo ku weydiiso waxay keentaa ciqaab ilaa hakinta akoonka.',
-        ],
-        steps: [
-          { title: 'Order dhammaystiran', body: 'Macmiil aqbalay delivery.' },
-          { title: 'Macmiilku qiimeeyo', body: '1–5 xiddig iyo qoraal.' },
-          { title: 'Review dadweyne', body: 'Wuu muuqdaa profile-ka.' },
-          { title: 'Sumcad koreey', body: 'Furi heerar.' },
-        ],
-        bullets: [
-          'Qiimeyn daacad ah 1–5.',
-          'Reviews been ah waa la saaraa.',
-          'Reviews waxay tirsanaaan seller level.',
-          'Ma tirtiri kartid review dhab ah.',
-        ],
-        tip: 'Mar walba ka geyso wax ka badan order-ka kowaad.',
+      {
+        heading: 'What happens next?',
+        body: 'The buyer reviews the delivery. They can accept it, request a revision, or open a dispute if the work does not match the order.',
       },
-      ar: {
-        title: '11. التقييمات',
-        subtitle: 'سمعتك تُبنى تقييمًا تلو الآخر.',
-        description: ['تقييم 1-5 نجوم بعد كل طلب.', 'إزالة التقييمات المزيفة.'],
-        steps: [
-          { title: 'اكتمال الطلب', body: 'بعد القبول.' },
-          { title: 'التقييم', body: 'نجوم وتعليق.' },
-          { title: 'النشر', body: 'يظهر على ملفك.' },
-          { title: 'النمو', body: 'مستويات أعلى.' },
-        ],
-        bullets: ['تقييمات صادقة.', 'إزالة المزيفة.', 'تحدد مستواك.', 'لا يمكن حذف الحقيقي.'],
-        tip: 'تفوّق في الطلب الأول.',
-      },
-      fr: {
-        title: '11. Avis et notes',
-        subtitle: 'Votre réputation se construit un avis à la fois.',
-        description: ['Note 1-5 étoiles après chaque commande.', 'Faux avis supprimés.'],
-        steps: [
-          { title: 'Commande terminée', body: 'Après acceptation.' },
-          { title: 'Évaluation', body: 'Étoiles et commentaire.' },
-          { title: 'Publication', body: 'Sur votre profil.' },
-          { title: 'Croissance', body: 'Niveaux débloqués.' },
-        ],
-        bullets: ['Avis honnêtes.', 'Faux supprimés.', 'Affecte le niveau.', 'Avis réels indélébiles.'],
-        tip: 'Excellez sur la première commande.',
-      },
-    },
+    ],
+    related: ['reviewing-delivery', 'revisions', 'earnings-fees'],
   },
   {
-    id: 'security', icon: Lock, image: imgSecurity,
-    t: {
-      en: {
-        title: '12. Security & Trust',
-        subtitle: 'Multiple layers of protection on every account, payment, and message.',
-        description: [
-          'Security is not an add-on at FIVESOM — it is built into every part of the product. Accounts are protected by Google authentication. Payments are protected by escrow. Messages are stored on the platform and reviewable by support. Suspicious activity is monitored automatically and accounts that break the rules are removed quickly.',
-          'You can also help keep the platform safe. If you ever see a scam, fake portfolio, or abusive user, use the Report button. Every report is reviewed by the admin team.',
-        ],
-        steps: [
-          { title: 'Account protection', body: 'Google login + verified email by default.' },
-          { title: 'Identity verification', body: 'Optional verified blue tick after admin review.' },
-          { title: 'Anti-fraud monitoring', body: 'Suspicious behavior flagged automatically.' },
-          { title: 'Reporting tools', body: 'Report button on profiles, gigs, chats, and orders.' },
-          { title: 'Privacy', body: 'We never share your private data with third parties.' },
-        ],
+    id: 'reviewing-delivery',
+    group: 'Buyers',
+    title: 'Reviewing a Delivery',
+    eyebrow: 'Accept, rate, or ask for changes',
+    summary: 'Check the delivered work carefully before accepting, because acceptance releases the escrow payment.',
+    icon: PackageCheck,
+    video: buyerAcceptVideo.url,
+    videoLabel: 'Buyer acceptance and payment release tutorial',
+    cta: { label: 'View buyer orders', to: '/buyer/orders' },
+    sections: [
+      {
+        heading: 'What is delivery review?',
+        body: 'Delivery review is the buyer decision point. You compare the delivered work with the package and requirements, then accept, request a revision, or dispute the order.',
+      },
+      {
+        heading: 'How to review safely',
         bullets: [
-          'Secure Google authentication.',
-          'Verified profiles get a blue tick.',
-          'Suspicious activity detection.',
-          'In-app reporting on every page.',
+          'Open all files and links before clicking Accept Delivery.',
+          'Compare the work against the requirements you submitted.',
+          'Use revision requests for clear, fixable changes.',
+          'Open a dispute only when the delivery does not match the order and normal revision does not solve it.',
         ],
-        tip: 'If something feels wrong, it usually is. Trust your instinct and report it.',
       },
-      so: {
-        title: '12. Ammaanka & Kalsoonida',
-        subtitle: 'Lakabyo ilaalin oo akoonka, lacagta, iyo fariimaha.',
-        description: [
-          'Ammaanku ma aha add-on FIVESOM — waxaa lagu dhisay qayb kasta. Akoonnada waxaa ilaaliya Google. Lacagta waxaa ilaaliya escrow. Fariimaha waxaa lagu kaydiyaa platform-ka.',
-          'Adigana waad caawin kartaa. Haddii aad aragto khiyaamo ama portfolio been ah, isticmaal Report.',
-        ],
-        steps: [
-          { title: 'Ilaalinta akoonka', body: 'Google login.' },
-          { title: 'Xaqiijinta', body: 'Tick buluug ah.' },
-          { title: 'Anti-fraud', body: 'Si toos ah loo eego.' },
-          { title: 'Soo sheegista', body: 'Button Report.' },
-          { title: 'Asturnaanta', body: 'Xogtaada lama wadaago.' },
-        ],
-        bullets: [
-          'Google authentication.',
-          'Tick buluug ah.',
-          'Eegista khiyaamo.',
-          'Reporting bog kasta.',
-        ],
-        tip: 'Haddii aad dareemayso wax khaldan, soo sheeg.',
+      {
+        heading: 'What happens next?',
+        body: 'When you accept the delivery, escrow is released to the freelancer and you can leave a 1–5 star review with a written comment.',
       },
-      ar: {
-        title: '12. الأمان والثقة',
-        subtitle: 'طبقات حماية متعددة.',
-        description: ['الأمان مدمج في كل شيء.', 'ساعدنا بالإبلاغ عن المخالفات.'],
-        steps: [
-          { title: 'حماية الحساب', body: 'تسجيل Google.' },
-          { title: 'التوثيق', body: 'علامة زرقاء.' },
-          { title: 'مكافحة الاحتيال', body: 'مراقبة تلقائية.' },
-          { title: 'الإبلاغ', body: 'زر Report.' },
-          { title: 'الخصوصية', body: 'لا مشاركة.' },
-        ],
-        bullets: ['Google.', 'علامة زرقاء.', 'كشف احتيال.', 'إبلاغ في كل مكان.'],
-        tip: 'أبلغ عن أي شك.',
-      },
-      fr: {
-        title: '12. Sécurité et confiance',
-        subtitle: 'Plusieurs couches de protection.',
-        description: ['Sécurité intégrée partout.', 'Aidez-nous en signalant.'],
-        steps: [
-          { title: 'Protection du compte', body: 'Connexion Google.' },
-          { title: 'Vérification', body: 'Badge bleu.' },
-          { title: 'Anti-fraude', body: 'Surveillance automatique.' },
-          { title: 'Signalement', body: 'Bouton Report.' },
-          { title: 'Confidentialité', body: 'Pas de partage.' },
-        ],
-        bullets: ['Google.', 'Badge bleu.', 'Détection fraude.', 'Signalement partout.'],
-        tip: 'Signalez tout doute.',
-      },
-    },
+    ],
+    related: ['revisions', 'disputes', 'escrow-payments'],
   },
   {
-    id: 'community', icon: Users, image: imgCommunity,
-    t: {
-      en: {
-        title: '13. Community Guidelines',
-        subtitle: 'Simple rules that keep FIVESOM clean, safe, and respectful.',
-        description: [
-          'FIVESOM is a community of professionals. Whether you are a freelancer, a buyer, or a business, the same simple rules apply: be honest, be respectful, and do real work.',
-          'Breaking the guidelines can result in warnings, gig removal, account suspension, or permanent ban depending on severity.',
-        ],
-        steps: [
-          { title: 'Be honest', body: 'No fake portfolios, fake reviews, or fake identities.' },
-          { title: 'Respect everyone', body: 'No harassment, hate speech, or abusive language.' },
-          { title: 'Protect IP', body: 'Do not steal or copy work that is not yours.' },
-          { title: 'No spam', body: 'Do not flood chats, gigs, or comments.' },
-          { title: 'Stay on platform', body: 'Do not push contact off FIVESOM.' },
-        ],
+    id: 'revisions',
+    group: 'Orders & Delivery',
+    title: 'Revisions',
+    eyebrow: 'Request changes',
+    summary: 'Use revisions to ask for specific changes before accepting the delivery.',
+    icon: RotateCcw,
+    sections: [
+      {
+        heading: 'What is a revision?',
+        body: 'A revision is a request for the freelancer to adjust a delivery that is close but not yet right. It should be based on the original order scope and requirements.',
+      },
+      {
+        heading: 'How to request a useful revision',
         bullets: [
-          'No fake accounts or fake portfolios.',
-          'No abuse, harassment, or hate speech.',
-          'No copyright violations.',
-          'No off-platform payments.',
+          'Be specific about what should change and where the issue appears.',
+          'Attach screenshots, timestamps, file names, or examples when helpful.',
+          'Keep the request within the package you purchased.',
+          'Avoid asking for a completely new project as a revision.',
         ],
-        tip: 'When in doubt, ask support before doing it.',
       },
-      so: {
-        title: '13. Xeerarka Bulshada',
-        subtitle: 'Xeerar fudud oo nadiifiya FIVESOM.',
-        description: [
-          'FIVESOM waa bulsho xirfadlayaal ah. Xeerar isku mid ah ayaa khuseeya: noqo daacad, ixtiraam, oo qabo shaqo dhab ah.',
-          'Jebinta xeerarka waxay keeni kartaa digniin, hakad, ama mamnuucid joogto ah.',
-        ],
-        steps: [
-          { title: 'Daacadnimo', body: 'Bilaa portfolio been ah ama reviews been ah.' },
-          { title: 'Ixtiraam', body: 'Bilaa cay ama hadal xun.' },
-          { title: 'Ilaali IP', body: 'Ha xadin shaqo aan kaa ahayn.' },
-          { title: 'Bilaa spam', body: 'Ha buux-buuxin chats.' },
-          { title: 'Ku sii jir platform', body: 'Ha qaadin ka baxsan.' },
-        ],
-        bullets: [
-          'Bilaa akoonno been ah.',
-          'Bilaa cay.',
-          'Bilaa copyright.',
-          'Bilaa lacag platform-ka ka baxsan.',
-        ],
-        tip: 'Markaad shakidid, weydii support.',
+      {
+        heading: 'What happens next?',
+        body: 'The freelancer reviews your request, updates the work, and submits a new delivery for you to review again.',
       },
-      ar: {
-        title: '13. إرشادات المجتمع',
-        subtitle: 'قواعد بسيطة لمجتمع نظيف.',
-        description: ['مجتمع محترفين.', 'مخالفة القواعد تؤدي لعقوبات.'],
-        steps: [
-          { title: 'الصدق', body: 'لا للأعمال المزيفة.' },
-          { title: 'الاحترام', body: 'لا للإساءة.' },
-          { title: 'الملكية', body: 'لا للسرقة.' },
-          { title: 'لا سبام', body: 'لا للفيضانات.' },
-          { title: 'ابقَ على المنصة', body: 'لا للتواصل الخارجي.' },
-        ],
-        bullets: ['لا حسابات مزيفة.', 'لا إساءة.', 'لا انتهاك.', 'لا دفع خارجي.'],
-        tip: 'استفسر من الدعم.',
-      },
-      fr: {
-        title: '13. Règles de la communauté',
-        subtitle: 'Règles simples pour une communauté propre.',
-        description: ['Communauté de professionnels.', 'Les violations entraînent des sanctions.'],
-        steps: [
-          { title: 'Honnêteté', body: 'Pas de faux travaux.' },
-          { title: 'Respect', body: 'Pas d\'abus.' },
-          { title: 'Propriété', body: 'Pas de vol.' },
-          { title: 'Pas de spam', body: 'Pas d\'inondation.' },
-          { title: 'Restez sur la plateforme', body: 'Pas de contact externe.' },
-        ],
-        bullets: ['Pas de faux comptes.', 'Pas d\'abus.', 'Pas de violation.', 'Pas de paiement externe.'],
-        tip: 'Demandez au support en cas de doute.',
-      },
-    },
+    ],
+    related: ['reviewing-delivery', 'messaging-communication', 'disputes'],
   },
   {
-    id: 'dispute', icon: Scale, video: disputeVid.url,
-    t: {
-      en: {
-        title: '14. Dispute Resolution',
-        subtitle: 'Fair, fast mediation when something goes wrong.',
-        description: [
-          'Even with the best intentions, sometimes a buyer and freelancer disagree about a delivery. FIVESOM\'s dispute team exists to handle exactly that. Either side can open a dispute from the order page, and our team will review the messages, files, and original agreement before deciding.',
-          'Our goal is always a fair outcome — that may be a full refund, a partial refund, or a full release of payment to the freelancer. Decisions are based on evidence, not opinion.',
-        ],
-        steps: [
-          { title: 'Open a dispute', body: 'From the order page, click Open Dispute and explain.' },
-          { title: 'Submit evidence', body: 'Both sides upload files, screenshots, and chat references.' },
-          { title: 'Admin review', body: 'A senior admin reviews the case end-to-end.' },
-          { title: 'Decision', body: 'Refund, partial refund, or release based on findings.' },
-        ],
+    id: 'disputes',
+    group: 'Orders & Delivery',
+    title: 'Disputes',
+    eyebrow: 'When an order needs review',
+    summary: 'Open a dispute when the buyer and freelancer cannot resolve an order issue through normal messages or revisions.',
+    icon: FileCheck2,
+    video: disputeVideo.url,
+    videoLabel: 'FIVESOM dispute process tutorial',
+    sections: [
+      {
+        heading: 'What is a dispute?',
+        body: 'A dispute asks FIVESOM support to review an order and decide the fairest outcome based on the order details, messages, files, and evidence from both sides.',
+      },
+      {
+        heading: 'How disputes work',
         bullets: [
-          'Both sides have equal voice.',
-          'Decisions based on evidence.',
-          'Most disputes resolved within 72 hours.',
-          'Funds remain in escrow during review.',
+          'Either side explains the problem from the order page.',
+          'Both sides can provide messages, files, screenshots, or other order evidence.',
+          'The support team reviews the original scope and delivery history.',
+          'The result can include revision guidance, refund handling, or payment release depending on the evidence.',
         ],
-        tip: 'Keep all communication on platform — chat history is your strongest evidence in a dispute.',
       },
-      so: {
-        title: '14. Xallinta Khilaafaadka',
-        subtitle: 'Dhexdhexaad caadil ah oo dhakhso ah.',
-        description: [
-          'Mararka qaarkood macmiil iyo freelancer wey isku khilaafaan. Kooxda dispute ee FIVESOM ayaa ku jirta. Labadaba waxay furi karaan dispute order-ka.',
-          'Yoolkayagu waa natiijo caadil ah — refund buuxa, refund qayb ka mid ah, ama sii daynta lacagta. Go\'aamada waxay ku salaysan yihiin caddayn.',
-        ],
-        steps: [
-          { title: 'Fur dispute', body: 'Order page, riix Open Dispute.' },
-          { title: 'Soo gudbi caddayn', body: 'Files, screenshots, chat.' },
-          { title: 'Admin eegay', body: 'Admin sare wuu eegayaa.' },
-          { title: 'Go\'aan', body: 'Refund ama sii daa.' },
-        ],
-        bullets: [
-          'Labada dhinac cod siman.',
-          'Caddayn ku salaysan.',
-          'Inta badan 72 saac.',
-          'Lacagta escrow waxay ku sii jirtaa.',
-        ],
-        tip: 'Sii hay isgaarsiinta platform-ka — chat waa caddaynta ugu xoog badan.',
+      {
+        heading: 'What happens next?',
+        body: 'Funds remain protected while the dispute is reviewed. Keep communication professional and respond quickly when support asks for details.',
       },
-      ar: {
-        title: '14. حل النزاعات',
-        subtitle: 'وساطة عادلة وسريعة.',
-        description: ['فريق متخصص لحل النزاعات.', 'القرار مبني على الأدلة.'],
-        steps: [
-          { title: 'فتح نزاع', body: 'من صفحة الطلب.' },
-          { title: 'الأدلة', body: 'ملفات ولقطات.' },
-          { title: 'مراجعة', body: 'إدارة كبار.' },
-          { title: 'قرار', body: 'استرداد أو إفراج.' },
-        ],
-        bullets: ['صوت متساوٍ.', 'أدلة.', '72 ساعة.', 'الأموال في الضمان.'],
-        tip: 'ابقَ على المنصة لقوة الأدلة.',
-      },
-      fr: {
-        title: '14. Résolution des litiges',
-        subtitle: 'Médiation juste et rapide.',
-        description: ['Équipe dédiée aux litiges.', 'Décision basée sur les preuves.'],
-        steps: [
-          { title: 'Ouvrir un litige', body: 'Depuis la commande.' },
-          { title: 'Preuves', body: 'Fichiers et captures.' },
-          { title: 'Examen', body: 'Admin senior.' },
-          { title: 'Décision', body: 'Remboursement ou libération.' },
-        ],
-        bullets: ['Voix égale.', 'Preuves.', '72 heures.', 'Fonds en séquestre.'],
-        tip: 'Restez sur la plateforme.',
-      },
-    },
+    ],
+    related: ['escrow-payments', 'revisions', 'support'],
   },
   {
-    id: 'levels', icon: Trophy, image: imgLevels,
-    t: {
-      en: {
-        title: '15. Seller Levels System',
-        subtitle: 'Climb the ranks. Unlock more orders, higher prices, and platform perks.',
-        description: [
-          'Every freelancer on FIVESOM moves through a clear progression of seller levels. Levels are calculated automatically based on completed orders, on-time delivery, average rating, and account behavior.',
-          'Higher levels unlock real, visible benefits: priority placement in search, larger withdrawal limits, eligibility for Featured Sellers and Weekly Winners, and more trust signals next to your name.',
-        ],
-        steps: [
-          { title: 'New Seller', body: 'Default level when you join. Focus on your first orders.' },
-          { title: 'Level 1', body: 'Earned after consistent quality on early orders.' },
-          { title: 'Level 2', body: 'Solid record of completed orders and high ratings.' },
-          { title: 'Top Rated', body: 'Highest tier — reserved for the most trusted, most active freelancers.' },
-        ],
+    id: 'escrow-payments',
+    group: 'Payments & Security',
+    title: 'Escrow & Payments',
+    eyebrow: 'Payment protection',
+    summary: 'Learn how FIVESOM holds buyer funds safely until work is delivered and accepted.',
+    icon: ShieldCheck,
+    sections: [
+      {
+        heading: 'What is escrow?',
+        body: 'Escrow means the buyer pays through FIVESOM, but the freelancer does not receive the money immediately. The payment is held while the work is being completed.',
+      },
+      {
+        heading: 'How payment protection works',
         bullets: [
-          'Levels are calculated automatically.',
-          'Higher levels appear higher in search.',
-          'Featured Sellers and Weekly Winners pulled from Top Rated.',
-          'Levels can go down if quality drops.',
+          'The buyer pays through an approved FIVESOM checkout method.',
+          'The order becomes active after the payment is confirmed.',
+          'The freelancer delivers the work through the order page.',
+          'The buyer accepts the delivery, and payment is released to the freelancer wallet.',
         ],
-        tip: 'Consistency beats intensity. Five strong months in a row will move you up faster than one giant month.',
       },
-      so: {
-        title: '15. Nidaamka Heerarka Iibiyaha',
-        subtitle: 'Kor u kac. Hel order badan, qiime sare, iyo perks.',
-        description: [
-          'Freelancer kasta FIVESOM wuxuu mara horumar cad. Heerarka waxaa si toos ah loogu xisaabiyaa orders, on-time delivery, qiimayn, iyo dhaqanka akoonka.',
-          'Heerarka sare waxay furaan faa\'iidooyin: mudnaan search, withdrawal limits sare, Featured Sellers, iyo Weekly Winners.',
-        ],
-        steps: [
-          { title: 'New Seller', body: 'Heerka bilowga ah.' },
-          { title: 'Level 1', body: 'Tayo joogto ah orders bilow ah.' },
-          { title: 'Level 2', body: 'Diiwaan adag.' },
-          { title: 'Top Rated', body: 'Heerka ugu sarreeya.' },
-        ],
-        bullets: [
-          'Si toos ah loo xisaabiyo.',
-          'Heerka sare = search sare.',
-          'Featured Sellers Top Rated.',
-          'Heerka waa dhici karaa.',
-        ],
-        tip: 'Joogtaynta way ka fiican tahay degdeg.',
+      {
+        heading: 'What happens next?',
+        body: 'If the delivery does not match the order, the buyer can request a revision or open a dispute before accepting.',
       },
-      ar: {
-        title: '15. مستويات البائع',
-        subtitle: 'ارتقِ المستويات.',
-        description: ['تقدّم تلقائي.', 'مستويات أعلى = مزايا أكثر.'],
-        steps: [
-          { title: 'بائع جديد', body: 'البداية.' },
-          { title: 'مستوى 1', body: 'جودة مستمرة.' },
-          { title: 'مستوى 2', body: 'سجل قوي.' },
-          { title: 'الأعلى تقييمًا', body: 'القمة.' },
-        ],
-        bullets: ['تلقائي.', 'بحث أعلى.', 'مميزون.', 'يمكن النزول.'],
-        tip: 'الاستمرارية أهم.',
-      },
-      fr: {
-        title: '15. Niveaux vendeur',
-        subtitle: 'Grimpez les échelons.',
-        description: ['Progression automatique.', 'Niveaux supérieurs = avantages.'],
-        steps: [
-          { title: 'Nouveau', body: 'Le départ.' },
-          { title: 'Niveau 1', body: 'Qualité constante.' },
-          { title: 'Niveau 2', body: 'Historique solide.' },
-          { title: 'Top Rated', body: 'Le sommet.' },
-        ],
-        bullets: ['Automatique.', 'Recherche prioritaire.', 'Mis en avant.', 'Peut descendre.'],
-        tip: 'La régularité prime.',
-      },
-    },
+    ],
+    related: ['buying-gig', 'reviewing-delivery', 'withdrawals'],
   },
   {
-    id: 'tick', icon: BadgeCheck, image: imgTick, cta: { label: { en: 'Get Verified', so: 'Hel Tick-ga', ar: 'احصل على التوثيق', fr: 'Vérifiez-vous' }, to: '/freelancer/verify' },
-    t: {
-      en: {
-        title: '16. Verified Tick',
-        subtitle: 'A blue tick is the strongest trust signal you can earn.',
-        description: [
-          'The blue verified tick on a freelancer\'s profile means our admin team has personally reviewed their identity, portfolio, and activity. Verified freelancers consistently earn more orders and command higher prices.',
-          'Apply by submitting your government ID and a portfolio that proves your skills. Reviews typically take a few business days. Verification can be removed at any time if a freelancer breaks the rules.',
-        ],
-        steps: [
-          { title: 'Submit your ID', body: 'Government ID uploaded securely (not public).' },
-          { title: 'Submit your portfolio', body: 'Real samples of your work.' },
-          { title: 'Admin reviews', body: 'Our team verifies identity and skills.' },
-          { title: 'Tick appears', body: 'Blue tick shown next to your name across the platform.' },
-        ],
+    id: 'earnings-fees',
+    group: 'Freelancers',
+    title: 'Freelancer Earnings & Fees',
+    eyebrow: 'Wallet balance',
+    summary: 'Understand how completed orders become freelancer earnings and how the FIVESOM fee is applied.',
+    icon: Banknote,
+    cta: { label: 'Open wallet', to: '/freelancer/wallet' },
+    sections: [
+      {
+        heading: 'When do freelancers earn?',
+        body: 'Freelancers earn when a buyer accepts the delivery. Before acceptance, the buyer payment remains protected in escrow and is not available for withdrawal.',
+      },
+      {
+        heading: 'How fees work',
         bullets: [
-          'Government ID required.',
-          'Portfolio must be your own work.',
-          'Reviewed by senior admins.',
-          'Blue tick visible everywhere your name appears.',
+          'FIVESOM applies a 15% platform commission to freelancer earnings when withdrawals are processed.',
+          'The freelancer receives the remaining 85% after the platform fee.',
+          'Wallet balances are calculated by the platform, not manually edited in the browser.',
+          'Withdrawal availability depends on completed orders and pending withdrawal requests.',
         ],
-        tip: 'Verification is the single highest ROI thing a freelancer can do on FIVESOM.',
       },
-      so: {
-        title: '16. Tick (Calaamadda Xaqiijinta)',
-        subtitle: 'Tick buluug ah waa calaamadda kalsoonida ugu xoog badan.',
-        description: [
-          'Tick buluug ah profile freelancer waxay ka dhigan tahay in admin si gaar ah u eegay aqoonsiga, portfolio, iyo dhaqanka.',
-          'Codso adoo soo gudbinaya ID dawladeed iyo portfolio. Eegista waxay qaadataa maalmo shaqo.',
-        ],
-        steps: [
-          { title: 'Soo gudbi ID', body: 'ID dawladeed si ammaan ah.' },
-          { title: 'Soo gudbi portfolio', body: 'Tusaalooyin dhab ah.' },
-          { title: 'Admin eegay', body: 'Kooxda waxay xaqiijinaysaa.' },
-          { title: 'Tick muuqdaa', body: 'Buluug ag magacaaga.' },
-        ],
-        bullets: [
-          'ID dawladeed.',
-          'Portfolio shaqadaada.',
-          'Admin sare.',
-          'Buluug muuqdaa meel kasta.',
-        ],
-        tip: 'Xaqiijinta waa ROI ugu sareeya freelancer.',
+      {
+        heading: 'What happens next?',
+        body: 'Once funds are available in your wallet, you can request a withdrawal using the supported payout options in your account.',
       },
-      ar: {
-        title: '16. علامة التوثيق',
-        subtitle: 'العلامة الزرقاء أقوى إشارة ثقة.',
-        description: ['تم التحقق منها يدويًا.', 'مراجعة خلال أيام عمل.'],
-        steps: [
-          { title: 'الهوية', body: 'هوية رسمية.' },
-          { title: 'الأعمال', body: 'نماذج حقيقية.' },
-          { title: 'المراجعة', body: 'إدارة كبار.' },
-          { title: 'العلامة', body: 'تظهر بجانب اسمك.' },
-        ],
-        bullets: ['هوية رسمية.', 'أعمالك.', 'إدارة كبار.', 'مرئية في كل مكان.'],
-        tip: 'أعلى عائد للمستقل.',
-      },
-      fr: {
-        title: '16. Badge vérifié',
-        subtitle: 'Le badge bleu est le plus fort signal de confiance.',
-        description: ['Vérification manuelle par l\'admin.', 'Examen sous quelques jours.'],
-        steps: [
-          { title: 'Pièce d\'identité', body: 'ID officiel.' },
-          { title: 'Portfolio', body: 'Vos vrais travaux.' },
-          { title: 'Examen', body: 'Admin senior.' },
-          { title: 'Badge', body: 'À côté de votre nom.' },
-        ],
-        bullets: ['ID officiel.', 'Vos travaux.', 'Admin senior.', 'Visible partout.'],
-        tip: 'Plus haut ROI pour un freelance.',
-      },
-    },
+    ],
+    related: ['withdrawals', 'delivering-order', 'packages-pricing'],
   },
   {
-    id: 'support', icon: LifeBuoy, image: imgSupport, cta: { label: { en: 'Help Center', so: 'Xarunta Caawimaada', ar: 'مركز المساعدة', fr: 'Centre d\'aide' }, to: '/buyer/help' },
-    t: {
-      en: {
-        title: '17. Contact & Support',
-        subtitle: 'Real humans, fast answers, in your language.',
-        description: [
-          'FIVESOM support is available to every user. You can browse the Help Center for answers to common questions, open a support ticket from your dashboard, or reach out by email. Our team replies in English and Somali.',
-          'For account safety issues, payment problems, or disputes, support takes priority and usually responds within hours.',
-        ],
-        steps: [
-          { title: 'Browse Help Center', body: 'Most common questions are answered there.' },
-          { title: 'Open a ticket', body: 'From your dashboard, send a detailed ticket.' },
-          { title: 'Wait for reply', body: 'Most tickets answered within 24 hours.' },
-          { title: 'Follow up', body: 'Reply on the ticket to keep context.' },
-        ],
+    id: 'withdrawals',
+    group: 'Freelancers',
+    title: 'Withdrawals',
+    eyebrow: 'Payouts',
+    summary: 'Request a payout from your FIVESOM wallet after eligible earnings are available.',
+    icon: Wallet,
+    video: withdrawalVideo.url,
+    videoLabel: 'Withdrawing FIVESOM earnings tutorial',
+    cta: { label: 'Request withdrawal', to: '/freelancer/wallet/withdraw' },
+    sections: [
+      {
+        heading: 'What is a withdrawal?',
+        body: 'A withdrawal is a request to transfer available freelancer earnings from your FIVESOM wallet to a supported payout method.',
+      },
+      {
+        heading: 'How withdrawals work',
         bullets: [
-          'Help Center available 24/7.',
-          'Tickets answered by humans.',
-          'English and Somali support.',
-          'Priority for account safety and disputes.',
+          'Complete orders and wait until buyer acceptance releases funds to your wallet.',
+          'Confirm your payout details before requesting a withdrawal.',
+          'Submit the withdrawal request from your wallet page.',
+          'FIVESOM reviews and processes eligible withdrawal requests according to platform rules.',
         ],
-        tip: 'Always include the order ID or gig link when contacting support — it speeds up your reply.',
       },
-      so: {
-        title: '17. Xiriir & Taageero',
-        subtitle: 'Dadka dhabta ah, jawaabo dhakhso, luqaddaada.',
-        description: [
-          'Taageerada FIVESOM waxaa heli kara user kasta. Waxaad eegi kartaa Help Center, furi karaa ticket dashboard-ka, ama nala soo xidhiidh email.',
-          'Arrimaha ammaanka iyo lacagta, taageerada way mudnaan ka tahay oo inta badan ka jawaabaan saacado gudahood.',
-        ],
-        steps: [
-          { title: 'Eeg Help Center', body: 'Su\'aalaha caadiga ah halkaas.' },
-          { title: 'Fur ticket', body: 'Dashboard-ka.' },
-          { title: 'Sug jawaab', body: 'Inta badan 24 saac gudahood.' },
-          { title: 'La soco', body: 'Ka jawaab ticket-ka.' },
-        ],
-        bullets: [
-          'Help Center 24/7.',
-          'Tickets dad dhab ah.',
-          'English & Somali.',
-          'Mudnaan ammaan & dispute.',
-        ],
-        tip: 'Mar walba ku dar order ID — wuu dhakhsiyaa.',
+      {
+        heading: 'What happens next?',
+        body: 'You can track the withdrawal status from your wallet. If a request needs review, support may ask for updated payout details.',
       },
-      ar: {
-        title: '17. الدعم',
-        subtitle: 'بشر حقيقيون وردود سريعة.',
-        description: ['دعم متاح للجميع.', 'أولوية للأمان والمدفوعات.'],
-        steps: [
-          { title: 'مركز المساعدة', body: 'الأسئلة الشائعة.' },
-          { title: 'تذكرة', body: 'من اللوحة.' },
-          { title: 'انتظار', body: '24 ساعة.' },
-          { title: 'متابعة', body: 'رد على التذكرة.' },
-        ],
-        bullets: ['24/7.', 'بشر.', 'إنجليزي وصومالي.', 'أولوية للأمان.'],
-        tip: 'أرفق رقم الطلب.',
-      },
-      fr: {
-        title: '17. Support',
-        subtitle: 'Vrais humains, réponses rapides.',
-        description: ['Support pour tous.', 'Priorité sécurité et paiements.'],
-        steps: [
-          { title: 'Centre d\'aide', body: 'FAQ.' },
-          { title: 'Ticket', body: 'Depuis le tableau.' },
-          { title: 'Attente', body: '24 heures.' },
-          { title: 'Suivi', body: 'Répondre au ticket.' },
-        ],
-        bullets: ['24/7.', 'Humains.', 'Anglais et somali.', 'Priorité sécurité.'],
-        tip: 'Joignez l\'ID de commande.',
-      },
-    },
+    ],
+    related: ['earnings-fees', 'escrow-payments', 'support'],
   },
   {
-    id: 'faq', icon: HelpCircle, image: imgFaq,
-    t: {
-      en: {
-        title: '18. FAQ',
-        subtitle: 'Quick answers to the most common questions.',
-        description: ['These are the questions we hear most often. If your question is not here, the Help Center has many more — or contact support.'],
-        steps: [],
-        bullets: [],
-        faqs: [
-          { q: 'How do I get paid as a freelancer?', a: 'After the buyer accepts your delivery, funds are released from escrow to your FIVESOM wallet. From there you can withdraw via supported local payment methods (mobile money, etc.).' },
-          { q: 'How do I cancel an order?', a: 'Open the order, click Cancel and choose a reason. Refund handling depends on the order status — pending orders are refunded automatically, active orders may go through dispute review.' },
-          { q: 'How do I upgrade my profile?', a: 'Visit your profile dashboard and click Edit Profile. Add more skills, languages, portfolio samples, and apply for verification to unlock the blue tick.' },
-          { q: 'How much does FIVESOM charge?', a: 'Fivesom charges freelancers a 15% commission on withdrawals. When a freelancer withdraws their earnings, 15% is deducted as the Fivesom fee and they receive the remaining 85%. Buyers are not charged an extra platform fee.' },
-          { q: 'What happens if a freelancer disappears?', a: 'Open a dispute from the order page. Funds remain in escrow and can be fully refunded after admin review.' },
-          { q: 'Can I work as both buyer and freelancer?', a: 'Yes. You can switch between Buyer and Freelancer modes from your account settings.' },
+    id: 'privacy-trust',
+    group: 'Payments & Security',
+    title: 'Privacy & Trust',
+    eyebrow: 'Safe marketplace behavior',
+    summary: 'Understand how FIVESOM protects private data and what users should do to keep orders safe.',
+    icon: ShieldCheck,
+    cta: { label: 'Read terms', to: '/legal/terms' },
+    sections: [
+      {
+        heading: 'What stays private?',
+        body: 'Private account details, identity documents, payment records, order attachments, and internal verification decisions are not part of public profiles or gig pages.',
+      },
+      {
+        heading: 'How users help keep trust high',
+        bullets: [
+          'Use real portfolio work and honest profile information.',
+          'Do not ask for off-platform payment or private contact details to bypass FIVESOM.',
+          'Report fake accounts, stolen work, abusive messages, or suspicious payment behavior.',
+          'Use disputes only for genuine order problems and provide clear evidence.',
         ],
       },
-      so: {
-        title: '18. Su\'aalaha Caadiga ah',
-        subtitle: 'Jawaabo dhakhso ah ee su\'aalaha ugu badan.',
-        description: ['Kuwani waa su\'aalaha ugu badan ee la na waydiiyo. Help Center waxaa ku jira kuwo badan.'],
-        steps: [],
-        bullets: [],
-        faqs: [
-          { q: 'Sidee lacag u helaa freelancer ahaan?', a: 'Marka macmiilku oggolaado delivery-gaaga, lacagta waxay ka soo guurtaa escrow una guurtaa wallet-kaaga FIVESOM. Markaas waad ka saari kartaa hababka maxalliga ah.' },
-          { q: 'Sidee order u cancel gareeyaa?', a: 'Fur order-ka, riix Cancel oo dooro sabab. Refund-ka wuxuu ku xidhan yahay xaaladda order-ka.' },
-          { q: 'Sidee profile-ka u upgrade gareeyaa?', a: 'Tag profile dashboard-ka, riix Edit Profile. Ku dar xirfado, luqado, portfolio, oo codso xaqiijin.' },
-          { q: 'Immisa fee ayuu FIVESOM qaadaa?', a: 'Fivesom waxay ka qaadataa freelancer-ka 15% commission marka uu lacagta kala baxo (withdrawal). Freelancer-ku wuxuu helayaa 85%. Buyer-ka wax fee dheeraad ah lagama qaadayo.' },
-          { q: 'Maxaa dhacaya haddii freelancer-ku libaaxo?', a: 'Fur dispute. Lacagta escrow ayaa ku sii jirta oo refund la heli karo.' },
-          { q: 'Ma u shaqayn karaa labadaba buyer iyo freelancer?', a: 'Haa. Waad isku bedeli kartaa dejinta akoonka.' },
-        ],
+      {
+        heading: 'What happens next?',
+        body: 'Reports and disputes are reviewed by the FIVESOM team. Accounts that break marketplace rules can receive warnings, restrictions, or removal.',
       },
-      ar: {
-        title: '18. الأسئلة الشائعة',
-        subtitle: 'إجابات سريعة لأكثر الأسئلة شيوعًا.',
-        description: ['أكثر الأسئلة شيوعًا.'],
-        steps: [],
-        bullets: [],
-        faqs: [
-          { q: 'كيف أتقاضى؟', a: 'بعد قبول التسليم، تحوّل الأموال من الضمان إلى محفظتك ثم يمكنك السحب.' },
-          { q: 'كيف ألغي طلبًا؟', a: 'افتح الطلب واضغط إلغاء.' },
-          { q: 'كيف أحدث ملفي؟', a: 'لوحة الملف، Edit Profile.' },
-          { q: 'ما الرسوم؟', a: 'تتقاضى Fivesom عمولة قدرها 15% من المستقلين عند سحب أرباحهم. يحصل المستقل على 85%. لا توجد رسوم إضافية على المشتري.' },
-          { q: 'إذا اختفى المستقل؟', a: 'افتح نزاعًا.' },
-          { q: 'مشتري ومستقل معًا؟', a: 'نعم.' },
-        ],
-      },
-      fr: {
-        title: '18. FAQ',
-        subtitle: 'Réponses rapides aux questions fréquentes.',
-        description: ['Les questions les plus fréquentes.'],
-        steps: [],
-        bullets: [],
-        faqs: [
-          { q: 'Comment être payé ?', a: 'Après acceptation, fonds dans votre portefeuille puis retrait.' },
-          { q: 'Comment annuler ?', a: 'Ouvrez la commande, cliquez Annuler.' },
-          { q: 'Comment améliorer mon profil ?', a: 'Tableau de profil, Edit Profile.' },
-          { q: 'Quels frais ?', a: 'Frais clairs avant paiement.' },
-          { q: 'Si le freelance disparaît ?', a: 'Ouvrez un litige.' },
-          { q: 'Acheteur et freelance ?', a: 'Oui.' },
-        ],
-      },
-    },
+    ],
+    related: ['account-security', 'disputes', 'support'],
   },
   {
-    id: 'mobile-money', icon: Smartphone, video: withdrawMoneyVid.url,
-    t: {
-      en: {
-        title: '19. Mobile Money & Local Payments',
-        subtitle: 'How Somali payment methods work on FIVESOM.',
-        description: [
-          'FIVESOM supports the payment methods people actually use in Somalia. Buyers can pay with a card through our secure Stripe checkout, or use local mobile money by following the USSD instructions shown at checkout.',
-          'For mobile money, the platform shows the exact merchant number and amount. You dial the USSD code from your phone, confirm the transfer, and then upload the confirmation so support can match the payment to your order. Once confirmed, the money enters escrow exactly like a card payment.',
-        ],
-        steps: [
-          { title: 'Choose a payment method', body: 'At checkout, pick card payment or local mobile money.' },
-          { title: 'Follow the USSD prompt', body: 'Tap the number to dial and confirm the transfer on your phone.' },
-          { title: 'Submit your confirmation', body: 'Upload or paste the transaction reference so it can be verified.' },
-          { title: 'Order starts in escrow', body: 'Once verified, funds are held in escrow and the order becomes active.' },
-        ],
-        bullets: [
-          'Card payments are processed instantly through Stripe.',
-          'Mobile money payments are verified by the FIVESOM team before the order becomes active.',
-          'Never send money outside the platform — off-platform payments are not protected by escrow.',
-          'Freelancers withdraw earnings to their preferred local method, minus the 15% Fivesom commission.',
-        ],
-        tip: 'Always keep your mobile money confirmation message until the order is completed.',
+    id: 'verification-blue-tick',
+    group: 'Verification & VIP',
+    title: 'Verification & Blue Tick',
+    eyebrow: 'Trust signal',
+    summary: 'Learn what freelancer verification means, how Blue Tick eligibility works, and how applications are reviewed.',
+    icon: BadgeCheck,
+    cta: { label: 'Start verification', to: '/freelancer/verify' },
+    sections: [
+      {
+        heading: 'What is the Blue Tick?',
+        body: 'The Blue Tick is a trust signal for freelancers who meet the platform eligibility requirements and complete the application review process.',
       },
-      so: {
-        title: '19. Mobile Money & Lacag-bixinta Maxalliga',
-        subtitle: 'Sida hababka lacag-bixinta Soomaaliyeed ay u shaqeeyaan FIVESOM.',
-        description: [
-          'FIVESOM waxay taageertaa hababka lacag-bixinta dadku dhab ahaan isticmaalaan Soomaaliya. Macmiilku wuxuu ku bixin karaa kaarka Stripe checkout-ka ammaan ah, ama wuxuu isticmaali karaa mobile money isagoo raacaya tilmaamaha USSD ee checkout-ka lagu tuso.',
-          'Mobile money, madasha waxay tusaysaa nambarka merchant-ka iyo qadarka saxda ah. Waxaad ka garaacdaa USSD-ga taleefankaaga, xaqiijisaa wareejinta, ka dibna waxaad soo gudbisaa xaqiijinta si taageeradu ula xidhiidhiso order-kaaga. Marka la xaqiijiyo, lacagta waxay gashaa escrow sida kaarka oo kale.',
-        ],
-        steps: [
-          { title: 'Dooro habka lacag-bixinta', body: 'Checkout-ka, dooro kaar ama mobile money maxalli ah.' },
-          { title: 'Raac USSD-ga', body: 'Riix nambarka si aad garaacdo oo xaqiiji wareejinta.' },
-          { title: 'Soo gudbi xaqiijinta', body: 'Soo geli reference-ka macaamilka si loo hubiyo.' },
-          { title: 'Order-ku wuxuu galo escrow', body: 'Marka la hubiyo, lacagta escrow ku jirta oo order-ku firfircoonaadaa.' },
-        ],
+      {
+        heading: 'How verification works',
         bullets: [
-          'Kaarka wuxuu isla markiiba ku maraya Stripe.',
-          'Mobile money waxaa xaqiijiya kooxda FIVESOM ka hor inta order-ku firfircoonaan.',
-          'Waligaa lacag ha dirin banaanka madasha — lacagta dibedda escrow ma ilaaliyo.',
-          'Freelancer-ku wuxuu lacagta la baxaa habka maxalliga, ka dib 15% commission Fivesom.',
+          'Eligibility is checked from real account activity such as account age, completed orders, ratings, earnings, and profile quality.',
+          'The application is completed in three steps: professional information, identity information, and face or camera verification.',
+          'Identity documents are stored privately and reviewed only by authorized verification staff.',
+          'Admins can approve, reject, or request changes before the application is accepted.',
         ],
-        tip: 'Fariinta xaqiijinta mobile money ilaali ilaa order-ku dhammaado.',
       },
-      ar: {
-        title: '19. المحفظة الإلكترونية والمدفوعات المحلية',
-        subtitle: 'كيف تعمل طرق الدفع المحلية على FIVESOM.',
-        description: [
-          'يدعم FIVESOM الدفع بالبطاقة عبر Stripe وكذلك المحافظ المحلية عبر رموز USSD الظاهرة عند الدفع.',
-          'بعد إتمام التحويل، ترفع إثبات الدفع ليتم التحقق منه، ثم تُحفظ الأموال في الضمان مثل الدفع بالبطاقة.',
-        ],
-        steps: [
-          { title: 'اختر طريقة الدفع', body: 'بطاقة أو محفظة محلية.' },
-          { title: 'اتبع رمز USSD', body: 'أكمل التحويل من هاتفك.' },
-          { title: 'أرسل الإثبات', body: 'ارفع رقم العملية للتحقق.' },
-          { title: 'يبدأ الطلب', body: 'تُحفظ الأموال في الضمان.' },
-        ],
-        bullets: [
-          'الدفع بالبطاقة فوري عبر Stripe.',
-          'يتم التحقق من المدفوعات المحلية من قبل الفريق.',
-          'لا تدفع خارج المنصة.',
-          'عمولة Fivesom 15% عند السحب.',
-        ],
-        tip: 'احتفظ برسالة التأكيد حتى إتمام الطلب.',
+      {
+        heading: 'What happens next?',
+        body: 'Approved freelancers receive the Blue Tick across the platform. If changes are required, update the application and resubmit it for review.',
       },
-      fr: {
-        title: '19. Mobile Money et paiements locaux',
-        subtitle: 'Comment fonctionnent les paiements locaux sur FIVESOM.',
-        description: [
-          'FIVESOM accepte les cartes via Stripe et les paiements mobile money via les codes USSD affichés au paiement.',
-          'Après le transfert, vous envoyez la preuve pour vérification, puis les fonds sont placés en séquestre.',
-        ],
-        steps: [
-          { title: 'Choisir le mode', body: 'Carte ou mobile money.' },
-          { title: 'Suivre le code USSD', body: 'Confirmez le transfert sur votre téléphone.' },
-          { title: 'Envoyer la preuve', body: 'Ajoutez la référence de transaction.' },
-          { title: 'Commande active', body: 'Les fonds passent en séquestre.' },
-        ],
-        bullets: [
-          'Paiements par carte instantanés via Stripe.',
-          'Paiements locaux vérifiés par l\'équipe.',
-          'Ne payez jamais hors plateforme.',
-          'Commission Fivesom de 15% au retrait.',
-        ],
-        tip: 'Conservez votre message de confirmation jusqu\'à la fin de la commande.',
-      },
-    },
+    ],
+    related: ['freelancer-profile', 'creating-gig', 'privacy-trust'],
   },
   {
-    id: 'buyer-accept', icon: Star, video: buyerAcceptVid.url,
-    t: {
-      en: {
-        title: '20. Buyer Acceptance, Ratings & Payment Release',
-        subtitle: 'How a buyer accepts the delivery, leaves a star rating, and releases the payment.',
-        description: [
-          'When the freelancer submits the work, the order moves to "Delivered" and the buyer receives a notification. The buyer opens the order details page, previews the delivered files or links, and decides whether to accept the delivery or request a revision.',
-          'Accepting the delivery is the moment the escrow is released: the payment moves to the freelancer\'s wallet and the download links unlock for the buyer. Right after acceptance the buyer is asked to leave a 1–5 star rating and a short comment, which becomes part of the freelancer\'s public reputation.',
-        ],
-        steps: [
-          { title: 'Open the delivered order', body: 'Go to My Orders and open the order marked "Delivered".' },
-          { title: 'Review the delivery', body: 'Read the delivery message and preview the files or links before deciding.' },
-          { title: 'Accept the delivery', body: 'Click "Accept Delivery". This releases the escrow payment to the freelancer and unlocks your downloads.' },
-          { title: 'Or request a revision', body: 'If something is missing, use "Request Revision" and describe exactly what should change.' },
-          { title: 'Leave a star rating', body: 'Give 1–5 stars and write a short honest comment about the work and communication.' },
-          { title: 'Order completed', body: 'The order status becomes "Completed" and your review appears on the freelancer\'s gig.' },
-        ],
-        bullets: [
-          'Downloads and delivery links unlock only after you accept the delivery.',
-          'Payment is released from escrow at the moment of acceptance — never before.',
-          'If the work is genuinely wrong you can open a dispute instead of accepting.',
-          'Only buyers with a completed order can leave a rating, so reviews stay real.',
-        ],
-        tip: 'Always preview the delivery carefully before accepting — acceptance releases the payment immediately.',
+    id: 'vip-membership',
+    group: 'Verification & VIP',
+    title: 'VIP Membership',
+    eyebrow: 'Growth features',
+    summary: 'Understand VIP visibility features, seller limits, and how membership supports more serious freelancers.',
+    icon: Trophy,
+    cta: { label: 'View VIP membership', to: '/vip' },
+    sections: [
+      {
+        heading: 'What is VIP?',
+        body: 'VIP membership is designed for freelancers who want more visibility and growth tools. It complements strong work quality; it does not replace reviews, delivery performance, or marketplace rules.',
       },
-      so: {
-        title: '20. Aqbalidda Buyer-ka, Xidigaha & Sii-deynta Lacagta',
-        subtitle: 'Sida buyer-ku u aqbalo delivery-ga, u siiyo xidigo, oo lacagta loo sii daayo.',
-        description: [
-          'Marka freelancer-ku shaqada soo gudbiyo, order-ku wuxuu noqdaa "Delivered" oo buyer-ku ogeysiis hela. Buyer-ku wuxuu furaa bogga order details, wuxuu eegaa faylalka ama links-ka la keenay, ka dibna wuxuu doortaa inuu aqbalo ama revision codsado.',
-          'Aqbalidda delivery-ga waa waqtiga lacagta escrow-ga laga sii daayo: lacagta waxay gashaa wallet-ka freelancer-ka oo download-yada buyer-ka furmaan. Isla markiiba ka dib waxaa buyer-ka laga codsanayaa qiimayn 1–5 xidig iyo faallo gaaban, taasoo qayb ka noqonaysa sumcadda freelancer-ka.',
-        ],
-        steps: [
-          { title: 'Fur order-ka la keenay', body: 'Aad My Orders oo fur order-ka calaamadaysan "Delivered".' },
-          { title: 'Eeg delivery-ga', body: 'Akhri fariinta delivery-ga oo eeg faylalka ama links-ka ka hor inta aadan go\'aansan.' },
-          { title: 'Aqbal delivery-ga', body: 'Riix "Accept Delivery". Tani waxay lacagta escrow-ga u sii daysaa freelancer-ka oo download-yadaada furaysaa.' },
-          { title: 'Ama codso revision', body: 'Haddii wax maqan yihiin, isticmaal "Request Revision" oo si cad sharax waxa la beddelayo.' },
-          { title: 'Sii xidigo qiimayn', body: 'Sii 1–5 xidig oo qor faallo daacad ah oo ku saabsan shaqada iyo wada hadalka.' },
-          { title: 'Order-ku wuu dhammaaday', body: 'Xaaladda order-ku waxay noqonaysaa "Completed" oo review-gaagu wuxuu ka muuqdaa gig-ga freelancer-ka.' },
-        ],
+      {
+        heading: 'How to use VIP responsibly',
         bullets: [
-          'Download-yada iyo links-ka waxay furmaan kaliya ka dib marka aad aqbasho delivery-ga.',
-          'Lacagta escrow waxaa laga sii daayaa marka aqbalidda dhacdo — waligeed ka hor maaha.',
-          'Haddii shaqada dhab ahaan qaldan tahay waad furi kartaa dispute halkii aad aqbasho.',
-          'Kaliya buyer-ka leh order dhammaystiran wuxuu qiimayn siin karaa, sidaas darteed reviews-ku waa dhab.',
+          'Keep gig quality high before paying for more visibility.',
+          'Use extra gig capacity only for services you can deliver well.',
+          'Maintain fast responses, on-time delivery, and clear buyer communication.',
+          'Review your performance before upgrading or renewing.',
         ],
-        tip: 'Had iyo jeer si feejigan eeg delivery-ga ka hor aqbalidda — aqbalidda isla markiiba lacagta way sii daysaa.',
       },
-      ar: {
-        title: '20. قبول المشتري والتقييم وتحرير الدفع',
-        subtitle: 'كيف يقبل المشتري التسليم ويمنح النجوم ويُحرَّر المبلغ.',
-        description: [
-          'عند تسليم العمل تتحول الحالة إلى "تم التسليم" ويستعرض المشتري الملفات أو الروابط قبل القرار.',
-          'قبول التسليم يحرّر المبلغ من الضمان إلى محفظة المستقل، ثم يُطلب من المشتري تقييم من 1 إلى 5 نجوم مع تعليق قصير.',
-        ],
-        steps: [
-          { title: 'افتح الطلب المُسلَّم', body: 'من طلباتي افتح الطلب بحالة "تم التسليم".' },
-          { title: 'راجع التسليم', body: 'اقرأ الرسالة واستعرض الملفات.' },
-          { title: 'اقبل التسليم', body: 'زر Accept Delivery يحرّر المبلغ ويفتح التحميل.' },
-          { title: 'أو اطلب تعديلًا', body: 'اشرح بدقة ما يجب تغييره.' },
-          { title: 'اترك تقييمًا', body: 'من 1 إلى 5 نجوم مع تعليق صادق.' },
-          { title: 'اكتمل الطلب', body: 'تصبح الحالة "مكتمل" ويظهر تقييمك.' },
-        ],
-        bullets: [
-          'لا تُفتح التحميلات إلا بعد القبول.',
-          'يُحرَّر المبلغ لحظة القبول فقط.',
-          'يمكنك فتح نزاع بدلًا من القبول.',
-          'التقييم متاح فقط لمن أكمل طلبًا.',
-        ],
-        tip: 'راجع التسليم جيدًا قبل القبول لأن القبول يحرّر المبلغ فورًا.',
+      {
+        heading: 'What happens next?',
+        body: 'Visit the VIP page to compare available options and make sure the plan matches your current freelance workload.',
       },
-      fr: {
-        title: '20. Acceptation de l\'acheteur, notes et libération du paiement',
-        subtitle: 'Comment l\'acheteur accepte la livraison, laisse des étoiles et libère le paiement.',
-        description: [
-          'Dès la livraison, la commande passe en « Livrée » et l\'acheteur consulte les fichiers ou liens avant de décider.',
-          'Accepter la livraison libère les fonds du séquestre vers le portefeuille du freelance, puis l\'acheteur laisse une note de 1 à 5 étoiles avec un court commentaire.',
-        ],
-        steps: [
-          { title: 'Ouvrir la commande livrée', body: 'Dans Mes commandes, ouvrez la commande « Livrée ».' },
-          { title: 'Examiner la livraison', body: 'Lisez le message et prévisualisez les fichiers.' },
-          { title: 'Accepter la livraison', body: '« Accept Delivery » libère le paiement et débloque les téléchargements.' },
-          { title: 'Ou demander une révision', body: 'Expliquez précisément ce qui doit changer.' },
-          { title: 'Laisser une note', body: 'De 1 à 5 étoiles avec un commentaire honnête.' },
-          { title: 'Commande terminée', body: 'Le statut devient « Terminée » et votre avis s\'affiche.' },
-        ],
-        bullets: [
-          'Les téléchargements se débloquent après acceptation.',
-          'Les fonds sont libérés au moment de l\'acceptation.',
-          'Vous pouvez ouvrir un litige au lieu d\'accepter.',
-          'Seuls les acheteurs ayant terminé une commande peuvent noter.',
-        ],
-        tip: 'Vérifiez bien la livraison avant d\'accepter : le paiement est libéré immédiatement.',
-      },
-    },
+    ],
+    related: ['verification-blue-tick', 'creating-gig', 'earnings-fees'],
   },
-
+  {
+    id: 'support',
+    group: 'Support',
+    title: 'FIVESOM Support',
+    eyebrow: 'Help and contact',
+    summary: 'Find answers, contact support, and include the right information so the team can help faster.',
+    icon: LifeBuoy,
+    cta: { label: 'Contact support', to: '/buyer/help' },
+    sections: [
+      {
+        heading: 'When should you contact support?',
+        body: 'Contact FIVESOM Support when you have account access issues, payment questions, order disputes, verification problems, suspicious behavior, or questions not answered in the documentation.',
+      },
+      {
+        heading: 'What to include',
+        bullets: [
+          'Your order ID, gig link, or profile link when the question relates to a specific page.',
+          'A short explanation of what happened and what you expected instead.',
+          'Screenshots or files only when they help support understand the issue.',
+          'Your preferred reply language if you need Somali or English support.',
+        ],
+      },
+      {
+        heading: 'What happens next?',
+        body: 'Support reviews the request, checks the relevant account or order records, and replies with the next action or decision.',
+      },
+    ],
+    related: ['account-security', 'disputes', 'privacy-trust'],
+  },
 ];
 
+const GROUPS: { title: TopicGroup; description: string }[] = [
+  { title: 'Getting Started', description: 'Account setup, platform basics, and security foundations.' },
+  { title: 'Freelancers', description: 'Profile, gigs, orders, earnings, and withdrawals.' },
+  { title: 'Buyers', description: 'Finding talent, ordering work, requirements, and delivery review.' },
+  { title: 'Orders & Delivery', description: 'Communication, delivery, revisions, and dispute handling.' },
+  { title: 'Payments & Security', description: 'Escrow, privacy, safe payments, and marketplace trust.' },
+  { title: 'Verification & VIP', description: 'Blue Tick verification and VIP growth options.' },
+  { title: 'Support', description: 'Where to get help and what details support needs.' },
+];
 
-const UI_LABELS: Record<Lang, { onPage: string; tableOfContents: string; faqHeading: string; backToTop: string; steps: string; highlights: string; tip: string; faqInside: string }> = {
-  en: { onPage: 'On this page', tableOfContents: 'Documentation', faqHeading: 'Common Questions', backToTop: 'Back to top', steps: 'Steps', highlights: 'Highlights', tip: 'Pro tip', faqInside: 'FAQ' },
-  so: { onPage: 'Bogga kan', tableOfContents: 'Dukumentiyada', faqHeading: 'Su\'aalaha Caadiga ah', backToTop: 'Ku noqo dusha', steps: 'Tallaabooyinka', highlights: 'Muhiim', tip: 'Talo Pro', faqInside: 'FAQ' },
-  ar: { onPage: 'في هذه الصفحة', tableOfContents: 'التوثيق', faqHeading: 'أسئلة شائعة', backToTop: 'إلى الأعلى', steps: 'الخطوات', highlights: 'أبرز النقاط', tip: 'نصيحة', faqInside: 'الأسئلة' },
-  fr: { onPage: 'Sur cette page', tableOfContents: 'Documentation', faqHeading: 'Questions fréquentes', backToTop: 'Retour en haut', steps: 'Étapes', highlights: 'Points clés', tip: 'Astuce', faqInside: 'FAQ' },
+const topicMap = TOPICS.reduce<Record<string, Topic>>((acc, topic) => {
+  acc[topic.id] = topic;
+  return acc;
+}, {});
+
+const docsJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${SITE_URL}/docs#documentation`,
+  name: 'FIVESOM Documentation',
+  description: 'Official FIVESOM documentation for buyers and freelancers: accounts, gigs, orders, escrow, verification, VIP, payments, withdrawals, and support.',
+  url: `${SITE_URL}/docs`,
+  inLanguage: 'en',
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+  hasPart: TOPICS.map((topic) => ({
+    '@type': 'TechArticle',
+    '@id': `${SITE_URL}/docs#${topic.id}`,
+    headline: topic.title,
+    description: topic.summary,
+    url: `${SITE_URL}/docs#${topic.id}`,
+  })),
 };
 
-const LANG_OPTIONS: { code: Lang; flag: string; label: string }[] = [
-  { code: 'en', flag: '🇺🇸', label: 'English' },
-  { code: 'so', flag: '🇸🇴', label: 'Soomaali' },
-  { code: 'ar', flag: '🇸🇦', label: 'العربية' },
-  { code: 'fr', flag: '🇫🇷', label: 'Français' },
-];
+const topicMatches = (topic: Topic, query: string) => {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return true;
+  const searchable = [
+    topic.group,
+    topic.title,
+    topic.eyebrow,
+    topic.summary,
+    ...topic.sections.flatMap((section) => [section.heading, section.body ?? '', ...(section.bullets ?? [])]),
+  ]
+    .join(' ')
+    .toLowerCase();
+  return searchable.includes(normalized);
+};
 
 const Docs: React.FC = () => {
-  const [lang, setLang] = useState<Lang>(() => (localStorage.getItem('docs-lang') as Lang) || 'en');
-  const [activeId, setActiveId] = useState<string>('intro');
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const location = useLocation();
-  const ui = UI_LABELS[lang];
-  const isRtl = lang === 'ar';
+  const [query, setQuery] = useState('');
+  const [activeId, setActiveId] = useState(TOPICS[0]?.id ?? 'getting-started');
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
-  useEffect(() => { localStorage.setItem('docs-lang', lang); }, [lang]);
+  const filteredTopics = useMemo(() => TOPICS.filter((topic) => topicMatches(topic, query)), [query]);
+  const filteredIds = useMemo(() => new Set(filteredTopics.map((topic) => topic.id)), [filteredTopics]);
 
   useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.slice(1);
-      const el = document.getElementById(id);
-      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
-    } else {
-      window.scrollTo({ top: 0 });
+    if (!location.hash) return;
+    const id = location.hash.slice(1);
+    const el = document.getElementById(id);
+    if (el) {
+      window.setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      setActiveId(id);
     }
   }, [location.hash]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.filter(e => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
         if (visible[0]) setActiveId(visible[0].target.id);
       },
-      { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.25, 0.5, 1] }
+      { rootMargin: '-28% 0px -58% 0px', threshold: [0.1, 0.35, 0.7] }
     );
-    SECTIONS.forEach(s => {
-      const el = document.getElementById(s.id);
+
+    TOPICS.forEach((topic) => {
+      const el = document.getElementById(topic.id);
       if (el) observer.observe(el);
     });
+
     return () => observer.disconnect();
   }, []);
 
-  const handleNavClick = (id: string) => {
-    setMobileNavOpen(false);
-    const el = document.getElementById(id);
-    if (el) {
-      window.history.replaceState(null, '', `#${id}`);
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
-  const currentLangOpt = useMemo(() => LANG_OPTIONS.find(l => l.code === lang)!, [lang]);
+  const closeMobileNav = () => setMobileNavOpen(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-background text-foreground">
       <SEO
-        title="FIVESOM Docs — Buyer & Freelancer Guide"
-        description="FIVESOM documentation in English, Somali, Arabic and French: accounts, gigs, escrow, payments, security, disputes and VIP."
+        title="FIVESOM Documentation — Buyer & Freelancer Guides"
+        description="Official FIVESOM docs for accounts, gigs, orders, escrow, payments, withdrawals, Blue Tick verification, VIP, security and support."
         canonical="/docs"
+        jsonLd={docsJsonLd}
       />
       <Navbar />
 
-      {/* Top docs bar with language switcher */}
-      <div className="border-b border-border bg-muted/30 sticky top-16 z-30 backdrop-blur supports-[backdrop-filter]:bg-muted/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <button
-              className="lg:hidden p-2 rounded-md hover:bg-muted text-foreground"
+      <div className="sticky top-16 z-30 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="lg:hidden"
               onClick={() => setMobileNavOpen(true)}
-              aria-label="Open docs menu"
+              aria-label="Open documentation menu"
             >
-              <Menu className="h-5 w-5" />
-            </button>
-            <h1 className="text-base sm:text-lg font-semibold text-foreground">FIVESOM {ui.tableOfContents}</h1>
+              <Menu className="h-5 w-5" aria-hidden />
+            </Button>
+            <div>
+              <p className="text-sm font-semibold">FIVESOM Documentation</p>
+              <p className="hidden text-xs text-muted-foreground sm:block">20 focused guides for buyers, freelancers, payments and support</p>
+            </div>
           </div>
-          <div className="flex items-center gap-1 bg-background border border-border rounded-full p-1">
-            {LANG_OPTIONS.map(opt => (
-              <button
-                key={opt.code}
-                onClick={() => setLang(opt.code)}
-                className={`px-2.5 sm:px-3 py-1 text-xs sm:text-sm rounded-full transition-colors ${
-                  lang === opt.code ? 'bg-primary text-primary-foreground font-medium' : 'text-muted-foreground hover:text-foreground'
-                }`}
-                aria-label={opt.label}
-              >
-                <span className="mr-1">{opt.flag}</span>
-                <span className="hidden sm:inline">{opt.code.toUpperCase()}</span>
-              </button>
-            ))}
+          <div className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex">
+            <span className="rounded-full border border-border bg-muted/40 px-3 py-1">Updated for the current platform flow</span>
           </div>
         </div>
       </div>
 
-      <div className="w-full px-4 sm:px-6 lg:px-0 flex-1">
-        <div className="flex gap-8">
-          {/* Sidebar - desktop, pinned to the left edge of the screen */}
-          <aside className={`hidden lg:block w-72 shrink-0 py-8 ${isRtl ? 'order-2' : ''}`}>
-            <div className={`sticky top-32 max-h-[calc(100vh-9rem)] overflow-y-auto py-2 ${isRtl ? 'pr-6 pl-4 border-l' : 'pl-6 pr-4 border-r'} border-border`}>
-              <p className="text-xs font-semibold uppercase text-muted-foreground mb-3 tracking-wider">{ui.onPage}</p>
-              <nav className="space-y-1">
-                {SECTIONS.map(s => {
-                  const Icon = s.icon;
-                  const active = activeId === s.id;
-                  return (
-                    <button
-                      key={s.id}
-                      onClick={() => handleNavClick(s.id)}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors text-left ${
-                        active
-                          ? 'bg-primary/10 text-primary font-medium border-l-2 border-primary'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                      }`}
-                    >
-                      <Icon className="h-4 w-4 shrink-0" />
-                      <span className="truncate">{s.t[lang].title}</span>
-                    </button>
-                  );
-                })}
-              </nav>
+      {mobileNavOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Documentation navigation">
+          <button
+            type="button"
+            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+            onClick={closeMobileNav}
+            aria-label="Close documentation menu"
+          />
+          <div className="absolute inset-y-0 left-0 w-[min(22rem,90vw)] overflow-y-auto border-r border-border bg-card p-5 shadow-xl">
+            <div className="mb-5 flex items-center justify-between gap-3">
+              <p className="font-semibold">Documentation</p>
+              <Button type="button" variant="ghost" size="icon" onClick={closeMobileNav} aria-label="Close documentation menu">
+                <X className="h-5 w-5" aria-hidden />
+              </Button>
             </div>
-          </aside>
+            <DocsNav activeId={activeId} filteredIds={filteredIds} onNavigate={closeMobileNav} />
+          </div>
+        </div>
+      )}
 
-          {/* Mobile sidebar drawer */}
-          {mobileNavOpen && (
-            <div className="fixed inset-0 z-50 lg:hidden">
-              <div className="absolute inset-0 bg-black/60" onClick={() => setMobileNavOpen(false)} />
-              <div className={`absolute top-0 ${isRtl ? 'right-0' : 'left-0'} bottom-0 w-72 bg-card border-${isRtl ? 'l' : 'r'} border-border p-4 overflow-y-auto`}>
-                <div className="flex items-center justify-between mb-4">
-                  <p className="text-sm font-semibold text-foreground">{ui.tableOfContents}</p>
-                  <button onClick={() => setMobileNavOpen(false)} aria-label="Close"><X className="h-5 w-5 text-foreground" /></button>
-                </div>
-                <nav className="space-y-1">
-                  {SECTIONS.map(s => {
-                    const Icon = s.icon;
-                    const active = activeId === s.id;
-                    return (
-                      <button
-                        key={s.id}
-                        onClick={() => handleNavClick(s.id)}
-                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-left ${active ? 'bg-primary/10 text-primary font-medium' : 'text-muted-foreground hover:bg-muted'}`}
-                      >
-                        <Icon className="h-4 w-4 shrink-0" />
-                        <span>{s.t[lang].title}</span>
-                      </button>
-                    );
-                  })}
-                </nav>
+      <main>
+        <section className="border-b border-border bg-muted/20 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
+            <div>
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-semibold text-primary">
+                <BookOpen className="h-4 w-4" aria-hidden />
+                Official platform guide
               </div>
-            </div>
-          )}
-
-          {/* Main content */}
-          <main className="flex-1 min-w-0 py-8 max-w-4xl pr-4 sm:pr-6 lg:pr-8">
-            <header className="mb-12">
-              <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary mb-4">
-                FIVESOM Docs
-              </div>
-              <h1 className="text-3xl sm:text-5xl font-bold text-foreground mb-4 tracking-tight">
-                {lang === 'so' ? 'Hagaha Buuxa ee FIVESOM' :
-                 lang === 'ar' ? 'الدليل الكامل لـ FIVESOM' :
-                 lang === 'fr' ? 'Guide complet FIVESOM' :
-                 'The Complete FIVESOM Guide'}
+              <h1 className="max-w-4xl text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
+                FIVESOM Documentation
               </h1>
-              <p className="text-muted-foreground text-base sm:text-xl leading-relaxed">
-                {lang === 'so' ? 'Wax kasta oo aad u baahan tahay si aad u isticmaasho FIVESOM A illaa Z — bog kasta oo si qoto dheer loo sharaxay.' :
-                 lang === 'ar' ? 'كل ما تحتاج معرفته من الألف إلى الياء — كل قسم بشرح متعمق.' :
-                 lang === 'fr' ? 'Tout ce qu\'il faut savoir, de A à Z — chaque section expliquée en profondeur.' :
-                 'Everything you need to use FIVESOM from A to Z — every section explained in depth.'}
+              <p className="mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+                Clear, practical guides for using FIVESOM as a buyer or freelancer. Learn how accounts, gigs, orders, escrow, payments, delivery, verification and support work without reading a long mixed page.
               </p>
-            </header>
-
-            <div className="space-y-20">
-              {SECTIONS.map((s) => {
-                const t = s.t[lang];
-                const Icon = s.icon;
-                return (
-                  <section key={s.id} id={s.id} className="scroll-mt-32">
-                    {/* Header */}
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-1">
-                        <Icon className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <h2 className="text-2xl sm:text-3xl font-bold text-foreground">{t.title}</h2>
-                        <p className="text-muted-foreground text-base sm:text-lg mt-1">{t.subtitle}</p>
-                      </div>
-                    </div>
-
-                    {/* Long description paragraphs */}
-                    <div className="space-y-4 mb-6 mt-6">
-                      {t.description.map((para, i) => (
-                        <p key={i} className="text-foreground/90 text-base leading-relaxed">{para}</p>
-                      ))}
-                    </div>
-
-                    {/* Section media — tutorial video, illustration, or nothing */}
-                    {s.video ? (
-                      <figure className="rounded-2xl overflow-hidden border border-border mb-8 bg-black shadow-sm">
-                        <div className="aspect-video w-full max-h-[70vh]">
-                          <SmartVideo
-                            src={s.video}
-                            label="tutorial video"
-                            controls
-                            lazy
-                          />
-                        </div>
-                      </figure>
-                    ) : s.image ? (
-                      <figure className="rounded-2xl overflow-hidden border border-border mb-8 bg-muted shadow-sm">
-                        <SmartImage
-                          src={s.image}
-                          alt={t.title}
-                          width={1280}
-                          height={720}
-                          wrapperClassName="w-full aspect-video"
-                          className="w-full h-full object-cover"
-                          showRetry
-                        />
-                      </figure>
-                    ) : null}
-
-
-                    {/* Steps cards grid */}
-                    {t.steps.length > 0 && (
-                      <div className="mb-6">
-                        <p className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wider">{ui.steps}</p>
-                        <div className="grid sm:grid-cols-2 gap-3">
-                          {t.steps.map((step, i) => (
-                            <Card key={i} className="border-border bg-card">
-                              <CardContent className="p-4">
-                                <div className="flex items-start gap-3">
-                                  <span className="shrink-0 h-7 w-7 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center text-sm">
-                                    {i + 1}
-                                  </span>
-                                  <div>
-                                    <p className="font-semibold text-foreground text-sm">{step.title}</p>
-                                    <p className="text-muted-foreground text-sm mt-1 leading-relaxed">{step.body}</p>
-                                  </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Highlights bullets */}
-                    {t.bullets.length > 0 && (
-                      <div className="mb-6 rounded-xl border border-border bg-muted/30 p-5">
-                        <p className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wider">{ui.highlights}</p>
-                        <ul className="space-y-2">
-                          {t.bullets.map((b, i) => (
-                            <li key={i} className="flex items-start gap-2.5 text-sm text-foreground/90">
-                              <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                              <span>{b}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Pro tip callout */}
-                    {t.tip && (
-                      <div className="mb-6 border-l-4 border-primary bg-primary/5 px-4 py-3 rounded-r flex gap-3 items-start">
-                        <Lightbulb className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">{ui.tip}</p>
-                          <p className="text-sm text-foreground">{t.tip}</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Inline FAQ accordion (only on FAQ section) */}
-                    {t.faqs && t.faqs.length > 0 && (
-                      <Accordion type="single" collapsible className="border border-border rounded-xl bg-card mb-6">
-                        {t.faqs.map((item, i) => (
-                          <AccordionItem key={i} value={`item-${i}`} className="px-4">
-                            <AccordionTrigger className="text-left text-foreground">{item.q}</AccordionTrigger>
-                            <AccordionContent className="text-muted-foreground">{item.a}</AccordionContent>
-                          </AccordionItem>
-                        ))}
-                      </Accordion>
-                    )}
-
-                    {s.cta && (
-                      <Link to={s.cta.to}>
-                        <Button className="gap-2">
-                          {s.cta.label[lang]}
-                          <ArrowRight className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
-                        </Button>
-                      </Link>
-                    )}
-                  </section>
-                );
-              })}
-
-              <div className="text-center pt-6 border-t border-border">
-                <Button variant="outline" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                  ↑ {ui.backToTop}
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg" className="gap-2">
+                  <Link to="/explore">
+                    Find a freelancer <ArrowRight className="h-4 w-4" aria-hidden />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="gap-2">
+                  <Link to="/register/freelancer">
+                    Become a freelancer <ArrowRight className="h-4 w-4" aria-hidden />
+                  </Link>
                 </Button>
               </div>
             </div>
-          </main>
+
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+              <label htmlFor="docs-search" className="text-sm font-semibold">Search documentation</label>
+              <div className="mt-3 flex items-center gap-3 rounded-xl border border-input bg-background px-3 py-2">
+                <Search className="h-5 w-5 text-muted-foreground" aria-hidden />
+                <input
+                  id="docs-search"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Try escrow, Blue Tick, withdrawal..."
+                  className="min-w-0 flex-1 bg-transparent py-1 text-sm outline-none placeholder:text-muted-foreground"
+                />
+              </div>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Showing {filteredTopics.length} of {TOPICS.length} topics.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[18rem_minmax(0,1fr)] lg:px-8">
+          <aside className="hidden lg:block">
+            <div className="sticky top-32 max-h-[calc(100vh-9rem)] overflow-y-auto pr-4">
+              <DocsNav activeId={activeId} filteredIds={filteredIds} />
+            </div>
+          </aside>
+
+          <div className="min-w-0">
+            <section aria-labelledby="docs-topics" className="mb-14">
+              <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <h2 id="docs-topics" className="text-2xl font-bold sm:text-3xl">Browse by topic</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">Start with a category, then jump into the exact guide you need.</p>
+                </div>
+                {query && (
+                  <Button type="button" variant="ghost" onClick={() => setQuery('')}>Clear search</Button>
+                )}
+              </div>
+
+              {filteredTopics.length === 0 ? (
+                <div className="rounded-2xl border border-border bg-card p-8 text-center">
+                  <HelpCircle className="mx-auto h-8 w-8 text-muted-foreground" aria-hidden />
+                  <p className="mt-3 font-semibold">No documentation topics matched your search.</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Try a simpler word like order, payment, gig, support or verification.</p>
+                </div>
+              ) : (
+                <div className="space-y-8">
+                  {GROUPS.map((group) => {
+                    const topics = TOPICS.filter((topic) => topic.group === group.title && filteredIds.has(topic.id));
+                    if (topics.length === 0) return null;
+                    return (
+                      <div key={group.title}>
+                        <div className="mb-3">
+                          <h3 className="text-lg font-semibold">{group.title}</h3>
+                          <p className="text-sm text-muted-foreground">{group.description}</p>
+                        </div>
+                        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                          {topics.map((topic) => {
+                            const Icon = topic.icon;
+                            return (
+                              <Link
+                                key={topic.id}
+                                to={`/docs#${topic.id}`}
+                                className="group rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/50 hover:bg-muted/20"
+                              >
+                                <div className="mb-4 flex items-start justify-between gap-4">
+                                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                                    <Icon className="h-5 w-5" aria-hidden />
+                                  </span>
+                                  <ChevronRight className="h-5 w-5 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" aria-hidden />
+                                </div>
+                                <p className="text-xs font-semibold text-primary">{topic.eyebrow}</p>
+                                <h4 className="mt-1 font-semibold leading-snug">{topic.title}</h4>
+                                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{topic.summary}</p>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+
+            <div className="space-y-12">
+              {TOPICS.map((topic, topicIndex) => (
+                <article key={topic.id} id={topic.id} className="scroll-mt-32 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-7">
+                  <TopicHeader topic={topic} index={topicIndex + 1} />
+
+                  {topic.video && (
+                    <figure className="mt-6 overflow-hidden rounded-2xl border border-border bg-background">
+                      <div className="aspect-video w-full">
+                        <SmartVideo src={topic.video} label={topic.videoLabel ?? `${topic.title} tutorial video`} controls lazy />
+                      </div>
+                      <figcaption className="border-t border-border px-4 py-3 text-xs text-muted-foreground">
+                        This instructional video is placed here because it supports the {topic.title.toLowerCase()} topic.
+                      </figcaption>
+                    </figure>
+                  )}
+
+                  <div className="mt-7 grid gap-4 md:grid-cols-3">
+                    {topic.sections.map((section) => (
+                      <section key={section.heading} className="rounded-xl border border-border bg-muted/20 p-4">
+                        <h3 className="text-base font-semibold">{section.heading}</h3>
+                        {section.body && <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{section.body}</p>}
+                        {section.bullets && (
+                          <ul className="mt-3 space-y-2">
+                            {section.bullets.map((bullet) => (
+                              <li key={bullet} className="flex gap-2 text-sm leading-relaxed text-muted-foreground">
+                                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
+                                <span>{bullet}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </section>
+                    ))}
+                  </div>
+
+                  <div className="mt-7 flex flex-col gap-4 border-t border-border pt-5 lg:flex-row lg:items-center lg:justify-between">
+                    <div>
+                      <p className="text-sm font-semibold">Related documentation</p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {topic.related.map((id) => {
+                          const related = topicMap[id];
+                          if (!related) return null;
+                          return (
+                            <Link
+                              key={id}
+                              to={`/docs#${id}`}
+                              className="rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
+                            >
+                              {related.title}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    {topic.cta && (
+                      <Button asChild variant="outline" className="shrink-0 gap-2">
+                        <Link to={topic.cta.to}>
+                          {topic.cta.label} <ArrowRight className="h-4 w-4" aria-hidden />
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
 
       <Footer />
     </div>
+  );
+};
+
+const DocsNav = ({ activeId, filteredIds, onNavigate }: { activeId: string; filteredIds: Set<string>; onNavigate?: () => void }) => (
+  <nav aria-label="Documentation topics" className="space-y-6">
+    {GROUPS.map((group) => {
+      const topics = TOPICS.filter((topic) => topic.group === group.title && filteredIds.has(topic.id));
+      if (topics.length === 0) return null;
+      return (
+        <div key={group.title}>
+          <p className="mb-2 text-xs font-semibold text-muted-foreground">{group.title}</p>
+          <div className="space-y-1">
+            {topics.map((topic) => {
+              const Icon = topic.icon;
+              const active = activeId === topic.id;
+              return (
+                <Link
+                  key={topic.id}
+                  to={`/docs#${topic.id}`}
+                  onClick={onNavigate}
+                  className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${
+                    active ? 'bg-primary/10 font-semibold text-primary' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                  }`}
+                >
+                  <Icon className="h-4 w-4 shrink-0" aria-hidden />
+                  <span>{topic.title}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      );
+    })}
+  </nav>
+);
+
+const TopicHeader = ({ topic, index }: { topic: Topic; index: number }) => {
+  const Icon = topic.icon;
+  return (
+    <header className="flex flex-col gap-4 sm:flex-row sm:items-start">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <Icon className="h-6 w-6" aria-hidden />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="mb-2 flex flex-wrap items-center gap-2 text-xs font-semibold text-muted-foreground">
+          <span className="rounded-full border border-border bg-background px-2.5 py-1">{String(index).padStart(2, '0')}</span>
+          <span>{topic.group}</span>
+          <span aria-hidden>•</span>
+          <span className="text-primary">{topic.eyebrow}</span>
+        </div>
+        <h2 className="text-2xl font-bold leading-tight sm:text-3xl">{topic.title}</h2>
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">{topic.summary}</p>
+      </div>
+    </header>
   );
 };
 
