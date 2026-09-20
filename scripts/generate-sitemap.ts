@@ -227,6 +227,12 @@ function generateSitemap(entries: SitemapEntry[]) {
   ].join("\n");
 }
 
-const entries = [...staticEntries, ...categoryEntries, ...(await dynamicEntries())];
+const entries = [
+  ...staticEntries,
+  ...marketEntries,
+  ...categoryEntries,
+  ...docsEntries,
+  ...(await dynamicEntries()),
+];
 writeFileSync(resolve("public/sitemap.xml"), generateSitemap(entries));
 console.log(`sitemap.xml written (${entries.length} entries)`);
