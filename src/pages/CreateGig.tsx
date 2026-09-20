@@ -174,23 +174,30 @@ const CreateGig = () => {
       const imageUrls: string[] = [];
 
       // Video cover image first — it becomes the gig thumbnail and video poster
+      // Image file names are derived from the gig title so Google Images sees
+      // "professional-logo-design.webp" instead of "IMG_1234.jpg". A short
+      // random folder keeps uploads unique without polluting the file name.
+      const mediaFolder = `${user.id}/${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+      let imageIndex = 0;
+
       if (gigData.videoThumbnail) {
         const thumb = await compressImage(gigData.videoThumbnail);
-        const tExt = thumb.name.split('.').pop();
-        const tName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${tExt}`;
+        const tExt = thumb.name.split('.').pop() || 'jpg';
+        const tName = `${mediaFolder}/${gigImageFileName(gigData.title, imageIndex, tExt)}`;
         const { error: tErr } = await supabase.storage.from('gig-images').upload(tName, thumb, { contentType: thumb.type });
         if (tErr) console.error('Video thumbnail upload error:', tErr);
-        else imageUrls.push(supabase.storage.from('gig-images').getPublicUrl(tName).data.publicUrl);
+        else { imageUrls.push(supabase.storage.from('gig-images').getPublicUrl(tName).data.publicUrl); imageIndex += 1; }
       }
 
       const optimizedImages = await compressImages(gigData.images);
       for (const imageFile of optimizedImages) {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const fileExt = imageFile.name.split('.').pop() || 'jpg';
+        const fileName = `${mediaFolder}/${gigImageFileName(gigData.title, imageIndex, fileExt)}`;
         const { error: uploadError } = await supabase.storage.from('gig-images').upload(fileName, imageFile, { contentType: imageFile.type });
         if (uploadError) { console.error('Image upload error:', uploadError); continue; }
         const { data: publicUrl } = supabase.storage.from('gig-images').getPublicUrl(fileName);
         imageUrls.push(publicUrl.publicUrl);
+        imageIndex += 1;
       }
 
       // Upload video (if any) to gig-media bucket
