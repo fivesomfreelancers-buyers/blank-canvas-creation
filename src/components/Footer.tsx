@@ -138,18 +138,28 @@ export const Footer: React.FC = () => {
                 </span>
               </li>
               <li>
-                <Link to="/docs#support" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                <Link to="/support/help-center" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
                   Help Center
                 </Link>
               </li>
               <li>
-                <Link to="/how-it-works" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                <Link to="/support/contact" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link to="/how-it-works" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
-                  Trust & Safety
+                <Link to="/support/trust-safety" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                  Trust &amp; Safety
+                </Link>
+              </li>
+              <li>
+                <Link to="/freelancers/africa" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                  Freelancers in Africa
+                </Link>
+              </li>
+              <li>
+                <Link to="/freelancers/somalia" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                  Somali freelancer marketplace
                 </Link>
               </li>
               <li>
