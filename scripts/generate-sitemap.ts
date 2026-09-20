@@ -234,5 +234,18 @@ const entries = [
   ...docsEntries,
   ...(await dynamicEntries()),
 ];
-writeFileSync(resolve("public/sitemap.xml"), generateSitemap(entries));
+const sitemap = generateSitemap(entries);
+
+// Fail the build instead of ever publishing an HTML fallback or malformed
+// sitemap. Vite serves files in public/ directly from the site root.
+if (
+  !sitemap.startsWith('<?xml version="1.0" encoding="UTF-8"?>') ||
+  !sitemap.includes('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"') ||
+  !sitemap.endsWith("</urlset>") ||
+  /<(?:!doctype\s+html|html|head|body)(?:\s|>)/i.test(sitemap)
+) {
+  throw new Error("Refusing to write sitemap.xml: generated output is not pure sitemap XML");
+}
+
+writeFileSync(resolve("public/sitemap.xml"), sitemap);
 console.log(`sitemap.xml written (${entries.length} entries)`);
