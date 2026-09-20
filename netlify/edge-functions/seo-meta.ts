@@ -166,8 +166,8 @@ function rewrite(html: string, meta: Meta): string {
     `<meta name="twitter:title" content="${enc(meta.title)}" />`,
     `<meta name="twitter:description" content="${enc(meta.description)}" />`,
     `<meta name="twitter:image" content="${enc(image)}" />`,
-    // A real <img> in the served HTML, so image crawlers discover the
-    // freelancer's own upload without executing any JavaScript.
+    // Tells the browser and image crawlers about the freelancer's own upload
+    // before any JavaScript runs.
     meta.image
       ? `<link rel="preload" as="image" href="${enc(meta.image)}" fetchpriority="high" />`
       : "",
@@ -178,9 +178,11 @@ function rewrite(html: string, meta: Meta): string {
   out = out.replace(/<\/head>/i, `  ${tags}\n  </head>`);
 
   if (meta.image) {
+    // A real <img> for crawlers that do not execute JavaScript. React replaces
+    // the contents of #root on mount, so visitors never see it.
     out = out.replace(
       /<div id="root"><\/div>/i,
-      `<div id="root"><img src="${enc(meta.image)}" alt="${enc(meta.imageAlt || meta.title)}" width="800" height="600" /></div>`,
+      `<div id="root"><img src="${enc(meta.image)}" alt="${enc(meta.imageAlt || meta.title)}" width="1" height="1" style="position:absolute;opacity:0;pointer-events:none" /></div>`,
     );
   }
   return out;
