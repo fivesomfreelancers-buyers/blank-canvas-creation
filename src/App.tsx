@@ -15,7 +15,12 @@ const Services = lazy(() => import("./pages/Services"));
 const ServiceCategory = lazy(() => import("./pages/ServiceCategory"));
 const GigDetails = lazy(() => import("./pages/GigDetails"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
-const Docs = lazy(() => import("./pages/Docs"));
+const DocsRoute = lazy(() => import("./pages/docs/DocsRoute"));
+const FreelancerMarket = lazy(() => import("./pages/markets/FreelancerMarket"));
+const Support = lazy(() => import("./pages/support/Support"));
+const HelpCenter = lazy(() => import("./pages/support/HelpCenter"));
+const SupportContact = lazy(() => import("./pages/support/Contact"));
+const TrustSafety = lazy(() => import("./pages/support/TrustSafety"));
 const About = lazy(() => import("./pages/About"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
@@ -110,7 +115,19 @@ const App = () => (
               <Route path="/services/:categorySlug/:subcategorySlug" element={<ServiceCategory />} />
               <Route path="/gig/:slug" element={<GigDetails />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
-              <Route path="/docs" element={<Docs />} />
+              {/* Documentation: /docs, /docs/:slug, /docs/:lang and /docs/:lang/:slug */}
+              <Route path="/docs" element={<DocsRoute />} />
+              <Route path="/docs/:a" element={<DocsRoute />} />
+              <Route path="/docs/:a/:b" element={<DocsRoute />} />
+
+              {/* Market / region landing pages */}
+              <Route path="/freelancers/:market" element={<FreelancerMarket />} />
+
+              {/* Support */}
+              <Route path="/support" element={<Support />} />
+              <Route path="/support/help-center" element={<HelpCenter />} />
+              <Route path="/support/contact" element={<SupportContact />} />
+              <Route path="/support/trust-safety" element={<TrustSafety />} />
               <Route path="/about" element={<About />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
