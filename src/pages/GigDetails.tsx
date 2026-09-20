@@ -227,7 +227,17 @@ const GigDetails = () => {
             name: gig.title,
             url: gigUrl,
             description: (gig.description || '').toString().slice(0, 500),
-            ...(absImages.length ? { image: absImages } : {}),
+            ...(absImages.length
+              ? {
+                  image: absImages.map((src: string, i: number) => ({
+                    '@type': 'ImageObject',
+                    url: src,
+                    contentUrl: src,
+                    caption: gigImageAlt(gig.title, i, gig.freelancerName),
+                  })),
+                }
+              : {}),
+            ...(gig.category_slug ? { category: prettyCategory(gig.category_slug) } : {}),
             ...(gig.freelancerName ? { brand: { '@type': 'Brand', name: gig.freelancerName } } : {}),
             offers: {
               '@type': 'Offer',
@@ -281,6 +291,14 @@ const GigDetails = () => {
 
           return [
             product,
+            breadcrumbSchema([
+              { name: 'Home', path: '/' },
+              { name: 'Explore services', path: '/explore' },
+              ...(gig.category_slug
+                ? [{ name: prettyCategory(gig.category_slug), path: `/services/${gig.category_slug}` }]
+                : []),
+              { name: gig.title, path: gigPath(gig) },
+            ]),
             ...(faqs && faqs.length > 0
               ? [
                   {
