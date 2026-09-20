@@ -7,6 +7,7 @@ import { SocialLinks }  from './SocialLinks';
 import logoLight from '@/assets/logo.png';
 import logoDark from '@/assets/logo-new.png';
 import { openCookiePreferences } from '@/lib/cookieConsent';
+import { MARKETS } from '@/content/markets';
 
 export const SUPPORT_EMAIL = 'fivesomsupport@gmail.com';
 
@@ -220,6 +221,24 @@ export const Footer: React.FC = () => {
           </div>
         </div>
         
+        {/* Country landing pages: internal links so every market page is
+            reachable from any page on the site. */}
+        <nav aria-label="Freelancers by country" className="border-t pt-8 mt-8 border-border">
+          <h4 className="font-semibold mb-3 text-foreground">Freelancers by country</h4>
+          <ul className="flex flex-wrap gap-x-4 gap-y-2">
+            {MARKETS.map((m) => (
+              <li key={m.slug}>
+                <Link
+                  to={`/freelancers/${m.slug}`}
+                  className="text-sm transition-colors text-muted-foreground hover:text-foreground"
+                >
+                  {m.slug === 'africa' ? 'Freelancers in Africa' : `${m.name} freelancers`}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
         <div className="border-t pt-8 mt-8 text-center border-border">
           <p className="text-sm text-muted-foreground">
             © 2026 FIVESOM. All rights reserved.
