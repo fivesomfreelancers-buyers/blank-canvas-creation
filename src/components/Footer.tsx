@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
   const isDarkMode = theme === 'dark';
 
   return (
-    <footer className="py-12 px-4 sm:px-6 lg:px-8 border-t border-border bg-muted/30">
+    <footer className="overflow-hidden border-t border-border bg-muted/30 px-4 pt-12 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="md:col-span-2">
@@ -244,6 +244,15 @@ export const Footer: React.FC = () => {
             © 2026 FIVESOM. All rights reserved.
           </p>
         </div>
+      </div>
+
+      <div
+        className="mt-10 flex h-20 select-none items-end justify-center overflow-hidden sm:h-32 lg:h-48"
+        aria-hidden="true"
+      >
+        <span className="translate-y-[18%] whitespace-nowrap text-center text-7xl font-black leading-none tracking-normal text-foreground opacity-[0.05] sm:text-9xl lg:text-[12rem]">
+          FIVESOM
+        </span>
       </div>
     </footer>
   );
