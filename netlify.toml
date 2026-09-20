@@ -16,3 +16,15 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Per-page head metadata for public gig pages and freelancer profiles. The edge
+# function rewrites title/description/canonical and the share image of the served
+# HTML so each gig advertises the freelancer's own uploaded photo, not the
+# site-wide image (see netlify/edge-functions/seo-meta.ts).
+[[edge_functions]]
+  function = "seo-meta"
+  path = "/gig/*"
+
+[[edge_functions]]
+  function = "seo-meta"
+  path = "/freelancer/*"

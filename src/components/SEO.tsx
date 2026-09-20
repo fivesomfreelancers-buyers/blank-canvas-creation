@@ -41,9 +41,15 @@ const SEO = ({
   // index.html carries a site-wide robots directive for crawlers that do not run
   // JavaScript. Once a route sets its own, the static one is removed so a
   // noindex page can never be contradicted by the site-wide "index, follow".
+  // Gig and freelancer pages are also given a canonical link at serve time by
+  // the Netlify edge function, so the non-Helmet copy is dropped to keep exactly
+  // one canonical per page.
   useEffect(() => {
     document
       .querySelectorAll('meta[name="robots"]:not([data-rh])')
+      .forEach((el) => el.remove());
+    document
+      .querySelectorAll('link[rel="canonical"]:not([data-rh])')
       .forEach((el) => el.remove());
   }, []);
 

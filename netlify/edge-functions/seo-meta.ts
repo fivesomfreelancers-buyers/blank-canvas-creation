@@ -94,9 +94,9 @@ async function gigMeta(slug: string): Promise<Meta | null> {
   const by = seller ? ` by ${seller}` : "";
 
   return {
-    title: `${clean(gig.title, 65)}${by ? ` ${by.trim()}` : ""} | FIVESOM`,
+    title: `${clean(gig.title, 60)} | FIVESOM`,
     description: clean(
-      `${gig.description || gig.title}${price}${days} Hire African freelancers on FIVESOM with escrow-protected payment.`,
+      `${gig.description || gig.title}${price}${days}${by ? ` Offered${by} on FIVESOM.` : " Hire African freelancers on FIVESOM with escrow-protected payment."}`,
       300,
     ),
     canonical: `${SITE_URL}/gig/${encodeURIComponent(slug)}`,
