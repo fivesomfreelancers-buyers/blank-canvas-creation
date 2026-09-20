@@ -21,7 +21,7 @@ const DocsShell = ({ lang, dict, activeId, activeTitle, children }: Props) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background" dir={dict.dir}>
+    <div className="min-h-screen bg-background pt-16" dir={dict.dir}>
       <Navbar />
 
       <div className="border-b border-border bg-muted/30">

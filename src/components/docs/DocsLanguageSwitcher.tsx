@@ -7,13 +7,7 @@ import {
   type DocsDictionary,
   type DocsLang,
 } from '@/content/docs';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
 
 export const DOCS_LANG_STORAGE_KEY = 'fivesom.docs.lang';
 
@@ -37,23 +31,23 @@ const DocsLanguageSwitcher = ({ lang, dict, slug }: Props) => {
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <Globe className="h-4 w-4 text-muted-foreground" aria-hidden />
-      <label className="sr-only" htmlFor="docs-language">
-        {dict.ui.languageLabel}
-      </label>
-      <Select value={lang} onValueChange={change}>
-        <SelectTrigger id="docs-language" className="h-9 w-[150px]">
-          <SelectValue placeholder={dict.ui.languageLabel} />
-        </SelectTrigger>
-        <SelectContent>
-          {DOCS_LANGS.map((code) => (
-            <SelectItem key={code} value={code}>
-              {DOCS_LANG_LABELS[code]}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <div className="flex max-w-full items-center gap-2" aria-label={dict.ui.languageLabel}>
+      <Globe className="hidden h-4 w-4 shrink-0 text-muted-foreground sm:block" aria-hidden />
+      <div className="flex max-w-full gap-1 overflow-x-auto rounded-md border border-border bg-background p-1" role="group">
+        {DOCS_LANGS.map((code) => (
+          <Button
+            key={code}
+            type="button"
+            size="sm"
+            variant={lang === code ? 'default' : 'ghost'}
+            className="h-8 shrink-0 px-3"
+            aria-pressed={lang === code}
+            onClick={() => change(code)}
+          >
+            {DOCS_LANG_LABELS[code]}
+          </Button>
+        ))}
+      </div>
     </div>
   );
 };
