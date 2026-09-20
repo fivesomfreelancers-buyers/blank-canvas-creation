@@ -221,9 +221,9 @@ const Contact = () => {
                       Trust & Safety
                     </Button>
                   </Link>
-                  <Link to="/support/community">
+                  <Link to="/docs">
                     <Button variant="outline" className="w-full justify-start">
-                      Community Forum
+                      Documentation
                     </Button>
                   </Link>
                 </CardContent>

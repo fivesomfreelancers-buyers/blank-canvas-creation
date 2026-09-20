@@ -37,7 +37,11 @@ const toRegex = (pattern: string) => {
   return new RegExp(`^/${body}/?$`);
 };
 
-const matchers = routePatterns.filter(p => p !== '*').map(toRegex);
+const matchers = routePatterns
+  .filter(p => p !== '*')
+  // A "/admin/*" route also serves its own base path "/admin".
+  .flatMap(p => (p.endsWith('/*') ? [p, p.slice(0, -2)] : [p]))
+  .map(toRegex);
 const matchesRoute = (path: string) => matchers.some(re => re.test(path));
 
 const problems: string[] = [];
