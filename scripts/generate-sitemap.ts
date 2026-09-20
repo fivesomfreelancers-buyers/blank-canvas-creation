@@ -6,6 +6,8 @@
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 import { CATEGORIES } from "../src/lib/categories";
+import { MARKETS } from "../src/content/markets";
+import en from "../src/content/docs/en";
 
 const BASE_URL = "https://fivesom.net";
 
@@ -37,7 +39,6 @@ const staticEntries: SitemapEntry[] = [
       { loc: "/images/how-it-works/release-payment.webp", title: "Release payment after delivery on FIVESOM" },
     ],
   },
-  { path: "/docs", changefreq: "monthly", priority: "0.7" },
   { path: "/vip", changefreq: "monthly", priority: "0.6" },
   { path: "/about", changefreq: "monthly", priority: "0.6" },
   { path: "/blog", changefreq: "weekly", priority: "0.8" },
@@ -63,6 +64,28 @@ const categoryEntries: SitemapEntry[] = CATEGORIES.flatMap((c) => [
     priority: "0.7",
   })),
 ]);
+
+// Country / region landing pages, straight from the market content file, so a
+// new market page is listed as soon as its content exists.
+const marketEntries: SitemapEntry[] = MARKETS.map((m) => ({
+  path: `/freelancers/${m.slug}`,
+  changefreq: "weekly" as const,
+  priority: m.slug === "africa" ? "0.9" : "0.8",
+}));
+
+// Documentation: every chapter in every translated language.
+const DOCS_LANGS = ["en", "so", "ar", "fr"] as const;
+const docsEntries: SitemapEntry[] = DOCS_LANGS.flatMap((lang) => {
+  const base = lang === "en" ? "/docs" : `/docs/${lang}`;
+  return [
+    { path: base, changefreq: "monthly" as const, priority: "0.7" },
+    ...Object.keys(en.chapters).map((slug) => ({
+      path: `${base}/${slug}`,
+      changefreq: "monthly" as const,
+      priority: "0.6",
+    })),
+  ];
+});
 
 function escapeXml(value: string) {
   return value
@@ -204,6 +227,12 @@ function generateSitemap(entries: SitemapEntry[]) {
   ].join("\n");
 }
 
-const entries = [...staticEntries, ...categoryEntries, ...(await dynamicEntries())];
+const entries = [
+  ...staticEntries,
+  ...marketEntries,
+  ...categoryEntries,
+  ...docsEntries,
+  ...(await dynamicEntries()),
+];
 writeFileSync(resolve("public/sitemap.xml"), generateSitemap(entries));
 console.log(`sitemap.xml written (${entries.length} entries)`);
