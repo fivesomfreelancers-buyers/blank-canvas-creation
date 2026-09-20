@@ -191,7 +191,12 @@ const GigDetails = () => {
     return (<div className="min-h-screen bg-background"><Navbar /><div className="max-w-7xl mx-auto px-4 py-8 pt-24 text-center"><h2 className="text-2xl font-bold text-foreground">Gig not found</h2><Button onClick={() => navigate('/explore')} className="mt-4">Browse Services</Button></div></div>);
   }
 
-  const images = gig.images && gig.images.length > 0 ? gig.images : [];
+  // Only publicly listed (active) gigs may be indexed. Paused / draft gigs stay
+  // reachable by direct link but are kept out of Search and Google Images.
+  const isPublicGig = gig.status === 'active';
+  const images: string[] = (gig.images && gig.images.length > 0 ? gig.images : []).filter(
+    (url: string) => typeof url === 'string' && /^https?:\/\//i.test(url)
+  );
   const currentPkg = packages.find(p => p.package_type === selectedPackage);
   const vipTheme = getVipTheme(gig.vipTier, mode);
   const vipCardStyle = vipTheme ? { background: vipTheme.cardBg, boxShadow: vipTheme.cardShadow, borderColor: 'transparent' } : undefined;
