@@ -548,6 +548,338 @@ export const MARKETS: Market[] = [
     areaServed: ['Nigeria', 'Lagos', 'Abuja'],
     languages: ['en', 'ha', 'ig', 'yo'],
   },
+  {
+    slug: 'ghana',
+    name: 'Ghana',
+    h1: 'Ghana freelance marketplace: hire Ghanaian freelancers on FIVESOM',
+    metaTitle: 'Ghana Freelancer Marketplace — Hire Ghanaian Freelancers | FIVESOM',
+    metaDescription:
+      'Hire Ghanaian freelancers for design, web development, writing and video on FIVESOM, or sell your skills. Escrow-protected orders and mobile money or bank withdrawals.',
+    intro:
+      'Accra and Kumasi have a deep bench of self-taught designers, web developers and content writers who already work with local businesses on WhatsApp and Instagram. FIVESOM gives Ghanaian freelancers a structured place to sell the same services — fixed packages, written requirements, escrow-held payment and a public review history that carries over from one client to the next.',
+    sections: [
+      {
+        heading: 'Why Ghanaian freelancers use FIVESOM',
+        bullets: [
+          'Sell in US dollars to local and international clients from one profile',
+          'Escrow removes the "client disappeared after delivery" risk',
+          'Star ratings and reviews build a track record you own publicly',
+          'A verified badge after identity review helps you win first-time buyers',
+        ],
+      },
+      {
+        heading: 'What Ghanaian sellers are hired for',
+        bullets: [
+          'Logo design, flyers and brand kits for small businesses and churches',
+          'Business and e-commerce websites, plus Shopify and WordPress work',
+          'Content writing, SEO articles and proofreading in English',
+          'Video editing and motion graphics for adverts and social media',
+        ],
+      },
+      {
+        heading: 'Getting paid from Ghana',
+        body:
+          'Earnings build up in your FIVESOM balance as orders are accepted. Once the balance reaches the $20 minimum you can request a withdrawal to a bank account or to a mobile money number supported in Ghana. FIVESOM keeps a 15% commission on completed orders and freelancers keep 85%.',
+      },
+      {
+        heading: 'Hiring a Ghanaian freelancer as a client',
+        body:
+          'Browse categories, compare Basic, Standard and Premium packages, and message the freelancer before ordering. Your payment stays in escrow until you review the delivered files and accept them, or request the revisions included in the package.',
+      },
+    ],
+    faqs: [
+      {
+        q: 'How do Ghanaian freelancers get paid on FIVESOM?',
+        a: 'Accepted-order earnings sit in your FIVESOM balance, and you can withdraw to a bank account or a supported mobile money number once you reach the $20 minimum.',
+      },
+      {
+        q: 'Can clients outside Ghana order from Ghanaian freelancers?',
+        a: 'Yes. Buyers anywhere in the world can order, and the escrow process is the same regardless of where the client is based.',
+      },
+      {
+        q: 'What does FIVESOM charge?',
+        a: 'FIVESOM keeps a 15% commission on each completed order, so freelancers receive 85% of the order value.',
+      },
+    ],
+    areaServed: ['Ghana', 'Accra', 'Kumasi'],
+    languages: ['en', 'tw'],
+  },
+  {
+    slug: 'tanzania',
+    name: 'Tanzania',
+    h1: 'Tanzania freelance marketplace: hire Tanzanian freelancers on FIVESOM',
+    metaTitle: 'Tanzania Freelancer Marketplace — Hire Tanzanian Freelancers | FIVESOM',
+    metaDescription:
+      'FIVESOM connects Tanzanian freelancers with clients in Tanzania and abroad. Swahili and English services, escrow-protected orders and mobile money or bank payouts.',
+    intro:
+      'Tanzanian freelancers work in two languages, and that is a commercial advantage on FIVESOM: Swahili copywriting, subtitling and translation are in steady demand from businesses selling across East Africa, while design and development work sells internationally in English. Dar es Salaam, Arusha and Mwanza sellers can list both sides of that skill set.',
+    sections: [
+      {
+        heading: 'Services that sell well from Tanzania',
+        bullets: [
+          'Swahili translation, subtitling and voice-over scripts',
+          'Social media graphics and logo design for local brands and tour operators',
+          'Tourism and hospitality website design and content writing',
+          'Video editing for YouTube channels, events and promotional reels',
+        ],
+      },
+      {
+        heading: 'Setting up as a Tanzanian freelancer',
+        bullets: [
+          'List the languages you work in — Swahili fluency is a selling point, not a footnote',
+          'Publish up to 2 active gigs with clear packages, delivery times and revision counts',
+          'Upload real samples so buyers can judge quality before ordering',
+          'Submit identity documents for the verified badge',
+        ],
+      },
+      {
+        heading: 'Payments and withdrawals',
+        body:
+          'Buyers pay upfront and the money is held in escrow until the delivery is accepted, then credited to your FIVESOM balance. Withdrawals go to a bank account or a supported Tanzanian mobile money number once the balance passes the $20 minimum. FIVESOM keeps a 15% commission and you keep 85%.',
+      },
+      {
+        heading: 'For clients hiring in Tanzania',
+        body:
+          'If you need work produced in Swahili for a Tanzanian or Kenyan audience, filter by language and read reviews from earlier buyers. Requirements are collected in a form at order time, so the freelancer starts with your brief rather than a guess.',
+      },
+    ],
+    faqs: [
+      {
+        q: 'Can I offer Swahili services on FIVESOM?',
+        a: 'Yes. Swahili writing, translation and subtitling are popular gig types, and you can list the languages you work in on your profile.',
+      },
+      {
+        q: 'How do Tanzanian freelancers withdraw earnings?',
+        a: 'To a bank account or a supported mobile money number, once your FIVESOM balance reaches the $20 minimum withdrawal.',
+      },
+      {
+        q: 'Is payment guaranteed once I deliver?',
+        a: 'The buyer pays into escrow before you start, and the funds are released to your balance when the buyer accepts the delivery.',
+      },
+    ],
+    areaServed: ['Tanzania', 'Dar es Salaam', 'Arusha', 'Mwanza'],
+    languages: ['en', 'sw'],
+  },
+  {
+    slug: 'uganda',
+    name: 'Uganda',
+    h1: 'Uganda freelance marketplace: hire Ugandan freelancers on FIVESOM',
+    metaTitle: 'Uganda Freelancer Marketplace — Hire Ugandan Freelancers | FIVESOM',
+    metaDescription:
+      'Hire Ugandan freelancers for graphic design, web development, writing and video editing on FIVESOM. Escrow-protected orders, mobile money or bank withdrawals, 85% to the freelancer.',
+    intro:
+      'Kampala has a large pool of graduates and self-taught creatives competing for a small number of salaried jobs. Freelancing abroad usually fails on the payout step, not the skill step. FIVESOM handles the order, the brief, the escrow and the withdrawal in one place, so a Ugandan designer or developer can treat freelance work as steady income rather than occasional favours.',
+    sections: [
+      {
+        heading: 'What Ugandan freelancers offer most',
+        bullets: [
+          'Graphic design: logos, posters, packaging and social media sets',
+          'WordPress and custom business websites, plus landing pages',
+          'Academic-style writing, blog articles, CV writing and transcription',
+          'Video editing and thumbnail design for creators',
+        ],
+      },
+      {
+        heading: 'From gig to first order',
+        bullets: [
+          'Register free and complete your profile with skills and languages',
+          'Create a gig with Basic, Standard and Premium packages',
+          'Answer buyer questions in chat before they order',
+          'Deliver through the platform so the order history and payment stay protected',
+        ],
+      },
+      {
+        heading: 'Escrow and payouts',
+        body:
+          "The buyer's payment is held in escrow from the moment the order is placed. When the delivery is accepted, the money moves to your FIVESOM balance, and you can withdraw to a bank account or a supported Ugandan mobile money number at the $20 minimum. FIVESOM's commission is 15%.",
+      },
+      {
+        heading: 'Hiring from Uganda',
+        body:
+          'Clients can compare gigs by price, delivery time and rating, and read every review left on past orders. If a delivery misses the brief, you can request the revisions included in the package or open a dispute for FIVESOM to review.',
+      },
+    ],
+    faqs: [
+      {
+        q: 'Do I need a company to freelance on FIVESOM from Uganda?',
+        a: 'No. Individual freelancers register free with a personal account; identity documents are only used for optional verification.',
+      },
+      {
+        q: 'What is the minimum withdrawal?',
+        a: 'You can request a withdrawal once your FIVESOM balance reaches $20.',
+      },
+      {
+        q: 'How many gigs can I run at once?',
+        a: 'Up to 2 active gigs, which keeps profiles focused on your strongest services.',
+      },
+    ],
+    areaServed: ['Uganda', 'Kampala', 'Entebbe'],
+    languages: ['en', 'lg', 'sw'],
+  },
+  {
+    slug: 'rwanda',
+    name: 'Rwanda',
+    h1: 'Rwanda freelance marketplace: hire Rwandan freelancers on FIVESOM',
+    metaTitle: 'Rwanda Freelancer Marketplace — Hire Rwandan Freelancers | FIVESOM',
+    metaDescription:
+      'FIVESOM connects Rwandan freelancers with local and international clients. English, French and Kinyarwanda services, escrow-protected orders and mobile money or bank payouts.',
+    intro:
+      "Rwanda's tech-focused economy has produced a generation of developers, UI designers and trilingual writers working in Kinyarwanda, English and French. That language mix makes Rwandan freelancers unusually useful to clients selling into both East and Central Africa, and FIVESOM lets them package that as a paid service rather than ad-hoc help.",
+    sections: [
+      {
+        heading: 'Strong service areas from Rwanda',
+        bullets: [
+          'Web and app development, including landing pages and dashboards',
+          'UI/UX design in Figma for startups and NGOs',
+          'English–French translation and bilingual content writing',
+          'Brand identity design and pitch deck design',
+        ],
+      },
+      {
+        heading: 'Building a profile buyers trust',
+        bullets: [
+          'List all working languages, including French, on your profile',
+          'Show real project samples in your gig gallery and portfolio',
+          'Submit identity documents for verification once eligible',
+          'Reply quickly in chat — response habits show up in buyer decisions',
+        ],
+      },
+      {
+        heading: 'Money flow',
+        body:
+          'Orders are paid upfront into escrow and released to your balance when the buyer accepts the work. Withdrawals go to a bank account or a supported Rwandan mobile money number from a $20 minimum. FIVESOM keeps 15% of completed orders; freelancers keep 85%.',
+      },
+      {
+        heading: 'For clients',
+        body:
+          'Hiring in Rwanda works well for bilingual projects and for development work with clear specs. Submit your requirements at order time, keep every file and message in the order thread, and accept the delivery only when it matches the brief.',
+      },
+    ],
+    faqs: [
+      {
+        q: 'Can I sell French-language services on FIVESOM?',
+        a: 'Yes. French writing and translation gigs are supported, and FIVESOM documentation is also available in French.',
+      },
+      {
+        q: 'How long until I can withdraw my first earnings?',
+        a: 'Funds are credited when a buyer accepts your delivery, and you can request a withdrawal once your balance reaches $20.',
+      },
+      {
+        q: 'Is there a fee to join?',
+        a: 'No. Creating an account and publishing gigs is free; FIVESOM only earns its 15% commission when an order completes.',
+      },
+    ],
+    areaServed: ['Rwanda', 'Kigali'],
+    languages: ['en', 'fr', 'rw'],
+  },
+  {
+    slug: 'south-africa',
+    name: 'South Africa',
+    h1: 'South Africa freelance marketplace: hire South African freelancers on FIVESOM',
+    metaTitle: 'South Africa Freelancer Marketplace — Hire Freelancers | FIVESOM',
+    metaDescription:
+      'Hire South African freelancers for design, development, copywriting and video on FIVESOM, or sell your services. Escrow-protected orders and bank withdrawals from $20.',
+    intro:
+      'South Africa has the continent’s most established freelance market — experienced copywriters, brand designers, developers and video editors who already bill international clients. On FIVESOM they reach African businesses that want that level of craft without an agency retainer, and they get escrow protection on every order instead of chasing invoices.',
+    sections: [
+      {
+        heading: 'Where South African sellers stand out',
+        bullets: [
+          'Brand identity, packaging and presentation design',
+          'Conversion copywriting, product descriptions and editing',
+          'Full-stack web development and Shopify or Webflow builds',
+          'Video editing, colour grading and motion graphics',
+        ],
+      },
+      {
+        heading: 'Pricing your work honestly',
+        body:
+          'FIVESOM uses three package tiers per gig, so you can sell a small fixed-scope job and a full project from the same listing without negotiating from zero each time. Delivery time and revision counts are part of the package, which keeps scope creep out of the order.',
+      },
+      {
+        heading: 'Escrow and withdrawals',
+        body:
+          'Buyers pay before work starts and the funds are held in escrow until they accept the delivery. Cleared earnings can be withdrawn by bank transfer once your balance reaches the $20 minimum. FIVESOM keeps a 15% commission on completed orders.',
+      },
+      {
+        heading: 'Hiring South African freelancers',
+        body:
+          'Clients elsewhere in Africa often hire South African sellers for polish — the final brand guide, the sales page, the ad edit. Compare portfolios and reviews, ask questions in chat, then order with a written brief attached.',
+      },
+    ],
+    faqs: [
+      {
+        q: 'How are South African freelancers paid?',
+        a: 'Earnings are credited when a buyer accepts the delivery and can be withdrawn by bank transfer from a $20 minimum balance.',
+      },
+      {
+        q: 'Can I keep working with clients I find on FIVESOM?',
+        a: 'Repeat orders are placed through FIVESOM so both sides keep escrow protection, order records and review history.',
+      },
+      {
+        q: 'What commission does FIVESOM take?',
+        a: '15% of each completed order; the freelancer keeps the remaining 85%.',
+      },
+    ],
+    areaServed: ['South Africa', 'Johannesburg', 'Cape Town', 'Durban'],
+    languages: ['en', 'af', 'zu'],
+  },
+  {
+    slug: 'egypt',
+    name: 'Egypt',
+    h1: 'Egypt freelance marketplace: hire Egyptian freelancers on FIVESOM',
+    metaTitle: 'Egypt Freelancer Marketplace — Hire Egyptian Freelancers | FIVESOM',
+    metaDescription:
+      'FIVESOM connects Egyptian freelancers with clients across Africa and the Gulf. Arabic and English services, escrow-protected orders and bank or wallet withdrawals from $20.',
+    intro:
+      'Cairo and Alexandria supply much of the Arabic-language creative work used across North Africa and the Gulf: Arabic copywriting, calligraphy-influenced logo design, Arabic subtitling and voice work, plus a large developer community. FIVESOM is Arabic-friendly — the documentation is available in Arabic and renders right-to-left — so Egyptian freelancers can work in their own language while selling internationally.',
+    sections: [
+      {
+        heading: 'Arabic-language services in demand',
+        bullets: [
+          'Arabic copywriting, transcreation and English–Arabic translation',
+          'Arabic logo and brand design, including typographic marks',
+          'Arabic subtitling, dubbing scripts and video editing',
+          'Web and mobile development, plus WordPress and e-commerce builds',
+        ],
+      },
+      {
+        heading: 'Selling from Egypt on FIVESOM',
+        bullets: [
+          'Register free, then build a profile listing your skills and languages',
+          'Publish up to 2 active gigs with three clearly priced packages each',
+          'Use the Arabic documentation to follow each step in your own language',
+          'Apply for verification to show a verified badge on your profile',
+        ],
+      },
+      {
+        heading: 'Escrow, commission and payouts',
+        body:
+          'Every order is paid upfront into escrow and released once the buyer accepts the delivery. FIVESOM keeps a 15% commission, freelancers keep 85%, and withdrawals are available from a $20 balance to a bank account or a supported local wallet.',
+      },
+      {
+        heading: 'Hiring Egyptian freelancers',
+        body:
+          'If your audience reads Arabic, hire someone who writes it natively rather than translating after the fact. Filter by category and language, check reviews, and send your brief through the requirements form so the first draft is already close.',
+      },
+    ],
+    faqs: [
+      {
+        q: 'Is FIVESOM available in Arabic?',
+        a: 'The FIVESOM documentation is available in Arabic with right-to-left layout, and freelancers can offer Arabic-language services and chat in Arabic with buyers.',
+      },
+      {
+        q: 'How do Egyptian freelancers withdraw money?',
+        a: 'To a bank account or a supported local wallet, once the FIVESOM balance reaches the $20 minimum withdrawal.',
+      },
+      {
+        q: 'Can Egyptian freelancers serve Gulf clients?',
+        a: 'Yes. Buyers from any country can order, which makes Arabic-language gigs attractive well beyond Egypt.',
+      },
+    ],
+    areaServed: ['Egypt', 'Cairo', 'Alexandria'],
+    languages: ['ar', 'en'],
+  },
 ];
 
 export const getMarket = (slug: string): Market | undefined =>
