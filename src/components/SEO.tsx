@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 export const SITE_URL = 'https://fivesom.net';
@@ -33,6 +34,19 @@ const SEO = ({
   const schemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   const url = absoluteSeoUrl(canonical);
   const ogImage = image ? absoluteSeoUrl(image) : DEFAULT_OG_IMAGE;
+
+  // index.html carries a site-wide share image for crawlers that do not run
+  // JavaScript. When a page supplies its own image (a gig photo, for example),
+  // those static tags are dropped so crawlers see exactly one share image.
+  useEffect(() => {
+    if (!image) return;
+    document
+      .querySelectorAll(
+        'meta[property="og:image"]:not([data-rh]), meta[property="og:image:width"]:not([data-rh]), meta[property="og:image:height"]:not([data-rh]), meta[property="og:image:alt"]:not([data-rh]), meta[name="twitter:image"]:not([data-rh])',
+      )
+      .forEach((el) => el.remove());
+  }, [image]);
+
 
   return (
     <Helmet>
