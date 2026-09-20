@@ -107,7 +107,11 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
                       >
                         <SmartImage
                           src={slide.url}
-                          alt={title}
+                          alt={gigImageAlt(title, imageSlideIndexes.indexOf(idx), seller)}
+                          title={title}
+                          /* The first gig image is the main one Google Images
+                             should find, so it is never lazy-loaded. */
+                          loading={idx === imageSlideIndexes[0] ? 'eager' : 'lazy'}
                           wrapperClassName="w-full h-full flex items-center justify-center"
                           className="max-w-full max-h-full w-auto h-auto object-contain"
                           showRetry
@@ -174,7 +178,7 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
                 ) : (
                   <SmartImage
                     src={slide.url}
-                    alt={title}
+                    alt={gigImageAlt(title, imageSlideIndexes.indexOf(idx), seller)}
                     wrapperClassName="w-full h-full flex items-center justify-center"
                     className="max-w-full max-h-full w-auto h-auto object-contain"
                   />
