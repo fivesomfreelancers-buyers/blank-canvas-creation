@@ -5,16 +5,19 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ChevronLeft, ChevronRight, Play, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { gigImageAlt } from '@/lib/seo/gigImages';
 
 interface UnifiedGalleryProps {
   videoUrl: string | null;
   images: string[];
   title: string;
+  /** Used to build descriptive alt text for Google Images. */
+  seller?: string | null;
 }
 
 type Slide = { type: 'video'; url: string } | { type: 'image'; url: string };
 
-const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title }) => {
+const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title, seller }) => {
   const slides: Slide[] = [
     ...(videoUrl ? [{ type: 'video' as const, url: videoUrl }] : []),
     ...images.map((url) => ({ type: 'image' as const, url })),
