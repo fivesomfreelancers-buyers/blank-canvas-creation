@@ -25,6 +25,12 @@ import { toast } from '@/hooks/use-toast';
 import { getVipTheme, resolveVipTier } from '@/lib/vipTheme';
 import { useTheme } from '@/components/ThemeProvider';
 import { isUuid, gigPath, freelancerPath } from '@/lib/urls';
+import { gigImageAlt } from '@/lib/seo/gigImages';
+import { breadcrumbSchema } from '@/lib/seo/schemas';
+
+/** "graphics-design" -> "Graphics Design" for schema/breadcrumb labels. */
+const prettyCategory = (slug: string) =>
+  slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
 const GigDetails = () => {
   const { slug } = useParams();
@@ -191,7 +197,12 @@ const GigDetails = () => {
     return (<div className="min-h-screen bg-background"><Navbar /><div className="max-w-7xl mx-auto px-4 py-8 pt-24 text-center"><h2 className="text-2xl font-bold text-foreground">Gig not found</h2><Button onClick={() => navigate('/explore')} className="mt-4">Browse Services</Button></div></div>);
   }
 
-  const images = gig.images && gig.images.length > 0 ? gig.images : [];
+  // Only publicly listed (active) gigs may be indexed. Paused / draft gigs stay
+  // reachable by direct link but are kept out of Search and Google Images.
+  const isPublicGig = gig.status === 'active';
+  const images: string[] = (gig.images && gig.images.length > 0 ? gig.images : []).filter(
+    (url: string) => typeof url === 'string' && /^https?:\/\//i.test(url)
+  );
   const currentPkg = packages.find(p => p.package_type === selectedPackage);
   const vipTheme = getVipTheme(gig.vipTier, mode);
   const vipCardStyle = vipTheme ? { background: vipTheme.cardBg, boxShadow: vipTheme.cardShadow, borderColor: 'transparent' } : undefined;
@@ -205,7 +216,11 @@ const GigDetails = () => {
         canonical={gigPath(gig)}
         type="product"
         image={images[0]}
+        noindex={!isPublicGig}
         jsonLd={(() => {
+          // Structured data is only emitted for publicly listed gigs, so it
+          // never describes a page Google is told not to index.
+          if (!isPublicGig) return undefined;
           const gigUrl = absoluteSeoUrl(gigPath(gig));
           const absImages = images.map((img: string) => absoluteSeoUrl(img));
           const realReviews = (gig.reviews || []).filter((r: any) => r && r.rating);
@@ -218,7 +233,17 @@ const GigDetails = () => {
             name: gig.title,
             url: gigUrl,
             description: (gig.description || '').toString().slice(0, 500),
-            ...(absImages.length ? { image: absImages } : {}),
+            ...(absImages.length
+              ? {
+                  image: absImages.map((src: string, i: number) => ({
+                    '@type': 'ImageObject',
+                    url: src,
+                    contentUrl: src,
+                    caption: gigImageAlt(gig.title, i, gig.freelancerName),
+                  })),
+                }
+              : {}),
+            ...(gig.category_slug ? { category: prettyCategory(gig.category_slug) } : {}),
             ...(gig.freelancerName ? { brand: { '@type': 'Brand', name: gig.freelancerName } } : {}),
             offers: {
               '@type': 'Offer',
@@ -272,6 +297,14 @@ const GigDetails = () => {
 
           return [
             product,
+            breadcrumbSchema([
+              { name: 'Home', path: '/' },
+              { name: 'Explore services', path: '/explore' },
+              ...(gig.category_slug
+                ? [{ name: prettyCategory(gig.category_slug), path: `/services/${gig.category_slug}` }]
+                : []),
+              { name: gig.title, path: gigPath(gig) },
+            ]),
             ...(faqs && faqs.length > 0
               ? [
                   {
@@ -298,7 +331,7 @@ const GigDetails = () => {
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
             {/* Unified Media Gallery (video + images) */}
-            <UnifiedGallery videoUrl={videoUrl} images={images} title={gig.title} />
+            <UnifiedGallery videoUrl={videoUrl} images={images} title={gig.title} seller={gig.freelancerName} />
 
             {/* Title & Info */}
             <Card className={vipCardClass} style={vipCardStyle}>

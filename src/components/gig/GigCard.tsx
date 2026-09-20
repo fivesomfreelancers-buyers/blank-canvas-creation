@@ -6,6 +6,7 @@ import VerifiedBadge from '@/components/VerifiedBadge';
 import BlueTickBadge from '@/components/BlueTickBadge';
 import VipBadge from '@/components/VipBadge';
 import { gigPath } from '@/lib/urls';
+import { gigImageAlt } from '@/lib/seo/gigImages';
 import type { SearchGigResult } from '@/hooks/useGigSearch';
 
 /** Compact gig card used by Explore and the category landing pages. */
@@ -18,8 +19,12 @@ const GigCard: React.FC<{ gig: SearchGigResult }> = ({ gig }) => (
       {gig.image ? (
         <img
           src={gig.image}
-          alt={gig.title}
+          alt={gigImageAlt(gig.title, 0, gig.freelancer)}
+          title={gig.title}
+          width={320}
+          height={128}
           loading="lazy"
+          decoding="async"
           className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-300"
         />
       ) : (

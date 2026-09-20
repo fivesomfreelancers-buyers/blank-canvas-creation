@@ -5,16 +5,19 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ChevronLeft, ChevronRight, Play, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { gigImageAlt } from '@/lib/seo/gigImages';
 
 interface UnifiedGalleryProps {
   videoUrl: string | null;
   images: string[];
   title: string;
+  /** Used to build descriptive alt text for Google Images. */
+  seller?: string | null;
 }
 
 type Slide = { type: 'video'; url: string } | { type: 'image'; url: string };
 
-const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title }) => {
+const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title, seller }) => {
   const slides: Slide[] = [
     ...(videoUrl ? [{ type: 'video' as const, url: videoUrl }] : []),
     ...images.map((url) => ({ type: 'image' as const, url })),
@@ -104,7 +107,11 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
                       >
                         <SmartImage
                           src={slide.url}
-                          alt={title}
+                          alt={gigImageAlt(title, imageSlideIndexes.indexOf(idx), seller)}
+                          title={title}
+                          /* The first gig image is the main one Google Images
+                             should find, so it is never lazy-loaded. */
+                          loading={idx === imageSlideIndexes[0] ? 'eager' : 'lazy'}
                           wrapperClassName="w-full h-full flex items-center justify-center"
                           className="max-w-full max-h-full w-auto h-auto object-contain"
                           showRetry
@@ -164,14 +171,14 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
                 {slide.type === 'video' ? (
                   <div className="w-full h-full bg-black flex items-center justify-center">
                     {images[0] ? (
-                      <SmartImage src={images[0]} alt="Video thumbnail" wrapperClassName="w-full h-full flex items-center justify-center" className="max-w-full max-h-full object-contain opacity-70" />
+                      <SmartImage src={images[0]} alt={`${title} — video preview`} wrapperClassName="w-full h-full flex items-center justify-center" className="max-w-full max-h-full object-contain opacity-70" />
                     ) : null}
                     <Play className="w-5 h-5 text-white absolute" fill="currentColor" />
                   </div>
                 ) : (
                   <SmartImage
                     src={slide.url}
-                    alt={title}
+                    alt={gigImageAlt(title, imageSlideIndexes.indexOf(idx), seller)}
                     wrapperClassName="w-full h-full flex items-center justify-center"
                     className="max-w-full max-h-full w-auto h-auto object-contain"
                   />
@@ -192,7 +199,8 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
             {activeLightboxUrl && (
               <img
                 src={activeLightboxUrl}
-                alt={title}
+                alt={gigImageAlt(title, imageSlideIndexes.indexOf(lightboxIndex ?? 0), seller)}
+                title={title}
                 style={{ transform: `scale(${zoom})` }}
                 className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-200 origin-center"
               />
