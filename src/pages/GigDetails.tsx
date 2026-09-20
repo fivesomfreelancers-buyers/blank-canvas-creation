@@ -210,6 +210,7 @@ const GigDetails = () => {
         canonical={gigPath(gig)}
         type="product"
         image={images[0]}
+        noindex={!isPublicGig}
         jsonLd={(() => {
           const gigUrl = absoluteSeoUrl(gigPath(gig));
           const absImages = images.map((img: string) => absoluteSeoUrl(img));
@@ -303,7 +304,7 @@ const GigDetails = () => {
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
             {/* Unified Media Gallery (video + images) */}
-            <UnifiedGallery videoUrl={videoUrl} images={images} title={gig.title} />
+            <UnifiedGallery videoUrl={videoUrl} images={images} title={gig.title} seller={gig.freelancerName} />
 
             {/* Title & Info */}
             <Card className={vipCardClass} style={vipCardStyle}>
