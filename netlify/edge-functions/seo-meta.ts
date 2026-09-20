@@ -24,6 +24,14 @@ const enc = (s: string) =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
+/** Trim to a whole word, no ellipsis — used for titles. */
+const cut = (s: string, max: number) => {
+  const t = s.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  const short = t.slice(0, max);
+  return short.slice(0, short.lastIndexOf(" ") > 20 ? short.lastIndexOf(" ") : max).trim();
+};
+
 const clean = (s: string, max: number) => {
   const t = s.replace(/\s+/g, " ").trim();
   return t.length > max ? `${t.slice(0, max - 1).trimEnd()}…` : t;
@@ -94,7 +102,7 @@ async function gigMeta(slug: string): Promise<Meta | null> {
   const by = seller ? ` by ${seller}` : "";
 
   return {
-    title: `${clean(gig.title, 60)} | FIVESOM`,
+    title: `${cut(gig.title, 60)} | FIVESOM`,
     description: clean(
       `${gig.description || gig.title}${price}${days}${by ? ` Offered${by} on FIVESOM.` : " Hire African freelancers on FIVESOM with escrow-protected payment."}`,
       300,
@@ -119,7 +127,7 @@ async function freelancerMeta(username: string): Promise<Meta | null> {
   if (!p) return null;
   const name = (p.full_name || p.username || "Freelancer").trim();
   return {
-    title: `${clean(name, 60)} — Freelancer on FIVESOM`,
+    title: `${cut(name, 60)} — Freelancer on FIVESOM`,
     description: clean(
       `${p.bio || `${name} offers freelance services on FIVESOM.`} View gigs, reviews and delivery times, and order with escrow-protected payment.`,
       300,
