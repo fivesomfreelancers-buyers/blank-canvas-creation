@@ -1,1 +1,10 @@
-/*    /index.html    200
+/sitemap.xml    /sitemap.xml    200
+/robots.txt     /robots.txt     200
+/ads.txt        /ads.txt        200
+/favicon.png    /favicon.png    200
+/og-image.png   /og-image.png   200
+/email-logo.png /email-logo.png 200
+/llms.txt       /llms.txt       200
+/images/*       /images/*       200
+/assets/*       /assets/*       200
+/*              /index.html     200
