@@ -1,0 +1,18 @@
+# SPA fallback for Netlify hosting.
+#
+# Netlify always serves a real file in the publish directory before applying a
+# non-forced redirect rule, so /sitemap.xml, /robots.txt, /ads.txt, /assets/*
+# and every image keep their own content type and are NOT rewritten to HTML.
+# The rules below are listed explicitly for clarity and safety.
+
+/sitemap.xml     /sitemap.xml     200
+/robots.txt      /robots.txt      200
+/ads.txt         /ads.txt         200
+/llms.txt        /llms.txt        200
+/favicon.png     /favicon.png     200
+/og-image.png    /og-image.png    200
+/email-logo.png  /email-logo.png  200
+
+# Everything else is a client-side route handled by React Router, so direct
+# access and browser refresh on nested URLs must return index.html with 200.
+/*               /index.html      200
