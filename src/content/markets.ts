@@ -34,7 +34,7 @@ export const MARKETS: Market[] = [
       {
         heading: 'One marketplace, many countries',
         body:
-          'FIVESOM operates across Somalia, Somaliland, Ethiopia, Djibouti, Kenya, Nigeria and other African countries, alongside clients from anywhere in the world. Freelancers set their location and currency preferences, and buyers can search by category, price or delivery time regardless of where a seller is based.',
+          'FIVESOM has dedicated market pages for Somalia, Somaliland, Ethiopia, Djibouti, Kenya, Nigeria, Ghana, Tanzania, Uganda, Rwanda, South Africa and Egypt, alongside clients from anywhere in the world. Freelancers set their location and language preferences, and buyers can search by category, price or delivery time regardless of where a seller is based.',
       },
       {
         heading: 'Joining as a freelancer',
@@ -79,7 +79,7 @@ export const MARKETS: Market[] = [
     faqs: [
       {
         q: 'Which African countries can freelancers work from on FIVESOM?',
-        a: 'FIVESOM freelancers currently work from Somalia, Somaliland, Ethiopia, Djibouti, Kenya, Nigeria and other African countries, serving clients locally and internationally.',
+        a: 'FIVESOM has market pages for Somalia, Somaliland, Ethiopia, Djibouti, Kenya, Nigeria, Ghana, Tanzania, Uganda, Rwanda, South Africa and Egypt, and freelancers from other African countries are welcome too.',
       },
       {
         q: 'How does FIVESOM make money?',
@@ -94,7 +94,21 @@ export const MARKETS: Market[] = [
         a: 'Each freelancer can have up to 2 active gigs at a time, so sellers are encouraged to focus on their strongest services.',
       },
     ],
-    areaServed: ['Africa', 'Somalia', 'Somaliland', 'Ethiopia', 'Djibouti', 'Kenya', 'Nigeria'],
+    areaServed: [
+      'Africa',
+      'Somalia',
+      'Somaliland',
+      'Ethiopia',
+      'Djibouti',
+      'Kenya',
+      'Nigeria',
+      'Ghana',
+      'Tanzania',
+      'Uganda',
+      'Rwanda',
+      'South Africa',
+      'Egypt',
+    ],
     languages: ['en', 'so', 'ar', 'am', 'sw'],
   },
   {
