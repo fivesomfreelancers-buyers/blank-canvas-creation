@@ -171,7 +171,7 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
                 {slide.type === 'video' ? (
                   <div className="w-full h-full bg-black flex items-center justify-center">
                     {images[0] ? (
-                      <SmartImage src={images[0]} alt="Video thumbnail" wrapperClassName="w-full h-full flex items-center justify-center" className="max-w-full max-h-full object-contain opacity-70" />
+                      <SmartImage src={images[0]} alt={`${title} — video preview`} wrapperClassName="w-full h-full flex items-center justify-center" className="max-w-full max-h-full object-contain opacity-70" />
                     ) : null}
                     <Play className="w-5 h-5 text-white absolute" fill="currentColor" />
                   </div>
@@ -199,7 +199,8 @@ const UnifiedGallery: React.FC<UnifiedGalleryProps> = ({ videoUrl, images, title
             {activeLightboxUrl && (
               <img
                 src={activeLightboxUrl}
-                alt={title}
+                alt={gigImageAlt(title, imageSlideIndexes.indexOf(lightboxIndex ?? 0), seller)}
+                title={title}
                 style={{ transform: `scale(${zoom})` }}
                 className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-200 origin-center"
               />
