@@ -25,6 +25,12 @@ import { toast } from '@/hooks/use-toast';
 import { getVipTheme, resolveVipTier } from '@/lib/vipTheme';
 import { useTheme } from '@/components/ThemeProvider';
 import { isUuid, gigPath, freelancerPath } from '@/lib/urls';
+import { gigImageAlt } from '@/lib/seo/gigImages';
+import { breadcrumbSchema } from '@/lib/seo/schemas';
+
+/** "graphics-design" -> "Graphics Design" for schema/breadcrumb labels. */
+const prettyCategory = (slug: string) =>
+  slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
 const GigDetails = () => {
   const { slug } = useParams();
