@@ -212,6 +212,9 @@ const GigDetails = () => {
         image={images[0]}
         noindex={!isPublicGig}
         jsonLd={(() => {
+          // Structured data is only emitted for publicly listed gigs, so it
+          // never describes a page Google is told not to index.
+          if (!isPublicGig) return undefined;
           const gigUrl = absoluteSeoUrl(gigPath(gig));
           const absImages = images.map((img: string) => absoluteSeoUrl(img));
           const realReviews = (gig.reviews || []).filter((r: any) => r && r.rating);
