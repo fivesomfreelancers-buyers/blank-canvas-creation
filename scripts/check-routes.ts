@@ -18,7 +18,7 @@ import { readFileSync, existsSync } from 'fs';
 import { readdirSync, statSync } from 'fs';
 import { join, resolve } from 'path';
 
-const root = resolve(__dirname, '..');
+const root = resolve(process.cwd());
 const appSource = readFileSync(join(root, 'src/App.tsx'), 'utf8');
 
 /** Route patterns declared in App.tsx, e.g. "/gig/:slug" or "/admin/*". */
