@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { Helmet } from "react-helmet-async";
+import SEO from "@/components/SEO";
 import { Compass, Home, LifeBuoy, BookOpen, Search } from "lucide-react";
 import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
@@ -26,10 +26,12 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4 py-16">
-      <Helmet>
-        <title>Page not found — FIVESOM</title>
-        <meta name="robots" content="noindex, follow" />
-      </Helmet>
+      <SEO
+        title="Page not found — FIVESOM"
+        description="The page you were looking for could not be found on FIVESOM."
+        canonical={location.pathname}
+        noindex
+      />
 
       <div className="w-full max-w-2xl text-center">
         <div className="mb-8 flex justify-center">
