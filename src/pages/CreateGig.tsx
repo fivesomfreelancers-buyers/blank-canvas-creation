@@ -9,6 +9,7 @@ import GigDescription from '@/components/gig/GigDescription';
 import GalleryPublish from '@/components/gig/GalleryPublish';
 import { supabase } from '@/integrations/supabase/client';
 import { compressImage, compressImages } from '@/lib/imageCompress';
+import { gigImageFileName } from '@/lib/seo/gigImages';
 
 export interface GigData {
   title: string;
