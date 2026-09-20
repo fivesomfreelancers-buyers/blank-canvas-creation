@@ -38,6 +38,15 @@ const SEO = ({
   // index.html carries a site-wide share image for crawlers that do not run
   // JavaScript. When a page supplies its own image (a gig photo, for example),
   // those static tags are dropped so crawlers see exactly one share image.
+  // index.html carries a site-wide robots directive for crawlers that do not run
+  // JavaScript. Once a route sets its own, the static one is removed so a
+  // noindex page can never be contradicted by the site-wide "index, follow".
+  useEffect(() => {
+    document
+      .querySelectorAll('meta[name="robots"]:not([data-rh])')
+      .forEach((el) => el.remove());
+  }, []);
+
   useEffect(() => {
     if (!image) return;
     document

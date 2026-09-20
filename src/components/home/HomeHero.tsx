@@ -54,7 +54,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
         </div>
 
         <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold leading-tight text-foreground mb-5 min-h-[2.4em] sm:min-h-[2.3em]">
-          Hire skilled freelancers.{' '}
+          Hire skilled African freelancers.{' '}
           <TypingHeadline
             className="text-primary"
             phrases={[
@@ -68,10 +68,11 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
         </h1>
 
         <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-          FIVESOM is a global freelance marketplace that connects clients with skilled
-          freelancers in design, web development, video editing, writing, translation and
-          digital marketing. Every order is protected by escrow: your payment is held
-          securely and released to the freelancer only after you accept the delivered work.
+          FIVESOM is a freelance marketplace connecting African freelancers — from Somalia,
+          Somaliland, Ethiopia, Djibouti, Kenya, Nigeria and beyond — with clients worldwide,
+          across design, web development, video editing, writing, translation and digital
+          marketing. Every order is protected by escrow: your payment is held securely and
+          released to the freelancer only after you accept the delivered work.
         </p>
 
         <div className="max-w-2xl mx-auto mb-6">
