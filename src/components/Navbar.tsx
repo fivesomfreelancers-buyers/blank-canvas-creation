@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -70,26 +71,26 @@ const Navbar = () => {
     : user?.email?.[0]?.toUpperCase() || 'U';
 
   return (
-    <nav className="fixed top-0 w-full z-50 backdrop-blur-[12px] bg-background/80 border-b border-border/20 shadow-lg supports-[backdrop-filter]:bg-background/60 transition-all duration-300">
+    <nav className="fixed top-0 z-50 w-full border-b border-border bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/75">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Logo />
           
-          <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-foreground hover:text-primary transition-colors">Home</Link>
-            <Link to="/explore" className="text-foreground hover:text-primary transition-colors">Explore</Link>
-            <Link to="/how-it-works" className="text-foreground hover:text-primary transition-colors">How It Works</Link>
+          <div className="hidden md:flex items-center gap-7 text-sm font-medium">
+            <Link to="/explore" className="text-muted-foreground hover:text-foreground transition-colors">Explore services</Link>
+            <Link to="/services" className="text-muted-foreground hover:text-foreground transition-colors">Categories</Link>
+            <Link to="/how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">How it works</Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <button
-
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={toggleTheme}
-              className="p-2 rounded-full hover:bg-accent transition-colors"
               aria-label="Toggle theme"
             >
               {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
+            </Button>
 
             {user ? (
               <>
@@ -206,37 +207,30 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/login">
-                  <button className="px-6 py-2 border border-border rounded-lg hover:bg-accent transition-colors">
-                    Sign In
-                  </button>
-                </Link>
-                <Link to="/register">
-                  <button className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
-                    Join
-                  </button>
-                </Link>
+                <Button variant="ghost" asChild><Link to="/login">Sign in</Link></Button>
+                <Button asChild><Link to="/register">Join Fivesom</Link></Button>
               </>
             )}
           </div>
 
           <div className="md:hidden flex items-center gap-1">
             {user && <NotificationBell />}
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+            </Button>
           </div>
 
         </div>
 
         {isMenuOpen && (
           <div className="md:hidden py-4 space-y-4">
-            <Link to="/" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            <Link to="/explore" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Explore</Link>
+            <Link to="/explore" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Explore services</Link>
+            <Link to="/services" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Categories</Link>
             <Link to="/how-it-works" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>How It Works</Link>
             <button onClick={toggleTheme} className="flex items-center space-x-2 w-full text-left">
               {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -269,10 +263,10 @@ const Navbar = () => {
             ) : (
               <>
                 <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                  <button className="w-full px-6 py-2 border border-border rounded-lg hover:bg-accent transition-colors">Sign In</button>
+                  <Button variant="outline" className="w-full">Sign in</Button>
                 </Link>
                 <Link to="/register" onClick={() => setIsMenuOpen(false)}>
-                  <button className="w-full px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">Join</button>
+                  <Button className="w-full">Join Fivesom</Button>
                 </Link>
               </>
             )}
