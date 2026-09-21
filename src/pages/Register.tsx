@@ -139,7 +139,7 @@ const Register = () => {
               <img src={logo} alt="FIVESOM Logo" width="50" height="50" className="w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] object-contain" />
               <span className="text-xl sm:text-2xl font-bold text-foreground">FIVESOM</span>
             </Link>
-            <p className="text-muted-foreground mt-2 text-sm sm:text-base">Join FIVSOM and start your journey</p>
+            <p className="text-muted-foreground mt-2 text-sm sm:text-base">Join Fivesom and start your journey</p>
           </div>
 
           <div className="bg-card/80 backdrop-blur-lg rounded-2xl p-6 sm:p-8 shadow-xl border border-border">

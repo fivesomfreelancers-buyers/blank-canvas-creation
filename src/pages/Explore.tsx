@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter } from 'lucide-react';
+import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -8,8 +8,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import Navbar from '../components/Navbar';
 import SEO, { SITE_URL } from '../components/SEO';
 import { useTheme } from '../components/ThemeProvider';
-import { toast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import GigCard from '@/components/gig/GigCard';
 import { CATEGORIES, getCategoryBySlug } from '@/lib/categories';
 import { useSearchParams } from 'react-router-dom';
@@ -93,20 +91,19 @@ const Explore = () => {
       />
       <Navbar />
       
-      <div className="pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="px-4 pb-16 pt-24 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Explore Services</h1>
-            <p className="text-lg text-muted-foreground">Discover talented freelancers ready to help grow your business</p>
-            <p className="text-sm mt-2 text-muted-foreground">
+          <div className="mb-8 max-w-3xl">
+            <span className="mb-3 block text-sm font-semibold text-primary">Fivesom marketplace</span>
+            <h1 className="mb-3 text-3xl font-bold text-foreground md:text-5xl">Find the right service for your next project</h1>
+            <p className="text-base text-muted-foreground sm:text-lg">Compare real work, seller ratings, delivery options, and clear starting prices.</p>
+            <p className="mt-3 text-sm font-medium text-foreground">
               {loading ? 'Loading...' : `Showing ${currentGigs.length} of ${total} gigs`}
             </p>
           </div>
 
           {/* Search and Filters */}
-          <div className={`backdrop-blur-lg rounded-2xl p-6 mb-8 ${
-            isDarkMode ? 'bg-card/50 border border-border' : 'bg-card/50 border border-border'
-          } shadow-xl`}>
+          <div className="mb-8 rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5">
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1 relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -116,7 +113,7 @@ const Explore = () => {
                   value={searchQuery}
                   onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
                   placeholder="Search for services..."
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border-0 outline-none bg-muted/50 text-foreground placeholder:text-muted-foreground"
+                  className="h-12 w-full rounded-md border border-input bg-background pl-12 pr-4 text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
                 />
               </div>
 
@@ -124,7 +121,7 @@ const Explore = () => {
                 aria-label="Filter by category"
                 value={selectedCategory}
                 onChange={(e) => { setSelectedCategory(e.target.value); setSelectedSubcategory('all'); setCurrentPage(1); }}
-                className="px-4 py-3 rounded-xl border-0 outline-none bg-muted/50 text-foreground"
+                className="h-12 rounded-md border border-input bg-background px-4 text-foreground outline-none focus:ring-2 focus:ring-ring"
               >
                 {categories.map(category => (
                   <option key={category.slug} value={category.slug}>{category.name}</option>
@@ -136,7 +133,7 @@ const Explore = () => {
                   aria-label="Filter by subcategory"
                   value={selectedSubcategory}
                   onChange={(e) => { setSelectedSubcategory(e.target.value); setCurrentPage(1); }}
-                  className="px-4 py-3 rounded-xl border-0 outline-none bg-muted/50 text-foreground"
+                  className="h-12 rounded-md border border-input bg-background px-4 text-foreground outline-none focus:ring-2 focus:ring-ring"
                 >
                   <option value="all">All {activeCategory.name}</option>
                   {activeCategory.subcategories.map(sub => (
@@ -147,10 +144,10 @@ const Explore = () => {
 
               <Dialog open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
                 <DialogTrigger asChild>
-                  <button className="px-6 py-3 rounded-xl flex items-center space-x-2 bg-muted/50 text-foreground hover:bg-muted transition-colors">
-                    <Filter size={20} />
+                  <Button variant="outline" className="h-12 px-5">
+                    <SlidersHorizontal size={18} />
                     <span>More Filters</span>
-                  </button>
+                  </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-lg">
                   <DialogHeader>
@@ -206,7 +203,7 @@ const Explore = () => {
               <p className="text-sm text-muted-foreground mt-2">Try adjusting your filters or search query</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 mb-8">
+            <div className="mb-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {currentGigs.map(gig => (
                 <GigCard key={gig.id} gig={gig} />
               ))}

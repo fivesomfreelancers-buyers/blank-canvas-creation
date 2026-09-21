@@ -3,6 +3,7 @@ import { Search, ArrowRight, ShieldCheck, Globe2, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import TypingHeadline from './TypingHeadline';
 import { CATEGORIES } from '@/lib/categories';
+import { Button } from '@/components/ui/button';
 
 const POPULAR = [
   'Logo Design',
@@ -46,14 +47,14 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
   };
 
   return (
-    <section className="pt-20 sm:pt-24 pb-14 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-background via-background to-primary/5">
-      <div className="max-w-5xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6">
+    <section className="border-b border-border bg-background px-4 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8">
+      <div className="mx-auto max-w-6xl text-center">
+        <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-semibold text-primary">
           <Globe2 className="w-3.5 h-3.5" />
           Global freelance marketplace with an African heart
         </div>
 
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold leading-tight text-foreground mb-5 min-h-[2.4em] sm:min-h-[2.3em]">
+        <h1 className="mx-auto mb-6 min-h-[2.4em] max-w-5xl text-4xl font-bold leading-tight text-foreground sm:min-h-[2.3em] sm:text-5xl md:text-6xl">
           Hire skilled African freelancers.{' '}
           <TypingHeadline
             className="text-primary"
@@ -75,10 +76,10 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
           released to the freelancer only after you accept the delivered work.
         </p>
 
-        <div className="max-w-2xl mx-auto mb-6">
+        <div className="mx-auto mb-6 max-w-3xl">
           <form
             onSubmit={submit}
-            className="flex flex-col sm:flex-row items-stretch gap-2 p-1 rounded-2xl bg-card/60 backdrop-blur-lg border border-border shadow-xl"
+            className="flex items-stretch gap-2 rounded-lg border border-border bg-card p-1.5 shadow-lg"
           >
             <label htmlFor="hero-search" className="sr-only">
               Search freelance services
@@ -109,28 +110,15 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
                 </span>
               )}
             </div>
-            <button
-              type="submit"
-              className="px-6 py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors inline-flex items-center justify-center gap-2"
-            >
+            <Button type="submit" size="lg" className="h-auto shrink-0 px-6">
               Search <ArrowRight className="w-4 h-4" aria-hidden />
-            </button>
+            </Button>
           </form>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center mb-8">
-          <Link
-            to="/explore"
-            className="px-8 py-4 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all"
-          >
-            Find a Freelancer
-          </Link>
-          <Link
-            to="/register/freelancer"
-            className="px-8 py-4 rounded-xl bg-card/60 backdrop-blur-lg border border-border text-foreground font-semibold hover:bg-card transition-all"
-          >
-            Become a Freelancer
-          </Link>
+          <Button size="lg" asChild><Link to="/explore">Find a freelancer</Link></Button>
+          <Button size="lg" variant="outline" asChild><Link to="/register/freelancer">Sell your services</Link></Button>
         </div>
 
         <ul className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-muted-foreground mb-8">
