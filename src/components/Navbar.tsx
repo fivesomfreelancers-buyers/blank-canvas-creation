@@ -59,6 +59,7 @@ const Navbar = () => {
   const isNormal = userRole === 'user';
   const pendingRole = isNormal ? profile?.onboarding_role ?? null : null;
   const pendingSetupPath = pendingRole ? `/register/${pendingRole}` : '/select-role';
+  const setupLabel = 'Finish your profile';
   const dashboardPath = userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard';
   const profilePath = userRole === 'freelancer' ? '/freelancer/profile' : '/buyer/settings';
   const settingsPath = userRole === 'freelancer' ? '/freelancer/settings' : '/buyer/settings';
@@ -149,7 +150,7 @@ const Navbar = () => {
                 </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="relative flex h-11 w-11 items-center justify-center focus:outline-none" aria-label={pendingRole ? `Profile setup incomplete. Complete ${pendingRole} setup.` : 'Open profile menu'}>
+                    <button className="relative flex h-11 w-11 items-center justify-center focus:outline-none" aria-label={pendingRole ? "Profile setup incomplete. Finish your profile." : "Open profile menu"}>
                       {pendingRole && (
                         <svg className="pointer-events-none absolute inset-0 h-11 w-11 -rotate-90 text-primary" viewBox="0 0 44 44" aria-hidden="true">
                           <circle cx="22" cy="22" r="19" fill="none" stroke="currentColor" strokeOpacity="0.2" strokeWidth="3" />
@@ -179,7 +180,7 @@ const Navbar = () => {
                     <>
                       <DropdownMenuItem onClick={() => navigate(pendingSetupPath)}>
                         {pendingRole === 'freelancer' ? <Settings className="mr-2 h-4 w-4" /> : <User className="mr-2 h-4 w-4" />}
-                        {pendingRole ? `Complete ${pendingRole === 'freelancer' ? 'Freelancer' : 'Buyer'} setup` : 'Choose account type'}
+                        {setupLabel}
                       </DropdownMenuItem>
                     </>
                   ) : (
@@ -258,7 +259,7 @@ const Navbar = () => {
                 )}
                 {isNormal ? (
                   <Link to={pendingSetupPath} className="block font-semibold text-primary" onClick={() => setIsMenuOpen(false)}>
-                    {pendingRole ? `Complete ${pendingRole === 'freelancer' ? 'Freelancer' : 'Buyer'} setup` : 'Choose account type'}
+                    {setupLabel}
                   </Link>
                 ) : (
                   <>
