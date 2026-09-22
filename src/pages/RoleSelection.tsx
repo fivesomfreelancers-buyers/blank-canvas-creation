@@ -18,6 +18,7 @@ import SEO from '@/components/SEO';
 import { useAuth } from '@/hooks/useAuth';
 import { saveOnboardingRole } from '@/lib/onboardingRole';
 import { accountLandingPath, fetchAccountState } from '@/lib/accountState';
+import { readOnboardingDraft } from '@/lib/onboardingDraft';
 import { useToast } from '@/hooks/use-toast';
 
 type Role = 'freelancer' | 'buyer';
@@ -97,6 +98,12 @@ const RoleSelection = () => {
     fetchAccountState()
       .then((state) => {
         const landing = accountLandingPath(state);
+        const pendingRole = readOnboardingDraft()?.role ?? null;
+        if (landing === '/select-role' && pendingRole) {
+          void saveOnboardingRole(pendingRole).catch(() => undefined);
+          navigate(`/register/${pendingRole}`, { replace: true });
+          return;
+        }
         if (landing !== '/select-role') navigate(landing, { replace: true });
       })
       .catch(() => undefined);

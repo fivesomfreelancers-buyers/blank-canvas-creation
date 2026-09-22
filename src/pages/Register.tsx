@@ -4,7 +4,7 @@ import { ArrowRight, BriefcaseBusiness, Check, ShoppingBag } from 'lucide-react'
 import AuthShell from '@/components/auth/AuthShell';
 import SEO from '@/components/SEO';
 import { useAuth } from '@/hooks/useAuth';
-import type { OnboardingRole } from '@/lib/onboardingDraft';
+import { saveOnboardingDraft, type OnboardingRole } from '@/lib/onboardingDraft';
 import { accountLandingPath, fetchAccountState } from '@/lib/accountState';
 
 const choices = [
@@ -32,23 +32,39 @@ const Register = () => {
   const { user, userRole, isLoading } = useAuth();
   const navigate = useNavigate();
   const [selected, setSelected] = useState<OnboardingRole | null>(null);
+  const [checkingAccount, setCheckingAccount] = useState(true);
 
   useEffect(() => {
-    if (isLoading || !user) return;
+    if (isLoading) return;
+    if (!user) {
+      setCheckingAccount(false);
+      return;
+    }
     // Signed-in accounts follow the account type stored on their account, so
     // this two-option screen is only for brand new visitors.
+    setCheckingAccount(true);
     fetchAccountState()
       .then((state) => {
         const landing = accountLandingPath(state);
         if (landing !== '/select-role') navigate(landing, { replace: true });
+        else setCheckingAccount(false);
       })
-      .catch(() => undefined);
+      .catch(() => setCheckingAccount(false));
   }, [user, isLoading, navigate]);
 
   const choose = (role: OnboardingRole) => {
     setSelected(role);
+    saveOnboardingDraft({ role });
     window.setTimeout(() => navigate(`/register/${role}`), 180);
   };
+
+  if (isLoading || (user && checkingAccount)) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary" />
+      </div>
+    );
+  }
 
   return (
     <>
