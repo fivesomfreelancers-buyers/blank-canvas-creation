@@ -279,33 +279,38 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     }
   };
 
-  const completeProfile = async () => {
-    if (!user) return;
-    if (!emailVerified) {
+  const completeProfile = async (activeUserId?: string) => {
+    const userId = activeUserId ?? user?.id;
+    if (!userId) return;
+    if (!activeUserId && !emailVerified) {
       saveOnboardingDraft(currentDraft());
       navigate('/verify-email');
       return;
     }
 
-    const fullName = `${firstName.trim()} ${lastName.trim()}`;
-    const profileUpdate = isFreelancer
-      ? { full_name: fullName, location: country.trim(), professional_title: professionalTitle.trim(), bio: bio.trim(), skills: [category], languages: [] }
-      : { full_name: fullName, location: country.trim(), industry };
+    const savedPhoto = await uploadPendingPhoto(userId);
 
-    const { error: profileError } = await (supabase as any).from('profiles').update(profileUpdate).eq('id', user.id);
-    if (profileError) throw profileError;
-    await upgradeToRole(user.id, role);
-    if (isFreelancer) {
-      const { error } = await (supabase as any).from('freelancers').update({ bio: bio.trim(), skills: [category] }).eq('user_id', user.id);
-      if (error) throw error;
-    } else {
-      const { error } = await (supabase as any).from('buyers').update({ industry }).eq('user_id', user.id);
-      if (error) throw error;
-    }
+    // One database call saves the role, profile, languages, photo and the
+    // matching freelancer/buyer record together. Either everything is saved or
+    // nothing is, so an account is never left half-created.
+    const { error } = await (supabase as any).rpc('complete_role_onboarding', {
+      _role: role,
+      _full_name: `${firstName.trim()} ${lastName.trim()}`,
+      _country: country.trim(),
+      _languages: languages,
+      _profile_image_url: (savedPhoto || photoUrl || '').split('?')[0] || null,
+      _professional_title: isFreelancer ? professionalTitle.trim() : null,
+      _bio: isFreelancer ? bio.trim() : null,
+      _primary_skill: isFreelancer ? category : null,
+      _industry: isFreelancer ? null : industry,
+    });
+    if (error) throw error;
+
     clearOnboardingDraft();
     await refreshRole();
     navigate(isFreelancer ? '/freelancer/dashboard' : '/buyer/dashboard', { replace: true });
   };
+
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
