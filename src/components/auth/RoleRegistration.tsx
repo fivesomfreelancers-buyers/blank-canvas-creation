@@ -82,6 +82,40 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     if (userRole === 'buyer') navigate('/buyer/dashboard', { replace: true });
   }, [authLoading, userRole, navigate]);
 
+  // Signed in through Google: the account is linked already, so there is no
+  // role to change here — the person must finish this form.
+  const isGoogleUser = Boolean(
+    user && (
+      (user.app_metadata as any)?.provider === 'google' ||
+      ((user.app_metadata as any)?.providers as string[] | undefined)?.includes('google') ||
+      (user as any).identities?.some((identity: any) => identity.provider === 'google')
+    ),
+  );
+  const onboardingIncomplete = Boolean(user) && userRole !== 'freelancer' && userRole !== 'buyer';
+
+  // If a Google account abandoned this form earlier, drop the session so the
+  // person starts a fresh sign-up instead of resuming a half-made account.
+  useEffect(() => {
+    if (authLoading || !user || !onboardingIncomplete) return;
+    let active = true;
+    enforceAbandonedOnboarding(user.id).then((signedOut) => {
+      if (signedOut && active) navigate('/register', { replace: true });
+    });
+    return () => { active = false; };
+  }, [authLoading, user, onboardingIncomplete, navigate]);
+
+  // Leaving the page (closing the tab, navigating away) counts as abandoning.
+  useEffect(() => {
+    if (!user || !isGoogleUser || !onboardingIncomplete) return;
+    const onLeave = () => markOnboardingAbandoned(user.id);
+    window.addEventListener('pagehide', onLeave);
+    window.addEventListener('beforeunload', onLeave);
+    return () => {
+      window.removeEventListener('pagehide', onLeave);
+      window.removeEventListener('beforeunload', onLeave);
+    };
+  }, [user, isGoogleUser, onboardingIncomplete]);
+
   const currentDraft = () => ({
     role, firstName, lastName, email, country, professionalTitle, category, bio, industry, termsAccepted,
   });
