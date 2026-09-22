@@ -136,6 +136,27 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     return () => { active = false; };
   }, [authLoading, user, accountState, role, navigate, toast]);
 
+  const savedProfile = accountState?.profile;
+  const displayName = String(
+    savedProfile?.full_name || user?.user_metadata?.full_name || user?.user_metadata?.name || '',
+  ).trim();
+  const filled = (value: string | null | undefined) => Boolean(value && value.trim().length > 0);
+  const requiredFields = isFreelancer
+    ? [
+        { label: 'Full name', done: filled(savedProfile?.full_name) },
+        { label: 'Country', done: filled(savedProfile?.location) },
+        { label: 'Professional title', done: filled(savedProfile?.professional_title) },
+        { label: 'Professional introduction', done: filled(savedProfile?.bio) },
+      ]
+    : [
+        { label: 'Full name', done: filled(savedProfile?.full_name) },
+        { label: 'Country', done: filled(savedProfile?.location) },
+        { label: 'Industry or hiring context', done: filled(savedProfile?.industry) },
+      ];
+  const completionPercent = Math.round(
+    (requiredFields.filter((field) => field.done).length / requiredFields.length) * 100,
+  );
+
   const currentDraft = () => ({
     role, firstName, lastName, email, country, professionalTitle, category, bio, industry, termsAccepted,
   });
