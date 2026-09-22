@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Moon, Sun, Menu, X, User, LogOut, Settings, LayoutDashboard, MessageSquare, Shield, ShoppingBag } from 'lucide-react';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
+import { readOnboardingDraft } from '@/lib/onboardingDraft';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -58,11 +59,13 @@ const Navbar = () => {
     fetchProfile();
   }, [user]);
 
+  const draftRole = useMemo(() => readOnboardingDraft()?.role ?? null, [user?.id]);
   const isNormal = userRole === 'user';
   const setupRole = accountState?.onboardingStatus !== 'complete'
-    ? accountState?.selectedRole ?? profile?.onboarding_role ?? null
+    ? accountState?.selectedRole ?? profile?.onboarding_role ?? draftRole
     : null;
   const showFinishSetup = Boolean(user && setupRole);
+  const showChooseAccountType = Boolean(user && isNormal && !accountStateLoading && !setupRole);
   const pendingSetupPath = setupRole ? `/register/${setupRole}` : '/register';
   const setupLabel = 'Finish profile setup';
   const dashboardPath = userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard';
@@ -193,6 +196,11 @@ const Navbar = () => {
                       <User className="mr-2 h-4 w-4" />
                       Checking profile setup…
                     </DropdownMenuItem>
+                  ) : showChooseAccountType ? (
+                    <DropdownMenuItem onClick={() => navigate('/register')}>
+                      <User className="mr-2 h-4 w-4" />
+                      Choose account type
+                    </DropdownMenuItem>
                   ) : (
                     <>
                       <DropdownMenuItem onClick={() => navigate(dashboardPath)}>
@@ -273,6 +281,10 @@ const Navbar = () => {
                   </Link>
                 ) : isNormal && accountStateLoading ? (
                   <span className="block text-muted-foreground">Checking profile setup…</span>
+                ) : showChooseAccountType ? (
+                  <Link to="/register" className="block font-semibold text-primary" onClick={() => setIsMenuOpen(false)}>
+                    Choose account type
+                  </Link>
                 ) : (
                   <>
                     <Link to={dashboardPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
