@@ -11,6 +11,7 @@ import AuthShell from '@/components/auth/AuthShell';
 import GoogleIcon from '@/components/auth/GoogleIcon';
 import { CATEGORIES } from '@/lib/categories';
 import { readOnboardingDraft, saveOnboardingDraft, clearOnboardingDraft, type OnboardingRole } from '@/lib/onboardingDraft';
+import { clearOnboardingAbandoned, enforceAbandonedOnboarding, markOnboardingAbandoned } from '@/lib/onboardingAbandon';
 import { upgradeToRole } from '@/lib/roleUpgrade';
 import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 import { supabase } from '@/integrations/supabase/client';
