@@ -9,9 +9,9 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predev": "bunx tsx scripts/generate-sitemap.ts",
-    "prebuild": "bunx tsx scripts/generate-sitemap.ts && bunx tsx scripts/check-routes.ts",
-    "check:routes": "bunx tsx scripts/generate-sitemap.ts && bunx tsx scripts/check-routes.ts"
+    "predev": "tsx scripts/generate-sitemap.ts",
+    "prebuild": "tsx scripts/generate-sitemap.ts && tsx scripts/check-routes.ts",
+    "check:routes": "tsx scripts/generate-sitemap.ts && tsx scripts/check-routes.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
