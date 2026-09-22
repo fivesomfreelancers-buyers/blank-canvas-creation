@@ -22,6 +22,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { readOnboardingDraft } from '@/lib/onboardingDraft';
+import { useMyPhoto } from '@/hooks/useMyPhoto';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -165,8 +166,8 @@ const Navbar = () => {
                         </svg>
                       )}
                       <Avatar className={`h-9 w-9 cursor-pointer transition-all ${showFinishSetup ? '' : 'ring-2 ring-primary/20 hover:ring-primary/50'}`}>
-                        {profile?.profile_image_url ? (
-                          <AvatarImage src={profile.profile_image_url} alt={profile?.full_name || 'User'} />
+                        {avatarUrl ? (
+                          <AvatarImage src={avatarUrl} alt={displayName} className="object-cover" />
                         ) : null}
                         <AvatarFallback className="bg-primary text-primary-foreground text-sm font-medium">
                           {initials}
@@ -254,8 +255,8 @@ const Navbar = () => {
               <>
                 <div className="flex items-center space-x-3 py-2 border-t border-border pt-4">
                   <Avatar className="h-8 w-8">
-                    {profile?.profile_image_url ? (
-                      <AvatarImage src={profile.profile_image_url} alt={profile?.full_name || 'User'} />
+                    {avatarUrl ? (
+                      <AvatarImage src={avatarUrl} alt={displayName} className="object-cover" />
                     ) : null}
                     <AvatarFallback className="bg-primary text-primary-foreground text-xs">{initials}</AvatarFallback>
                   </Avatar>
