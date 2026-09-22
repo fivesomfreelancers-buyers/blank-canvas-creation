@@ -38,7 +38,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, userRole, emailVerified, isLoading: authLoading, refreshRole } = useAuth();
-  const { state: accountState } = useAccountState();
+  const { state: accountState, refresh: refreshAccountState } = useAccountState();
   const [googleLoading, setGoogleLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
@@ -248,16 +248,23 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     role, firstName, lastName, email, country, professionalTitle, category, bio, industry, termsAccepted,
   });
 
+  // Each rule names the single field that still needs attention, so the person
+  // is never told to fix something they already filled in.
   const validate = () => {
     if (firstName.trim().length < 2 || lastName.trim().length < 2) return 'Enter your first and last name.';
-    if (!country.trim()) return 'Country is required.';
-    if (!user && (!email.trim() || password.length < 8)) return 'Enter a valid email and a password of at least 8 characters.';
-    if (!languages.length) return 'Select at least one language you speak.';
-    if (!termsAccepted) return 'Accept the Terms of Service and Privacy Policy to continue.';
-    if (isFreelancer && (!professionalTitle.trim() || !category || bio.trim().length < 50)) {
-      return 'Add your professional title, primary skill, and an introduction of at least 50 characters.';
+    if (!country.trim()) return 'Add the country you work from.';
+    if (!user && !email.trim()) return 'Enter the email address for your account.';
+    if (!user && password.length < 8) return 'Choose a password with at least 8 characters.';
+    if (isFreelancer) {
+      if (!professionalTitle.trim()) return 'Add your professional title, for example “Brand Designer”.';
+      if (!category) return 'Open “Primary skill” and choose the service you offer.';
+      if (bio.trim().length < 50) {
+        return `Your professional introduction needs at least 50 characters — ${50 - bio.trim().length} to go.`;
+      }
     }
     if (!isFreelancer && !industry) return 'Choose your industry or hiring context.';
+    if (!languages.length) return 'Add at least one language you speak.';
+    if (!termsAccepted) return 'Accept the Terms of Service and Privacy Policy to continue.';
     return null;
   };
 
@@ -307,7 +314,9 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     if (error) throw error;
 
     clearOnboardingDraft();
-    await refreshRole();
+    // Re-read the saved account from the database before leaving, so the guard
+    // on the dashboard sees the finished state instead of a stale one.
+    await Promise.all([refreshRole(), refreshAccountState().catch(() => undefined)]);
     navigate(isFreelancer ? '/freelancer/dashboard' : '/buyer/dashboard', { replace: true });
   };
 
