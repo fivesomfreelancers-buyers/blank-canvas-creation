@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { useAccountState } from '@/hooks/useAccountState';
+import { Button } from '@/components/ui/button';
 
 
 type Requirement = 'authenticated' | 'freelancer' | 'buyer';
@@ -66,9 +67,9 @@ const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }
         <div className="max-w-sm text-center">
           <p className="font-semibold text-foreground">We couldn't verify your account access.</p>
           <p className="mt-2 text-sm text-muted-foreground">Your account data is safe. Please check your connection and try again.</p>
-          <button type="button" className="mt-5 text-sm font-semibold text-primary hover:underline" onClick={() => void refresh()}>
+          <Button type="button" variant="link" className="mt-3" onClick={() => void refresh()}>
             Try again
-          </button>
+          </Button>
           {stateError ? <span className="sr-only">Account verification request failed.</span> : null}
         </div>
       </div>
