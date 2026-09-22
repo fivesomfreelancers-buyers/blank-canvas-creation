@@ -53,6 +53,67 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
   const [professionalTitle, setProfessionalTitle] = useState('');
   const [bio, setBio] = useState('');
   const [industry, setIndustry] = useState('');
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [languagePicker, setLanguagePicker] = useState('');
+  const [photoUrl, setPhotoUrl] = useState('');
+  const [photoPreview, setPhotoPreview] = useState('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+
+  const addLanguage = (value: string) => {
+    if (!value) return;
+    setLanguages((current) => (current.includes(value) ? current : [...current, value]));
+    setLanguagePicker('');
+  };
+  const removeLanguage = (value: string) => setLanguages((current) => current.filter((item) => item !== value));
+
+  const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: 'Image too large', description: 'Choose a photo under 5MB.', variant: 'destructive' });
+      return;
+    }
+    setUploadingPhoto(true);
+    try {
+      const optimized = await compressImage(file, { maxDimension: 800 });
+      setPhotoFile(optimized);
+      setPhotoPreview(URL.createObjectURL(optimized));
+      // Signed-in accounts upload straight away so the photo is stored against
+      // their user id in Supabase Storage, never only in browser memory.
+      if (user) {
+        const ext = (optimized.name.split('.').pop() || 'jpg').toLowerCase();
+        const path = `${user.id}/avatar.${ext}`;
+        const { error } = await supabase.storage.from('profile-images').upload(path, optimized, { upsert: true, contentType: optimized.type });
+        if (error) throw error;
+        const { data } = supabase.storage.from('profile-images').getPublicUrl(path);
+        setPhotoUrl(`${data.publicUrl}?t=${Date.now()}`);
+      }
+    } catch (error) {
+      toast({ title: 'Photo upload failed', description: error instanceof Error ? error.message : 'Please try again.', variant: 'destructive' });
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
+
+  const clearPhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview('');
+    setPhotoUrl('');
+  };
+
+  /** Uploads a photo picked before authentication, once the account exists. */
+  const uploadPendingPhoto = async (userId: string) => {
+    if (!photoFile) return photoUrl || '';
+    const ext = (photoFile.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = `${userId}/avatar.${ext}`;
+    const { error } = await supabase.storage.from('profile-images').upload(path, photoFile, { upsert: true, contentType: photoFile.type });
+    if (error) return photoUrl || '';
+    const { data } = supabase.storage.from('profile-images').getPublicUrl(path);
+    return data.publicUrl;
+  };
 
   const title = isFreelancer ? 'Create your Freelancer account' : 'Create your Buyer account';
   const subtitle = isFreelancer
