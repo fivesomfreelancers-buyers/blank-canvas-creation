@@ -97,21 +97,22 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
         {!reducedMotion && (
           <video
             ref={videoRef}
+            key={clipIndex}
             poster={heroPoster.url}
             autoPlay
-            loop
             muted
             playsInline
             preload="auto"
             disablePictureInPicture
             tabIndex={-1}
             onCanPlay={() => setVideoReady(true)}
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-out ${
+            onEnded={() => setClipIndex((i) => (i + 1) % HERO_CLIPS.length)}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out ${
               videoReady ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <source src={heroVideoWebm.url} type="video/webm" />
-            <source src={heroVideo.url} type="video/mp4" />
+            <source src={clip.webm} type="video/webm" />
+            <source src={clip.mp4} type="video/mp4" />
           </video>
         )}
         {/* Readability overlay */}
