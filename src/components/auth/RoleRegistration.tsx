@@ -174,6 +174,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
       if (error) throw error;
     }
     clearOnboardingDraft();
+    clearOnboardingAbandoned();
     await refreshRole();
     navigate(isFreelancer ? '/freelancer/dashboard' : '/buyer/dashboard', { replace: true });
   };
