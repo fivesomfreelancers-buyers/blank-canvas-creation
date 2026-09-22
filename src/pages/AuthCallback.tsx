@@ -141,7 +141,7 @@ const AuthCallback = () => {
           return;
         }
 
-        // No buyer/freelancer role yet → stay a normal user and browse freely.
+        // No buyer/freelancer role yet → neutral member, then choose a role.
         setStatus('Setting up your account...');
         try {
           await ensureNormalUserRole(user.id);
@@ -149,11 +149,15 @@ const AuthCallback = () => {
           // Never block a valid session on a role bootstrap hiccup.
           console.error('ensureNormalUserRole error:', roleErr);
         }
+
+        const verified = Boolean((user as any).email_confirmed_at || (user as any).confirmed_at);
         toast({
-          title: 'Welcome to FIVESOM!',
-          description: 'Explore services freely. You can become a buyer or freelancer anytime.',
+          title: 'Welcome to Fivesom!',
+          description: verified
+            ? 'Choose how you want to use Fivesom.'
+            : 'Please confirm your email address to continue.',
         });
-        navigate('/', { replace: true });
+        navigate(verified ? '/select-role' : '/verify-email', { replace: true });
       } catch (err: any) {
         console.error('Auth callback error:', err);
         if (cancelled) return;
