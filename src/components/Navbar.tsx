@@ -35,6 +35,7 @@ const Navbar = () => {
   const { newDeliveryCount } = useNewDeliveries();
   const { isAdmin } = useAdminRole();
   const { state: accountState, isLoading: accountStateLoading } = useAccountState();
+  const myIdentity = useMyPhoto();
   const [profile, setProfile] = useState<{ full_name: string; profile_image_url: string | null; onboarding_role: 'buyer' | 'freelancer' | null } | null>(null);
 
   useEffect(() => {
@@ -78,8 +79,13 @@ const Navbar = () => {
     navigate('/');
   };
 
-  const initials = profile?.full_name
-    ? profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+  // One shared photo/name for the whole app, so the website header and the
+  // dashboard always show the same picture the person uploaded.
+  const displayName = myIdentity.fullName || profile?.full_name || user?.email || 'User';
+  const avatarUrl = myIdentity.photoUrl || profile?.profile_image_url || null;
+
+  const initials = displayName
+    ? displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
     : user?.email?.[0]?.toUpperCase() || 'U';
 
   return (
