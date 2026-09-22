@@ -4,16 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import TypingHeadline from './TypingHeadline';
 import { CATEGORIES } from '@/lib/categories';
 import { Button } from '@/components/ui/button';
-import heroVideo from '@/assets/hero-bg.mp4.asset.json';
-import heroVideoWebm from '@/assets/hero-bg.webm.asset.json';
-import heroVideo2 from '@/assets/hero-bg2.mp4.asset.json';
-import heroVideo2Webm from '@/assets/hero-bg2.webm.asset.json';
-import heroPoster from '@/assets/hero-bg-poster.jpg.asset.json';
+// Served as plain static files from /public so they work on any host (Netlify included).
+const HERO_POSTER = '/media/hero-bg-poster.jpg';
 
 // Background clips play one after the other: when one ends, the next one starts.
 const HERO_CLIPS = [
-  { webm: heroVideoWebm.url, mp4: heroVideo.url },
-  { webm: heroVideo2Webm.url, mp4: heroVideo2.url },
+  { webm: '/media/hero-bg.webm', mp4: '/media/hero-bg.mp4' },
+  { webm: '/media/hero-bg2.webm', mp4: '/media/hero-bg2.mp4' },
 ];
 
 const POPULAR = [
