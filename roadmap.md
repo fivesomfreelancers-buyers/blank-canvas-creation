@@ -33,4 +33,4 @@
 - [x] Present escrow as a staged protected-payment flow
 - [x] Add distinct freelancer, buyer, Africa-to-global, and trust story chapters
 - [x] Preserve live freelancer profiles, tutorials, FAQ, CTA links, and Footer content
-- [ ] Verify semantic headings, crawlable text, desktop/mobile motion, overflow, and performance
+- [x] Verify semantic headings, crawlable text, desktop/mobile motion, overflow, and performance
