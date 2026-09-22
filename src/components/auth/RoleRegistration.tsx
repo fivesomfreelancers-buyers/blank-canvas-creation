@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, BriefcaseBusiness, CheckCircle2, Circle, Eye, EyeOff, Loader2, ShoppingBag, UserRound } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BriefcaseBusiness, CheckCircle2, Circle, Eye, EyeOff, Loader2, ShoppingBag, Upload, UserRound, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,7 @@ import GoogleIcon from '@/components/auth/GoogleIcon';
 import { CATEGORIES } from '@/lib/categories';
 import { readOnboardingDraft, saveOnboardingDraft, clearOnboardingDraft, type OnboardingRole } from '@/lib/onboardingDraft';
 import { saveOnboardingRole } from '@/lib/onboardingRole';
-import { upgradeToRole } from '@/lib/roleUpgrade';
+import { compressImage } from '@/lib/imageCompress';
 import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -23,6 +23,12 @@ const BUYER_INDUSTRIES = [
   'Technology / IT', 'E-commerce / Retail', 'Marketing / Media', 'Local Business',
   'Agency / Consulting', 'Education', 'Healthcare', 'Finance', 'Real Estate',
   'Non-Profit / NGO', 'Personal Project', 'Other',
+];
+
+const AVAILABLE_LANGUAGES = [
+  'English', 'Somali', 'Arabic', 'French', 'Italian', 'Amharic', 'Swahili',
+  'Spanish', 'Portuguese', 'Turkish', 'German', 'Dutch', 'Hindi', 'Urdu',
+  'Chinese', 'Russian',
 ];
 
 interface RoleRegistrationProps { role: OnboardingRole }
@@ -47,6 +53,67 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
   const [professionalTitle, setProfessionalTitle] = useState('');
   const [bio, setBio] = useState('');
   const [industry, setIndustry] = useState('');
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [languagePicker, setLanguagePicker] = useState('');
+  const [photoUrl, setPhotoUrl] = useState('');
+  const [photoPreview, setPhotoPreview] = useState('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+
+  const addLanguage = (value: string) => {
+    if (!value) return;
+    setLanguages((current) => (current.includes(value) ? current : [...current, value]));
+    setLanguagePicker('');
+  };
+  const removeLanguage = (value: string) => setLanguages((current) => current.filter((item) => item !== value));
+
+  const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: 'Image too large', description: 'Choose a photo under 5MB.', variant: 'destructive' });
+      return;
+    }
+    setUploadingPhoto(true);
+    try {
+      const optimized = await compressImage(file, { maxDimension: 800 });
+      setPhotoFile(optimized);
+      setPhotoPreview(URL.createObjectURL(optimized));
+      // Signed-in accounts upload straight away so the photo is stored against
+      // their user id in Supabase Storage, never only in browser memory.
+      if (user) {
+        const ext = (optimized.name.split('.').pop() || 'jpg').toLowerCase();
+        const path = `${user.id}/avatar.${ext}`;
+        const { error } = await supabase.storage.from('profile-images').upload(path, optimized, { upsert: true, contentType: optimized.type });
+        if (error) throw error;
+        const { data } = supabase.storage.from('profile-images').getPublicUrl(path);
+        setPhotoUrl(`${data.publicUrl}?t=${Date.now()}`);
+      }
+    } catch (error) {
+      toast({ title: 'Photo upload failed', description: error instanceof Error ? error.message : 'Please try again.', variant: 'destructive' });
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
+
+  const clearPhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview('');
+    setPhotoUrl('');
+  };
+
+  /** Uploads a photo picked before authentication, once the account exists. */
+  const uploadPendingPhoto = async (userId: string) => {
+    if (!photoFile) return photoUrl || '';
+    const ext = (photoFile.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = `${userId}/avatar.${ext}`;
+    const { error } = await supabase.storage.from('profile-images').upload(path, photoFile, { upsert: true, contentType: photoFile.type });
+    if (error) return photoUrl || '';
+    const { data } = supabase.storage.from('profile-images').getPublicUrl(path);
+    return data.publicUrl;
+  };
 
   const title = isFreelancer ? 'Create your Freelancer account' : 'Create your Buyer account';
   const subtitle = isFreelancer
@@ -101,7 +168,27 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     setProfessionalTitle((current) => current || (profile.professional_title ?? ''));
     setBio((current) => current || (profile.bio ?? ''));
     setIndustry((current) => current || (profile.industry ?? ''));
+    setPhotoUrl((current) => current || (profile.profile_image_url ?? ''));
   }, [accountState]);
+
+  // Languages and the saved photo come from the account, so they survive a
+  // logout, a new browser, or a different device.
+  useEffect(() => {
+    if (!user) return;
+    let active = true;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from('profiles')
+        .select('languages, profile_image_url')
+        .eq('id', user.id)
+        .maybeSingle();
+      if (!active || !data) return;
+      const saved = Array.isArray(data.languages) ? data.languages.filter(Boolean) : [];
+      if (saved.length) setLanguages((current) => (current.length ? current : saved));
+      if (data.profile_image_url) setPhotoUrl((current) => current || data.profile_image_url);
+    })();
+    return () => { active = false; };
+  }, [user]);
 
   // Signed in through Google: the account is linked already, so there is no
   // role to change here — the person must finish this form.
@@ -165,6 +252,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     if (firstName.trim().length < 2 || lastName.trim().length < 2) return 'Enter your first and last name.';
     if (!country.trim()) return 'Country is required.';
     if (!user && (!email.trim() || password.length < 8)) return 'Enter a valid email and a password of at least 8 characters.';
+    if (!languages.length) return 'Select at least one language you speak.';
     if (!termsAccepted) return 'Accept the Terms of Service and Privacy Policy to continue.';
     if (isFreelancer && (!professionalTitle.trim() || !category || bio.trim().length < 50)) {
       return 'Add your professional title, primary skill, and an introduction of at least 50 characters.';
@@ -191,33 +279,38 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     }
   };
 
-  const completeProfile = async () => {
-    if (!user) return;
-    if (!emailVerified) {
+  const completeProfile = async (activeUserId?: string) => {
+    const userId = activeUserId ?? user?.id;
+    if (!userId) return;
+    if (!activeUserId && !emailVerified) {
       saveOnboardingDraft(currentDraft());
       navigate('/verify-email');
       return;
     }
 
-    const fullName = `${firstName.trim()} ${lastName.trim()}`;
-    const profileUpdate = isFreelancer
-      ? { full_name: fullName, location: country.trim(), professional_title: professionalTitle.trim(), bio: bio.trim(), skills: [category], languages: [] }
-      : { full_name: fullName, location: country.trim(), industry };
+    const savedPhoto = await uploadPendingPhoto(userId);
 
-    const { error: profileError } = await (supabase as any).from('profiles').update(profileUpdate).eq('id', user.id);
-    if (profileError) throw profileError;
-    await upgradeToRole(user.id, role);
-    if (isFreelancer) {
-      const { error } = await (supabase as any).from('freelancers').update({ bio: bio.trim(), skills: [category] }).eq('user_id', user.id);
-      if (error) throw error;
-    } else {
-      const { error } = await (supabase as any).from('buyers').update({ industry }).eq('user_id', user.id);
-      if (error) throw error;
-    }
+    // One database call saves the role, profile, languages, photo and the
+    // matching freelancer/buyer record together. Either everything is saved or
+    // nothing is, so an account is never left half-created.
+    const { error } = await (supabase as any).rpc('complete_role_onboarding', {
+      _role: role,
+      _full_name: `${firstName.trim()} ${lastName.trim()}`,
+      _country: country.trim(),
+      _languages: languages,
+      _profile_image_url: (savedPhoto || photoUrl || '').split('?')[0] || null,
+      _professional_title: isFreelancer ? professionalTitle.trim() : null,
+      _bio: isFreelancer ? bio.trim() : null,
+      _primary_skill: isFreelancer ? category : null,
+      _industry: isFreelancer ? null : industry,
+    });
+    if (error) throw error;
+
     clearOnboardingDraft();
     await refreshRole();
     navigate(isFreelancer ? '/freelancer/dashboard' : '/buyer/dashboard', { replace: true });
   };
+
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -246,7 +339,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
       });
       if (error) throw error;
       if (data.session?.user) {
-        await completeProfile();
+        await completeProfile(data.session.user.id);
       } else {
         await supabase.functions.invoke('send-verification-email', {
           body: { email: email.trim(), redirect_to: new URL('/auth/callback', window.location.origin).toString() },
@@ -255,7 +348,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
       }
     } catch (error) {
       toast({
-        title: 'Could not create your account',
+        title: user ? 'Could not finish your setup' : 'Could not create your account',
         description: error instanceof Error ? error.message : 'Please review your information and try again.',
         variant: 'destructive',
       });
@@ -369,6 +462,56 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
         ) : (
           <div className="space-y-2"><Label htmlFor="industry">Industry or hiring context</Label><Select value={industry} onValueChange={setIndustry} required><SelectTrigger id="industry"><SelectValue placeholder="What best describes you?" /></SelectTrigger><SelectContent>{BUYER_INDUSTRIES.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent></Select></div>
         )}
+
+        <div className="space-y-3 rounded-md border border-border bg-card p-4">
+          <Label className="text-sm font-semibold text-foreground">Profile photo</Label>
+          <div className="flex items-center gap-4">
+            <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-primary">
+              {photoPreview || photoUrl ? (
+                <img src={photoPreview || photoUrl} alt="Your profile photo preview" className="h-full w-full object-cover" />
+              ) : (
+                <UserRound className="h-8 w-8" />
+              )}
+            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button type="button" variant="outline" size="sm" onClick={() => photoInputRef.current?.click()} disabled={uploadingPhoto}>
+                {uploadingPhoto ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+                {photoPreview || photoUrl ? 'Replace photo' : 'Upload photo'}
+              </Button>
+              {(photoPreview || photoUrl) && (
+                <Button type="button" variant="ghost" size="sm" onClick={clearPhoto}><X className="mr-2 h-4 w-4" />Remove</Button>
+              )}
+              <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">A clear photo helps clients trust your profile. JPG or PNG, up to 5MB.</p>
+        </div>
+
+        <div className="space-y-3 rounded-md border border-border bg-card p-4">
+          <Label htmlFor={`${role}-languages`} className="text-sm font-semibold text-foreground">Languages you speak</Label>
+          {languages.length > 0 && (
+            <ul className="flex flex-wrap gap-2">
+              {languages.map((language) => (
+                <li key={language} className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                  {language}
+                  <button type="button" onClick={() => removeLanguage(language)} aria-label={`Remove ${language}`} className="text-primary/70 hover:text-primary">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          <Select value={languagePicker} onValueChange={addLanguage}>
+            <SelectTrigger id={`${role}-languages`}><SelectValue placeholder="Add a language" /></SelectTrigger>
+            <SelectContent>
+              {AVAILABLE_LANGUAGES.filter((item) => !languages.includes(item)).map((item) => (
+                <SelectItem key={item} value={item}>{item}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">Choose every language you can work in. Clients use this to know who they can talk to.</p>
+        </div>
+
 
         <div className="flex items-start gap-3 rounded-md border border-border bg-card p-4">
           <Checkbox id={`${role}-terms`} checked={termsAccepted} onCheckedChange={(checked) => setTermsAccepted(checked === true)} className="mt-0.5" />
