@@ -13,6 +13,7 @@ import { compressImage } from '@/lib/imageCompress';
 import { toast } from '@/hooks/use-toast';
 import { SOFTWARE_CATALOG, SoftwareDef, findTool } from '@/lib/verificationCatalog';
 import ToolIcon from '@/components/ToolIcon';
+import { notifyMyPhotoChanged } from '@/hooks/useMyPhoto';
 
 interface EditProfileModalProps {
   open: boolean;
