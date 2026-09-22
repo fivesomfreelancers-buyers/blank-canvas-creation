@@ -17,8 +17,8 @@ import { compressImage } from '@/lib/imageCompress';
 import BlueTickApply from '@/components/freelancer/BlueTickApply';
 import ToolIcon from '@/components/ToolIcon';
 import { FREELANCER_PUBLIC_COLUMNS } from '@/lib/freelancerEarnings';
-import {
 import { notifyMyPhotoChanged } from '@/hooks/useMyPhoto';
+import {
   CATEGORIES, SOFTWARE_CATALOG, EXPERIENCE_OPTIONS, EDUCATION_OPTIONS, toolsForCategories, searchTools, SoftwareDef,
 } from '@/lib/verificationCatalog';
 
