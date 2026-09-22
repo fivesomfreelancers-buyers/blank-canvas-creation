@@ -63,8 +63,8 @@ const Navbar = () => {
     ? accountState?.selectedRole ?? profile?.onboarding_role ?? null
     : null;
   const showFinishSetup = Boolean(user && setupRole);
-  const pendingSetupPath = setupRole ? `/register/${setupRole}` : '/select-role';
-  const setupLabel = setupRole ? 'Complete your profile' : 'Choose account type';
+  const pendingSetupPath = setupRole ? `/register/${setupRole}` : null;
+  const setupLabel = 'Finish profile setup';
   const dashboardPath = userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard';
   const profilePath = userRole === 'freelancer' ? '/freelancer/profile' : '/buyer/settings';
   const settingsPath = userRole === 'freelancer' ? '/freelancer/settings' : '/buyer/settings';
@@ -181,13 +181,18 @@ const Navbar = () => {
                     <p className="text-xs text-muted-foreground capitalize">{showFinishSetup ? `${setupRole} setup incomplete` : isNormal ? 'Member' : (userRole || 'User')}</p>
                   </div>
                   <DropdownMenuSeparator />
-                  {showFinishSetup || isNormal ? (
+                  {showFinishSetup ? (
                     <>
-                      <DropdownMenuItem disabled={accountStateLoading && !setupRole} onClick={() => navigate(pendingSetupPath)}>
+                      <DropdownMenuItem onClick={() => navigate(pendingSetupPath)}>
                         {setupRole === 'freelancer' ? <Settings className="mr-2 h-4 w-4" /> : <User className="mr-2 h-4 w-4" />}
                         {setupLabel}
                       </DropdownMenuItem>
                     </>
+                  ) : isNormal && accountStateLoading ? (
+                    <DropdownMenuItem disabled>
+                      <User className="mr-2 h-4 w-4" />
+                      Checking profile setup…
+                    </DropdownMenuItem>
                   ) : (
                     <>
                       <DropdownMenuItem onClick={() => navigate(dashboardPath)}>
@@ -262,10 +267,12 @@ const Navbar = () => {
                     <Shield className="h-4 w-4" /> Admin Panel
                   </Link>
                 )}
-                {showFinishSetup || isNormal ? (
+                {showFinishSetup ? (
                   <Link to={pendingSetupPath} className="block font-semibold text-primary" onClick={() => setIsMenuOpen(false)}>
                     {setupLabel}
                   </Link>
+                ) : isNormal && accountStateLoading ? (
+                  <span className="block text-muted-foreground">Checking profile setup…</span>
                 ) : (
                   <>
                     <Link to={dashboardPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
