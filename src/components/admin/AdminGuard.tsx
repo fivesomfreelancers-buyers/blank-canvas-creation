@@ -16,12 +16,17 @@ interface AdminGuardProps {
 }
 
 const checkAdminRole = async (userId: string): Promise<boolean> => {
-  // Check both admin and super_admin via direct query (covers either role)
+  // Use the same authoritative decision as admin RLS. Founders are included.
+  const { data: allowed, error: rpcError } = await (supabase as any)
+    .rpc('is_admin_user', { _user_id: userId });
+  if (!rpcError) return allowed === true;
+
+  // Fallback stays RLS-scoped to the signed-in account's own role rows.
   const { data, error } = await (supabase as any)
     .from('user_roles')
     .select('role')
     .eq('user_id', userId)
-    .in('role', ['admin', 'super_admin']);
+    .in('role', ['admin', 'super_admin', 'founder']);
   if (error) {
     console.error('checkAdminRole error:', error);
     return false;

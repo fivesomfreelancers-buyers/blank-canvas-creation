@@ -12,7 +12,8 @@ import { purgeLegacyRoleCache, readRoleCache, writeRoleCache } from '@/lib/roleC
  * so nothing in browser storage advertises or can fake privilege status.
  *
  * Reliability rules:
- * - Resolves through the `has_role` security-definer RPC (admin + super_admin),
+ * - Resolves through the server's `is_admin_user` decision (admin,
+ *   super_admin and founder),
  *   with a direct `user_roles` read as a fallback.
  * - Retries transient failures instead of returning `false`.
  * - Never clears a known-true value because of an error — only an explicit
@@ -25,22 +26,18 @@ export function useAdminRole() {
   const inFlight = useRef(false);
 
   const resolve = useCallback(async (id: string): Promise<boolean | null> => {
-    // Preferred path: security-definer RPC.
-    for (const role of ['admin', 'super_admin'] as const) {
-      const { data, error } = await (supabase as any).rpc('has_role', { _user_id: id, _role: role });
-      if (!error && data === true) return true;
-      if (error) {
-        // RPC unreachable → fall through to the table read before giving up.
-        const { data: rows, error: tableErr } = await (supabase as any)
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', id)
-          .in('role', ['admin', 'super_admin']);
-        if (tableErr) return null; // unknown, retry later
-        return Array.isArray(rows) && rows.length > 0;
-      }
-    }
-    return false;
+    // This is the same server-side decision used by admin database policies.
+    const { data, error } = await (supabase as any).rpc('is_admin_user', { _user_id: id });
+    if (!error) return data === true;
+
+    // RPC unreachable → fall through to the caller's RLS-scoped role rows.
+    const { data: rows, error: tableErr } = await (supabase as any)
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', id)
+      .in('role', ['admin', 'super_admin', 'founder']);
+    if (tableErr) return null;
+    return Array.isArray(rows) && rows.length > 0;
   }, []);
 
   const check = useCallback(async (attempt = 0) => {
