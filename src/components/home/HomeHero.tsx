@@ -85,7 +85,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
       {/* Background layer: still image first, video fades in on top of it */}
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
         <img
-          src={heroPoster.url}
+          src={HERO_POSTER}
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
           loading="eager"
@@ -95,7 +95,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
           <video
             ref={videoRef}
             key={clipIndex}
-            poster={heroPoster.url}
+            poster={HERO_POSTER}
             autoPlay
             muted
             playsInline
