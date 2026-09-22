@@ -41,8 +41,8 @@ interface UserProfile {
   profile_image_url: string | null;
 }
 
-const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userProfile, userId }: { 
-  activeSection: string; setActiveSection: (section: string) => void; isVerified: boolean; userProfile: UserProfile | null; userId: string | null
+const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userProfile, userId, completedOrders }: { 
+  activeSection: string; setActiveSection: (section: string) => void; isVerified: boolean; userProfile: UserProfile | null; userId: string | null; completedOrders: number
 }) => {
   const { newOrderCount, markSeen } = useNewOrders();
   const { unreadCount } = useUnreadMessages();
