@@ -65,6 +65,9 @@ interface ProfileData {
 const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSection: string; setActiveSection: (section: string) => void; profile: ProfileData | null }) => {
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'B';
   const { newDeliveryCount, markSeen } = useNewDeliveries();
+  // Shared photo so the dashboard always matches the website header.
+  const myIdentity = useMyPhoto();
+  const sidebarPhoto = myIdentity.photoUrl || profile?.profile_image_url || undefined;
 
   React.useEffect(() => {
     if (activeSection === 'orders') markSeen();

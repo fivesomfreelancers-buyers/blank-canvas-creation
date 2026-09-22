@@ -45,6 +45,9 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
 }) => {
   const { newOrderCount, markSeen } = useNewOrders();
   const { unreadCount } = useUnreadMessages();
+  // Shared photo so the dashboard always matches the website header.
+  const myIdentity = useMyPhoto();
+  const sidebarPhoto = myIdentity.photoUrl || userProfile?.profile_image_url || null;
   const sidebarItems = [
     { title: "Dashboard", icon: Home, key: "dashboard" },
     { title: "My Gigs", icon: Briefcase, key: "gigs" },
