@@ -2210,6 +2210,7 @@ export type Database = {
         Args: { _dispute_id: string; _user_id: string }
         Returns: boolean
       }
+      is_email_verified: { Args: { _user_id?: string }; Returns: boolean }
       is_founder_user: { Args: { _user_id: string }; Returns: boolean }
       is_listed_freelancer: {
         Args: { _freelancer_id: string }
