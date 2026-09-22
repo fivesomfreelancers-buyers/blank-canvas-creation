@@ -643,7 +643,7 @@ const FreelancerDashboard = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <FreelancerSidebar activeSection={activeSection} setActiveSection={setActiveSection} isVerified={isVerified} userProfile={userProfile} userId={userId} />
+        <FreelancerSidebar activeSection={activeSection} setActiveSection={setActiveSection} isVerified={isVerified} userProfile={userProfile} userId={userId} completedOrders={stats.completedOrders} />
         <SidebarInset>
           <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
             <SidebarTrigger className="-ml-1" />
