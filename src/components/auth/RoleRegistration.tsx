@@ -252,6 +252,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     if (firstName.trim().length < 2 || lastName.trim().length < 2) return 'Enter your first and last name.';
     if (!country.trim()) return 'Country is required.';
     if (!user && (!email.trim() || password.length < 8)) return 'Enter a valid email and a password of at least 8 characters.';
+    if (!languages.length) return 'Select at least one language you speak.';
     if (!termsAccepted) return 'Accept the Terms of Service and Privacy Policy to continue.';
     if (isFreelancer && (!professionalTitle.trim() || !category || bio.trim().length < 50)) {
       return 'Add your professional title, primary skill, and an introduction of at least 50 characters.';
