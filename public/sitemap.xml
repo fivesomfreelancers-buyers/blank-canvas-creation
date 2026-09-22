@@ -1198,6 +1198,16 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://fivesom.net/gig/i-will-translate-somali-english-and-arabic-accurately</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/54b496f7-f341-4fd3-8b35-06f51e033c97/mube1cmlv1qc/i-will-translate-somali-english-and-arabic-accurately.webp</image:loc>
+      <image:title>I will translate Somali English and Arabic accurately</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://fivesom.net/freelancer/daadir-cade</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -1234,6 +1244,11 @@
   </url>
   <url>
     <loc>https://fivesom.net/freelancer/yahya-abdi</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/cabdirahmaan-bashiir</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
