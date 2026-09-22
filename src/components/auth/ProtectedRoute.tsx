@@ -35,13 +35,10 @@ const Spinner = () => (
  * second, authoritative layer — this guard only decides what to render.
  */
 const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }) => {
-  const { user, userRole, emailVerified, isLoading } = useAuth();
-  const { isAdmin, isAdminResolved } = useAdminRole();
+  const { user, isLoading } = useAuth();
+  const { isAdmin } = useAdminRole();
   const location = useLocation();
-  const profileState = useProfileComplete(
-    require === 'freelancer' || require === 'buyer' ? require : null
-  );
-
+  const { state, isLoading: stateLoading } = useAccountState();
 
   // 1. Session still resolving → render nothing private.
   if (isLoading) return <Spinner />;
@@ -56,26 +53,22 @@ const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }
   // 3. Admins are allowed everywhere (monitoring/support).
   if (isAdmin) return <>{children}</>;
 
-  // 4. Unconfirmed identity → no buyer/freelancer area at all. The database
-  //    refuses the same writes, so this is only the visible half of the rule.
-  if (!emailVerified) return <Navigate to="/verify-email" replace />;
+  // 4. The database decides: identity, account type and setup completion.
+  if (stateLoading || !state) return <Spinner />;
 
-  // 5. Role not resolved yet → keep waiting instead of guessing.
-  if (userRole === null && !isAdminResolved) return <Spinner />;
+  if (!state.emailVerified) return <Navigate to="/verify-email" replace />;
 
-  // 6. Wrong role → send them to the right entry point, never render.
-  if (userRole !== require) {
-    if (userRole === 'freelancer') return <Navigate to="/freelancer/dashboard" replace />;
-    if (userRole === 'buyer') return <Navigate to="/buyer/dashboard" replace />;
-    // No role chosen yet → the single role-selection screen.
-    return <Navigate to="/select-role" replace />;
+  // 5. No account type chosen yet → the single role-selection screen.
+  if (!state.selectedRole) return <Navigate to="/select-role" replace />;
+
+  // 6. Required setup form unfinished → finish it before any dashboard.
+  if (state.onboardingStatus !== 'complete') {
+    return <Navigate to={`/register/${state.selectedRole}`} replace />;
   }
 
-  // 6. Right role, but the mandatory profile was never completed
-  //    (legacy "Skip for now" accounts) → finish the profile first.
-  if (profileState === 'loading') return <Spinner />;
-  if (profileState === 'incomplete') {
-    return <Navigate to={`/complete-profile/${require}`} replace />;
+  // 7. Wrong role → their own dashboard, never this one.
+  if (state.selectedRole !== require) {
+    return <Navigate to={state.selectedRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard'} replace />;
   }
 
   return <>{children}</>;
