@@ -24,6 +24,7 @@ import { getOrCreateConversation, inboxPath } from '@/lib/conversations';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { isUuid, freelancerPath, gigPath } from '@/lib/urls';
+import { languageFlag } from '@/lib/languages';
 
 
 const FreelancerProfilePage = () => {
@@ -339,7 +340,7 @@ const FreelancerProfilePage = () => {
                   <div className="flex items-center"><MapPin className="w-4 h-4 mr-1" />{profileData.location}</div>
                   <div className="flex items-center"><Calendar className="w-4 h-4 mr-1" />Member since {profileData.memberSince}</div>
                   {profileData.languages?.length > 0 && (
-                    <div className="flex items-center"><Globe className="w-4 h-4 mr-1" />{profileData.languages.join(', ')}</div>
+                    <div className="flex items-center"><Globe className="w-4 h-4 mr-1" />Speaks {profileData.languages.length} language{profileData.languages.length === 1 ? '' : 's'}</div>
                   )}
                 </div>
                 <div className="flex items-center gap-6 mb-4">
@@ -358,6 +359,18 @@ const FreelancerProfilePage = () => {
                     {profileData.skills.map((skill: string) => (
                       <Badge key={skill} variant="secondary">{skill}</Badge>
                     ))}
+                  </div>
+                )}
+                {profileData.languages?.length > 0 && (
+                  <div className="mt-4">
+                    <p className="mb-2 text-sm font-semibold text-foreground">Languages</p>
+                    <div className="flex flex-wrap gap-2">
+                      {profileData.languages.map((language: string) => (
+                        <Badge key={language} variant="outline" className="gap-1.5">
+                          <span aria-hidden="true">{languageFlag(language)}</span>{language}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

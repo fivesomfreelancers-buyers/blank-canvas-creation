@@ -24,6 +24,23 @@ export interface AccountState {
   profile: AccountProfile;
 }
 
+export const parseAccountState = (data: unknown): AccountState => {
+  const raw = (data ?? {}) as Record<string, any>;
+  const status = raw.onboarding_status;
+  return {
+    authenticated: Boolean(raw.authenticated),
+    emailVerified: Boolean(raw.email_verified),
+    activeRole: typeof raw.active_role === 'string' ? raw.active_role : null,
+    selectedRole: toRole(raw.selected_role),
+    onboardingStatus:
+      status === 'complete' || status === 'incomplete' || status === 'role_pending'
+        ? status
+        : 'role_pending',
+    profileComplete: Boolean(raw.profile_complete),
+    profile: { ...EMPTY_PROFILE, ...(raw.profile ?? {}) },
+  };
+};
+
 const EMPTY_PROFILE: AccountProfile = {
   full_name: null, location: null, professional_title: null, bio: null,
   industry: null, profile_image_url: null, username: null, email: null,
@@ -41,20 +58,7 @@ const toRole = (value: unknown): OnboardingRole | null =>
 export const fetchAccountState = async (): Promise<AccountState> => {
   const { data, error } = await (supabase as any).rpc('get_account_state');
   if (error) throw error;
-  const raw = (data ?? {}) as Record<string, any>;
-  const status = raw.onboarding_status;
-  return {
-    authenticated: Boolean(raw.authenticated),
-    emailVerified: Boolean(raw.email_verified),
-    activeRole: typeof raw.active_role === 'string' ? raw.active_role : null,
-    selectedRole: toRole(raw.selected_role),
-    onboardingStatus:
-      status === 'complete' || status === 'incomplete' || status === 'role_pending'
-        ? status
-        : 'role_pending',
-    profileComplete: Boolean(raw.profile_complete),
-    profile: { ...EMPTY_PROFILE, ...(raw.profile ?? {}) },
-  };
+  return parseAccountState(data);
 };
 
 /** Where this account belongs right now, decided from database state only. */

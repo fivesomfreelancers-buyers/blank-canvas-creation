@@ -18,17 +18,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useAccountState } from '@/hooks/useAccountState';
 import { useToast } from '@/hooks/use-toast';
+import LanguageSelector from '@/components/profile/LanguageSelector';
+import { accountLandingPath, parseAccountState } from '@/lib/accountState';
+import { notifyMyPhotoChanged } from '@/hooks/useMyPhoto';
 
 const BUYER_INDUSTRIES = [
   'Technology / IT', 'E-commerce / Retail', 'Marketing / Media', 'Local Business',
   'Agency / Consulting', 'Education', 'Healthcare', 'Finance', 'Real Estate',
   'Non-Profit / NGO', 'Personal Project', 'Other',
-];
-
-const AVAILABLE_LANGUAGES = [
-  'English', 'Somali', 'Arabic', 'French', 'Italian', 'Amharic', 'Swahili',
-  'Spanish', 'Portuguese', 'Turkish', 'German', 'Dutch', 'Hindi', 'Urdu',
-  'Chinese', 'Russian',
 ];
 
 interface RoleRegistrationProps { role: OnboardingRole }
@@ -54,19 +51,11 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
   const [bio, setBio] = useState('');
   const [industry, setIndustry] = useState('');
   const [languages, setLanguages] = useState<string[]>([]);
-  const [languagePicker, setLanguagePicker] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
   const [photoPreview, setPhotoPreview] = useState('');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const photoInputRef = useRef<HTMLInputElement>(null);
-
-  const addLanguage = (value: string) => {
-    if (!value) return;
-    setLanguages((current) => (current.includes(value) ? current : [...current, value]));
-    setLanguagePicker('');
-  };
-  const removeLanguage = (value: string) => setLanguages((current) => current.filter((item) => item !== value));
 
   const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -300,7 +289,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     // One database call saves the role, profile, languages, photo and the
     // matching freelancer/buyer record together. Either everything is saved or
     // nothing is, so an account is never left half-created.
-    const { error } = await (supabase as any).rpc('complete_role_onboarding', {
+    const { data, error } = await (supabase as any).rpc('complete_role_onboarding', {
       _role: role,
       _full_name: `${firstName.trim()} ${lastName.trim()}`,
       _country: country.trim(),
@@ -313,11 +302,22 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     });
     if (error) throw error;
 
+    const completedState = parseAccountState(data);
+    if (completedState.onboardingStatus !== 'complete' || completedState.selectedRole !== role) {
+      throw new Error('Your saved account could not be confirmed. Please try again.');
+    }
+
+    const { data: authResult, error: authError } = await supabase.auth.getUser();
+    if (authError || authResult.user?.id !== userId) {
+      throw new Error('Your session could not be confirmed. Please sign in again.');
+    }
+
     clearOnboardingDraft();
     // Re-read the saved account from the database before leaving, so the guard
     // on the dashboard sees the finished state instead of a stale one.
     await Promise.all([refreshRole(), refreshAccountState().catch(() => undefined)]);
-    navigate(isFreelancer ? '/freelancer/dashboard' : '/buyer/dashboard', { replace: true });
+    notifyMyPhotoChanged(completedState.profile.profile_image_url);
+    navigate(accountLandingPath(completedState), { replace: true });
   };
 
 
@@ -498,27 +498,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
 
         <div className="space-y-3 rounded-md border border-border bg-card p-4">
           <Label htmlFor={`${role}-languages`} className="text-sm font-semibold text-foreground">Languages you speak</Label>
-          {languages.length > 0 && (
-            <ul className="flex flex-wrap gap-2">
-              {languages.map((language) => (
-                <li key={language} className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                  {language}
-                  <button type="button" onClick={() => removeLanguage(language)} aria-label={`Remove ${language}`} className="text-primary/70 hover:text-primary">
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-          <Select value={languagePicker} onValueChange={addLanguage}>
-            <SelectTrigger id={`${role}-languages`}><SelectValue placeholder="Add a language" /></SelectTrigger>
-            <SelectContent>
-              {AVAILABLE_LANGUAGES.filter((item) => !languages.includes(item)).map((item) => (
-                <SelectItem key={item} value={item}>{item}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <p className="text-xs text-muted-foreground">Choose every language you can work in. Clients use this to know who they can talk to.</p>
+          <LanguageSelector id={`${role}-languages`} value={languages} onChange={setLanguages} />
         </div>
 
 

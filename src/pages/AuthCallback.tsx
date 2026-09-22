@@ -123,7 +123,14 @@ const AuthCallback = () => {
         // type, finish the required setup, or open the existing dashboard. It is
         // the same answer in every browser and on every device.
         setStatus('Loading your account...');
-        let state = await fetchAccountState();
+        let state;
+        try {
+          state = await fetchAccountState();
+        } catch {
+          setStatus('Confirming your saved account...');
+          await new Promise((resolve) => setTimeout(resolve, 600));
+          state = await fetchAccountState();
+        }
 
         if (state.onboardingStatus === 'complete' || (state.activeRole && ['admin', 'super_admin', 'founder'].includes(state.activeRole))) {
           toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
@@ -165,10 +172,16 @@ const AuthCallback = () => {
       } catch (err: any) {
         console.error('Auth callback error:', err);
         if (cancelled) return;
-        // If a session did land despite the error, keep the user signed in.
+        // If a session did land despite the error, keep the user signed in and
+        // retry the authoritative account lookup instead of guessing a route.
         const { data } = await supabase.auth.getSession();
         if (data.session?.user) {
-          navigate('/', { replace: true });
+          setStatus('We could not load your saved account. Please try again.');
+          toast({
+            title: 'Could not load your account',
+            description: 'Your sign-in succeeded, but account verification failed. Refresh to try again.',
+            variant: 'destructive',
+          });
           return;
         }
         setStatus('Authentication failed. Redirecting...');

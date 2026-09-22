@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { getVipTheme, resolveVipTier } from '@/lib/vipTheme';
 import { useTheme } from '@/components/ThemeProvider';
 import { FREELANCER_PUBLIC_COLUMNS } from '@/lib/freelancerEarnings';
+import { languageFlag } from '@/lib/languages';
 
 interface Props {
   /** Pass either freelancerId (freelancers.id) or userId — the component resolves both. */
@@ -151,7 +152,7 @@ const FreelancerProfileCard: React.FC<Props> = ({ freelancerId, userId, hidePort
         {languages.length > 0 && (
           <div>
             <p className="text-sm font-semibold flex items-center gap-1.5 mb-2"><Globe className="w-4 h-4" /> Languages</p>
-            <div className="flex flex-wrap gap-1.5">{languages.map(l => <Badge key={l} variant="outline" className="text-xs">{l}</Badge>)}</div>
+            <div className="flex flex-wrap gap-1.5">{languages.map(l => <Badge key={l} variant="outline" className="gap-1 text-xs"><span aria-hidden="true">{languageFlag(l)}</span>{l}</Badge>)}</div>
           </div>
         )}
         {data.years_experience && (
