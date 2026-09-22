@@ -460,5 +460,8 @@
   }
   .home-story-link,
   .home-secondary-link { transition: none; }
+  .xnet-dot,
+  .xnet-links path { animation: none !important; }
+  .xnet-dot { offset-distance: 55%; }
 }
 
