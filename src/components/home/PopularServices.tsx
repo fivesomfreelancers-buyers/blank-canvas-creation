@@ -12,6 +12,7 @@ import {
   TrendingUp,
   ArrowRight,
 } from 'lucide-react';
+import ScrollReveal from './ScrollReveal';
 
 interface ServiceCategory {
   slug: string;
@@ -87,10 +88,11 @@ const SERVICES: ServiceCategory[] = [
 ];
 
 const PopularServices: React.FC = () => (
-  <section aria-labelledby="services-heading" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
+  <section aria-labelledby="services-heading" className="home-story-section px-4 sm:px-6 lg:px-8 [perspective:1200px]">
     <div className="max-w-7xl mx-auto">
-      <div className="max-w-3xl mb-12">
-        <h2 id="services-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
+      <ScrollReveal className="max-w-3xl mb-12" from="left">
+        <span className="home-kicker">Marketplace services</span>
+        <h2 id="services-heading" className="home-story-title">
           What you can get done on FIVESOM
         </h2>
         <p className="text-muted-foreground text-base sm:text-lg">
@@ -98,14 +100,14 @@ const PopularServices: React.FC = () => (
           Every category below is an active part of the marketplace — pick one to see the
           freelancers, packages and prices available today.
         </p>
-      </div>
+      </ScrollReveal>
 
       <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {SERVICES.map(({ slug, title, icon: Icon, what }) => (
-          <li key={slug}>
+        {SERVICES.map(({ slug, title, icon: Icon, what }, index) => (
+          <ScrollReveal as="li" key={slug} delay={(index % 3) * 90} from="depth">
             <Link
               to={`/services/${slug}`}
-              className="group h-full flex flex-col rounded-2xl p-6 bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all"
+              className="group h-full flex flex-col rounded-xl p-6 bg-card/95 border border-border hover:border-primary/50 hover:-translate-y-1 hover:[transform:translateY(-4px)_translateZ(18px)] hover:shadow-xl transition-all duration-300"
             >
               <span className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
                 <Icon className="w-6 h-6" aria-hidden />
@@ -117,7 +119,7 @@ const PopularServices: React.FC = () => (
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" aria-hidden />
               </span>
             </Link>
-          </li>
+          </ScrollReveal>
         ))}
       </ul>
     </div>

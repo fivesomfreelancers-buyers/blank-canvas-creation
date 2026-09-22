@@ -8,6 +8,7 @@ import EscrowSection from '../components/home/EscrowSection';
 import FeaturedFreelancers from '../components/home/FeaturedFreelancers';
 import TrustSafetySection from '../components/home/TrustSafetySection';
 import HomeCta from '../components/home/HomeCta';
+import MarketplaceJourneys from '../components/home/MarketplaceJourneys';
 import InteractiveTutorial from '../components/InteractiveTutorial';
 import HomeFAQ from '../components/HomeFAQ';
 import { Footer } from '../components/Footer';
@@ -33,14 +34,17 @@ const Index = () => {
       <main>
         <HomeHero gigCount={activeGigs} freelancerCount={freelancers} />
         <LiveGigsMarquee gigs={gigs} loading={loading} />
-        <PopularServices />
-        <HowFivesomWorks />
-        <EscrowSection />
-        <FeaturedFreelancers gigs={gigs} loading={loading} />
-        <TrustSafetySection />
-        <InteractiveTutorial />
-        <HomeFAQ />
-        <HomeCta />
+        <div className="home-story">
+          <PopularServices />
+          <HowFivesomWorks />
+          <EscrowSection />
+          <MarketplaceJourneys />
+          <FeaturedFreelancers gigs={gigs} loading={loading} />
+          <TrustSafetySection />
+          <InteractiveTutorial />
+          <HomeFAQ />
+          <HomeCta />
+        </div>
       </main>
       <Footer />
     </div>
