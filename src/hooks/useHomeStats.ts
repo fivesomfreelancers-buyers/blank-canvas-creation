@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface HomeStats {
@@ -15,27 +15,27 @@ export interface HomeStats {
 export const useHomeStats = (): HomeStats => {
   const [stats, setStats] = useState<HomeStats>({ activeGigs: 0, freelancers: 0, loading: true });
 
-  const load = useCallback(async () => {
-    const { data, error } = await (supabase as any).rpc('platform_stats');
-    const row = Array.isArray(data) ? data[0] : data;
-    if (error || !row) {
-      setStats((s) => ({ ...s, loading: false }));
-      return;
-    }
-    setStats({
-      freelancers: Number(row.freelancers ?? 0),
-      activeGigs: Number(row.active_gigs ?? 0),
-      loading: false,
-    });
-  }, []);
-
   useEffect(() => {
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
 
+    const load = async () => {
+      const { data, error } = await (supabase as any).rpc('platform_stats');
+      if (cancelled) return;
+      const row = Array.isArray(data) ? data[0] : data;
+      if (error || !row) {
+        setStats((s) => ({ ...s, loading: false }));
+        return;
+      }
+      setStats({
+        freelancers: Number(row.freelancers ?? 0),
+        activeGigs: Number(row.active_gigs ?? 0),
+        loading: false,
+      });
+    };
+
     const refresh = () => {
       if (cancelled) return;
-      // small debounce so a burst of changes triggers one refetch
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
         if (!cancelled) void load();
@@ -55,7 +55,7 @@ export const useHomeStats = (): HomeStats => {
       if (timer) clearTimeout(timer);
       supabase.removeChannel(channel);
     };
-  }, [load]);
+  }, []);
 
   return stats;
 };
