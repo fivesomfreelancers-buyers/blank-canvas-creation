@@ -113,7 +113,7 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        {isVerified && stats.completedOrders >= 1 && (
+        {isVerified && completedOrders >= 1 && (
           <SidebarGroup>
             <SidebarGroupContent>
               <BlueTickCard userId={userId} onOpen={() => setActiveSection('verify')} />
