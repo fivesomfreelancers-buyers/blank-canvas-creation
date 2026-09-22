@@ -13,6 +13,7 @@ import { compressImage } from '@/lib/imageCompress';
 import { toast } from '@/hooks/use-toast';
 import { SOFTWARE_CATALOG, SoftwareDef, findTool } from '@/lib/verificationCatalog';
 import ToolIcon from '@/components/ToolIcon';
+import { notifyMyPhotoChanged } from '@/hooks/useMyPhoto';
 
 interface EditProfileModalProps {
   open: boolean;
@@ -113,6 +114,7 @@ const EditProfileModal = ({ open, onClose, profile, freelancerData, userId, onSa
       if (freelancerErr) throw freelancerErr;
 
       toast({ title: 'Profile updated!' });
+      notifyMyPhotoChanged(imageUrl || null);
       onSaved();
       onClose();
     } catch (err: any) {

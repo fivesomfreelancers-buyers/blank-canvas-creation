@@ -17,6 +17,7 @@ import { compressImage } from '@/lib/imageCompress';
 import BlueTickApply from '@/components/freelancer/BlueTickApply';
 import ToolIcon from '@/components/ToolIcon';
 import { FREELANCER_PUBLIC_COLUMNS } from '@/lib/freelancerEarnings';
+import { notifyMyPhotoChanged } from '@/hooks/useMyPhoto';
 import {
   CATEGORIES, SOFTWARE_CATALOG, EXPERIENCE_OPTIONS, EDUCATION_OPTIONS, toolsForCategories, searchTools, SoftwareDef,
 } from '@/lib/verificationCatalog';
@@ -127,6 +128,7 @@ const FreelancerVerify: React.FC = () => {
     const { data } = supabase.storage.from('profile-images').getPublicUrl(path);
     setProfileImageUrl(data.publicUrl);
     await supabase.from('profiles').update({ profile_image_url: data.publicUrl }).eq('id', userId);
+    notifyMyPhotoChanged(data.publicUrl);
   };
 
   const addLanguage = () => {

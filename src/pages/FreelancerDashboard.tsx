@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { useMyPhoto } from '@/hooks/useMyPhoto';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -45,6 +46,9 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
 }) => {
   const { newOrderCount, markSeen } = useNewOrders();
   const { unreadCount } = useUnreadMessages();
+  // Shared photo so the dashboard always matches the website header.
+  const myIdentity = useMyPhoto();
+  const sidebarPhoto = myIdentity.photoUrl || userProfile?.profile_image_url || null;
   const sidebarItems = [
     { title: "Dashboard", icon: Home, key: "dashboard" },
     { title: "My Gigs", icon: Briefcase, key: "gigs" },
@@ -118,8 +122,8 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
       <SidebarFooter>
         <div className="p-4 border-t">
           <div className="flex items-center space-x-3">
-            {userProfile?.profile_image_url ? (
-              <img src={userProfile.profile_image_url} alt="" className="w-8 h-8 rounded-full object-cover" />
+            {sidebarPhoto ? (
+              <img src={sidebarPhoto} alt="" className="w-8 h-8 rounded-full object-cover" />
             ) : (
               <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
                 {userProfile?.full_name?.[0]?.toUpperCase() || 'F'}

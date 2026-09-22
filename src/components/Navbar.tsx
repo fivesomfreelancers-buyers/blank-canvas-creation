@@ -22,6 +22,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { readOnboardingDraft } from '@/lib/onboardingDraft';
+import { useMyPhoto } from '@/hooks/useMyPhoto';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,6 +35,7 @@ const Navbar = () => {
   const { newDeliveryCount } = useNewDeliveries();
   const { isAdmin } = useAdminRole();
   const { state: accountState, isLoading: accountStateLoading } = useAccountState();
+  const myIdentity = useMyPhoto();
   const [profile, setProfile] = useState<{ full_name: string; profile_image_url: string | null; onboarding_role: 'buyer' | 'freelancer' | null } | null>(null);
 
   useEffect(() => {
@@ -51,7 +53,7 @@ const Navbar = () => {
       const meta: any = user.user_metadata || {};
       setProfile({
         full_name: data?.full_name?.trim() || meta.full_name || meta.name || user.email || 'User',
-        profile_image_url: data?.profile_image_url || meta.avatar_url || meta.picture || null,
+        profile_image_url: (data?.profile_image_url || '').trim() || meta.avatar_url || meta.picture || null,
         onboarding_role: data?.onboarding_role === 'buyer' || data?.onboarding_role === 'freelancer' ? data.onboarding_role : null,
       });
       if (error) console.error('Navbar profile fetch error:', error);
@@ -77,8 +79,13 @@ const Navbar = () => {
     navigate('/');
   };
 
-  const initials = profile?.full_name
-    ? profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+  // One shared photo/name for the whole app, so the website header and the
+  // dashboard always show the same picture the person uploaded.
+  const displayName = myIdentity.fullName || profile?.full_name || user?.email || 'User';
+  const avatarUrl = myIdentity.photoUrl || profile?.profile_image_url || null;
+
+  const initials = displayName
+    ? displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
     : user?.email?.[0]?.toUpperCase() || 'U';
 
   return (
@@ -165,8 +172,8 @@ const Navbar = () => {
                         </svg>
                       )}
                       <Avatar className={`h-9 w-9 cursor-pointer transition-all ${showFinishSetup ? '' : 'ring-2 ring-primary/20 hover:ring-primary/50'}`}>
-                        {profile?.profile_image_url ? (
-                          <AvatarImage src={profile.profile_image_url} alt={profile?.full_name || 'User'} />
+                        {avatarUrl ? (
+                          <AvatarImage src={avatarUrl} alt={displayName} className="object-cover" />
                         ) : null}
                         <AvatarFallback className="bg-primary text-primary-foreground text-sm font-medium">
                           {initials}
@@ -254,8 +261,8 @@ const Navbar = () => {
               <>
                 <div className="flex items-center space-x-3 py-2 border-t border-border pt-4">
                   <Avatar className="h-8 w-8">
-                    {profile?.profile_image_url ? (
-                      <AvatarImage src={profile.profile_image_url} alt={profile?.full_name || 'User'} />
+                    {avatarUrl ? (
+                      <AvatarImage src={avatarUrl} alt={displayName} className="object-cover" />
                     ) : null}
                     <AvatarFallback className="bg-primary text-primary-foreground text-xs">{initials}</AvatarFallback>
                   </Avatar>

@@ -36,6 +36,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useMyPhoto } from '@/hooks/useMyPhoto';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import DisputeChat from '@/components/dispute/DisputeChat';
@@ -65,6 +66,9 @@ interface ProfileData {
 const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSection: string; setActiveSection: (section: string) => void; profile: ProfileData | null }) => {
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'B';
   const { newDeliveryCount, markSeen } = useNewDeliveries();
+  // Shared photo so the dashboard always matches the website header.
+  const myIdentity = useMyPhoto();
+  const sidebarPhoto = myIdentity.photoUrl || profile?.profile_image_url || undefined;
 
   React.useEffect(() => {
     if (activeSection === 'orders') markSeen();
@@ -120,7 +124,7 @@ const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSect
         <div className="p-4 border-t">
           <div className="flex items-center space-x-3">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={profile?.profile_image_url || undefined} />
+              <AvatarImage src={sidebarPhoto} className="object-cover" />
               <AvatarFallback className="bg-purple-500 text-white text-xs">{initials}</AvatarFallback>
             </Avatar>
             <div>
@@ -140,6 +144,7 @@ const BuyerDashboard = () => {
   const [stats, setStats] = useState({ activeOrders: 0, completedOrders: 0, totalSpent: 0, walletBalance: 0 });
   const [activeDisputes, setActiveDisputes] = useState<any[]>([]);
   const { user } = useAuth();
+  const myIdentity = useMyPhoto();
   const navigate = useNavigate();
 
   const fetchProfile = async () => {
@@ -217,6 +222,8 @@ const BuyerDashboard = () => {
   }, [user]);
 
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'B';
+  // Same shared photo as the website header.
+  const myPhoto = myIdentity.photoUrl || profile?.profile_image_url || undefined;
 
   const renderContent = () => {
     switch (activeSection) {
@@ -227,7 +234,7 @@ const BuyerDashboard = () => {
               <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 sm:p-6 rounded-lg">
                 <div className="flex items-center gap-4">
                   <Avatar className="h-14 w-14 border-2 border-white/50">
-                    <AvatarImage src={profile?.profile_image_url || undefined} />
+                    <AvatarImage src={myPhoto} className="object-cover" />
                     <AvatarFallback className="bg-card/20 text-white text-lg">{initials}</AvatarFallback>
                   </Avatar>
                   <div>
@@ -355,7 +362,7 @@ const BuyerDashboard = () => {
             )}
             <div className="ml-auto flex items-center space-x-4">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={profile?.profile_image_url || undefined} />
+                <AvatarImage src={myPhoto} className="object-cover" />
                 <AvatarFallback className="bg-purple-500 text-white text-xs">{initials}</AvatarFallback>
               </Avatar>
               <Badge variant="outline">Buyer</Badge>
