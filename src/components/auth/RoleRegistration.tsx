@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, BriefcaseBusiness, CheckCircle2, Circle, Eye, EyeOff, Loader2, ShoppingBag, UserRound } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BriefcaseBusiness, CheckCircle2, Circle, Eye, EyeOff, Loader2, ShoppingBag, Upload, UserRound, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,7 @@ import GoogleIcon from '@/components/auth/GoogleIcon';
 import { CATEGORIES } from '@/lib/categories';
 import { readOnboardingDraft, saveOnboardingDraft, clearOnboardingDraft, type OnboardingRole } from '@/lib/onboardingDraft';
 import { saveOnboardingRole } from '@/lib/onboardingRole';
-import { upgradeToRole } from '@/lib/roleUpgrade';
+import { compressImage } from '@/lib/imageCompress';
 import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -23,6 +23,12 @@ const BUYER_INDUSTRIES = [
   'Technology / IT', 'E-commerce / Retail', 'Marketing / Media', 'Local Business',
   'Agency / Consulting', 'Education', 'Healthcare', 'Finance', 'Real Estate',
   'Non-Profit / NGO', 'Personal Project', 'Other',
+];
+
+const AVAILABLE_LANGUAGES = [
+  'English', 'Somali', 'Arabic', 'French', 'Italian', 'Amharic', 'Swahili',
+  'Spanish', 'Portuguese', 'Turkish', 'German', 'Dutch', 'Hindi', 'Urdu',
+  'Chinese', 'Russian',
 ];
 
 interface RoleRegistrationProps { role: OnboardingRole }
