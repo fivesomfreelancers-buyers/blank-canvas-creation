@@ -254,7 +254,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
 
         <div className="flex items-start gap-3 rounded-md border border-border bg-card p-4">
           <Checkbox id={`${role}-terms`} checked={termsAccepted} onCheckedChange={(checked) => setTermsAccepted(checked === true)} className="mt-0.5" />
-          <Label htmlFor={`${role}-terms`} className="text-sm font-normal leading-6 text-muted-foreground">I agree to the <Link to="/legal/terms" className="font-semibold text-primary hover:underline">Terms of Service</Link> and <Link to="/legal/privacy" className="font-semibold text-primary hover:underline">Privacy Policy</Link>.</Label>
+          <Label htmlFor={`${role}-terms`} className="text-sm font-normal leading-6 text-muted-foreground">I agree to the <Link to="/terms" className="font-semibold text-primary hover:underline">Terms of Service</Link> and <Link to="/privacy" className="font-semibold text-primary hover:underline">Privacy Policy</Link>.</Label>
         </div>
 
         <Button type="submit" className="h-12 w-full font-semibold" disabled={submitting || googleLoading || authLoading}>{submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <>{user ? `Complete ${isFreelancer ? 'Freelancer' : 'Buyer'} setup` : 'Create my account'}<ArrowRight className="ml-2 h-4 w-4" /></>}</Button>
