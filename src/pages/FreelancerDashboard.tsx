@@ -473,7 +473,7 @@ const FreelancerDashboard = () => {
                   </div>
                 </CardContent>
               </Card>
-            ) : stats.completedOrders < 1 ? null : (
+            ) : (
               <Card className="border-red-200 bg-red-50">
                 <CardHeader>
                   <CardTitle className="text-red-700 flex items-center">
