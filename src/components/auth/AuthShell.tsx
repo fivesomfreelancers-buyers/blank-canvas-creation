@@ -12,7 +12,7 @@ interface AuthShellProps {
 }
 
 const AuthShell = ({ eyebrow, title, description, children, benefits }: AuthShellProps) => (
-  <main className="min-h-screen bg-background pt-16 font-body">
+  <main className="dark min-h-screen bg-background pt-16 font-body">
     <div className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-[1440px] lg:grid-cols-[0.9fr_1.1fr]">
       <section className="relative hidden overflow-hidden border-r border-border bg-card px-12 py-14 lg:flex lg:flex-col lg:justify-between xl:px-20">
         <div className="absolute inset-x-0 top-0 h-1 bg-primary" aria-hidden="true" />
