@@ -314,7 +314,9 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     if (error) throw error;
 
     clearOnboardingDraft();
-    await refreshRole();
+    // Re-read the saved account from the database before leaving, so the guard
+    // on the dashboard sees the finished state instead of a stale one.
+    await Promise.all([refreshRole(), refreshAccountState().catch(() => undefined)]);
     navigate(isFreelancer ? '/freelancer/dashboard' : '/buyer/dashboard', { replace: true });
   };
 
