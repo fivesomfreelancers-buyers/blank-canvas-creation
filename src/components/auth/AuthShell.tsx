@@ -18,7 +18,7 @@ const AuthShell = ({ eyebrow, title, description, children, benefits }: AuthShel
         <div className="absolute inset-x-0 top-0 h-1 bg-primary" aria-hidden="true" />
         <Link to="/" className="relative inline-flex w-fit items-center gap-3" aria-label="FIVESOM home">
           <img src={logo} alt="" className="h-11 w-11 object-contain" />
-          <span className="font-heading text-xl font-bold text-foreground">FIVESOM</span>
+          <span className="font-heading text-xl font-bold text-foreground">Fivesom</span>
         </Link>
 
         <div className="relative max-w-lg animate-fade-in-up">
