@@ -24,6 +24,7 @@
 - [x] Prevent incomplete accounts from opening role-specific pages; database enforcement awaits the atomic migration
 - [x] Verify public/direct routes, refresh, desktop, mobile, and signed-out behavior
 - [ ] Live-test verified email, Google return, and existing-role routing with test accounts
+- [x] Persist the first Google onboarding choice across browsers and show only its completion CTA
 
 # Premium homepage scroll narrative
 

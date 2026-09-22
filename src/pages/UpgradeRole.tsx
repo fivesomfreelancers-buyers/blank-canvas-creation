@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { upgradeToRole, NEED_BUYER_MESSAGE } from '@/lib/roleUpgrade';
+import { getSavedOnboardingRole } from '@/lib/onboardingRole';
 
 interface UpgradeRoleProps {
   role: 'buyer' | 'freelancer';
@@ -57,8 +58,21 @@ const UpgradeRole = ({ role }: UpgradeRoleProps) => {
     }
     // Unconfirmed identity can never take a buyer/freelancer role — the
     // database refuses the same write, this is only the visible half.
-    if (!emailVerified) navigate('/verify-email', { replace: true });
-  }, [authLoading, user, emailVerified, navigate]);
+    if (!emailVerified) {
+      navigate('/verify-email', { replace: true });
+      return;
+    }
+
+    // A first-time account that already chose Buyer/Freelancer cannot switch
+    // through these legacy upgrade URLs. It must finish its saved setup.
+    if (userRole === 'user') {
+      getSavedOnboardingRole(user.id)
+        .then((pendingRole) => {
+          if (pendingRole) navigate(`/register/${pendingRole}`, { replace: true });
+        })
+        .catch(() => undefined);
+    }
+  }, [authLoading, user, userRole, emailVerified, navigate]);
 
   useEffect(() => {
     if (!authLoading && userRole === role) {
@@ -70,6 +84,11 @@ const UpgradeRole = ({ role }: UpgradeRoleProps) => {
     if (!user) return;
     setIsLoading(true);
     try {
+      const pendingRole = await getSavedOnboardingRole(user.id);
+      if (pendingRole) {
+        navigate(`/register/${pendingRole}`, { replace: true });
+        return;
+      }
       await upgradeToRole(user.id, role);
       await refreshRole();
       toast({ title: 'All set!', description: `You are now a ${role}.` });

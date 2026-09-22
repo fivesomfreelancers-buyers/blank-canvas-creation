@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { authCooldownRemaining, clearAuthFailures, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
+import { getSavedOnboardingRole } from '@/lib/onboardingRole';
 
 const Login = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -28,7 +29,12 @@ const Login = () => {
     if (authLoading || emailLoading || googleLoading || !user) return;
     if (userRole === 'freelancer') navigate('/freelancer/dashboard', { replace: true });
     else if (userRole === 'buyer') navigate('/buyer/dashboard', { replace: true });
-    else navigate(emailVerified ? '/select-role' : '/verify-email', { replace: true });
+    else if (!emailVerified) navigate('/verify-email', { replace: true });
+    else {
+      getSavedOnboardingRole(user.id)
+        .then((pendingRole) => navigate(pendingRole ? `/register/${pendingRole}` : '/select-role', { replace: true }))
+        .catch(() => navigate('/select-role', { replace: true }));
+    }
   }, [user, userRole, emailVerified, authLoading, emailLoading, googleLoading, navigate]);
 
   const handleGoogleLogin = async () => {
@@ -57,7 +63,11 @@ const Login = () => {
     if (roles.includes('admin') || roles.includes('super_admin')) navigate('/admin', { replace: true });
     else if (roles.includes('freelancer')) navigate('/freelancer/dashboard', { replace: true });
     else if (roles.includes('buyer')) navigate('/buyer/dashboard', { replace: true });
-    else navigate(verified ? '/select-role' : '/verify-email', { replace: true });
+    else if (!verified) navigate('/verify-email', { replace: true });
+    else {
+      const pendingRole = await getSavedOnboardingRole(userId).catch(() => null);
+      navigate(pendingRole ? `/register/${pendingRole}` : '/select-role', { replace: true });
+    }
   };
 
   const handleEmailLogin = async (event: React.FormEvent) => {
