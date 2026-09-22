@@ -273,9 +273,51 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
         </div>
       </div>
 
+      {user && onboardingIncomplete && (
+        <div className="mb-7 animate-fade-in rounded-lg border border-border bg-card p-5">
+          <div className="flex items-center gap-4">
+            <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-primary">
+              {accountState?.profile.profile_image_url ? (
+                <img src={accountState.profile.profile_image_url} alt={displayName ? `${displayName} profile photo` : 'Your profile photo'} className="h-full w-full object-cover" />
+              ) : (
+                <UserRound className="h-7 w-7" />
+              )}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate font-heading text-lg font-bold text-foreground">{displayName || 'Your Fivesom account'}</p>
+              <p className="truncate text-sm text-muted-foreground">{accountState?.profile.email || user.email} · {isFreelancer ? 'Freelancer' : 'Buyer'}</p>
+            </div>
+            <span className="ml-auto shrink-0 text-right">
+              <span className="block font-heading text-xl font-bold text-primary">{completionPercent}%</span>
+              <span className="block text-xs text-muted-foreground">complete</span>
+            </span>
+          </div>
+
+          <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-secondary" role="progressbar" aria-valuenow={completionPercent} aria-valuemin={0} aria-valuemax={100} aria-label="Profile completion">
+            <span className="block h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${completionPercent}%` }} />
+          </div>
+
+          <p className="mt-4 text-sm font-semibold text-foreground">Your account exists — finish setting up your profile.</p>
+          <ul className="mt-3 space-y-2 text-sm">
+            {requiredFields.map((field) => (
+              <li key={field.label} className="flex items-center gap-3">
+                {field.done ? (
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                ) : (
+                  <Circle className="h-4 w-4 shrink-0 text-muted-foreground" />
+                )}
+                <span className={field.done ? 'text-muted-foreground' : 'font-medium text-foreground'}>{field.label}</span>
+                {!field.done && <span className="ml-auto text-xs font-semibold uppercase tracking-wide text-muted-foreground">Missing</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {!user && (
         <>
           <Button type="button" variant="outline" className="h-12 w-full bg-card font-semibold" onClick={handleGoogle} disabled={googleLoading || submitting}>
+
             {googleLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <><GoogleIcon /><span className="ml-3">Continue with Google</span></>}
           </Button>
           <div className="relative my-6 flex items-center justify-center"><div className="absolute inset-x-0 border-t border-border" /><span className="relative bg-background px-4 text-xs font-semibold text-muted-foreground">OR</span></div>
