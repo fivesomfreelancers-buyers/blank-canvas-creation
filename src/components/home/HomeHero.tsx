@@ -6,7 +6,15 @@ import { CATEGORIES } from '@/lib/categories';
 import { Button } from '@/components/ui/button';
 import heroVideo from '@/assets/hero-bg.mp4.asset.json';
 import heroVideoWebm from '@/assets/hero-bg.webm.asset.json';
+import heroVideo2 from '@/assets/hero-bg2.mp4.asset.json';
+import heroVideo2Webm from '@/assets/hero-bg2.webm.asset.json';
 import heroPoster from '@/assets/hero-bg-poster.jpg.asset.json';
+
+// Background clips play one after the other: when one ends, the next one starts.
+const HERO_CLIPS = [
+  { webm: heroVideoWebm.url, mp4: heroVideo.url },
+  { webm: heroVideo2Webm.url, mp4: heroVideo2.url },
+];
 
 const POPULAR = [
   'Logo Design',
@@ -31,17 +39,26 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoReady, setVideoReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [clipIndex, setClipIndex] = useState(0);
+  const clip = HERO_CLIPS[clipIndex];
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
       setReducedMotion(true);
-      return;
     }
-    videoRef.current?.play().catch(() => {
+  }, []);
+
+  // Load and play whichever clip is current; on the first one this is the autoplay start.
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el || reducedMotion) return;
+    setVideoReady(false);
+    el.load();
+    el.play().catch(() => {
       /* autoplay blocked — the still image stays visible */
     });
-  }, []);
+  }, [clipIndex, reducedMotion]);
 
   // Rotating example service names (the 9 official categories) shown in the search box.
   const examples = CATEGORIES.map((c) => c.name);
@@ -80,21 +97,22 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
         {!reducedMotion && (
           <video
             ref={videoRef}
+            key={clipIndex}
             poster={heroPoster.url}
             autoPlay
-            loop
             muted
             playsInline
             preload="auto"
             disablePictureInPicture
             tabIndex={-1}
             onCanPlay={() => setVideoReady(true)}
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-out ${
+            onEnded={() => setClipIndex((i) => (i + 1) % HERO_CLIPS.length)}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out ${
               videoReady ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <source src={heroVideoWebm.url} type="video/webm" />
-            <source src={heroVideo.url} type="video/mp4" />
+            <source src={clip.webm} type="video/webm" />
+            <source src={clip.mp4} type="video/mp4" />
           </video>
         )}
         {/* Readability overlay */}
