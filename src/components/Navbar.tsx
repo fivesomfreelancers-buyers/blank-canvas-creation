@@ -77,9 +77,9 @@ const Navbar = () => {
           <Logo />
           
           <div className="hidden md:flex items-center gap-7 text-sm font-medium">
-            <Link to="/explore" className="text-muted-foreground hover:text-foreground transition-colors">Explore services</Link>
-            <Link to="/services" className="text-muted-foreground hover:text-foreground transition-colors">Categories</Link>
-            <Link to="/how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">How it works</Link>
+            <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">Home</Link>
+            <Link to="/explore" className="text-muted-foreground hover:text-foreground transition-colors">Explore</Link>
+            <Link to="/how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">How It Works</Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -229,8 +229,8 @@ const Navbar = () => {
 
         {isMenuOpen && (
           <div className="md:hidden py-4 space-y-4">
-            <Link to="/explore" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Explore services</Link>
-            <Link to="/services" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Categories</Link>
+            <Link to="/" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            <Link to="/explore" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Explore</Link>
             <Link to="/how-it-works" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>How It Works</Link>
             <button onClick={toggleTheme} className="flex items-center space-x-2 w-full text-left">
               {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
