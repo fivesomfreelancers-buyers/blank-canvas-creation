@@ -103,7 +103,7 @@ const MarketplaceJourneys: React.FC = () => (
             <div className="global-orbit global-orbit-one" />
             <div className="global-orbit global-orbit-two" />
             <div className="global-core"><Globe2 className="h-14 w-14" /></div>
-            {['Africa', 'Europe', 'AfricanAmericas', '\n'].map((place, index) => (
+            {['Africa', 'Europe', 'Africans'].map((place, index) => (
               <span key={place} className={`network-node network-node-${index + 1}`}><BadgeCheck className="h-4 w-4" /> {place}</span>
             ))}
           </ScrollReveal>
