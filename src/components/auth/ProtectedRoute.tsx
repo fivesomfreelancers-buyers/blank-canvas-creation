@@ -35,7 +35,7 @@ const Spinner = () => (
  * second, authoritative layer — this guard only decides what to render.
  */
 const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }) => {
-  const { user, userRole, isLoading } = useAuth();
+  const { user, userRole, emailVerified, isLoading } = useAuth();
   const { isAdmin, isAdminResolved } = useAdminRole();
   const location = useLocation();
   const profileState = useProfileComplete(
@@ -56,15 +56,19 @@ const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }
   // 3. Admins are allowed everywhere (monitoring/support).
   if (isAdmin) return <>{children}</>;
 
-  // 4. Role not resolved yet → keep waiting instead of guessing.
+  // 4. Unconfirmed identity → no buyer/freelancer area at all. The database
+  //    refuses the same writes, so this is only the visible half of the rule.
+  if (!emailVerified) return <Navigate to="/verify-email" replace />;
+
+  // 5. Role not resolved yet → keep waiting instead of guessing.
   if (userRole === null && !isAdminResolved) return <Spinner />;
 
-  // 5. Wrong role → send them to the right entry point, never render.
+  // 6. Wrong role → send them to the right entry point, never render.
   if (userRole !== require) {
     if (userRole === 'freelancer') return <Navigate to="/freelancer/dashboard" replace />;
     if (userRole === 'buyer') return <Navigate to="/buyer/dashboard" replace />;
-    // Normal member: offer the proper authenticated upgrade flow.
-    return <Navigate to={require === 'freelancer' ? '/become-freelancer' : '/become-buyer'} replace />;
+    // No role chosen yet → the single role-selection screen.
+    return <Navigate to="/select-role" replace />;
   }
 
   // 6. Right role, but the mandatory profile was never completed

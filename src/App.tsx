@@ -34,6 +34,7 @@ const BuyerRegister = lazy(() => import("./pages/BuyerRegister"));
 const FreelancerRegister = lazy(() => import("./pages/FreelancerRegister"));
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
 const RoleSelection = lazy(() => import("./pages/RoleSelection"));
+const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
 const UpgradeRole = lazy(() => import("./pages/UpgradeRole"));
 const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
 const CreateGig = lazy(() => import("./pages/CreateGig"));
@@ -147,7 +148,9 @@ const App = () => (
               {/* Universal inbox — works for every signed-in role */}
               <Route path="/inbox" element={<ProtectedRoute require="authenticated"><Inbox /></ProtectedRoute>} />
 
+              <Route path="/verify-email" element={<ProtectedRoute require="authenticated"><VerifyEmail /></ProtectedRoute>} />
               <Route path="/select-role" element={<ProtectedRoute require="authenticated"><RoleSelection /></ProtectedRoute>} />
+              <Route path="/choose-role" element={<ProtectedRoute require="authenticated"><RoleSelection /></ProtectedRoute>} />
               <Route path="/become-buyer" element={<ProtectedRoute><UpgradeRole role="buyer" /></ProtectedRoute>} />
               <Route path="/become-freelancer" element={<ProtectedRoute><UpgradeRole role="freelancer" /></ProtectedRoute>} />
               <Route path="/complete-profile/:role" element={<ProtectedRoute require="authenticated"><CompleteProfile /></ProtectedRoute>} />
