@@ -27,10 +27,10 @@
 
 # Premium homepage scroll narrative
 
-- [ ] Add a lightweight reusable scroll-reveal and depth system with reduced-motion support
+- [x] Add a lightweight reusable scroll-reveal and depth system with reduced-motion support
 - [ ] Transform Services into the opening depth chapter without changing category links or copy
 - [ ] Rebuild How FIVESOM Works as progressive buyer and freelancer journeys
 - [ ] Present escrow as a staged protected-payment flow
-- [ ] Add distinct freelancer, buyer, Africa-to-global, and trust story chapters
+- [x] Add distinct freelancer, buyer, Africa-to-global, and trust story chapters
 - [ ] Preserve live freelancer profiles, tutorials, FAQ, CTA links, and Footer content
 - [ ] Verify semantic headings, crawlable text, desktop/mobile motion, overflow, and performance
