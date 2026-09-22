@@ -149,8 +149,14 @@ const Navbar = () => {
                 </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center space-x-2 focus:outline-none relative">
-                      <Avatar className="h-9 w-9 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/50 transition-all">
+                    <button className="relative flex h-11 w-11 items-center justify-center focus:outline-none" aria-label={pendingRole ? `Profile setup incomplete. Complete ${pendingRole} setup.` : 'Open profile menu'}>
+                      {pendingRole && (
+                        <svg className="pointer-events-none absolute inset-0 h-11 w-11 -rotate-90 text-primary" viewBox="0 0 44 44" aria-hidden="true">
+                          <circle cx="22" cy="22" r="19" fill="none" stroke="currentColor" strokeOpacity="0.2" strokeWidth="3" />
+                          <circle cx="22" cy="22" r="19" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeDasharray="72 120" />
+                        </svg>
+                      )}
+                      <Avatar className={`h-9 w-9 cursor-pointer transition-all ${pendingRole ? '' : 'ring-2 ring-primary/20 hover:ring-primary/50'}`}>
                         {profile?.profile_image_url ? (
                           <AvatarImage src={profile.profile_image_url} alt={profile?.full_name || 'User'} />
                         ) : null}
@@ -158,7 +164,7 @@ const Navbar = () => {
                           {initials}
                         </AvatarFallback>
                       </Avatar>
-                      {unreadCount > 0 && (
+                      {unreadCount > 0 && !pendingRole && (
                         <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-background" />
                       )}
                     </button>

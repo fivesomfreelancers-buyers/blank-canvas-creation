@@ -17,6 +17,8 @@ import Navbar from '@/components/Navbar';
 import SEO from '@/components/SEO';
 import { useAuth } from '@/hooks/useAuth';
 import { getSavedOnboardingRole } from '@/lib/onboardingRole';
+import { saveOnboardingRole } from '@/lib/onboardingRole';
+import { useToast } from '@/hooks/use-toast';
 
 type Role = 'freelancer' | 'buyer';
 
@@ -82,6 +84,7 @@ const RoleSelection = () => {
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const { user, userRole, emailVerified, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (authLoading) return;
@@ -106,11 +109,22 @@ const RoleSelection = () => {
       .catch(() => undefined);
   }, [user, userRole, emailVerified, authLoading, navigate]);
 
-  const handleRoleSelect = (role: Role) => {
+  const handleRoleSelect = async (role: Role) => {
     if (!user || isLoading) return;
     setSelectedRole(role);
     setIsLoading(true);
-    window.setTimeout(() => navigate(`/register/${role}`, { replace: true }), 180);
+    try {
+      const savedRole = await saveOnboardingRole(role);
+      navigate(`/register/${savedRole}`, { replace: true });
+    } catch (error) {
+      setSelectedRole(null);
+      setIsLoading(false);
+      toast({
+        title: 'Could not save your account type',
+        description: error instanceof Error ? error.message : 'Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   if (authLoading) {
