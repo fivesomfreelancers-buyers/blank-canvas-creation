@@ -1,0 +1,1 @@
+revoke all on function public.user_roles_require_verified_email() from public, anon, authenticated;
