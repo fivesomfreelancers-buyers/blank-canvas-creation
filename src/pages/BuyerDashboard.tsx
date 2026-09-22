@@ -36,6 +36,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useMyPhoto } from '@/hooks/useMyPhoto';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import DisputeChat from '@/components/dispute/DisputeChat';
@@ -143,6 +144,7 @@ const BuyerDashboard = () => {
   const [stats, setStats] = useState({ activeOrders: 0, completedOrders: 0, totalSpent: 0, walletBalance: 0 });
   const [activeDisputes, setActiveDisputes] = useState<any[]>([]);
   const { user } = useAuth();
+  const myIdentity = useMyPhoto();
   const navigate = useNavigate();
 
   const fetchProfile = async () => {
