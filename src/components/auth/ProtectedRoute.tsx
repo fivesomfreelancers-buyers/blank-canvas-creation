@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { useAccountState } from '@/hooks/useAccountState';
+import { Button } from '@/components/ui/button';
 
 
 type Requirement = 'authenticated' | 'freelancer' | 'buyer';
@@ -35,10 +36,10 @@ const Spinner = () => (
  * second, authoritative layer — this guard only decides what to render.
  */
 const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }) => {
-  const { user, isLoading } = useAuth();
+  const { user, userRole, isLoading } = useAuth();
   const { isAdmin } = useAdminRole();
   const location = useLocation();
-  const { state, isLoading: stateLoading } = useAccountState();
+  const { state, error: stateError, isLoading: stateLoading, refresh } = useAccountState();
 
   // 1. Session still resolving → render nothing private.
   if (isLoading) return <Spinner />;
@@ -54,7 +55,26 @@ const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }
   if (isAdmin) return <>{children}</>;
 
   // 4. The database decides: identity, account type and setup completion.
-  if (stateLoading || !state) return <Spinner />;
+  if (stateLoading) return <Spinner />;
+
+  // A temporary account-state request failure must not crash or permanently
+  // lock an established role out. The database still authorizes every read and
+  // write. Use the separately fetched server role only as a resilient UI gate.
+  if (!state) {
+    if (userRole === require) return <>{children}</>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="max-w-sm text-center">
+          <p className="font-semibold text-foreground">We couldn't verify your account access.</p>
+          <p className="mt-2 text-sm text-muted-foreground">Your account data is safe. Please check your connection and try again.</p>
+          <Button type="button" variant="link" className="mt-3" onClick={() => void refresh()}>
+            Try again
+          </Button>
+          {stateError ? <span className="sr-only">Account verification request failed.</span> : null}
+        </div>
+      </div>
+    );
+  }
 
   if (!state.emailVerified) return <Navigate to="/verify-email" replace />;
 

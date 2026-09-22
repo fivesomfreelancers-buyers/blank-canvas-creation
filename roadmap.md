@@ -25,6 +25,8 @@
 - [x] Verify public/direct routes, refresh, desktop, mobile, and signed-out behavior
 - [ ] Live-test verified email, Google return, and existing-role routing with test accounts
 - [x] Persist the first Google onboarding choice across browsers and show only its completion CTA
+- [x] Restore legacy Freelancer/Buyer dashboard access without weakening new-user onboarding
+- [x] Align Founder access with the database-backed Admin authorization decision
 
 # Premium homepage scroll narrative
 
