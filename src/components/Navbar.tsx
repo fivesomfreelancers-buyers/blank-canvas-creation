@@ -65,7 +65,6 @@ const Navbar = () => {
     ? accountState?.selectedRole ?? profile?.onboarding_role ?? draftRole
     : null;
   const showFinishSetup = Boolean(user && setupRole);
-  const showChooseAccountType = Boolean(user && isNormal && !accountStateLoading && !setupRole);
   const pendingSetupPath = setupRole ? `/register/${setupRole}` : '/register';
   const setupLabel = 'Finish profile setup';
   const dashboardPath = userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard';
@@ -196,11 +195,6 @@ const Navbar = () => {
                       <User className="mr-2 h-4 w-4" />
                       Checking profile setup…
                     </DropdownMenuItem>
-                  ) : showChooseAccountType ? (
-                    <DropdownMenuItem onClick={() => navigate('/register')}>
-                      <User className="mr-2 h-4 w-4" />
-                      Choose account type
-                    </DropdownMenuItem>
                   ) : (
                     <>
                       <DropdownMenuItem onClick={() => navigate(dashboardPath)}>
@@ -281,10 +275,6 @@ const Navbar = () => {
                   </Link>
                 ) : isNormal && accountStateLoading ? (
                   <span className="block text-muted-foreground">Checking profile setup…</span>
-                ) : showChooseAccountType ? (
-                  <Link to="/register" className="block font-semibold text-primary" onClick={() => setIsMenuOpen(false)}>
-                    Choose account type
-                  </Link>
                 ) : (
                   <>
                     <Link to={dashboardPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
