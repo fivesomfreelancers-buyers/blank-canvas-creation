@@ -297,7 +297,11 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
       </form>
 
       <div className="mt-6 flex flex-col items-center justify-between gap-3 border-t border-border pt-5 text-sm sm:flex-row">
-        <Button variant="ghost" asChild className="px-0 text-muted-foreground"><Link to="/register"><ArrowLeft className="mr-2 h-4 w-4" />Change role</Link></Button>
+        {isGoogleUser ? (
+          <p className="text-muted-foreground">Finish this form to activate your {isFreelancer ? 'Freelancer' : 'Buyer'} account.</p>
+        ) : (
+          <Button variant="ghost" asChild className="px-0 text-muted-foreground"><Link to="/register"><ArrowLeft className="mr-2 h-4 w-4" />Change role</Link></Button>
+        )}
         <p className="text-muted-foreground">Already have an account? <Link to="/login" className="font-semibold text-primary hover:underline">Sign in</Link></p>
       </div>
     </AuthShell>
