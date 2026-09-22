@@ -473,7 +473,7 @@ const FreelancerDashboard = () => {
                   </div>
                 </CardContent>
               </Card>
-            ) : stats.completedOrders < 1 ? null : (
+            ) : (
               <Card className="border-red-200 bg-red-50">
                 <CardHeader>
                   <CardTitle className="text-red-700 flex items-center">
@@ -492,6 +492,11 @@ const FreelancerDashboard = () => {
                           ? 'Please re-submit your documents to try again.'
                           : 'Verify your identity to unlock full access and build buyer trust'}
                       </p>
+                      {stats.completedOrders < 1 && verificationStatus !== 'rejected' && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Blue Tick requires a verified account and at least 1 completed order.
+                        </p>
+                      )}
                     </div>
                     <Button
                       size="sm"
