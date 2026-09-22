@@ -16,6 +16,7 @@ import { upgradeToRole } from '@/lib/roleUpgrade';
 import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useAccountState } from '@/hooks/useAccountState';
 import { useToast } from '@/hooks/use-toast';
 
 const BUYER_INDUSTRIES = [
@@ -31,6 +32,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, userRole, emailVerified, isLoading: authLoading, refreshRole } = useAuth();
+  const { state: accountState } = useAccountState();
   const [googleLoading, setGoogleLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
