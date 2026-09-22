@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { authCooldownRemaining, clearAuthFailures, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
-import { getSavedOnboardingRole } from '@/lib/onboardingRole';
+import { accountLandingPath, fetchAccountState } from '@/lib/accountState';
 
 const Login = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -22,20 +22,15 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { toast } = useToast();
-  const { user, userRole, emailVerified, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (authLoading || emailLoading || googleLoading || !user) return;
-    if (userRole === 'freelancer') navigate('/freelancer/dashboard', { replace: true });
-    else if (userRole === 'buyer') navigate('/buyer/dashboard', { replace: true });
-    else if (!emailVerified) navigate('/verify-email', { replace: true });
-    else {
-      getSavedOnboardingRole(user.id)
-        .then((pendingRole) => navigate(pendingRole ? `/register/${pendingRole}` : '/select-role', { replace: true }))
-        .catch(() => navigate('/select-role', { replace: true }));
-    }
-  }, [user, userRole, emailVerified, authLoading, emailLoading, googleLoading, navigate]);
+    fetchAccountState()
+      .then((state) => navigate(accountLandingPath(state), { replace: true }))
+      .catch(() => undefined);
+  }, [user, authLoading, emailLoading, googleLoading, navigate]);
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
@@ -57,16 +52,12 @@ const Login = () => {
     }
   };
 
-  const routeAfterLogin = async (userId: string, verified: boolean) => {
-    const { data } = await (supabase as any).from('user_roles').select('role').eq('user_id', userId);
-    const roles = (data || []).map((row: { role: string }) => row.role);
-    if (roles.includes('admin') || roles.includes('super_admin')) navigate('/admin', { replace: true });
-    else if (roles.includes('freelancer')) navigate('/freelancer/dashboard', { replace: true });
-    else if (roles.includes('buyer')) navigate('/buyer/dashboard', { replace: true });
-    else if (!verified) navigate('/verify-email', { replace: true });
-    else {
-      const pendingRole = await getSavedOnboardingRole(userId).catch(() => null);
-      navigate(pendingRole ? `/register/${pendingRole}` : '/select-role', { replace: true });
+  const routeAfterLogin = async () => {
+    try {
+      const state = await fetchAccountState();
+      navigate(accountLandingPath(state), { replace: true });
+    } catch {
+      navigate('/select-role', { replace: true });
     }
   };
 
@@ -97,7 +88,7 @@ const Login = () => {
       return;
     }
     clearAuthFailures('login', email);
-    await routeAfterLogin(data.user.id, Boolean(data.user.email_confirmed_at));
+    await routeAfterLogin();
     setEmailLoading(false);
   };
 

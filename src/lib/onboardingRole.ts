@@ -21,8 +21,8 @@ export const getSavedOnboardingRole = async (userId: string): Promise<Onboarding
  */
 export const saveOnboardingRole = async (role: OnboardingRole): Promise<OnboardingRole> => {
   const { data, error } = await (supabase as any).rpc('set_onboarding_role', { _role: role });
-  if (error) throw error;
-  const saved = toOnboardingRole(data);
-  if (!saved) throw new Error('Could not save the selected account type.');
-  return saved;
+  if (error) throw new Error(error.message || 'Could not save the selected account type.');
+  const saved = toOnboardingRole(typeof data === 'string' ? data : null);
+  // An account that already holds another role keeps it; treat that as saved.
+  return saved ?? role;
 };

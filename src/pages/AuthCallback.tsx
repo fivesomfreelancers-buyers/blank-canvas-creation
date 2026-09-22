@@ -4,7 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ensureNormalUserRole } from '@/lib/roleUpgrade';
 import { readOnboardingDraft } from '@/lib/onboardingDraft';
-import { getSavedOnboardingRole } from '@/lib/onboardingRole';
+import { saveOnboardingRole } from '@/lib/onboardingRole';
+import { accountLandingPath, fetchAccountState } from '@/lib/accountState';
 
 /**
  * Google/OAuth landing page.
@@ -118,33 +119,18 @@ const AuthCallback = () => {
 
         const user = session.user;
 
-        const { data: roleRows } = await (supabase as any)
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', user.id);
+        // The database answers where this account belongs: choose an account
+        // type, finish the required setup, or open the existing dashboard. It is
+        // the same answer in every browser and on every device.
+        setStatus('Loading your account...');
+        let state = await fetchAccountState();
 
-        const roles: string[] = (roleRows || []).map((r: any) => r.role);
-
-        if (roles.includes('admin') || roles.includes('super_admin')) {
-          toast({ title: 'Welcome, Admin!', description: 'Redirecting to admin dashboard.' });
-          navigate('/admin', { replace: true });
-          return;
-        }
-
-        if (roles.includes('freelancer')) {
+        if (state.onboardingStatus === 'complete' || (state.activeRole && ['admin', 'super_admin', 'founder'].includes(state.activeRole))) {
           toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
-          navigate('/freelancer/dashboard', { replace: true });
+          navigate(accountLandingPath(state), { replace: true });
           return;
         }
 
-        if (roles.includes('buyer')) {
-          toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
-          navigate('/buyer/dashboard', { replace: true });
-          return;
-        }
-
-        // No buyer/freelancer role yet → neutral member. A role selected before
-        // Google/email verification returns to its required onboarding form.
         setStatus('Setting up your account...');
         try {
           await ensureNormalUserRole(user.id);
@@ -153,22 +139,29 @@ const AuthCallback = () => {
           console.error('ensureNormalUserRole error:', roleErr);
         }
 
-        const verified = Boolean((user as any).email_confirmed_at || (user as any).confirmed_at);
-        const localPending = readOnboardingDraft();
-        const savedRole = await getSavedOnboardingRole(user.id).catch(() => null);
-        const pendingRole = savedRole ?? localPending?.role ?? null;
+        // A role picked before authenticating is stored on the account now, so
+        // it is never lost when the browser changes.
+        if (!state.selectedRole && state.emailVerified) {
+          const localPending = readOnboardingDraft()?.role ?? null;
+          if (localPending) {
+            try {
+              await saveOnboardingRole(localPending);
+              state = await fetchAccountState();
+            } catch (saveErr) {
+              console.error('saveOnboardingRole error:', saveErr);
+            }
+          }
+        }
+
         toast({
           title: 'Welcome to Fivesom!',
-          description: verified
-            ? pendingRole
-              ? `Finish setting up your ${pendingRole} account.`
-              : 'Choose how you want to use Fivesom.'
-            : 'Please confirm your email address to continue.',
+          description: !state.emailVerified
+            ? 'Please confirm your email address to continue.'
+            : state.selectedRole
+              ? `Finish setting up your ${state.selectedRole} profile.`
+              : 'Choose how you want to use Fivesom.',
         });
-        navigate(
-          verified && pendingRole ? `/register/${pendingRole}` : verified ? '/select-role' : '/verify-email',
-          { replace: true },
-        );
+        navigate(accountLandingPath(state), { replace: true });
       } catch (err: any) {
         console.error('Auth callback error:', err);
         if (cancelled) return;

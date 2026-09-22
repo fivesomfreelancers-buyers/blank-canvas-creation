@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, BriefcaseBusiness, Eye, EyeOff, Loader2, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BriefcaseBusiness, CheckCircle2, Circle, Eye, EyeOff, Loader2, ShoppingBag, UserRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -11,11 +11,12 @@ import AuthShell from '@/components/auth/AuthShell';
 import GoogleIcon from '@/components/auth/GoogleIcon';
 import { CATEGORIES } from '@/lib/categories';
 import { readOnboardingDraft, saveOnboardingDraft, clearOnboardingDraft, type OnboardingRole } from '@/lib/onboardingDraft';
-import { getSavedOnboardingRole, saveOnboardingRole } from '@/lib/onboardingRole';
+import { saveOnboardingRole } from '@/lib/onboardingRole';
 import { upgradeToRole } from '@/lib/roleUpgrade';
 import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useAccountState } from '@/hooks/useAccountState';
 import { useToast } from '@/hooks/use-toast';
 
 const BUYER_INDUSTRIES = [
@@ -31,6 +32,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, userRole, emailVerified, isLoading: authLoading, refreshRole } = useAuth();
+  const { state: accountState } = useAccountState();
   const [googleLoading, setGoogleLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
@@ -76,11 +78,30 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     setEmail(user.email ?? '');
   }, [user]);
 
+  // Only a finished account leaves this page for a dashboard. An account that
+  // holds a role but never finished the form stays here.
   useEffect(() => {
-    if (authLoading) return;
-    if (userRole === 'freelancer') navigate('/freelancer/dashboard', { replace: true });
-    if (userRole === 'buyer') navigate('/buyer/dashboard', { replace: true });
-  }, [authLoading, userRole, navigate]);
+    if (authLoading || !accountState) return;
+    if (accountState.onboardingStatus === 'complete' && accountState.selectedRole) {
+      navigate(accountState.selectedRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard', { replace: true });
+    }
+  }, [authLoading, accountState, navigate]);
+
+  // Prefill with what the account already has saved, so a person returning in
+  // another browser sees their existing details instead of an empty form.
+  useEffect(() => {
+    const profile = accountState?.profile;
+    if (!profile) return;
+    const parts = String(profile.full_name ?? '').trim().split(/\s+/).filter(Boolean);
+    if (parts.length) {
+      setFirstName((current) => current || parts[0]);
+      setLastName((current) => current || parts.slice(1).join(' '));
+    }
+    setCountry((current) => current || (profile.location ?? ''));
+    setProfessionalTitle((current) => current || (profile.professional_title ?? ''));
+    setBio((current) => current || (profile.bio ?? ''));
+    setIndustry((current) => current || (profile.industry ?? ''));
+  }, [accountState]);
 
   // Signed in through Google: the account is linked already, so there is no
   // role to change here — the person must finish this form.
@@ -91,17 +112,17 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
       (user as any).identities?.some((identity: any) => identity.provider === 'google')
     ),
   );
-  const onboardingIncomplete = Boolean(user) && userRole !== 'freelancer' && userRole !== 'buyer';
+  const onboardingIncomplete = Boolean(user) && accountState?.onboardingStatus !== 'complete';
 
-  // Lock the first selected account type in Postgres. This follows the Google
-  // account across browsers, but does not grant Buyer/Freelancer access.
+  // Lock the first selected account type in Postgres. This follows the account
+  // across browsers and devices, but does not grant Buyer/Freelancer access.
   useEffect(() => {
-    if (authLoading || !user || !onboardingIncomplete) return;
+    if (authLoading || !user || !accountState) return;
+    if (accountState.onboardingStatus === 'complete') return;
     let active = true;
     (async () => {
       try {
-        const existing = await getSavedOnboardingRole(user.id);
-        const saved = existing ?? await saveOnboardingRole(role);
+        const saved = accountState.selectedRole ?? await saveOnboardingRole(role);
         if (active && saved !== role) navigate(`/register/${saved}`, { replace: true });
       } catch (error) {
         if (!active) return;
@@ -110,11 +131,31 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
           description: error instanceof Error ? error.message : 'Please try again.',
           variant: 'destructive',
         });
-        navigate('/select-role', { replace: true });
       }
     })();
     return () => { active = false; };
-  }, [authLoading, user, onboardingIncomplete, role, navigate, toast]);
+  }, [authLoading, user, accountState, role, navigate, toast]);
+
+  const savedProfile = accountState?.profile;
+  const displayName = String(
+    savedProfile?.full_name || user?.user_metadata?.full_name || user?.user_metadata?.name || '',
+  ).trim();
+  const filled = (value: string | null | undefined) => Boolean(value && value.trim().length > 0);
+  const requiredFields = isFreelancer
+    ? [
+        { label: 'Full name', done: filled(savedProfile?.full_name) },
+        { label: 'Country', done: filled(savedProfile?.location) },
+        { label: 'Professional title', done: filled(savedProfile?.professional_title) },
+        { label: 'Professional introduction', done: filled(savedProfile?.bio) },
+      ]
+    : [
+        { label: 'Full name', done: filled(savedProfile?.full_name) },
+        { label: 'Country', done: filled(savedProfile?.location) },
+        { label: 'Industry or hiring context', done: filled(savedProfile?.industry) },
+      ];
+  const completionPercent = Math.round(
+    (requiredFields.filter((field) => field.done).length / requiredFields.length) * 100,
+  );
 
   const currentDraft = () => ({
     role, firstName, lastName, email, country, professionalTitle, category, bio, industry, termsAccepted,
@@ -253,9 +294,51 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
         </div>
       </div>
 
+      {user && onboardingIncomplete && (
+        <div className="mb-7 animate-fade-in rounded-lg border border-border bg-card p-5">
+          <div className="flex items-center gap-4">
+            <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-primary">
+              {accountState?.profile.profile_image_url ? (
+                <img src={accountState.profile.profile_image_url} alt={displayName ? `${displayName} profile photo` : 'Your profile photo'} className="h-full w-full object-cover" />
+              ) : (
+                <UserRound className="h-7 w-7" />
+              )}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate font-heading text-lg font-bold text-foreground">{displayName || 'Your Fivesom account'}</p>
+              <p className="truncate text-sm text-muted-foreground">{accountState?.profile.email || user.email} · {isFreelancer ? 'Freelancer' : 'Buyer'}</p>
+            </div>
+            <span className="ml-auto shrink-0 text-right">
+              <span className="block font-heading text-xl font-bold text-primary">{completionPercent}%</span>
+              <span className="block text-xs text-muted-foreground">complete</span>
+            </span>
+          </div>
+
+          <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-secondary" role="progressbar" aria-valuenow={completionPercent} aria-valuemin={0} aria-valuemax={100} aria-label="Profile completion">
+            <span className="block h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${completionPercent}%` }} />
+          </div>
+
+          <p className="mt-4 text-sm font-semibold text-foreground">Your account exists — finish setting up your profile.</p>
+          <ul className="mt-3 space-y-2 text-sm">
+            {requiredFields.map((field) => (
+              <li key={field.label} className="flex items-center gap-3">
+                {field.done ? (
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                ) : (
+                  <Circle className="h-4 w-4 shrink-0 text-muted-foreground" />
+                )}
+                <span className={field.done ? 'text-muted-foreground' : 'font-medium text-foreground'}>{field.label}</span>
+                {!field.done && <span className="ml-auto text-xs font-semibold uppercase tracking-wide text-muted-foreground">Missing</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {!user && (
         <>
           <Button type="button" variant="outline" className="h-12 w-full bg-card font-semibold" onClick={handleGoogle} disabled={googleLoading || submitting}>
+
             {googleLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <><GoogleIcon /><span className="ml-3">Continue with Google</span></>}
           </Button>
           <div className="relative my-6 flex items-center justify-center"><div className="absolute inset-x-0 border-t border-border" /><span className="relative bg-background px-4 text-xs font-semibold text-muted-foreground">OR</span></div>
@@ -296,7 +379,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
       </form>
 
       <div className="mt-6 flex flex-col items-center justify-between gap-3 border-t border-border pt-5 text-sm sm:flex-row">
-        {isGoogleUser ? (
+        {user ? (
           <p className="text-muted-foreground">Finish this form to activate your {isFreelancer ? 'Freelancer' : 'Buyer'} account.</p>
         ) : (
           <Button variant="ghost" asChild className="px-0 text-muted-foreground"><Link to="/register"><ArrowLeft className="mr-2 h-4 w-4" />Change role</Link></Button>

@@ -16,8 +16,8 @@ import {
 import Navbar from '@/components/Navbar';
 import SEO from '@/components/SEO';
 import { useAuth } from '@/hooks/useAuth';
-import { getSavedOnboardingRole } from '@/lib/onboardingRole';
 import { saveOnboardingRole } from '@/lib/onboardingRole';
+import { accountLandingPath, fetchAccountState } from '@/lib/accountState';
 import { useToast } from '@/hooks/use-toast';
 
 type Role = 'freelancer' | 'buyer';
@@ -92,22 +92,15 @@ const RoleSelection = () => {
       navigate('/login', { replace: true });
       return;
     }
-    // Identity must be confirmed before any role can be chosen.
-    if (!emailVerified) {
-      navigate('/verify-email', { replace: true });
-      return;
-    }
-    // Existing buyers/freelancers keep their role and go straight to work.
-    if (userRole === 'freelancer' || userRole === 'buyer') {
-      navigate(userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard', { replace: true });
-      return;
-    }
-    getSavedOnboardingRole(user.id)
-      .then((pendingRole) => {
-        if (pendingRole) navigate(`/register/${pendingRole}`, { replace: true });
+    // The account itself decides: an account type already chosen is never
+    // offered again, in any browser.
+    fetchAccountState()
+      .then((state) => {
+        const landing = accountLandingPath(state);
+        if (landing !== '/select-role') navigate(landing, { replace: true });
       })
       .catch(() => undefined);
-  }, [user, userRole, emailVerified, authLoading, navigate]);
+  }, [user, authLoading, navigate]);
 
   const handleRoleSelect = async (role: Role) => {
     if (!user || isLoading) return;
