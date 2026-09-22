@@ -7,6 +7,7 @@ import SEO from '@/components/SEO';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { readOnboardingDraft } from '@/lib/onboardingDraft';
 
 /**
  * Shown whenever a signed-in account tries to reach a buyer/freelancer area
@@ -46,7 +47,8 @@ const VerifyEmail = () => {
     const { data } = await supabase.auth.refreshSession();
     setChecking(false);
     if (data.user?.email_confirmed_at) {
-      navigate('/select-role', { replace: true });
+      const pending = readOnboardingDraft();
+      navigate(pending ? `/register/${pending.role}` : '/select-role', { replace: true });
       return;
     }
     toast({
@@ -56,9 +58,12 @@ const VerifyEmail = () => {
     });
   };
 
-  if (!isLoading && emailVerified) {
-    navigate('/select-role', { replace: true });
-  }
+  useEffect(() => {
+    if (!isLoading && emailVerified) {
+      const pending = readOnboardingDraft();
+      navigate(pending ? `/register/${pending.role}` : '/select-role', { replace: true });
+    }
+  }, [isLoading, emailVerified, navigate]);
 
   return (
     <>
