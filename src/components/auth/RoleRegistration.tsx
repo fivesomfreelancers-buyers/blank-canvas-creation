@@ -76,11 +76,30 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     setEmail(user.email ?? '');
   }, [user]);
 
+  // Only a finished account leaves this page for a dashboard. An account that
+  // holds a role but never finished the form stays here.
   useEffect(() => {
-    if (authLoading) return;
-    if (userRole === 'freelancer') navigate('/freelancer/dashboard', { replace: true });
-    if (userRole === 'buyer') navigate('/buyer/dashboard', { replace: true });
-  }, [authLoading, userRole, navigate]);
+    if (authLoading || !accountState) return;
+    if (accountState.onboardingStatus === 'complete' && accountState.selectedRole) {
+      navigate(accountState.selectedRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard', { replace: true });
+    }
+  }, [authLoading, accountState, navigate]);
+
+  // Prefill with what the account already has saved, so a person returning in
+  // another browser sees their existing details instead of an empty form.
+  useEffect(() => {
+    const profile = accountState?.profile;
+    if (!profile) return;
+    const parts = String(profile.full_name ?? '').trim().split(/\s+/).filter(Boolean);
+    if (parts.length) {
+      setFirstName((current) => current || parts[0]);
+      setLastName((current) => current || parts.slice(1).join(' '));
+    }
+    setCountry((current) => current || (profile.location ?? ''));
+    setProfessionalTitle((current) => current || (profile.professional_title ?? ''));
+    setBio((current) => current || (profile.bio ?? ''));
+    setIndustry((current) => current || (profile.industry ?? ''));
+  }, [accountState]);
 
   // Signed in through Google: the account is linked already, so there is no
   // role to change here — the person must finish this form.
