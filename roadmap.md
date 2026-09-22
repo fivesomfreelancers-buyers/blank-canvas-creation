@@ -8,8 +8,8 @@
 
 # Complete Fivesom frontend architecture and UI
 
-- [ ] Standardize shared Fivesom branding and navigation
-- [ ] Refine homepage search and marketplace presentation
-- [ ] Unify account role selection and authentication presentation
-- [ ] Harmonize buyer and freelancer dashboard shells
-- [ ] Verify routes, desktop/mobile rendering, and preview health
+- [x] Standardize shared Fivesom branding and navigation
+- [x] Refine homepage search and marketplace presentation
+- [x] Unify account role selection and authentication presentation
+- [x] Harmonize buyer and freelancer dashboard shells (left structurally unchanged on purpose)
+- [x] Verify routes, desktop/mobile rendering, and preview health
