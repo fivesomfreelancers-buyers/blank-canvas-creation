@@ -113,8 +113,8 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
           </video>
         )}
         {/* Readability overlay */}
-        <div className="absolute inset-0 bg-background/70 sm:bg-background/65" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/35 to-background" />
+        <div className="absolute inset-0 bg-background/55 sm:bg-background/45" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/35 via-background/25 to-background" />
       </div>
 
       <div className="relative mx-auto max-w-6xl text-center">
