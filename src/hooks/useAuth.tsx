@@ -271,6 +271,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       session,
       userRole,
       isNormalUser: !!user && userRole === 'user',
+      emailVerified: !!user && (!!(user as any).email_confirmed_at || !!(user as any).confirmed_at),
       isLoading,
       refreshRole,
       signUp,
