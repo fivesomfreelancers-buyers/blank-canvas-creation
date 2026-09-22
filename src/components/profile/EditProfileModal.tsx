@@ -7,13 +7,14 @@ import { Label } from '@/components/ui/label';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Camera, X, Loader2, Plus } from 'lucide-react';
+import { Camera, X, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { compressImage } from '@/lib/imageCompress';
 import { toast } from '@/hooks/use-toast';
 import { SOFTWARE_CATALOG, SoftwareDef, findTool } from '@/lib/verificationCatalog';
 import ToolIcon from '@/components/ToolIcon';
 import { notifyMyPhotoChanged } from '@/hooks/useMyPhoto';
+import LanguageSelector from '@/components/profile/LanguageSelector';
 
 interface EditProfileModalProps {
   open: boolean;
@@ -26,8 +27,6 @@ interface EditProfileModalProps {
 
 const EXPERIENCE_OPTIONS = ['Less than 1 year', '1-2 years', '3-5 years', '5-10 years', '10+ years'];
 const EDUCATION_OPTIONS = ['Self-taught', 'High School', 'Diploma / Certificate', 'Bachelor\'s Degree', 'Master\'s Degree', 'PhD'];
-const COMMON_LANGUAGES = ['Somali', 'English', 'Arabic', 'Swahili', 'Amharic', 'French', 'Italian', 'Turkish'];
-
 const EditProfileModal = ({ open, onClose, profile, freelancerData, userId, onSaved }: EditProfileModalProps) => {
   const [fullName, setFullName] = useState(profile?.full_name || '');
   const [professionalTitle, setProfessionalTitle] = useState(profile?.professional_title || freelancerData?.professional_title || '');
@@ -66,12 +65,6 @@ const EditProfileModal = ({ open, onClose, profile, freelancerData, userId, onSa
     } finally {
       setUploading(false);
     }
-  };
-
-  const addLanguage = (lang: string) => {
-    const v = lang.trim();
-    if (!v || languages.includes(v)) return;
-    setLanguages([...languages, v]);
   };
 
   const addTool = (slug: string) => {
@@ -174,21 +167,7 @@ const EditProfileModal = ({ open, onClose, profile, freelancerData, userId, onSa
 
           <div className="space-y-2">
             <Label>Languages</Label>
-            <div className="flex flex-wrap gap-1.5 mb-1">
-              {languages.map(l => (
-                <Badge key={l} variant="secondary" className="gap-1">
-                  {l}
-                  <button onClick={() => setLanguages(languages.filter(x => x !== l))}><X className="w-3 h-3" /></button>
-                </Badge>
-              ))}
-            </div>
-            <div className="flex flex-wrap gap-1">
-              {COMMON_LANGUAGES.filter(l => !languages.includes(l)).map(l => (
-                <Button key={l} type="button" size="sm" variant="outline" className="h-7 text-xs" onClick={() => addLanguage(l)}>
-                  <Plus className="w-3 h-3 mr-1" />{l}
-                </Button>
-              ))}
-            </div>
+            <LanguageSelector id="edit-profile-languages" value={languages} onChange={setLanguages} />
           </div>
 
           <div className="grid grid-cols-2 gap-3">

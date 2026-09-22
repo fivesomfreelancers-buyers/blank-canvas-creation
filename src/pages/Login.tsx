@@ -29,8 +29,8 @@ const Login = () => {
     if (authLoading || emailLoading || googleLoading || !user) return;
     fetchAccountState()
       .then((state) => navigate(accountLandingPath(state), { replace: true }))
-      .catch(() => undefined);
-  }, [user, authLoading, emailLoading, googleLoading, navigate]);
+      .catch(() => toast({ title: 'Could not load your account', description: 'Please check your connection and try again.', variant: 'destructive' }));
+  }, [user, authLoading, emailLoading, googleLoading, navigate, toast]);
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
@@ -57,7 +57,7 @@ const Login = () => {
       const state = await fetchAccountState();
       navigate(accountLandingPath(state), { replace: true });
     } catch {
-      navigate('/select-role', { replace: true });
+      toast({ title: 'Could not load your account', description: 'Your sign-in succeeded. Please retry while we load your saved account.', variant: 'destructive' });
     }
   };
 
