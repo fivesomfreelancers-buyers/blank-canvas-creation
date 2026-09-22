@@ -112,17 +112,17 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
       (user as any).identities?.some((identity: any) => identity.provider === 'google')
     ),
   );
-  const onboardingIncomplete = Boolean(user) && userRole !== 'freelancer' && userRole !== 'buyer';
+  const onboardingIncomplete = Boolean(user) && accountState?.onboardingStatus !== 'complete';
 
-  // Lock the first selected account type in Postgres. This follows the Google
-  // account across browsers, but does not grant Buyer/Freelancer access.
+  // Lock the first selected account type in Postgres. This follows the account
+  // across browsers and devices, but does not grant Buyer/Freelancer access.
   useEffect(() => {
-    if (authLoading || !user || !onboardingIncomplete) return;
+    if (authLoading || !user || !accountState) return;
+    if (accountState.onboardingStatus === 'complete') return;
     let active = true;
     (async () => {
       try {
-        const existing = await getSavedOnboardingRole(user.id);
-        const saved = existing ?? await saveOnboardingRole(role);
+        const saved = accountState.selectedRole ?? await saveOnboardingRole(role);
         if (active && saved !== role) navigate(`/register/${saved}`, { replace: true });
       } catch (error) {
         if (!active) return;
@@ -131,11 +131,10 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
           description: error instanceof Error ? error.message : 'Please try again.',
           variant: 'destructive',
         });
-        navigate('/select-role', { replace: true });
       }
     })();
     return () => { active = false; };
-  }, [authLoading, user, onboardingIncomplete, role, navigate, toast]);
+  }, [authLoading, user, accountState, role, navigate, toast]);
 
   const currentDraft = () => ({
     role, firstName, lastName, email, country, professionalTitle, category, bio, industry, termsAccepted,
