@@ -5,6 +5,7 @@ import AuthShell from '@/components/auth/AuthShell';
 import SEO from '@/components/SEO';
 import { useAuth } from '@/hooks/useAuth';
 import type { OnboardingRole } from '@/lib/onboardingDraft';
+import { accountLandingPath, fetchAccountState } from '@/lib/accountState';
 
 const choices = [
   {
