@@ -6,7 +6,15 @@ import { CATEGORIES } from '@/lib/categories';
 import { Button } from '@/components/ui/button';
 import heroVideo from '@/assets/hero-bg.mp4.asset.json';
 import heroVideoWebm from '@/assets/hero-bg.webm.asset.json';
+import heroVideo2 from '@/assets/hero-bg2.mp4.asset.json';
+import heroVideo2Webm from '@/assets/hero-bg2.webm.asset.json';
 import heroPoster from '@/assets/hero-bg-poster.jpg.asset.json';
+
+// Background clips play one after the other: when one ends, the next one starts.
+const HERO_CLIPS = [
+  { webm: heroVideoWebm.url, mp4: heroVideo.url },
+  { webm: heroVideo2Webm.url, mp4: heroVideo2.url },
+];
 
 const POPULAR = [
   'Logo Design',
