@@ -114,6 +114,7 @@ const EditProfileModal = ({ open, onClose, profile, freelancerData, userId, onSa
       if (freelancerErr) throw freelancerErr;
 
       toast({ title: 'Profile updated!' });
+      notifyMyPhotoChanged(imageUrl || null);
       onSaved();
       onClose();
     } catch (err: any) {
