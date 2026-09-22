@@ -11,6 +11,7 @@ import { User, Bell, Shield, Camera, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { notifyMyPhotoChanged } from '@/hooks/useMyPhoto';
 
 interface BuyerSettingsProps {
   onProfileUpdated?: () => void;
@@ -115,6 +116,7 @@ const BuyerSettings = ({ onProfileUpdated }: BuyerSettingsProps) => {
       toast.error('Failed to update profile image');
     } else {
       setProfile(prev => ({ ...prev, profile_image_url: publicUrl }));
+      notifyMyPhotoChanged(publicUrl);
       toast.success('Profile image updated');
       onProfileUpdated?.();
     }
