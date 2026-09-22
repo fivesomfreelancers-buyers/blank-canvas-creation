@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -36,10 +36,22 @@ const Spinner = () => (
  * second, authoritative layer — this guard only decides what to render.
  */
 const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }) => {
-  const { user, userRole, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
   const { isAdmin } = useAdminRole();
   const location = useLocation();
   const { state, error: stateError, isLoading: stateLoading, refresh } = useAccountState();
+  const retryCount = useRef(0);
+
+  useEffect(() => {
+    if (!user || !stateError || state || retryCount.current >= 2) return;
+    retryCount.current += 1;
+    const retryTimer = window.setTimeout(() => { void refresh(); }, retryCount.current * 500);
+    return () => window.clearTimeout(retryTimer);
+  }, [user, stateError, state, refresh]);
+
+  useEffect(() => {
+    retryCount.current = 0;
+  }, [user?.id]);
 
   // 1. Session still resolving → render nothing private.
   if (isLoading) return <Spinner />;
@@ -57,11 +69,9 @@ const ProtectedRoute: React.FC<Props> = ({ children, require = 'authenticated' }
   // 4. The database decides: identity, account type and setup completion.
   if (stateLoading) return <Spinner />;
 
-  // A temporary account-state request failure must not crash or permanently
-  // lock an established role out. The database still authorizes every read and
-  // write. Use the separately fetched server role only as a resilient UI gate.
+  // Never guess from browser state or a second role query. Retry brief network
+  // failures, then provide a manual retry without rendering a private screen.
   if (!state) {
-    if (userRole === require) return <>{children}</>;
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="max-w-sm text-center">
