@@ -63,7 +63,7 @@ const Navbar = () => {
     ? accountState?.selectedRole ?? profile?.onboarding_role ?? null
     : null;
   const showFinishSetup = Boolean(user && setupRole);
-  const pendingSetupPath = setupRole ? `/register/${setupRole}` : null;
+  const pendingSetupPath = setupRole ? `/register/${setupRole}` : '/register';
   const setupLabel = 'Finish profile setup';
   const dashboardPath = userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard';
   const profilePath = userRole === 'freelancer' ? '/freelancer/profile' : '/buyer/settings';
