@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Search, ArrowRight, ShieldCheck, Globe2, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import TypingHeadline from './TypingHeadline';
 import { CATEGORIES } from '@/lib/categories';
 import { Button } from '@/components/ui/button';
+import heroVideo from '@/assets/hero-bg.mp4.asset.json';
+import heroVideoWebm from '@/assets/hero-bg.webm.asset.json';
+import heroPoster from '@/assets/hero-bg-poster.jpg.asset.json';
 
 const POPULAR = [
   'Logo Design',
@@ -22,6 +25,23 @@ interface HomeHeroProps {
 const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
   const [q, setQ] = useState('');
   const navigate = useNavigate();
+
+  // Hero background video: fades in once it can play, silently falls back to the
+  // existing background if it fails or the visitor prefers reduced motion.
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoReady, setVideoReady] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      setReducedMotion(true);
+      return;
+    }
+    videoRef.current?.play().catch(() => {
+      /* autoplay blocked — the still image stays visible */
+    });
+  }, []);
 
   // Rotating example service names (the 9 official categories) shown in the search box.
   const examples = CATEGORIES.map((c) => c.name);
@@ -47,8 +67,42 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
   };
 
   return (
-    <section className="border-b border-border bg-background px-4 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8">
-      <div className="mx-auto max-w-6xl text-center">
+    <section className="relative isolate overflow-hidden border-b border-border bg-background px-4 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8">
+      {/* Background layer: still image first, video fades in on top of it */}
+      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+        <img
+          src={heroPoster.url}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+          loading="eager"
+          decoding="async"
+        />
+        {!reducedMotion && (
+          <video
+            ref={videoRef}
+            poster={heroPoster.url}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            tabIndex={-1}
+            onCanPlay={() => setVideoReady(true)}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-out ${
+              videoReady ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <source src={heroVideoWebm.url} type="video/webm" />
+            <source src={heroVideo.url} type="video/mp4" />
+          </video>
+        )}
+        {/* Readability overlay */}
+        <div className="absolute inset-0 bg-background/70 sm:bg-background/65" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/35 to-background" />
+      </div>
+
+      <div className="relative mx-auto max-w-6xl text-center">
         <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-semibold text-primary">
           <Globe2 className="w-3.5 h-3.5" />
           Global freelance marketplace with an African heart
