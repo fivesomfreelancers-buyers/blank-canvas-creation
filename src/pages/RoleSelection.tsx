@@ -16,8 +16,6 @@ import {
 import Navbar from '@/components/Navbar';
 import SEO from '@/components/SEO';
 import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
-import { upgradeToRole } from '@/lib/roleUpgrade';
 
 type Role = 'freelancer' | 'buyer';
 
@@ -81,9 +79,8 @@ const OPTIONS: Array<{
 const RoleSelection = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-  const { user, userRole, emailVerified, isLoading: authLoading, refreshRole } = useAuth();
+  const { user, userRole, emailVerified, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   useEffect(() => {
     if (authLoading) return;
@@ -102,29 +99,11 @@ const RoleSelection = () => {
     }
   }, [user, userRole, emailVerified, authLoading, navigate]);
 
-  const handleRoleSelect = async (role: Role) => {
+  const handleRoleSelect = (role: Role) => {
     if (!user || isLoading) return;
     setSelectedRole(role);
     setIsLoading(true);
-
-    try {
-      await upgradeToRole(user.id, role);
-      await refreshRole();
-      toast({
-        title: role === 'freelancer' ? 'Welcome, freelancer!' : 'Welcome, buyer!',
-        description: 'Let’s finish setting up your account.',
-      });
-      navigate(`/complete-profile/${role}`, { replace: true });
-    } catch (err) {
-      console.error('Role selection error:', err);
-      toast({
-        title: 'Could not save your choice',
-        description: 'Please confirm your email address and try again.',
-        variant: 'destructive',
-      });
-      setIsLoading(false);
-      setSelectedRole(null);
-    }
+    window.setTimeout(() => navigate(`/register/${role}`, { replace: true }), 180);
   };
 
   if (authLoading) {
@@ -144,7 +123,7 @@ const RoleSelection = () => {
           <div className="mb-10 text-center animate-fade-in">
             <p className="mb-3 text-sm font-semibold text-primary">Welcome to Fivesom</p>
             <h1 className="mb-3 text-3xl font-bold text-foreground sm:text-4xl">How would you like to use Fivesom?</h1>
-            <p className="text-lg text-muted-foreground">Pick one to get started. You can always add the other later.</p>
+             <p className="text-lg text-muted-foreground">Choose one account type and complete its required setup.</p>
           </div>
 
           <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2 md:gap-8">

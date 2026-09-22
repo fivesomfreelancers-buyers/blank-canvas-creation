@@ -39,12 +39,15 @@ export const upgradeToRole = async (userId: string, role: 'buyer' | 'freelancer'
     console.warn('Could not remove placeholder user role:', err);
   }
 
-  await (supabase as any).from('profiles').update({ role }).eq('id', userId);
+  const { error: profileError } = await (supabase as any).from('profiles').update({ role }).eq('id', userId);
+  if (profileError) throw profileError;
 
   if (role === 'freelancer') {
-    await (supabase as any).from('freelancers').upsert({ user_id: userId }, { onConflict: 'user_id' });
+    const { error: freelancerError } = await (supabase as any).from('freelancers').upsert({ user_id: userId }, { onConflict: 'user_id' });
+    if (freelancerError) throw freelancerError;
   } else {
-    await (supabase as any).from('buyers').upsert({ user_id: userId }, { onConflict: 'user_id' });
+    const { error: buyerError } = await (supabase as any).from('buyers').upsert({ user_id: userId }, { onConflict: 'user_id' });
+    if (buyerError) throw buyerError;
   }
 };
 

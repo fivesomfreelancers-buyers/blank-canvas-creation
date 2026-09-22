@@ -49,7 +49,7 @@ const CompleteProfile = () => {
   const isFreelancer = role === 'freelancer';
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, userRole, emailVerified, isLoading: authLoading } = useAuth();
   
   const [formData, setFormData] = useState({
     fullName: '',
@@ -99,6 +99,23 @@ const CompleteProfile = () => {
 
     return () => { cancelled = true; };
   }, [user, authLoading, navigate]);
+
+  useEffect(() => {
+    if (authLoading || !user) return;
+    if (!emailVerified) {
+      navigate('/verify-email', { replace: true });
+      return;
+    }
+    if (role !== 'buyer' && role !== 'freelancer') {
+      navigate('/select-role', { replace: true });
+      return;
+    }
+    if (userRole === 'buyer' || userRole === 'freelancer') {
+      if (userRole !== role) navigate(`/complete-profile/${userRole}`, { replace: true });
+      return;
+    }
+    navigate(`/register/${role}`, { replace: true });
+  }, [authLoading, user, emailVerified, userRole, role, navigate]);
 
 
   const handleSubmit = async (e: React.FormEvent) => {

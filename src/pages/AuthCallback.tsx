@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ensureNormalUserRole } from '@/lib/roleUpgrade';
+import { readOnboardingDraft } from '@/lib/onboardingDraft';
 
 /**
  * Google/OAuth landing page.
@@ -141,7 +142,8 @@ const AuthCallback = () => {
           return;
         }
 
-        // No buyer/freelancer role yet → neutral member, then choose a role.
+        // No buyer/freelancer role yet → neutral member. A role selected before
+        // Google/email verification returns to its required onboarding form.
         setStatus('Setting up your account...');
         try {
           await ensureNormalUserRole(user.id);
@@ -151,13 +153,19 @@ const AuthCallback = () => {
         }
 
         const verified = Boolean((user as any).email_confirmed_at || (user as any).confirmed_at);
+        const pending = readOnboardingDraft();
         toast({
           title: 'Welcome to Fivesom!',
           description: verified
-            ? 'Choose how you want to use Fivesom.'
+            ? pending
+              ? `Finish setting up your ${pending.role} account.`
+              : 'Choose how you want to use Fivesom.'
             : 'Please confirm your email address to continue.',
         });
-        navigate(verified ? '/select-role' : '/verify-email', { replace: true });
+        navigate(
+          verified && pending ? `/register/${pending.role}` : verified ? '/select-role' : '/verify-email',
+          { replace: true },
+        );
       } catch (err: any) {
         console.error('Auth callback error:', err);
         if (cancelled) return;
