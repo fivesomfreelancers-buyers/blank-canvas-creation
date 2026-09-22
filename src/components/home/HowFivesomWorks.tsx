@@ -13,6 +13,7 @@ import {
   Wallet,
   ArrowRight,
 } from 'lucide-react';
+import ScrollReveal from './ScrollReveal';
 
 const BUYER_STEPS = [
   {
@@ -77,7 +78,7 @@ const StepColumn: React.FC<{
   steps: typeof BUYER_STEPS;
   cta: { to: string; text: string };
 }> = ({ label, heading, intro, steps, cta }) => (
-  <div className="rounded-3xl border border-border bg-card p-6 sm:p-8">
+  <ScrollReveal from={label === 'For clients' ? 'left' : 'right'} className="rounded-xl border border-border bg-card/95 p-6 sm:p-8 shadow-xl [perspective:1000px]">
     <span className="inline-block text-[11px] font-semibold uppercase tracking-widest text-primary mb-3">
       {label}
     </span>
@@ -86,7 +87,7 @@ const StepColumn: React.FC<{
 
     <ol className="space-y-5">
       {steps.map((s, i) => (
-        <li key={s.title} className="flex gap-4">
+        <ScrollReveal as="li" key={s.title} delay={i * 85} from="depth" className="flex gap-4 rounded-lg p-2 transition-colors hover:bg-muted/40">
           <span className="relative shrink-0">
             <span className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
               <s.icon className="w-5 h-5" aria-hidden />
@@ -101,7 +102,7 @@ const StepColumn: React.FC<{
             </h4>
             <p className="text-sm text-muted-foreground leading-relaxed">{s.text}</p>
           </div>
-        </li>
+        </ScrollReveal>
       ))}
     </ol>
 
@@ -111,21 +112,22 @@ const StepColumn: React.FC<{
     >
       {cta.text} <ArrowRight className="w-4 h-4" aria-hidden />
     </Link>
-  </div>
+  </ScrollReveal>
 );
 
 const HowFivesomWorks: React.FC = () => (
-  <section aria-labelledby="how-heading" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-muted/20 border-y border-border">
+  <section aria-labelledby="how-heading" className="home-story-section px-4 sm:px-6 lg:px-8 bg-muted/20 border-y border-border">
     <div className="max-w-6xl mx-auto">
-      <div className="max-w-3xl mb-12">
-        <h2 id="how-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
+      <ScrollReveal className="max-w-3xl mb-12" from="left">
+        <span className="home-kicker">One marketplace, two journeys</span>
+        <h2 id="how-heading" className="home-story-title">
           How FIVESOM works
         </h2>
         <p className="text-muted-foreground text-base sm:text-lg">
           The same order powers two experiences: a client getting work delivered, and a freelancer
           getting paid for it. Here is exactly what happens on each side.
         </p>
-      </div>
+      </ScrollReveal>
 
       <div className="grid lg:grid-cols-2 gap-6">
         <StepColumn

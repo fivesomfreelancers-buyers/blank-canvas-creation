@@ -11,6 +11,7 @@ import {
   Headphones,
   MessagesSquare,
 } from 'lucide-react';
+import ScrollReveal from './ScrollReveal';
 
 const ITEMS = [
   {
@@ -63,28 +64,29 @@ const ITEMS = [
 const TrustSafetySection: React.FC = () => (
   <section
     aria-labelledby="trust-heading"
-    className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-muted/20 border-y border-border"
+    className="home-story-section px-4 sm:px-6 lg:px-8 bg-muted/20 border-y border-border"
   >
     <div className="max-w-6xl mx-auto">
-      <div className="max-w-3xl mb-12">
-        <h2 id="trust-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
+      <ScrollReveal className="max-w-3xl mb-12" from="left">
+        <span className="home-kicker"><ShieldCheck className="h-3.5 w-3.5" aria-hidden /> Trust built into every order</span>
+        <h2 id="trust-heading" className="home-story-title">
           Why people trust FIVESOM
         </h2>
         <p className="text-muted-foreground text-base sm:text-lg">
           Trust on a marketplace is built from systems, not slogans. These are the protections that
           are actually built into FIVESOM today for both sides of every order.
         </p>
-      </div>
+      </ScrollReveal>
 
       <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {ITEMS.map(({ icon: Icon, title, text }) => (
-          <li key={title} className="rounded-2xl border border-border bg-card p-6">
+        {ITEMS.map(({ icon: Icon, title, text }, index) => (
+          <ScrollReveal as="li" key={title} delay={(index % 3) * 95} from="depth" className="rounded-xl border border-border bg-card/95 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
             <span className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
               <Icon className="w-5 h-5" aria-hidden />
             </span>
             <h3 className="text-base font-semibold text-foreground mb-2">{title}</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
-          </li>
+          </ScrollReveal>
         ))}
       </ul>
 

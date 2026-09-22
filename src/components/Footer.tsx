@@ -16,7 +16,8 @@ export const Footer: React.FC = () => {
   const isDarkMode = theme === 'dark';
 
   return (
-    <footer className="overflow-hidden border-t border-border bg-muted/30 px-4 pt-12 sm:px-6 lg:px-8">
+    <footer className="relative overflow-hidden border-t border-border bg-muted/30 px-4 pt-16 sm:px-6 lg:px-8">
+      <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="md:col-span-2">
