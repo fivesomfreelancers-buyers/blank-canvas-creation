@@ -11,6 +11,7 @@ import AuthShell from '@/components/auth/AuthShell';
 import GoogleIcon from '@/components/auth/GoogleIcon';
 import { CATEGORIES } from '@/lib/categories';
 import { readOnboardingDraft, saveOnboardingDraft, clearOnboardingDraft, type OnboardingRole } from '@/lib/onboardingDraft';
+import { clearOnboardingAbandoned, enforceAbandonedOnboarding, markOnboardingAbandoned } from '@/lib/onboardingAbandon';
 import { upgradeToRole } from '@/lib/roleUpgrade';
 import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 import { supabase } from '@/integrations/supabase/client';
@@ -81,6 +82,40 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     if (userRole === 'buyer') navigate('/buyer/dashboard', { replace: true });
   }, [authLoading, userRole, navigate]);
 
+  // Signed in through Google: the account is linked already, so there is no
+  // role to change here — the person must finish this form.
+  const isGoogleUser = Boolean(
+    user && (
+      (user.app_metadata as any)?.provider === 'google' ||
+      ((user.app_metadata as any)?.providers as string[] | undefined)?.includes('google') ||
+      (user as any).identities?.some((identity: any) => identity.provider === 'google')
+    ),
+  );
+  const onboardingIncomplete = Boolean(user) && userRole !== 'freelancer' && userRole !== 'buyer';
+
+  // If a Google account abandoned this form earlier, drop the session so the
+  // person starts a fresh sign-up instead of resuming a half-made account.
+  useEffect(() => {
+    if (authLoading || !user || !onboardingIncomplete) return;
+    let active = true;
+    enforceAbandonedOnboarding(user.id).then((signedOut) => {
+      if (signedOut && active) navigate('/register', { replace: true });
+    });
+    return () => { active = false; };
+  }, [authLoading, user, onboardingIncomplete, navigate]);
+
+  // Leaving the page (closing the tab, navigating away) counts as abandoning.
+  useEffect(() => {
+    if (!user || !isGoogleUser || !onboardingIncomplete) return;
+    const onLeave = () => markOnboardingAbandoned(user.id);
+    window.addEventListener('pagehide', onLeave);
+    window.addEventListener('beforeunload', onLeave);
+    return () => {
+      window.removeEventListener('pagehide', onLeave);
+      window.removeEventListener('beforeunload', onLeave);
+    };
+  }, [user, isGoogleUser, onboardingIncomplete]);
+
   const currentDraft = () => ({
     role, firstName, lastName, email, country, professionalTitle, category, bio, industry, termsAccepted,
   });
@@ -139,6 +174,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
       if (error) throw error;
     }
     clearOnboardingDraft();
+    clearOnboardingAbandoned();
     await refreshRole();
     navigate(isFreelancer ? '/freelancer/dashboard' : '/buyer/dashboard', { replace: true });
   };
@@ -261,7 +297,11 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
       </form>
 
       <div className="mt-6 flex flex-col items-center justify-between gap-3 border-t border-border pt-5 text-sm sm:flex-row">
-        <Button variant="ghost" asChild className="px-0 text-muted-foreground"><Link to="/register"><ArrowLeft className="mr-2 h-4 w-4" />Change role</Link></Button>
+        {isGoogleUser ? (
+          <p className="text-muted-foreground">Finish this form to activate your {isFreelancer ? 'Freelancer' : 'Buyer'} account.</p>
+        ) : (
+          <Button variant="ghost" asChild className="px-0 text-muted-foreground"><Link to="/register"><ArrowLeft className="mr-2 h-4 w-4" />Change role</Link></Button>
+        )}
         <p className="text-muted-foreground">Already have an account? <Link to="/login" className="font-semibold text-primary hover:underline">Sign in</Link></p>
       </div>
     </AuthShell>
