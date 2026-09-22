@@ -2187,6 +2187,7 @@ export type Database = {
       }
       expire_vip_memberships: { Args: never; Returns: number }
       freelancer_privileged_snapshot: { Args: { _id: string }; Returns: Json }
+      get_account_state: { Args: never; Returns: Json }
       get_blue_tick_eligibility: { Args: { _user_id?: string }; Returns: Json }
       get_freelancer_earnings: {
         Args: { _ids?: string[] }
@@ -2357,10 +2358,7 @@ export type Database = {
           vip_tier: string
         }[]
       }
-      set_onboarding_role: {
-        Args: { _role: Database["public"]["Enums"]["app_role"] }
-        Returns: Database["public"]["Enums"]["app_role"]
-      }
+      set_onboarding_role: { Args: { _role: string }; Returns: string }
       shares_order_with_freelancer: {
         Args: { _freelancer_id: string; _viewer: string }
         Returns: boolean
