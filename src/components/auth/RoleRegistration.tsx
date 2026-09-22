@@ -168,7 +168,27 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
     setProfessionalTitle((current) => current || (profile.professional_title ?? ''));
     setBio((current) => current || (profile.bio ?? ''));
     setIndustry((current) => current || (profile.industry ?? ''));
+    setPhotoUrl((current) => current || (profile.profile_image_url ?? ''));
   }, [accountState]);
+
+  // Languages and the saved photo come from the account, so they survive a
+  // logout, a new browser, or a different device.
+  useEffect(() => {
+    if (!user) return;
+    let active = true;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from('profiles')
+        .select('languages, profile_image_url')
+        .eq('id', user.id)
+        .maybeSingle();
+      if (!active || !data) return;
+      const saved = Array.isArray(data.languages) ? data.languages.filter(Boolean) : [];
+      if (saved.length) setLanguages((current) => (current.length ? current : saved));
+      if (data.profile_image_url) setPhotoUrl((current) => current || data.profile_image_url);
+    })();
+    return () => { active = false; };
+  }, [user]);
 
   // Signed in through Google: the account is linked already, so there is no
   // role to change here — the person must finish this form.
