@@ -4,7 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ensureNormalUserRole } from '@/lib/roleUpgrade';
 import { readOnboardingDraft } from '@/lib/onboardingDraft';
-import { getSavedOnboardingRole } from '@/lib/onboardingRole';
+import { saveOnboardingRole } from '@/lib/onboardingRole';
+import { accountLandingPath, fetchAccountState } from '@/lib/accountState';
 
 /**
  * Google/OAuth landing page.
