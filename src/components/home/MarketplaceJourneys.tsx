@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import ExchangeNetwork from '@/components/home/ExchangeNetwork';
 import {
   ArrowRight,
-  BadgeCheck,
   Banknote,
   BriefcaseBusiness,
   CheckCircle2,
@@ -98,16 +98,9 @@ const MarketplaceJourneys: React.FC = () => (
           </div>
         </ScrollReveal>
 
-        <div aria-hidden="true">
-          <ScrollReveal from="depth" delay={120} className="global-network">
-            <div className="global-orbit global-orbit-one" />
-            <div className="global-orbit global-orbit-two" />
-            <div className="global-core"><Globe2 className="h-14 w-14" /></div>
-            {['Africa', 'Europe', 'Africans'].map((place, index) => (
-              <span key={place} className={`network-node network-node-${index + 1}`}><BadgeCheck className="h-4 w-4" /> {place}</span>
-            ))}
-          </ScrollReveal>
-        </div>
+        <ScrollReveal from="depth" delay={120}>
+          <ExchangeNetwork />
+        </ScrollReveal>
       </div>
     </section>
   </div>

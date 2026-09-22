@@ -381,6 +381,52 @@
   .network-node-3 { bottom: 13%; right: 10%; }
   .network-node-4 { bottom: 18%; left: 4%; }
 
+  .exchange-network { position: relative; }
+  .xnet-links path {
+    stroke: hsl(var(--primary) / .28);
+    stroke-width: 1.5;
+    stroke-dasharray: 5 7;
+    animation: xnet-dash 5s linear infinite;
+  }
+  .xnet-node circle { fill: hsl(var(--primary)); }
+  .xnet-node .xnet-halo { fill: hsl(var(--primary) / .12); }
+  .xnet-node-buyer circle { fill: hsl(0 84% 58%); }
+  .xnet-node-buyer .xnet-halo { fill: hsl(0 84% 58% / .12); }
+  .xnet-hub circle { fill: hsl(var(--card)); stroke: hsl(var(--primary) / .45); stroke-width: 1.5; }
+  .xnet-hub .xnet-halo { fill: hsl(var(--primary) / .07); stroke: hsl(var(--primary) / .18); }
+  .xnet-hub text {
+    fill: hsl(var(--foreground));
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .06em;
+  }
+  .xnet-dot {
+    offset-distance: 0%;
+    animation: xnet-travel 4.6s linear infinite;
+  }
+  .xnet-dot-talent { fill: hsl(var(--primary)); filter: drop-shadow(0 0 6px hsl(var(--primary) / .8)); }
+  .xnet-dot-buyer { fill: hsl(0 84% 58%); filter: drop-shadow(0 0 6px hsl(0 84% 58% / .8)); }
+
+  .exchange-legend {
+    margin-top: 1rem;
+    display: grid;
+    gap: .5rem;
+    font-size: .82rem;
+    color: hsl(var(--muted-foreground));
+  }
+  .exchange-legend li { display: flex; align-items: center; gap: .5rem; }
+  .exchange-swatch { width: .6rem; height: .6rem; border-radius: 999px; display: inline-block; }
+  .exchange-swatch-talent { background: hsl(var(--primary)); }
+  .exchange-swatch-buyer { background: hsl(0 84% 58%); }
+
+  @keyframes xnet-travel {
+    from { offset-distance: 0%; }
+    to { offset-distance: 100%; }
+  }
+  @keyframes xnet-dash {
+    to { stroke-dashoffset: -48; }
+  }
+
   .escrow-flow-line {
     position: absolute;
     left: 2rem;
@@ -414,5 +460,8 @@
   }
   .home-story-link,
   .home-secondary-link { transition: none; }
+  .xnet-dot,
+  .xnet-links path { animation: none !important; }
+  .xnet-dot { offset-distance: 55%; }
 }
 
