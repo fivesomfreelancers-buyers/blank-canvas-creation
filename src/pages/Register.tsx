@@ -34,9 +34,15 @@ const Register = () => {
 
   useEffect(() => {
     if (isLoading || !user) return;
-    if (userRole === 'freelancer') navigate('/freelancer/dashboard', { replace: true });
-    if (userRole === 'buyer') navigate('/buyer/dashboard', { replace: true });
-  }, [user, userRole, isLoading, navigate]);
+    // Signed-in accounts follow the account type stored on their account, so
+    // this two-option screen is only for brand new visitors.
+    fetchAccountState()
+      .then((state) => {
+        const landing = accountLandingPath(state);
+        if (landing !== '/select-role') navigate(landing, { replace: true });
+      })
+      .catch(() => undefined);
+  }, [user, isLoading, navigate]);
 
   const choose = (role: OnboardingRole) => {
     setSelected(role);
