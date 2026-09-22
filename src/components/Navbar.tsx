@@ -180,7 +180,7 @@ const Navbar = () => {
                     <>
                       <DropdownMenuItem onClick={() => navigate(pendingSetupPath)}>
                         {pendingRole === 'freelancer' ? <Settings className="mr-2 h-4 w-4" /> : <User className="mr-2 h-4 w-4" />}
-                        {pendingRole ? `Complete ${pendingRole === 'freelancer' ? 'Freelancer' : 'Buyer'} setup` : 'Choose account type'}
+                        {setupLabel}
                       </DropdownMenuItem>
                     </>
                   ) : (
@@ -259,7 +259,7 @@ const Navbar = () => {
                 )}
                 {isNormal ? (
                   <Link to={pendingSetupPath} className="block font-semibold text-primary" onClick={() => setIsMenuOpen(false)}>
-                    {pendingRole ? `Complete ${pendingRole === 'freelancer' ? 'Freelancer' : 'Buyer'} setup` : 'Choose account type'}
+                    {setupLabel}
                   </Link>
                 ) : (
                   <>
