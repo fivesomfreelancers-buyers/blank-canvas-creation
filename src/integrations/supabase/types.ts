@@ -1393,6 +1393,7 @@ export type Database = {
           last_seen: string | null
           location: string | null
           member_since: string | null
+          onboarding_role: Database["public"]["Enums"]["app_role"] | null
           preferred_language: string
           professional_title: string | null
           profile_image_url: string | null
@@ -1412,6 +1413,7 @@ export type Database = {
           last_seen?: string | null
           location?: string | null
           member_since?: string | null
+          onboarding_role?: Database["public"]["Enums"]["app_role"] | null
           preferred_language?: string
           professional_title?: string | null
           profile_image_url?: string | null
@@ -1431,6 +1433,7 @@ export type Database = {
           last_seen?: string | null
           location?: string | null
           member_since?: string | null
+          onboarding_role?: Database["public"]["Enums"]["app_role"] | null
           preferred_language?: string
           professional_title?: string | null
           profile_image_url?: string | null
@@ -2353,6 +2356,10 @@ export type Database = {
           vip_expires_at: string
           vip_tier: string
         }[]
+      }
+      set_onboarding_role: {
+        Args: { _role: Database["public"]["Enums"]["app_role"] }
+        Returns: Database["public"]["Enums"]["app_role"]
       }
       shares_order_with_freelancer: {
         Args: { _freelancer_id: string; _viewer: string }
