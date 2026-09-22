@@ -2351,8 +2351,6 @@ export type Database = {
         Args: { _freelancer_id: string; _viewer: string }
         Returns: boolean
       }
-      show_limit: { Args: never; Returns: number }
-      show_trgm: { Args: { "": string }; Returns: string[] }
       slugify: { Args: { _txt: string }; Returns: string }
       storage_ref_from_url: { Args: { _url: string }; Returns: Json }
       submit_blue_tick_application: {
