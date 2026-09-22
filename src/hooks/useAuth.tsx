@@ -26,6 +26,13 @@ interface AuthContextType {
   session: Session | null;
   userRole: UserRole;
   isNormalUser: boolean;
+  /**
+   * True only when the identity behind this session is confirmed — email
+   * accounts after clicking the verification link, Google accounts because the
+   * provider hands over a verified address. This is a UI signal only: the
+   * database enforces the same rule on every role/gig/order write.
+   */
+  emailVerified: boolean;
   isLoading: boolean;
   refreshRole: () => Promise<void>;
   signUp: (email: string, password: string, fullName: string, role: 'freelancer' | 'buyer', location?: string) => Promise<{ error: Error | null }>;
@@ -264,6 +271,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       session,
       userRole,
       isNormalUser: !!user && userRole === 'user',
+      emailVerified: !!user && (!!(user as any).email_confirmed_at || !!(user as any).confirmed_at),
       isLoading,
       refreshRole,
       signUp,
