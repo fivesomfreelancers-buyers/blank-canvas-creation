@@ -22,20 +22,15 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { toast } = useToast();
-  const { user, userRole, emailVerified, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (authLoading || emailLoading || googleLoading || !user) return;
-    if (userRole === 'freelancer') navigate('/freelancer/dashboard', { replace: true });
-    else if (userRole === 'buyer') navigate('/buyer/dashboard', { replace: true });
-    else if (!emailVerified) navigate('/verify-email', { replace: true });
-    else {
-      getSavedOnboardingRole(user.id)
-        .then((pendingRole) => navigate(pendingRole ? `/register/${pendingRole}` : '/select-role', { replace: true }))
-        .catch(() => navigate('/select-role', { replace: true }));
-    }
-  }, [user, userRole, emailVerified, authLoading, emailLoading, googleLoading, navigate]);
+    fetchAccountState()
+      .then((state) => navigate(accountLandingPath(state), { replace: true }))
+      .catch(() => undefined);
+  }, [user, authLoading, emailLoading, googleLoading, navigate]);
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
