@@ -211,19 +211,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return { error };
       }
 
-      if (data?.user) {
-        await (supabase as any).from('user_roles').upsert(
-          { user_id: data.user.id, role },
-          { onConflict: 'user_id,role' }
-        );
-        await (supabase as any).from('profiles').update({ role }).eq('id', data.user.id);
-
-        if (role === 'freelancer') {
-          await supabase.from('freelancers').upsert({ user_id: data.user.id } as any, { onConflict: 'user_id' });
-        } else {
-          await supabase.from('buyers').upsert({ user_id: data.user.id } as any, { onConflict: 'user_id' });
-        }
-        setUserRole(role);
+      // A signup creates only a neutral member. Buyer/freelancer access is
+      // granted after email verification and required onboarding completion.
+      // Never try to write the selected role while confirmation is pending.
+      if (data?.session?.user) {
+        await ensureNormalUserRole(data.session.user.id);
+        setUserRole('user');
       }
 
       return { error: null };
