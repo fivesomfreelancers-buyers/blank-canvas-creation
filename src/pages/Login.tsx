@@ -88,7 +88,7 @@ const Login = () => {
       return;
     }
     clearAuthFailures('login', email);
-    await routeAfterLogin(data.user.id, Boolean(data.user.email_confirmed_at));
+    await routeAfterLogin();
     setEmailLoading(false);
   };
 
