@@ -150,7 +150,7 @@ const Navbar = () => {
                 </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="relative flex h-11 w-11 items-center justify-center focus:outline-none" aria-label={pendingRole ? `Profile setup incomplete. Complete ${pendingRole} setup.` : 'Open profile menu'}>
+                    <button className="relative flex h-11 w-11 items-center justify-center focus:outline-none" aria-label={pendingRole ? "Profile setup incomplete. Finish your profile." : "Open profile menu"}>
                       {pendingRole && (
                         <svg className="pointer-events-none absolute inset-0 h-11 w-11 -rotate-90 text-primary" viewBox="0 0 44 44" aria-hidden="true">
                           <circle cx="22" cy="22" r="19" fill="none" stroke="currentColor" strokeOpacity="0.2" strokeWidth="3" />
