@@ -39,17 +39,26 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoReady, setVideoReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [clipIndex, setClipIndex] = useState(0);
+  const clip = HERO_CLIPS[clipIndex];
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
       setReducedMotion(true);
-      return;
     }
-    videoRef.current?.play().catch(() => {
+  }, []);
+
+  // Load and play whichever clip is current; on the first one this is the autoplay start.
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el || reducedMotion) return;
+    setVideoReady(false);
+    el.load();
+    el.play().catch(() => {
       /* autoplay blocked — the still image stays visible */
     });
-  }, []);
+  }, [clipIndex, reducedMotion]);
 
   // Rotating example service names (the 9 official categories) shown in the search box.
   const examples = CATEGORIES.map((c) => c.name);
