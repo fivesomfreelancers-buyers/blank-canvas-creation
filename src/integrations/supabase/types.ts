@@ -2169,6 +2169,20 @@ export type Database = {
         }
         Returns: Json
       }
+      complete_role_onboarding: {
+        Args: {
+          _bio?: string
+          _country: string
+          _full_name: string
+          _industry?: string
+          _languages?: string[]
+          _primary_skill?: string
+          _professional_title?: string
+          _profile_image_url?: string
+          _role: string
+        }
+        Returns: Json
+      }
       delete_dispute_message: { Args: { _message_id: string }; Returns: Json }
       delete_gig: { Args: { _gig_id: string }; Returns: Json }
       delete_message: { Args: { _message_id: string }; Returns: Json }
