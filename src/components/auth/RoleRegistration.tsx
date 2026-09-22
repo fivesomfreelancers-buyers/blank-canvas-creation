@@ -38,7 +38,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, userRole, emailVerified, isLoading: authLoading, refreshRole } = useAuth();
-  const { state: accountState } = useAccountState();
+  const { state: accountState, refresh: refreshAccountState } = useAccountState();
   const [googleLoading, setGoogleLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
