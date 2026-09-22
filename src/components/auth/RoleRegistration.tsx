@@ -339,7 +339,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
       });
       if (error) throw error;
       if (data.session?.user) {
-        await completeProfile();
+        await completeProfile(data.session.user.id);
       } else {
         await supabase.functions.invoke('send-verification-email', {
           body: { email: email.trim(), redirect_to: new URL('/auth/callback', window.location.origin).toString() },
@@ -348,7 +348,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
       }
     } catch (error) {
       toast({
-        title: 'Could not create your account',
+        title: user ? 'Could not finish your setup' : 'Could not create your account',
         description: error instanceof Error ? error.message : 'Please review your information and try again.',
         variant: 'destructive',
       });
