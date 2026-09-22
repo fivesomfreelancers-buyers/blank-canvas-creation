@@ -8,11 +8,12 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { HOME_FAQ } from '@/lib/seo/homeFaq';
+import ScrollReveal from '@/components/home/ScrollReveal';
 
 const HomeFAQ: React.FC = () => (
-  <section id="faq" aria-labelledby="faq-heading" className="py-16 px-4 sm:px-6 lg:px-8 bg-muted/30">
+  <section id="faq" aria-labelledby="faq-heading" className="home-story-section px-4 sm:px-6 lg:px-8 bg-muted/30">
     <div className="max-w-3xl mx-auto">
-      <div className="text-center mb-10">
+      <ScrollReveal className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
           <HelpCircle className="w-3.5 h-3.5" />
           FAQ
@@ -23,7 +24,7 @@ const HomeFAQ: React.FC = () => (
         <p className="text-muted-foreground">
           Everything about how FIVESOM works for buyers and freelancers.
         </p>
-      </div>
+      </ScrollReveal>
 
       <Accordion type="single" collapsible className="space-y-3">
         {HOME_FAQ.map((item, i) => (

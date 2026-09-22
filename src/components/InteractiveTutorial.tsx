@@ -4,6 +4,7 @@ import { verifyAccountTutorialMp4 as verifyAccountVideo } from '@/lib/mediaUrls'
 import { createGigTutorialMp4 as createGigVideo } from '@/lib/mediaUrls';
 import { withdrawTutorialMp4 as withdrawVideo } from '@/lib/mediaUrls';
 import SmartVideo from '@/components/media/SmartVideo';
+import ScrollReveal from '@/components/home/ScrollReveal';
 
 
 interface TutorialOption {
@@ -94,16 +95,17 @@ const InteractiveTutorial = () => {
   const activeTutorial = tutorials.find(t => t.id === activeTab) || tutorials[0];
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-muted/30 to-muted/10">
+    <section aria-labelledby="tutorial-heading" className="home-story-section px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-muted/30 to-muted/10">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+        <ScrollReveal className="text-center mb-12">
+          <span className="home-kicker mx-auto">Practical guides</span>
+          <h2 id="tutorial-heading" className="home-story-title">
             Master FIVESOM in Minutes
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Follow our step-by-step tutorials to quickly understand how each feature works
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* Tab Navigation */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
@@ -128,7 +130,7 @@ const InteractiveTutorial = () => {
         </div>
 
         {/* Active Tutorial Content */}
-        <div className="grid lg:grid-cols-2 gap-12 items-center animate-fade-in">
+        <ScrollReveal from="depth" className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Video Section */}
           <div className="relative">
             <div className="relative">
@@ -198,7 +200,7 @@ const InteractiveTutorial = () => {
               </button>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

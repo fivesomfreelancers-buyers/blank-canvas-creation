@@ -4,6 +4,7 @@ import { ArrowRight, MapPin, Star, PackageCheck } from 'lucide-react';
 import type { SearchGigResult } from '@/hooks/useGigSearch';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import BlueTickBadge from '@/components/BlueTickBadge';
+import ScrollReveal from './ScrollReveal';
 
 interface Props {
   gigs: SearchGigResult[];
@@ -63,17 +64,18 @@ const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
   const track = [...freelancers, ...freelancers];
 
   return (
-    <section aria-labelledby="freelancers-heading" className="py-16 sm:py-20">
+    <section aria-labelledby="freelancers-heading" className="home-story-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mb-12">
-          <h2 id="freelancers-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
+        <ScrollReveal className="max-w-3xl mb-12" from="left">
+          <span className="home-kicker"><Star className="h-3.5 w-3.5" aria-hidden /> Live marketplace talent</span>
+          <h2 id="freelancers-heading" className="home-story-title">
             Freelancers selling on FIVESOM
           </h2>
           <p className="text-muted-foreground text-base sm:text-lg">
             Every profile below belongs to a freelancer with live services on the platform. Open a
             profile to see their skills, portfolio, packages and reviews before you order.
           </p>
-        </div>
+        </ScrollReveal>
 
       </div>
 
@@ -89,7 +91,7 @@ const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
             <li key={`${f.id}-${idx}`} className="w-[280px] sm:w-[320px] shrink-0" aria-hidden={idx >= freelancers.length}>
               <Link
                 to={f.username ? `/freelancer/${f.username}` : `/profile/${f.id}`}
-                className="group h-full flex flex-col rounded-2xl border border-border bg-card p-6 hover:border-primary/50 hover:shadow-lg transition-all"
+                className="group h-full flex flex-col rounded-xl border border-border bg-card/95 p-6 hover:border-primary/50 hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
               >
                 <div className="flex items-center gap-4 mb-4">
                   {f.avatar ? (
