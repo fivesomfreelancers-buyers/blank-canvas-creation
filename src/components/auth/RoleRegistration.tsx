@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, BriefcaseBusiness, Eye, EyeOff, Loader2, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BriefcaseBusiness, CheckCircle2, Circle, Eye, EyeOff, Loader2, ShoppingBag, UserRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -11,7 +11,7 @@ import AuthShell from '@/components/auth/AuthShell';
 import GoogleIcon from '@/components/auth/GoogleIcon';
 import { CATEGORIES } from '@/lib/categories';
 import { readOnboardingDraft, saveOnboardingDraft, clearOnboardingDraft, type OnboardingRole } from '@/lib/onboardingDraft';
-import { getSavedOnboardingRole, saveOnboardingRole } from '@/lib/onboardingRole';
+import { saveOnboardingRole } from '@/lib/onboardingRole';
 import { upgradeToRole } from '@/lib/roleUpgrade';
 import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 import { supabase } from '@/integrations/supabase/client';
