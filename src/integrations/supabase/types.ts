@@ -2250,6 +2250,13 @@ export type Database = {
         Args: { _order_id: string }
         Returns: boolean
       }
+      platform_stats: {
+        Args: never
+        Returns: {
+          active_gigs: number
+          freelancers: number
+        }[]
+      }
       publish_news: {
         Args: { _attachment_url?: string; _audience?: string; _body: string }
         Returns: Json
