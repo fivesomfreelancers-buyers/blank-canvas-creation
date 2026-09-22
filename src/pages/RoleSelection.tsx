@@ -16,6 +16,7 @@ import {
 import Navbar from '@/components/Navbar';
 import SEO from '@/components/SEO';
 import { useAuth } from '@/hooks/useAuth';
+import { getSavedOnboardingRole } from '@/lib/onboardingRole';
 
 type Role = 'freelancer' | 'buyer';
 
@@ -96,7 +97,13 @@ const RoleSelection = () => {
     // Existing buyers/freelancers keep their role and go straight to work.
     if (userRole === 'freelancer' || userRole === 'buyer') {
       navigate(userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard', { replace: true });
+      return;
     }
+    getSavedOnboardingRole(user.id)
+      .then((pendingRole) => {
+        if (pendingRole) navigate(`/register/${pendingRole}`, { replace: true });
+      })
+      .catch(() => undefined);
   }, [user, userRole, emailVerified, authLoading, navigate]);
 
   const handleRoleSelect = (role: Role) => {

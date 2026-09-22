@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ensureNormalUserRole } from '@/lib/roleUpgrade';
 import { readOnboardingDraft } from '@/lib/onboardingDraft';
+import { getSavedOnboardingRole } from '@/lib/onboardingRole';
 
 /**
  * Google/OAuth landing page.
@@ -153,17 +154,19 @@ const AuthCallback = () => {
         }
 
         const verified = Boolean((user as any).email_confirmed_at || (user as any).confirmed_at);
-        const pending = readOnboardingDraft();
+        const localPending = readOnboardingDraft();
+        const savedRole = await getSavedOnboardingRole(user.id).catch(() => null);
+        const pendingRole = savedRole ?? localPending?.role ?? null;
         toast({
           title: 'Welcome to Fivesom!',
           description: verified
-            ? pending
-              ? `Finish setting up your ${pending.role} account.`
+            ? pendingRole
+              ? `Finish setting up your ${pendingRole} account.`
               : 'Choose how you want to use Fivesom.'
             : 'Please confirm your email address to continue.',
         });
         navigate(
-          verified && pending ? `/register/${pending.role}` : verified ? '/select-role' : '/verify-email',
+          verified && pendingRole ? `/register/${pendingRole}` : verified ? '/select-role' : '/verify-email',
           { replace: true },
         );
       } catch (err: any) {

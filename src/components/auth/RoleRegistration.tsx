@@ -11,7 +11,7 @@ import AuthShell from '@/components/auth/AuthShell';
 import GoogleIcon from '@/components/auth/GoogleIcon';
 import { CATEGORIES } from '@/lib/categories';
 import { readOnboardingDraft, saveOnboardingDraft, clearOnboardingDraft, type OnboardingRole } from '@/lib/onboardingDraft';
-import { clearOnboardingAbandoned, enforceAbandonedOnboarding, markOnboardingAbandoned } from '@/lib/onboardingAbandon';
+import { getSavedOnboardingRole, saveOnboardingRole } from '@/lib/onboardingRole';
 import { upgradeToRole } from '@/lib/roleUpgrade';
 import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 import { supabase } from '@/integrations/supabase/client';
@@ -93,28 +93,28 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
   );
   const onboardingIncomplete = Boolean(user) && userRole !== 'freelancer' && userRole !== 'buyer';
 
-  // If a Google account abandoned this form earlier, drop the session so the
-  // person starts a fresh sign-up instead of resuming a half-made account.
+  // Lock the first selected account type in Postgres. This follows the Google
+  // account across browsers, but does not grant Buyer/Freelancer access.
   useEffect(() => {
     if (authLoading || !user || !onboardingIncomplete) return;
     let active = true;
-    enforceAbandonedOnboarding(user.id).then((signedOut) => {
-      if (signedOut && active) navigate('/register', { replace: true });
-    });
+    (async () => {
+      try {
+        const existing = await getSavedOnboardingRole(user.id);
+        const saved = existing ?? await saveOnboardingRole(role);
+        if (active && saved !== role) navigate(`/register/${saved}`, { replace: true });
+      } catch (error) {
+        if (!active) return;
+        toast({
+          title: 'Could not save your account type',
+          description: error instanceof Error ? error.message : 'Please try again.',
+          variant: 'destructive',
+        });
+        navigate('/select-role', { replace: true });
+      }
+    })();
     return () => { active = false; };
-  }, [authLoading, user, onboardingIncomplete, navigate]);
-
-  // Leaving the page (closing the tab, navigating away) counts as abandoning.
-  useEffect(() => {
-    if (!user || !isGoogleUser || !onboardingIncomplete) return;
-    const onLeave = () => markOnboardingAbandoned(user.id);
-    window.addEventListener('pagehide', onLeave);
-    window.addEventListener('beforeunload', onLeave);
-    return () => {
-      window.removeEventListener('pagehide', onLeave);
-      window.removeEventListener('beforeunload', onLeave);
-    };
-  }, [user, isGoogleUser, onboardingIncomplete]);
+  }, [authLoading, user, onboardingIncomplete, role, navigate, toast]);
 
   const currentDraft = () => ({
     role, firstName, lastName, email, country, professionalTitle, category, bio, industry, termsAccepted,
@@ -174,7 +174,6 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
       if (error) throw error;
     }
     clearOnboardingDraft();
-    clearOnboardingAbandoned();
     await refreshRole();
     navigate(isFreelancer ? '/freelancer/dashboard' : '/buyer/dashboard', { replace: true });
   };

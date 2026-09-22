@@ -31,7 +31,7 @@ const Navbar = () => {
   const { newOrderCount } = useNewOrders();
   const { newDeliveryCount } = useNewDeliveries();
   const { isAdmin } = useAdminRole();
-  const [profile, setProfile] = useState<{ full_name: string; profile_image_url: string | null } | null>(null);
+  const [profile, setProfile] = useState<{ full_name: string; profile_image_url: string | null; onboarding_role: 'buyer' | 'freelancer' | null } | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -41,7 +41,7 @@ const Navbar = () => {
       }
       const { data, error } = await supabase
         .from('profiles')
-        .select('full_name, profile_image_url')
+        .select('full_name, profile_image_url, onboarding_role')
         .eq('id', user.id)
         .maybeSingle();
       
@@ -49,6 +49,7 @@ const Navbar = () => {
       setProfile({
         full_name: data?.full_name?.trim() || meta.full_name || meta.name || user.email || 'User',
         profile_image_url: data?.profile_image_url || meta.avatar_url || meta.picture || null,
+        onboarding_role: data?.onboarding_role === 'buyer' || data?.onboarding_role === 'freelancer' ? data.onboarding_role : null,
       });
       if (error) console.error('Navbar profile fetch error:', error);
     };
@@ -56,6 +57,8 @@ const Navbar = () => {
   }, [user]);
 
   const isNormal = userRole === 'user';
+  const pendingRole = isNormal ? profile?.onboarding_role ?? null : null;
+  const pendingSetupPath = pendingRole ? `/register/${pendingRole}` : '/select-role';
   const dashboardPath = userRole === 'freelancer' ? '/freelancer/dashboard' : '/buyer/dashboard';
   const profilePath = userRole === 'freelancer' ? '/freelancer/profile' : '/buyer/settings';
   const settingsPath = userRole === 'freelancer' ? '/freelancer/settings' : '/buyer/settings';
@@ -168,17 +171,9 @@ const Navbar = () => {
                   <DropdownMenuSeparator />
                   {isNormal ? (
                     <>
-                      <DropdownMenuItem onClick={() => navigate('/explore')}>
-                        <LayoutDashboard className="mr-2 h-4 w-4" />
-                        Explore Services
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate('/become-buyer')}>
-                        <User className="mr-2 h-4 w-4" />
-                        Become a Buyer
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate('/become-freelancer')}>
-                        <Settings className="mr-2 h-4 w-4" />
-                        Become a Freelancer
+                      <DropdownMenuItem onClick={() => navigate(pendingSetupPath)}>
+                        {pendingRole === 'freelancer' ? <Settings className="mr-2 h-4 w-4" /> : <User className="mr-2 h-4 w-4" />}
+                        {pendingRole ? `Complete ${pendingRole === 'freelancer' ? 'Freelancer' : 'Buyer'} setup` : 'Choose account type'}
                       </DropdownMenuItem>
                     </>
                   ) : (
@@ -255,9 +250,17 @@ const Navbar = () => {
                     <Shield className="h-4 w-4" /> Admin Panel
                   </Link>
                 )}
-                <Link to={dashboardPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
-                <Link to={profilePath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>My Profile</Link>
-                <Link to={settingsPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Settings</Link>
+                {isNormal ? (
+                  <Link to={pendingSetupPath} className="block font-semibold text-primary" onClick={() => setIsMenuOpen(false)}>
+                    {pendingRole ? `Complete ${pendingRole === 'freelancer' ? 'Freelancer' : 'Buyer'} setup` : 'Choose account type'}
+                  </Link>
+                ) : (
+                  <>
+                    <Link to={dashboardPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+                    <Link to={profilePath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>My Profile</Link>
+                    <Link to={settingsPath} className="block text-foreground hover:text-primary" onClick={() => setIsMenuOpen(false)}>Settings</Link>
+                  </>
+                )}
                 <button onClick={() => { handleLogout(); setIsMenuOpen(false); }} className="w-full text-left text-destructive">Logout</button>
               </>
             ) : (
