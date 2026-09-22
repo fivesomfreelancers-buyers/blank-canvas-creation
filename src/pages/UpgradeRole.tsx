@@ -43,15 +43,22 @@ const COPY = {
 const UpgradeRole = ({ role }: UpgradeRoleProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user, userRole, isLoading: authLoading, refreshRole } = useAuth();
+  const { user, userRole, emailVerified, isLoading: authLoading, refreshRole } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   const copy = COPY[role];
   const Icon = copy.icon;
 
   useEffect(() => {
-    if (!authLoading && !user) navigate('/login', { replace: true });
-  }, [authLoading, user, navigate]);
+    if (authLoading) return;
+    if (!user) {
+      navigate('/login', { replace: true });
+      return;
+    }
+    // Unconfirmed identity can never take a buyer/freelancer role — the
+    // database refuses the same write, this is only the visible half.
+    if (!emailVerified) navigate('/verify-email', { replace: true });
+  }, [authLoading, user, emailVerified, navigate]);
 
   useEffect(() => {
     if (!authLoading && userRole === role) {

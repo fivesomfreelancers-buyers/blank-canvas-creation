@@ -40,8 +40,8 @@ const Login = () => {
       } else if (userRole === 'buyer') {
         navigate('/buyer/dashboard');
       } else {
-        // Normal user — free to browse the marketplace
-        navigate('/');
+        // No role chosen yet → role selection (or verification first).
+        navigate('/select-role');
       }
     }
   }, [user, userRole, authLoading, navigate, emailLoading, googleLoading]);
@@ -110,7 +110,12 @@ const Login = () => {
 
     if (resolvedRole === 'freelancer') navigate('/freelancer/dashboard', { replace: true });
     else if (resolvedRole === 'buyer') navigate('/buyer/dashboard', { replace: true });
-    else navigate('/', { replace: true });
+    else {
+      // No role yet → the single role-selection screen (verification is checked there).
+      const { data: userRes } = await supabase.auth.getUser();
+      const verified = Boolean((userRes.user as any)?.email_confirmed_at || (userRes.user as any)?.confirmed_at);
+      navigate(verified ? '/select-role' : '/verify-email', { replace: true });
+    }
   };
 
 
