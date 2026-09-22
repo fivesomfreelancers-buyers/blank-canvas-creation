@@ -51,7 +51,7 @@ const Navbar = () => {
       const meta: any = user.user_metadata || {};
       setProfile({
         full_name: data?.full_name?.trim() || meta.full_name || meta.name || user.email || 'User',
-        profile_image_url: data?.profile_image_url || meta.avatar_url || meta.picture || null,
+        profile_image_url: (data?.profile_image_url || '').trim() || meta.avatar_url || meta.picture || null,
         onboarding_role: data?.onboarding_role === 'buyer' || data?.onboarding_role === 'freelancer' ? data.onboarding_role : null,
       });
       if (error) console.error('Navbar profile fetch error:', error);
