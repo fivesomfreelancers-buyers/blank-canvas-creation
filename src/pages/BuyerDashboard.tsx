@@ -123,7 +123,7 @@ const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSect
         <div className="p-4 border-t">
           <div className="flex items-center space-x-3">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={profile?.profile_image_url || undefined} />
+              <AvatarImage src={sidebarPhoto} className="object-cover" />
               <AvatarFallback className="bg-purple-500 text-white text-xs">{initials}</AvatarFallback>
             </Avatar>
             <div>

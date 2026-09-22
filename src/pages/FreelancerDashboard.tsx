@@ -121,8 +121,8 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
       <SidebarFooter>
         <div className="p-4 border-t">
           <div className="flex items-center space-x-3">
-            {userProfile?.profile_image_url ? (
-              <img src={userProfile.profile_image_url} alt="" className="w-8 h-8 rounded-full object-cover" />
+            {sidebarPhoto ? (
+              <img src={sidebarPhoto} alt="" className="w-8 h-8 rounded-full object-cover" />
             ) : (
               <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
                 {userProfile?.full_name?.[0]?.toUpperCase() || 'F'}
