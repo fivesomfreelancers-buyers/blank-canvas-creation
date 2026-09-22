@@ -463,6 +463,56 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
           <div className="space-y-2"><Label htmlFor="industry">Industry or hiring context</Label><Select value={industry} onValueChange={setIndustry} required><SelectTrigger id="industry"><SelectValue placeholder="What best describes you?" /></SelectTrigger><SelectContent>{BUYER_INDUSTRIES.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent></Select></div>
         )}
 
+        <div className="space-y-3 rounded-md border border-border bg-card p-4">
+          <Label className="text-sm font-semibold text-foreground">Profile photo</Label>
+          <div className="flex items-center gap-4">
+            <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-primary">
+              {photoPreview || photoUrl ? (
+                <img src={photoPreview || photoUrl} alt="Your profile photo preview" className="h-full w-full object-cover" />
+              ) : (
+                <UserRound className="h-8 w-8" />
+              )}
+            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button type="button" variant="outline" size="sm" onClick={() => photoInputRef.current?.click()} disabled={uploadingPhoto}>
+                {uploadingPhoto ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+                {photoPreview || photoUrl ? 'Replace photo' : 'Upload photo'}
+              </Button>
+              {(photoPreview || photoUrl) && (
+                <Button type="button" variant="ghost" size="sm" onClick={clearPhoto}><X className="mr-2 h-4 w-4" />Remove</Button>
+              )}
+              <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">A clear photo helps clients trust your profile. JPG or PNG, up to 5MB.</p>
+        </div>
+
+        <div className="space-y-3 rounded-md border border-border bg-card p-4">
+          <Label htmlFor={`${role}-languages`} className="text-sm font-semibold text-foreground">Languages you speak</Label>
+          {languages.length > 0 && (
+            <ul className="flex flex-wrap gap-2">
+              {languages.map((language) => (
+                <li key={language} className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                  {language}
+                  <button type="button" onClick={() => removeLanguage(language)} aria-label={`Remove ${language}`} className="text-primary/70 hover:text-primary">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          <Select value={languagePicker} onValueChange={addLanguage}>
+            <SelectTrigger id={`${role}-languages`}><SelectValue placeholder="Add a language" /></SelectTrigger>
+            <SelectContent>
+              {AVAILABLE_LANGUAGES.filter((item) => !languages.includes(item)).map((item) => (
+                <SelectItem key={item} value={item}>{item}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">Choose every language you can work in. Clients use this to know who they can talk to.</p>
+        </div>
+
+
         <div className="flex items-start gap-3 rounded-md border border-border bg-card p-4">
           <Checkbox id={`${role}-terms`} checked={termsAccepted} onCheckedChange={(checked) => setTermsAccepted(checked === true)} className="mt-0.5" />
           <Label htmlFor={`${role}-terms`} className="text-sm font-normal leading-6 text-muted-foreground">I agree to the <Link to="/legal/terms" className="font-semibold text-primary hover:underline">Terms of Service</Link> and <Link to="/legal/privacy" className="font-semibold text-primary hover:underline">Privacy Policy</Link>.</Label>
