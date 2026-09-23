@@ -103,7 +103,10 @@
   body {
     @apply bg-background text-foreground;
     max-width: 100%;
+    min-width: 320px;
     overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
   }
 
   #root {
@@ -169,6 +172,23 @@
     display: none;
   }
 
+  .safe-top { padding-top: env(safe-area-inset-top); }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+  .mobile-screen { height: calc(100dvh - 4rem); }
+  .touch-target { min-height: 44px; min-width: 44px; }
+  .scroll-fade-x { mask-image: linear-gradient(90deg, transparent, black 1rem, black calc(100% - 1rem), transparent); }
+
+  @media (max-width: 767px) {
+    .mobile-scroll-row {
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: inline mandatory;
+      scrollbar-width: none;
+    }
+    .mobile-scroll-row::-webkit-scrollbar { display: none; }
+    .mobile-scroll-row > * { scroll-snap-align: start; }
+  }
+
   /* Chat text: wrap long words, URLs and continuous characters safely. */
   .chat-text {
     white-space: pre-wrap;
@@ -201,8 +221,8 @@
   }
 
   .home-story-section {
-    padding-top: clamp(5rem, 9vw, 8rem);
-    padding-bottom: clamp(5rem, 9vw, 8rem);
+    padding-top: clamp(3.75rem, 9vw, 8rem);
+    padding-bottom: clamp(3.75rem, 9vw, 8rem);
     position: relative;
   }
 
@@ -448,7 +468,13 @@
   .buyer-stage { min-height: 0; padding-left: 4.25rem; }
   .journey-icon,
   .buyer-stage-icon { position: absolute; top: .2rem; left: .65rem; }
-  .global-network { min-height: 22rem; transform: scale(.86); }
+  .global-network { min-height: 18rem; transform: scale(.72); }
+  .home-story-title { font-size: 2rem; line-height: 1.12; }
+  .home-story-copy { margin-top: 1rem; line-height: 1.65; }
+  .home-kicker { max-width: 100%; font-size: .68rem; }
+  .home-story-link, .home-secondary-link { width: 100%; min-height: 3rem; margin-top: .75rem; }
+  .journey-card, .buyer-stage { border-radius: .5rem; }
+  .network-node { font-size: .68rem; padding: .45rem .6rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

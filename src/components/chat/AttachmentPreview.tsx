@@ -123,7 +123,7 @@ const AttachmentPreview: React.FC<Props> = ({
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 flex-shrink-0"
+            className="h-11 w-11 flex-shrink-0 sm:h-9 sm:w-9"
             disabled={managing}
             aria-label="Attachment options"
           >
@@ -198,7 +198,7 @@ const AttachmentPreview: React.FC<Props> = ({
   if (kind === 'image') {
     return (
       <>
-        <div className="mt-2 inline-block">
+        <div className="mt-2 block max-w-full">
           <div
             className="relative group cursor-zoom-in"
             onClick={() => setZoomOpen(true)}
@@ -208,7 +208,7 @@ const AttachmentPreview: React.FC<Props> = ({
               alt={name}
               onContextMenu={(e) => { if (!allowDownload) e.preventDefault(); }}
               draggable={allowDownload}
-              wrapperClassName="w-[260px] h-[200px] rounded-lg border shadow-sm"
+              wrapperClassName="w-full max-w-[260px] aspect-[4/3] rounded-lg border shadow-sm"
               className={`w-full h-full object-cover block ${!allowDownload ? 'blur-[1px]' : ''}`}
               showRetry
             />
@@ -260,9 +260,9 @@ const AttachmentPreview: React.FC<Props> = ({
 
   if (kind === 'video') {
     return (
-      <div className="mt-2 inline-block">
+      <div className="mt-2 block max-w-full">
         <div className="relative">
-          <div className="w-[320px] h-[220px] rounded-lg border bg-black overflow-hidden">
+          <div className="w-full max-w-[320px] aspect-video rounded-lg border bg-background overflow-hidden">
             <SmartVideo
               src={signedUrl}
               controls
@@ -288,7 +288,7 @@ const AttachmentPreview: React.FC<Props> = ({
           <iframe
             src={`${signedUrl}#toolbar=${allowDownload ? 1 : 0}&navpanes=0`}
             title={name}
-            className="w-full h-[420px] rounded-lg border bg-background"
+            className="w-full h-[55dvh] max-h-[420px] min-h-[260px] rounded-lg border bg-background"
           />
           {!allowDownload && (
             <div className="absolute top-2 right-2 flex items-center gap-1.5 px-2 py-1 rounded-md bg-background/90 border text-xs text-muted-foreground shadow">

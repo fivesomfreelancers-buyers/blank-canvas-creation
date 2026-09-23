@@ -35,7 +35,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
       <div
         key={conv.conversationId}
         onClick={() => onSelect(conv.conversationId, conv.partnerId)}
-        className={`p-4 cursor-pointer hover:bg-accent border-b transition-colors ${
+        className={`min-h-[76px] p-3.5 sm:p-4 cursor-pointer hover:bg-accent active:bg-accent border-b transition-colors ${
           selectedConversationId === conv.conversationId ? 'bg-accent border-l-4 border-l-primary' : ''
         }`}
       >
@@ -57,7 +57,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-start gap-2">
               <p className="font-medium text-foreground text-sm truncate inline-flex items-center gap-1">
                 {conv.partnerName}
                 {conv.partnerVerified && <VerifiedBadge size="sm" />}
@@ -68,7 +68,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
               )}
             </div>
             <p className="text-sm text-muted-foreground truncate">{conv.lastMessage}</p>
-            <p className="text-xs text-muted-foreground">
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
               {conv.lastMessageTime ? new Date(conv.lastMessageTime).toLocaleDateString() : ''}
             </p>
           </div>
@@ -78,8 +78,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
   };
 
   return (
-    <Card className="flex flex-col flex-1 h-full min-h-0 overflow-hidden">
-      <CardHeader className="pb-3">
+    <Card className="flex flex-col flex-1 h-full min-h-0 overflow-hidden rounded-none border-x-0 sm:rounded-lg sm:border-x">
+      <CardHeader className="px-4 pb-3 pt-4">
         <CardTitle>Conversations</CardTitle>
         <div className="relative">
           <Search className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
