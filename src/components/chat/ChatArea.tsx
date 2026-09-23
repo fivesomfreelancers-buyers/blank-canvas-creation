@@ -13,6 +13,8 @@ import AttachmentPreview from './AttachmentPreview';
 import MessageActions from './MessageActions';
 import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import type { ConversationItem, ChatMessage, ConversationKind } from '@/hooks/useConversations';
+import { Conversation, ConversationContent, ConversationEmptyState, ConversationScrollButton } from '@/components/ai-elements/conversation';
+import { Message, MessageContent } from '@/components/ai-elements/message';
 
 const EMOJIS = ['👍', '😊', '✔️', '🔥', '🎉', '💬', '👌', '⭐', '📩', '🚀'];
 
@@ -98,8 +100,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   const removeMessage = deleteMessage || deleteAttachment;
 
   return (
-    <Card className="lg:col-span-2 flex flex-col flex-1 h-full min-h-0 min-w-0 overflow-hidden">
-      <CardHeader className="pb-3 border-b bg-card/60 backdrop-blur supports-[backdrop-filter]:bg-card/50">
+    <Card className="lg:col-span-2 flex flex-col flex-1 h-full min-h-0 min-w-0 overflow-hidden rounded-none border-x-0 sm:rounded-lg sm:border-x">
+      <CardHeader className="shrink-0 border-b bg-card/95 px-3 py-2.5 backdrop-blur supports-[backdrop-filter]:bg-card/85 sm:px-6 sm:py-4">
         <CardTitle>
           {selectedConvo ? (
             <div className="flex items-center space-x-2 sm:space-x-3">
@@ -107,12 +109,12 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 -ml-1 shrink-0"
+                  className="h-11 w-11 -ml-2 shrink-0 rounded-full"
                   onClick={onBack}
-                  title="Back"
-                  aria-label="Back to conversations"
+                  title="Messages"
+                  aria-label="Back to messages"
                 >
-                  <ArrowLeft className="w-5 h-5" />
+                  <ArrowLeft className="w-5 h-5" /><span className="sr-only">Messages</span>
                 </Button>
               )}
               <div className="relative">
@@ -161,12 +163,11 @@ const ChatArea: React.FC<ChatAreaProps> = ({
           </div>
         ) : (
           <>
-            <div className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden space-y-1.5 px-3 sm:px-5 py-4 bg-muted/20">
+            <Conversation className="flex-1 min-h-0 min-w-0 bg-muted/20">
+              <ConversationContent className="gap-1.5 px-3 py-4 sm:px-5">
 
               {messages.length === 0 && !partnerTyping ? (
-                <div className="text-center py-6 text-muted-foreground text-sm">
-                  {isNews ? 'No announcements yet.' : 'No messages yet. Start the conversation!'}
-                </div>
+                <ConversationEmptyState className="min-h-48" title={isNews ? 'No announcements yet' : 'No messages yet'} description={isNews ? 'Official updates will appear here.' : 'Start the conversation when you are ready.'} />
               ) : (
                 messages.map((msg, i) => {
                   const isMine = msg.sender_id === currentUserId;
@@ -188,15 +189,16 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                           </span>
                         </div>
                       )}
-                      <div className={`group flex w-full min-w-0 items-start gap-1 ${isMine ? 'justify-end' : 'justify-start'} ${groupedWithPrev ? 'mt-0.5' : 'mt-2'}`}>
+                      <Message from={isMine ? 'user' : 'assistant'} className={`max-w-full ${groupedWithPrev ? 'mt-0.5' : 'mt-2'}`}>
+                        <div className={`flex w-full min-w-0 items-start gap-1 ${isMine ? 'justify-end' : 'justify-start'}`}>
                         {canDelete && (
                           <MessageActions
                             onDelete={() => removeMessage!(msg.id)}
                             className="mt-1 opacity-70 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100 data-[state=open]:opacity-100"
                           />
                         )}
-                        <div
-                          className={`max-w-[85%] sm:max-w-[70%] min-w-0 px-3.5 py-2 text-sm chat-text shadow-sm rounded-2xl ${
+                        <MessageContent
+                          className={`max-w-[88%] sm:max-w-[70%] min-w-0 gap-0 px-3.5 py-2 text-sm chat-text shadow-sm rounded-2xl ${
                             isMine
                               ? `bg-primary text-primary-foreground ${lastOfGroup ? 'rounded-br-md' : ''}`
                               : `bg-card text-foreground border ${lastOfGroup ? 'rounded-bl-md' : ''}`
@@ -222,8 +224,9 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                                 : <Check className="w-3.5 h-3.5" />
                             )}
                           </span>
+                        </MessageContent>
                         </div>
-                      </div>
+                      </Message>
 
                     </React.Fragment>
                   );
@@ -231,22 +234,24 @@ const ChatArea: React.FC<ChatAreaProps> = ({
               )}
               {partnerTyping && <TypingBubble />}
               <div ref={messagesEndRef} />
-            </div>
+              </ConversationContent>
+              <ConversationScrollButton className="bottom-3 h-10 w-10" />
+            </Conversation>
 
             {isNews ? (
               <div className="border-t text-center text-xs text-muted-foreground py-4 px-4">
                 📣 Fivesom News is one-way. You cannot write here — you will only receive official announcements.
               </div>
             ) : (
-              <div className="relative border-t bg-card px-3 sm:px-4 py-3">
+              <div className="safe-bottom relative shrink-0 border-t bg-card px-2.5 py-2.5 sm:px-4 sm:py-3">
                 {showEmojis && (
-                  <div className="absolute bottom-full left-3 mb-2 bg-popover border rounded-xl p-2 shadow-lg flex flex-wrap gap-1 z-20 max-w-[260px]">
+                  <div className="absolute bottom-full left-2 right-2 mb-2 max-h-40 overflow-y-auto bg-popover border rounded-lg p-2 shadow-lg flex flex-wrap gap-1 z-20 sm:left-3 sm:right-auto sm:max-w-[260px]">
                     {EMOJIS.map(emoji => (
                       <button
                         key={emoji}
                         type="button"
                         onClick={() => setNewMessage(newMessage + emoji)}
-                        className="hover:bg-accent p-1.5 rounded-lg text-xl leading-none"
+                        className="touch-target hover:bg-accent p-2 rounded-lg text-xl leading-none"
                       >
                         {emoji}
                       </button>
@@ -267,7 +272,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-9 w-9 rounded-full shrink-0"
+                      className="h-11 w-11 rounded-full shrink-0"
                       onClick={() => setShowEmojis(!showEmojis)}
                       title="Emoji"
                     >
@@ -289,7 +294,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-9 w-9 rounded-full shrink-0"
+                      className="h-11 w-11 rounded-full shrink-0"
                       onClick={() => fileInputRef.current?.click()}
                       disabled={uploadingImage}
                       title="Attach file"
@@ -303,7 +308,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                     onClick={handleSend}
                     disabled={!newMessage.trim()}
                     size="icon"
-                    className="h-11 w-11 rounded-full shadow-md shrink-0"
+                    className="h-12 w-12 rounded-full shadow-md shrink-0"
                     title="Send"
                   >
                     <Send className="w-5 h-5" />

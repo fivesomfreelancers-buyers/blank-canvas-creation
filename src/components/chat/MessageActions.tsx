@@ -68,7 +68,7 @@ const MessageActions: React.FC<MessageActionsProps> = ({
             aria-label="Message options"
             title="Message options"
             disabled={busy}
-            className={`h-6 w-6 rounded-full shrink-0 transition-opacity ${
+            className={`h-10 w-10 rounded-full shrink-0 transition-opacity md:h-7 md:w-7 ${
               onPrimary
                 ? 'text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/15'
                 : 'text-muted-foreground hover:text-foreground'

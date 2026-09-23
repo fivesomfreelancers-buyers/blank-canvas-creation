@@ -59,7 +59,7 @@ const NotificationBell: React.FC = () => {
       <DropdownMenuTrigger asChild>
         <button
           aria-label={unreadCount > 0 ? `${unreadCount} unread notifications` : 'Notifications'}
-          className="relative p-2 rounded-full hover:bg-accent transition-colors"
+          className="relative flex h-11 w-11 items-center justify-center rounded-full hover:bg-accent transition-colors"
         >
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
@@ -86,7 +86,7 @@ const NotificationBell: React.FC = () => {
             <button
               key={item.id}
               onClick={() => navigate(item.href)}
-              className={`w-full text-left flex gap-3 px-3 py-2.5 border-b border-border/60 last:border-0 hover:bg-accent transition-colors ${
+              className={`w-full min-h-[68px] text-left flex gap-3 px-3 py-3 border-b border-border/60 last:border-0 hover:bg-accent transition-colors ${
                 item.unread ? 'bg-primary/5' : ''
               }`}
             >
@@ -106,7 +106,7 @@ const NotificationBell: React.FC = () => {
 
         <button
           onClick={() => navigate(inboxBase)}
-          className="w-full py-2.5 text-sm font-semibold text-primary hover:bg-accent transition-colors border-t border-border"
+          className="w-full min-h-11 py-2.5 text-sm font-semibold text-primary hover:bg-accent transition-colors border-t border-border"
         >
           Open inbox
         </button>
