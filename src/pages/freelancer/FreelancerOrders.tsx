@@ -124,7 +124,7 @@ const FreelancerOrders = () => {
                 onClick={() => navigate(`/freelancer/order/${order.id}`)}
               >
                 <CardHeader>
-                  <div className="flex justify-between items-start gap-4">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start">
                     <div className="flex items-start gap-3 min-w-0">
                       <Avatar className="w-11 h-11 shrink-0">
                         <AvatarImage src={order.buyer_avatar || undefined} alt={order.buyer_name || 'Buyer'} className="object-cover" />
@@ -133,12 +133,12 @@ const FreelancerOrders = () => {
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0">
-                        <CardTitle className="text-xl truncate">{order.gigs?.title || 'Order'}</CardTitle>
+                        <CardTitle className="text-lg sm:text-xl line-clamp-2">{order.gigs?.title || 'Order'}</CardTitle>
                         <p className="mt-1 text-muted-foreground truncate">Ordered by: {order.buyer_name || 'Buyer'}</p>
                         <p className="text-sm text-muted-foreground">Order Date: {new Date(order.created_at).toLocaleDateString()}</p>
                       </div>
                     </div>
-                    <div className="text-right shrink-0">
+                    <div className="sm:text-right shrink-0">
                       <div className="text-2xl font-bold text-green-600 mb-2">${Number(order.amount).toFixed(2)}</div>
                       <div className="flex flex-col items-end gap-2">
                         <Badge className={getStatusColor(order.status)}>
@@ -158,14 +158,14 @@ const FreelancerOrders = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
                     <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                       <div className="flex items-center">
                         <Clock className="w-4 h-4 mr-1" />
                         <span className="text-foreground">{order.status === 'completed' ? 'Completed' : order.status}</span>
                       </div>
                     </div>
-                    <div className="flex space-x-2">
+                    <div className="grid grid-cols-1 gap-2 sm:flex [&>button]:min-h-11 sm:[&>button]:min-h-9">
                       <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); navigate(`/freelancer/order/${order.id}`); }}>
                         <Eye className="w-4 h-4 mr-1" />
                         View Details
