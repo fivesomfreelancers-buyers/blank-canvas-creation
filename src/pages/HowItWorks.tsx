@@ -255,14 +255,14 @@ const HowItWorks = () => {
           </div>
 
           <nav aria-label="FIVESOM journey" className="mt-12 overflow-x-auto border-y border-border py-5 no-scrollbar">
-            <ol className="flex min-w-max items-center gap-3">
+            <ol className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:min-w-max lg:items-center">
               {JOURNEY.map((item, index) => (
                 <li key={item} className="flex items-center gap-3">
                   <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">{index + 1}</span>
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">{index + 1}</span>
                     {item}
                   </span>
-                  {index < JOURNEY.length - 1 && <ArrowRight className="h-4 w-4 text-muted-foreground" aria-hidden />}
+                  {index < JOURNEY.length - 1 && <ArrowRight className="hidden h-4 w-4 text-muted-foreground lg:block" aria-hidden />}
                 </li>
               ))}
             </ol>
