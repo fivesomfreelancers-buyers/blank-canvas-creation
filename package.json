@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "predev": "tsx scripts/generate-sitemap.ts",
     "prebuild": "tsx scripts/generate-sitemap.ts && tsx scripts/check-routes.ts",
-    "check:routes": "tsx scripts/generate-sitemap.ts && tsx scripts/check-routes.ts"
+    "check:routes": "tsx scripts/generate-sitemap.ts && tsx scripts/check-routes.ts",
+    "postbuild": "tsx scripts/prerender.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

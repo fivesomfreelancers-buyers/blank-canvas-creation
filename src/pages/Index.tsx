@@ -25,8 +25,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
       <SEO
-        title="FIVESOM — African & Somali Freelancer Marketplace"
-        description="FIVESOM is a freelance marketplace connecting African freelancers with clients worldwide. Hire Somali, Ethiopian, Kenyan and Nigerian freelancers for design, web development, video and writing, or sell your skills — payments held in escrow until you accept the work."
+        title="FIVESOM — African & Somali Freelancer Marketplace | Hire Freelancers Worldwide"
+        description="FIVESOM is an African and Somali freelancer marketplace connecting skilled freelancers with clients worldwide. Hire for design, web development, video and writing — payment is held in escrow until you accept the work."
         canonical="/"
         jsonLd={[organizationSchema, webSiteSchema, serviceSchema, faqPageSchema()]}
       />

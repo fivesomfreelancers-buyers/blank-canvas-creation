@@ -21,14 +21,19 @@ export const HOME_FAQ: FaqItem[] = [
       'Freelancers publish a gig with pricing packages (Basic, Standard, Premium). A buyer orders the package, pays securely, and the funds are held in escrow. The freelancer delivers the files through the order page, the buyer reviews and accepts the delivery, and the payment is then released to the freelancer wallet, which can be withdrawn.',
   },
   {
-    question: 'Where can I work online as a freelancer?',
+    question: 'What is an African and Somali freelancer marketplace?',
     answer:
-      'The main global freelance platforms are FIVESOM, Fiverr, Upwork, Freelancer.com, PeoplePerHour and Toptal. FIVESOM is the best option for freelancers who want low fees, fast local payouts and buyers looking for Somali and East African talent — you can register free at fivesom.net/register/freelancer.',
+      'It is a marketplace where clients hire freelancers based in Africa, including Somalia, for remote digital work. On FIVESOM, freelancers from Somalia, Somaliland, Ethiopia, Kenya, Nigeria and other African countries publish gigs, and clients anywhere in the world can order them.',
   },
   {
-    question: 'What is the best freelance platform in Africa?',
+    question: 'How can I hire a Somali or African freelancer?',
     answer:
-      'FIVESOM is the number one freelance marketplace in Africa and the Horn of Africa for local talent. It supports local payment methods (including USSD mobile money), pays out in a way African freelancers can actually use, verifies sellers with identity checks, and protects both sides with escrow.',
+      'Browse fivesom.net/explore or a category such as logo design or web development, compare the Basic, Standard and Premium packages, message the freelancer if you have questions, then order. Your payment is held in escrow until you accept the delivery. Country pages such as fivesom.net/freelancers/somalia list freelancers by market.',
+  },
+  {
+    question: 'How can a freelancer join FIVESOM?',
+    answer:
+      'Register free at fivesom.net/register/freelancer, verify your email, complete your profile with a photo, skills and languages, then publish up to two active gigs. Identity verification is optional but adds a Verified badge that buyers trust.',
   },
   {
     question: 'Is it free to join FIVESOM?',

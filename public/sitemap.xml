@@ -82,9 +82,19 @@
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/delete-account</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <loc>https://fivesom.net/support</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/support/help-center</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/support/trust-safety</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
   </url>
   <url>
     <loc>https://fivesom.net/freelancers/africa</loc>
@@ -1230,6 +1240,48 @@
     </image:image>
   </url>
   <url>
+    <loc>https://fivesom.net/gig/i-will-provide-fast-and-accurate</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0d27e63e-419a-4825-8ff3-9223046caf47/mufg17dy5blo/i-will-provide-fast-and-accurate.webp</image:loc>
+      <image:title>I will provide fast and accurate</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/waxan-hayaa-maclamiin-waxan-rabaa-mashqur-weynaan-so-bandhigaa-matahay</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/29fa4b67-5d05-4697-ada8-5d2fd16b5181/mufipzlr9qog/waxan-hayaa-maclamiin-waxan-rabaa-mashqur-weynaan-so-bandhig.webp</image:loc>
+      <image:title>Waxan hayaa maclamiin waxan rabaa mashqur weynaan so bandhigaa matahay malgaliye</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/29fa4b67-5d05-4697-ada8-5d2fd16b5181/mufipzlr9qog/waxan-hayaa-maclamiin-waxan-rabaa-mashqur-weynaan-so-bandhig-2.webp</image:loc>
+      <image:title>Waxan hayaa maclamiin waxan rabaa mashqur weynaan so bandhigaa matahay malgaliye - preview 2</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-design-custom-canva-graphics-and-social-media-posts</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c9355fca-b9f1-4a24-90d0-bc9287ecff2c/mufmgr64oh0x/i-will-design-custom-canva-graphics-and-social-media-posts.webp</image:loc>
+      <image:title>I will design custom Canva graphics and social media posts</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c9355fca-b9f1-4a24-90d0-bc9287ecff2c/mufmgr64oh0x/i-will-design-custom-canva-graphics-and-social-media-posts-2.webp</image:loc>
+      <image:title>I will design custom Canva graphics and social media posts - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c9355fca-b9f1-4a24-90d0-bc9287ecff2c/mufmgr64oh0x/i-will-design-custom-canva-graphics-and-social-media-posts-3.webp</image:loc>
+      <image:title>I will design custom Canva graphics and social media posts - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://fivesom.net/freelancer/daadir-cade</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -1240,7 +1292,17 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fivesom.net/freelancer/sakariye-saki</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fivesom.net/freelancer/najiib-hassan</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/safa-abdikarim</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1250,7 +1312,17 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fivesom.net/freelancer/hafsa-hassan-ahmed</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fivesom.net/freelancer/aden-asmar</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/amar-hassen-mohammednur</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1260,12 +1332,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/hafsa-hassan-ahmed</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/amar-hassen-mohammednur</loc>
+    <loc>https://fivesom.net/freelancer/bashka-bashir</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1285,7 +1352,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/sakariye-saki</loc>
+    <loc>https://fivesom.net/freelancer/najiya-yasin</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
