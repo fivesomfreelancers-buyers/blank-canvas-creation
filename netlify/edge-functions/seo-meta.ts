@@ -144,6 +144,7 @@ function rewrite(html: string, meta: Meta): string {
 
   const drop = [
     /<title>[\s\S]*?<\/title>\s*/i,
+    /<link\s+rel="canonical"[^>]*\/>\s*/gi,
     /<meta\s+name="description"[\s\S]*?\/>\s*/i,
     /<meta\s+property="og:title"[\s\S]*?\/>\s*/i,
     /<meta\s+property="og:description"[\s\S]*?\/>\s*/i,
@@ -189,8 +190,8 @@ function rewrite(html: string, meta: Meta): string {
     // A real <img> for crawlers that do not execute JavaScript. React replaces
     // the contents of #root on mount, so visitors never see it.
     out = out.replace(
-      /<div id="root"><\/div>/i,
-      `<div id="root"><img src="${enc(meta.image)}" alt="${enc(meta.imageAlt || meta.title)}" width="1" height="1" style="position:absolute;opacity:0;pointer-events:none" /></div>`,
+      /<div id="root">/i,
+      `<div id="root">`,
     );
   }
   return out;
@@ -215,7 +216,14 @@ export default async function handler(request: Request, context: { next: () => P
   } catch {
     return response;
   }
-  if (!meta) return response;
+  if (!meta) {
+    // Unknown or inactive gig/profile: keep the app (owners can still preview)
+    // but tell crawlers the page does not exist instead of a soft 404.
+    const body = await response.text();
+    const headers = new Headers(response.headers);
+    headers.set("x-robots-tag", "noindex");
+    return new Response(body, { status: 404, headers });
+  }
 
   const html = await response.text();
   return new Response(rewrite(html, meta), {
