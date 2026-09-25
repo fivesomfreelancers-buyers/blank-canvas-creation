@@ -211,7 +211,7 @@ const GigDetails = () => {
   return (
     <div className="min-h-screen bg-background relative" style={vipTheme ? { backgroundImage: vipTheme.pageGlow } : undefined}>
       <SEO
-        title={`${gig.title} | FIVESOM`}
+        title={`${gig.title}${gig.category_slug ? ` | ${prettyCategory(gig.category_slug)}` : ''} | FIVESOM`}
         description={(gig.description || gig.title || '').toString().slice(0, 160)}
         canonical={gigPath(gig)}
         type="product"

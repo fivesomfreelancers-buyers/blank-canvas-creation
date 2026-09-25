@@ -75,14 +75,15 @@ const Explore = () => {
     <div className="min-h-screen transition-colors duration-300 bg-background">
       <SEO
         title="Explore Freelance Services & Gigs | FIVESOM"
-        description="Browse thousands of gigs from verified Somali freelancers. Find design, development, writing, video, marketing services and more on FIVESOM."
+        description="Browse gigs from African and Somali freelancers on FIVESOM. Compare design, development, writing and video services, then order with escrow-protected payment."
         canonical="/explore"
+        noindex={Array.from(searchParams.keys()).length > 0}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
           '@id': `${SITE_URL}/explore#collectionpage`,
           name: 'Explore Freelance Services & Gigs',
-          description: 'Browse gigs from verified Somali freelancers on FIVESOM.',
+          description: 'Browse gigs from African and Somali freelancers on FIVESOM.',
           url: `${SITE_URL}/explore`,
           inLanguage: 'en',
           isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },

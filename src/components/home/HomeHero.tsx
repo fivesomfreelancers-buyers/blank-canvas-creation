@@ -123,8 +123,10 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
           Global freelance marketplace with an African heart
         </div>
 
-        <h1 className="mx-auto mb-6 min-h-[2.4em] max-w-5xl text-4xl font-bold leading-tight text-foreground sm:min-h-[2.3em] sm:text-5xl md:text-6xl">
-          Hire skilled African freelancers.{' '}
+        <h1 className="mx-auto mb-3 max-w-5xl text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl">
+          Hire Skilled African Freelancers
+        </h1>
+        <p aria-hidden="true" className="mx-auto mb-6 min-h-[1.3em] max-w-5xl text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
           <TypingHeadline
             className="text-primary"
             phrases={[
@@ -135,13 +137,13 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
               'Get paid for your skills.',
             ]}
           />
-        </h1>
+        </p>
 
         <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-          FIVESOM is a freelance marketplace connecting African freelancers — from Somalia,
-          Somaliland, Ethiopia, Djibouti, Kenya, Nigeria and beyond — with clients worldwide,
-          across design, web development, video editing, writing, translation and digital
-          marketing. Every order is protected by escrow: your payment is held securely and
+          FIVESOM is an African and Somali freelancer marketplace. It connects freelancers from
+          Somalia and across Africa — Ethiopia, Kenya, Nigeria, Ghana and beyond — with clients
+          worldwide for logo design, graphic design, web and app development, video editing and
+          content writing. Every order is protected by escrow: your payment is held securely and
           released to the freelancer only after you accept the delivered work.
         </p>
 
