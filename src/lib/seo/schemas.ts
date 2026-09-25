@@ -5,12 +5,12 @@ export const organizationSchema = {
   '@type': 'Organization',
   '@id': `${SITE_URL}/#organization`,
   name: 'FIVESOM',
-  alternateName: 'Fivesom Freelance Marketplace',
+  alternateName: ['FIVESOM.net', 'Fivesom', 'FIVESOM — African & Somali Freelancer Marketplace'],
   url: `${SITE_URL}/`,
   logo: `${SITE_URL}/favicon.png`,
   image: `${SITE_URL}/og-image.png`,
   description:
-    'FIVESOM is a global freelance marketplace connecting buyers with verified freelancers, with escrow-protected payments and local mobile-money payouts for African and Somali talent.',
+    'FIVESOM is an African and Somali freelancer marketplace connecting African freelancers with clients worldwide, with escrow-protected orders and local payouts.',
   email: 'fivesomsupport@gmail.com',
   foundingDate: '2025',
   areaServed: ['Worldwide', 'Africa', 'Somalia', 'Horn of Africa'],
@@ -46,11 +46,12 @@ export const webSiteSchema = {
   '@type': 'WebSite',
   '@id': `${SITE_URL}/#website`,
   name: 'FIVESOM',
+  alternateName: ['FIVESOM.net', 'Fivesom'],
   url: `${SITE_URL}/`,
   inLanguage: 'en',
   publisher: { '@id': `${SITE_URL}/#organization` },
   description:
-    'Hire verified freelancers or sell your services on FIVESOM — escrow-protected orders, verified sellers and local payouts.',
+    'FIVESOM — African & Somali Freelancer Marketplace. Hire African freelancers worldwide with escrow-protected orders.',
   potentialAction: {
     '@type': 'SearchAction',
     target: {
