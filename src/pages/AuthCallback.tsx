@@ -6,6 +6,7 @@ import { ensureNormalUserRole } from '@/lib/roleUpgrade';
 import { readOnboardingDraft } from '@/lib/onboardingDraft';
 import { saveOnboardingRole } from '@/lib/onboardingRole';
 import { accountLandingPath, fetchAccountState } from '@/lib/accountState';
+import { takeAuthIntent } from '@/lib/authIntent';
 
 /**
  * Google/OAuth landing page.
@@ -28,6 +29,7 @@ const AuthCallback = () => {
 
   useEffect(() => {
     let cancelled = false;
+    const intent = takeAuthIntent();
 
     const readParams = () => {
       const query = new URLSearchParams(window.location.search);
