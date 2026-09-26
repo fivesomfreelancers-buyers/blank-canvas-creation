@@ -78,6 +78,13 @@ const FreelancerProfile = () => {
             <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Preview how buyers see your profile</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 sm:space-x-3 sm:gap-0">
+            {profile?.username && (
+              <CopyLinkButton
+                url={`/freelancer/${profile.username}`}
+                label="Copy profile link"
+                className="w-full sm:w-auto"
+              />
+            )}
             <Button variant="outline" className="w-full sm:w-auto" onClick={() => setPreviewOpen(true)}>
               <Eye className="w-4 h-4 mr-2" />
               Preview
