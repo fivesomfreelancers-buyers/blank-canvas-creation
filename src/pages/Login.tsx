@@ -25,6 +25,8 @@ const Login = () => {
   const { toast } = useToast();
   const { user, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const noAccount = searchParams.get('error') === 'no_account';
 
   useEffect(() => {
     if (authLoading || emailLoading || googleLoading || !user) return;
