@@ -34,6 +34,7 @@ const Login = () => {
   }, [user, authLoading, emailLoading, googleLoading, navigate, toast]);
 
   const handleGoogleLogin = async () => {
+    setAuthIntent('login');
     setGoogleLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
