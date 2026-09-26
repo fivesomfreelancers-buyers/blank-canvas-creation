@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { authCooldownRemaining, clearAuthFailures, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 import { accountLandingPath, fetchAccountState } from '@/lib/accountState';
+import { setAuthIntent } from '@/lib/authIntent';
 
 const Login = () => {
   const [googleLoading, setGoogleLoading] = useState(false);

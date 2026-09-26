@@ -259,6 +259,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
 
   const handleGoogle = async () => {
     saveOnboardingDraft(currentDraft());
+    setAuthIntent('signup');
     setGoogleLoading(true);
     try {
       const redirectTo = new URL('/auth/callback', window.location.origin).toString();
