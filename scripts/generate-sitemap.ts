@@ -47,7 +47,6 @@ const staticEntries: SitemapEntry[] = [
   { path: "/blog", changefreq: "weekly", priority: "0.8" },
   // /login and /forgot-password are intentionally excluded: they are noindex
   // and/or disallowed in robots.txt, so listing them would be a conflict.
-  { path: "/register", changefreq: "yearly", priority: "0.5" },
   { path: "/register/buyer", changefreq: "yearly", priority: "0.4" },
   { path: "/register/freelancer", changefreq: "yearly", priority: "0.4" },
 
