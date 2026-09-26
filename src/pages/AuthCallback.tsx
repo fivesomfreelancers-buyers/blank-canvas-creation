@@ -132,7 +132,20 @@ const AuthCallback = () => {
           state = await fetchAccountState();
         }
 
-        if (state.onboardingStatus === 'complete' || (state.activeRole && ['admin', 'super_admin', 'founder'].includes(state.activeRole))) {
+        const isAdministrative = !!state.activeRole && ['admin', 'super_admin', 'founder'].includes(state.activeRole);
+        const accountExists = state.onboardingStatus === 'complete' || isAdministrative || !!state.selectedRole;
+
+        // Signing in is only for people who already have a Fivesom account.
+        // A brand-new Google email arriving through the login page is signed out
+        // again and told to sign up first.
+        if (intent === 'login' && !accountExists) {
+          setStatus('No Fivesom account found for this Google email.');
+          await supabase.auth.signOut();
+          navigate('/login?error=no_account', { replace: true });
+          return;
+        }
+
+        if (state.onboardingStatus === 'complete' || isAdministrative) {
           toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
           navigate(accountLandingPath(state), { replace: true });
           return;
