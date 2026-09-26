@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { AlertCircle, ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { authCooldownRemaining, clearAuthFailures, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 import { accountLandingPath, fetchAccountState } from '@/lib/accountState';
+import { setAuthIntent } from '@/lib/authIntent';
 
 const Login = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -24,6 +25,8 @@ const Login = () => {
   const { toast } = useToast();
   const { user, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const noAccount = searchParams.get('error') === 'no_account';
 
   useEffect(() => {
     if (authLoading || emailLoading || googleLoading || !user) return;
@@ -33,6 +36,7 @@ const Login = () => {
   }, [user, authLoading, emailLoading, googleLoading, navigate, toast]);
 
   const handleGoogleLogin = async () => {
+    setAuthIntent('login');
     setGoogleLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -113,6 +117,23 @@ const Login = () => {
           <h1 className="mt-2 font-heading text-3xl font-bold text-foreground sm:text-4xl">Log in to FIVESOM</h1>
           <p className="mt-3 text-muted-foreground">Use Google or your email and password to continue.</p>
         </div>
+
+        {noAccount && (
+          <div role="alert" className="mb-6 rounded-lg border border-destructive/60 bg-destructive/10 p-4">
+            <div className="flex gap-3">
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+              <div>
+                <p className="font-semibold text-destructive">No account found with this Google email</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  You must sign up first before logging in. Please create a Fivesom account to join.
+                </p>
+                <Button asChild className="mt-4 h-11 w-full font-semibold sm:w-auto">
+                  <Link to="/register">Create your Fivesom account<ArrowRight className="ml-2 h-4 w-4" /></Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <Button type="button" variant="outline" className="h-12 w-full bg-card font-semibold" onClick={handleGoogleLogin} disabled={googleLoading || emailLoading}>
           {googleLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <><GoogleIcon /><span className="ml-3">Continue with Google</span></>}

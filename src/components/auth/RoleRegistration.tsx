@@ -11,6 +11,7 @@ import AuthShell from '@/components/auth/AuthShell';
 import GoogleIcon from '@/components/auth/GoogleIcon';
 import { CATEGORIES } from '@/lib/categories';
 import { readOnboardingDraft, saveOnboardingDraft, clearOnboardingDraft, type OnboardingRole } from '@/lib/onboardingDraft';
+import { setAuthIntent } from '@/lib/authIntent';
 import { saveOnboardingRole } from '@/lib/onboardingRole';
 import { compressImage } from '@/lib/imageCompress';
 import { authCooldownRemaining, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
@@ -259,6 +260,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
 
   const handleGoogle = async () => {
     saveOnboardingDraft(currentDraft());
+    setAuthIntent('signup');
     setGoogleLoading(true);
     try {
       const redirectTo = new URL('/auth/callback', window.location.origin).toString();
