@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import MobileFormAssist from "@/components/mobile/MobileFormAssist";
 
 // The homepage stays in the main bundle so the first paint is instant.
 import Index from "./pages/Index";
@@ -105,6 +106,8 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
+
+          <MobileFormAssist />
 
           <BrowserRouter>
             <Suspense fallback={<RouteFallback />}>

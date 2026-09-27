@@ -491,3 +491,34 @@
   .xnet-dot { offset-distance: 55%; }
 }
 
+
+/* ---------------------------------------------------------------
+   Mobile form ergonomics.
+   Phone browsers zoom the page when a focused control renders below
+   16px, so every text control keeps a 16px font and a comfortable
+   tap height on small screens. Pinch-zoom stays available.
+   --------------------------------------------------------------- */
+@media (max-width: 767px) {
+  input,
+  textarea,
+  select,
+  [contenteditable='true'] {
+    font-size: 16px !important;
+    line-height: 1.4;
+  }
+
+  input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  select,
+  button[role='combobox'] {
+    min-height: 44px;
+  }
+
+  textarea { min-height: 96px; }
+
+  /* Dropdown panels and dialogs stay inside the phone width. */
+  [role='dialog'],
+  [role='listbox'],
+  [data-radix-popper-content-wrapper] > * {
+    max-width: calc(100vw - 1.5rem);
+  }
+}
