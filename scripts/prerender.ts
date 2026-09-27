@@ -104,7 +104,10 @@ function render(p: Page): string {
   ].join("\n    ");
   html = html.replace(/<\/head>/i, `    ${head}\n  </head>`);
   if (p.lang && p.lang !== "en") html = html.replace(/<html lang="en">/i, `<html lang="${p.lang}"${p.lang === "ar" ? ' dir="rtl"' : ""}>`);
-  const main = `<div id="root"><div style="max-width:960px;margin:0 auto;padding:24px;line-height:1.6">${siteNav}<main><h1>${e(p.h1)}</h1>${p.body}</main>${footer}</div></div>`;
+  // The crawler copy lives in <noscript>, outside #root. Search engines and
+  // AI crawlers that do not run JavaScript still read the full text, while a
+  // normal visitor never sees it — so a refresh no longer flashes plain text.
+  const main = `<div id="root"></div>\n    <noscript><div style="max-width:960px;margin:0 auto;padding:24px;line-height:1.6">${siteNav}<main><h1>${e(p.h1)}</h1>${p.body}</main>${footer}</div></noscript>`;
   return html.replace(/<div id="root"><\/div>/i, main);
 }
 
