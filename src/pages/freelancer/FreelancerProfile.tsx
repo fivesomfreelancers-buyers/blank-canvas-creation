@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import FreelancerProfileCard from '@/components/profile/FreelancerProfileCard';
 import PortfolioManager from '@/components/profile/PortfolioManager';
 import { FREELANCER_PUBLIC_COLUMNS } from '@/lib/freelancerEarnings';
+import CopyLinkButton from '@/components/common/CopyLinkButton';
 
 const FreelancerProfile = () => {
   const [profile, setProfile] = useState<any>(null);

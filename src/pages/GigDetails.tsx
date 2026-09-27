@@ -630,6 +630,15 @@ const GigDetails = () => {
               </CardContent>
             </Card>
 
+            {/* Share this gig */}
+            <div className="flex justify-center">
+              <CopyLinkButton
+                url={`/gig/${gig.slug || slug}`}
+                label="Copy gig link"
+                className="w-full sm:w-auto"
+              />
+            </div>
+
             {/* Report */}
             <div className="flex justify-center">
               <ReportDialog
