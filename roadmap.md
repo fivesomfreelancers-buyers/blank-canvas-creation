@@ -12,3 +12,7 @@
 ## Existing unresolved verification
 
 - [ ] Authenticated cross-browser onboarding checks remain blocked by external unmanaged authentication
+
+## Completed follow-ups (Sep 27)
+- [x] Copy-link buttons on freelancer profile and gig pages (verified at 390px, no errors)
+- [x] Production build + prerender verified (238 static pages, canonical/meta present)
