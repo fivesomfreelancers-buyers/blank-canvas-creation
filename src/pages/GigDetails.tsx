@@ -27,6 +27,7 @@ import { useTheme } from '@/components/ThemeProvider';
 import { isUuid, gigPath, freelancerPath } from '@/lib/urls';
 import { gigImageAlt } from '@/lib/seo/gigImages';
 import { breadcrumbSchema } from '@/lib/seo/schemas';
+import CopyLinkButton from '@/components/common/CopyLinkButton';
 
 /** "graphics-design" -> "Graphics Design" for schema/breadcrumb labels. */
 const prettyCategory = (slug: string) =>
