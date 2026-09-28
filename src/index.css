@@ -522,3 +522,39 @@
     max-width: calc(100vw - 1.5rem);
   }
 }
+
+/* Keep authentication fields legible in Safari and password-manager autofill. */
+.auth-shell {
+  color-scheme: dark;
+}
+
+.auth-shell input,
+.auth-shell textarea,
+.auth-shell select,
+.auth-shell button[role='combobox'] {
+  color: hsl(var(--foreground));
+  caret-color: hsl(var(--primary));
+}
+
+.auth-shell input::placeholder,
+.auth-shell textarea::placeholder {
+  color: hsl(var(--muted-foreground));
+  opacity: 1;
+}
+
+.auth-shell input:-webkit-autofill,
+.auth-shell input:-webkit-autofill:hover,
+.auth-shell input:-webkit-autofill:focus,
+.auth-shell textarea:-webkit-autofill,
+.auth-shell select:-webkit-autofill {
+  -webkit-text-fill-color: hsl(var(--foreground));
+  caret-color: hsl(var(--primary));
+  -webkit-box-shadow: 0 0 0 1000px hsl(var(--background)) inset;
+  box-shadow: 0 0 0 1000px hsl(var(--background)) inset;
+  border-color: hsl(var(--input));
+  transition: background-color 9999s ease-out 0s;
+}
+
+.auth-shell label {
+  color: hsl(var(--foreground));
+}
