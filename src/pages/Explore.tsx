@@ -204,7 +204,7 @@ const Explore = () => {
               <p className="text-sm text-muted-foreground mt-2">Try adjusting your filters or search query</p>
             </div>
           ) : (
-            <div className="mb-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
               {currentGigs.map(gig => (
                 <GigCard key={gig.id} gig={gig} />
               ))}
