@@ -229,8 +229,12 @@ const GigDetails = () => {
 
           const product: Record<string, unknown> = {
             '@context': 'https://schema.org',
-            '@type': 'Product',
-            '@id': `${gigUrl}#product`,
+            // Gigs are digital freelance services, not physical products, so
+            // they use Service (no shipping/return policy fields apply).
+            '@type': 'Service',
+            '@id': `${gigUrl}#service`,
+            serviceType: gig.category_slug ? prettyCategory(gig.category_slug) : 'Freelance service',
+            areaServed: 'Worldwide',
             name: gig.title,
             url: gigUrl,
             description: (gig.description || '').toString().slice(0, 500),
@@ -245,7 +249,7 @@ const GigDetails = () => {
                 }
               : {}),
             ...(gig.category_slug ? { category: prettyCategory(gig.category_slug) } : {}),
-            ...(gig.freelancerName ? { brand: { '@type': 'Brand', name: gig.freelancerName } } : {}),
+            ...(gig.freelancerName ? { provider: { '@type': 'Person', name: gig.freelancerName } } : {}),
             offers: {
               '@type': 'Offer',
               url: gigUrl,
