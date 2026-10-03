@@ -158,7 +158,7 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
                 id="images"
                 type="file"
                 multiple
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp"
                 onChange={handleImageUpload}
                 className="sr-only"
               />
@@ -169,6 +169,7 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
             </p>
           </div>
         )}
+        {imageError && <p className="text-xs text-destructive mt-2">{imageError}</p>}
       </div>
 
       {/* Gig Video (Optional) */}
