@@ -16,15 +16,16 @@ interface GalleryPublishProps {
 const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExistingMedia = false }: GalleryPublishProps) => {
   const [isPublishing, setIsPublishing] = useState(false);
 
+  const [imageError, setImageError] = useState<string | null>(null);
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const newImages = Array.from(e.target.files);
-      const totalImages = gigData.images.length + newImages.length;
-      
-      if (totalImages <= 3) {
-        updateGigData({ images: [...gigData.images, ...newImages] });
-      }
-    }
+    const files = Array.from(e.target.files || []);
+    e.target.value = '';
+    setImageError(null);
+    const valid = files.filter((f) => /^image\/(jpeg|png|webp)$/.test(f.type) && f.size <= 5 * 1024 * 1024);
+    if (valid.length < files.length) setImageError('Only JPG, PNG or WEBP images up to 5MB are accepted.');
+    const room = 3 - gigData.images.length;
+    if (valid.length > room) setImageError('You can upload up to 3 images.');
+    if (room > 0 && valid.length) updateGigData({ images: [...gigData.images, ...valid.slice(0, room)] });
   };
 
   const [videoError, setVideoError] = useState<string | null>(null);
@@ -103,8 +104,10 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
     }
   };
 
+  const videoNeedsThumb = !!gigData.video && !gigData.videoThumbnail;
   const hasMedia =
-    gigData.images.length > 0 || !!gigData.video || !!gigData.videoThumbnail || hasExistingMedia;
+    !videoNeedsThumb &&
+    (gigData.images.length >= 3 || (!!gigData.video && !!gigData.videoThumbnail) || hasExistingMedia);
   const hasText = !!gigData.title?.trim() && !!gigData.description?.trim();
   const isValid = hasMedia && hasText;
 
@@ -117,8 +120,8 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
 
       {/* Gig Images */}
       <div>
-        <Label className="text-foreground font-medium text-lg">Gig Images (Required, up to 3)</Label>
-        <p className="text-sm text-muted-foreground mb-2">Upload high-quality images that showcase your work. At least one image or a video is required to publish.</p>
+        <Label className="text-foreground font-medium text-lg">Gig Images (Required, 3 images)</Label>
+        <p className="text-sm text-muted-foreground mb-2">Upload high-quality images that showcase your work. At least 3 images or a video (with a thumbnail) are required to publish.</p>
         
         {/* Current Images */}
         {gigData.images.length > 0 && (
@@ -155,7 +158,7 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
                 id="images"
                 type="file"
                 multiple
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp"
                 onChange={handleImageUpload}
                 className="sr-only"
               />
@@ -166,6 +169,7 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
             </p>
           </div>
         )}
+        {imageError && <p className="text-xs text-destructive mt-2">{imageError}</p>}
       </div>
 
       {/* Gig Video (Optional) */}
@@ -313,7 +317,10 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
       {!isValid && (
         <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive">
           {!hasText && <p>Add a gig title and description before publishing.</p>}
-          {!hasMedia && <p>Upload at least one image or a video before publishing.</p>}
+          {videoNeedsThumb && <p>You uploaded a video — a video thumbnail is required.</p>}
+          {!hasMedia && !videoNeedsThumb && (
+            <p>Upload at least 3 images ({gigData.images.length}/3) or a video with its thumbnail before publishing.</p>
+          )}
         </div>
       )}
 

@@ -34,13 +34,12 @@ const GigDescription = ({ gigData, updateGigData, onNext, onPrevious }: GigDescr
     updateGigData({ faqs: updatedFAQs });
   };
 
-  const handleNext = () => {
-    if (gigData.description.length >= 120 && gigData.buyerRequirements) {
-      onNext();
-    }
-  };
+  const reqLen = (gigData.buyerRequirements || '').trim().length;
+  const isValid = gigData.description.trim().length >= 120 && reqLen >= 20;
 
-  const isValid = gigData.description.length >= 120 && gigData.buyerRequirements;
+  const handleNext = () => {
+    if (isValid) onNext();
+  };
 
   return (
     <div className="space-y-8">
@@ -83,6 +82,9 @@ const GigDescription = ({ gigData, updateGigData, onNext, onPrevious }: GigDescr
           className="bg-muted/50 border-border min-h-[80px]"
           placeholder="Please provide your company name, preferred colors, industry, and any existing brand materials. If you have a specific style in mind, please share reference images."
         />
+        <p className={`text-xs mt-1 ${reqLen < 20 ? 'text-destructive' : 'text-green-600'}`}>
+          {reqLen >= 20 ? '✓' : '✗'} Required — minimum 20 characters ({reqLen}/20)
+        </p>
       </div>
 
       {/* FAQ Section */}

@@ -32,9 +32,10 @@ const PricingPackages = ({ gigData, updateGigData, onNext, onPrevious }: Pricing
   };
 
   const addFeature = (packageType: keyof typeof gigData.packages, feature: string) => {
-    if (feature.trim() && gigData.packages[packageType].features.length < 10) {
-      const newFeatures = [...gigData.packages[packageType].features, feature.trim()];
-      updatePackage(packageType, { features: newFeatures });
+    const f = feature.trim();
+    const existing = gigData.packages[packageType].features;
+    if (f && existing.length < 10 && !existing.some((x) => x.toLowerCase() === f.toLowerCase())) {
+      updatePackage(packageType, { features: [...existing, f] });
     }
   };
 
@@ -43,14 +44,34 @@ const PricingPackages = ({ gigData, updateGigData, onNext, onPrevious }: Pricing
     updatePackage(packageType, { features: newFeatures });
   };
 
+  const labels: Record<string, string> = { basic: 'Basic', standard: 'Standard', premium: 'Premium' };
+  const entries = (Object.keys(gigData.packages) as Array<keyof typeof gigData.packages>)
+    .map((k) => [k, gigData.packages[k]] as const)
+    .filter(([, p]) => p.isActive);
+  const errors: string[] = [];
+  if (entries.length === 0) errors.push('Activate at least one package.');
+  entries.forEach(([k, p]) => {
+    const name = labels[k];
+    if (!(Number(p.price) > 0)) errors.push(`${name}: enter a price.`);
+    if (!p.deliveryTime) errors.push(`${name}: choose a delivery time.`);
+    if (!p.revisions) errors.push(`${name}: choose the number of revisions.`);
+    if (p.features.length < 3) errors.push(`${name}: add at least 3 "What's Included" items (${p.features.length}/3).`);
+  });
+  const signature = (f: string[]) => f.map((x) => x.trim().toLowerCase()).sort().join('|');
+  for (let i = 0; i < entries.length; i++) {
+    for (let j = i + 1; j < entries.length; j++) {
+      const [a, pa] = entries[i];
+      const [b, pb] = entries[j];
+      if (pa.features.length && signature(pa.features) === signature(pb.features)) {
+        errors.push(`${labels[a]} and ${labels[b]} have the same "What's Included" list. Each package must offer something different.`);
+      }
+    }
+  }
+  const isValid = errors.length === 0;
+
   const handleNext = () => {
-    const activePackages = Object.values(gigData.packages).filter(pkg => pkg.isActive);
-    const isValid = activePackages.length > 0 && activePackages.every(pkg => pkg.price);
     if (isValid) onNext();
   };
-
-  const activePackages = Object.values(gigData.packages).filter(pkg => pkg.isActive);
-  const isValid = activePackages.length > 0 && activePackages.every(pkg => pkg.price);
 
   return (
     <div className="space-y-8">
@@ -64,6 +85,12 @@ const PricingPackages = ({ gigData, updateGigData, onNext, onPrevious }: Pricing
         <PackageCard packageType="standard" pkg={gigData.packages.standard} title="Standard Package" updatePackage={updatePackage} togglePackage={togglePackage} addFeature={addFeature} removeFeature={removeFeature} />
         <PackageCard packageType="premium" pkg={gigData.packages.premium} title="Premium Package" updatePackage={updatePackage} togglePackage={togglePackage} addFeature={addFeature} removeFeature={removeFeature} />
       </div>
+
+      {!isValid && (
+        <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive space-y-1">
+          {errors.map((e) => <p key={e}>{e}</p>)}
+        </div>
+      )}
 
       <div className="flex justify-between pt-6 border-t border-border">
         <Button onClick={onPrevious} variant="outline" className="flex items-center space-x-2">

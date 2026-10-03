@@ -152,9 +152,13 @@ const CreateGig = () => {
         toast({ title: "Text required", description: "Please add a gig title and description before publishing.", variant: "destructive" });
         return;
       }
-      const hasNewMedia = gigData.images.length > 0 || !!gigData.video || !!gigData.videoThumbnail;
+      if (gigData.video && !gigData.videoThumbnail) {
+        toast({ title: "Thumbnail required", description: "Please upload a thumbnail for your gig video.", variant: "destructive" });
+        return;
+      }
+      const hasNewMedia = gigData.images.length >= 3 || (!!gigData.video && !!gigData.videoThumbnail);
       if (!hasNewMedia && !hasExistingMedia) {
-        toast({ title: "Media required", description: "You must upload at least one image or a video before publishing your gig.", variant: "destructive" });
+        toast({ title: "Media required", description: "Upload at least 3 images or a video with its thumbnail before publishing your gig.", variant: "destructive" });
         return;
       }
 
