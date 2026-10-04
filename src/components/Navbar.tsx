@@ -1,5 +1,23 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Moon, Sun, Menu, X, User, LogOut, Settings, LayoutDashboard, MessageSquare, Shield, ShoppingBag } from 'lucide-react';
+import {
+  ArrowRight,
+  BookOpenText,
+  Building2,
+  CalendarDays,
+  ChevronDown,
+  LogOut,
+  Menu,
+  MessageSquare,
+  Moon,
+  Newspaper,
+  Settings,
+  Shield,
+  ShoppingBag,
+  Sun,
+  User,
+  X,
+  LayoutDashboard,
+} from 'lucide-react';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
@@ -26,6 +44,7 @@ import { useMyPhoto } from '@/hooks/useMyPhoto';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLearnMenuOpen, setIsLearnMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const isDarkMode = theme === 'dark';
   const { user, userRole, signOut } = useAuth();
@@ -74,6 +93,33 @@ const Navbar = () => {
   const settingsPath = userRole === 'freelancer' ? '/freelancer/settings' : '/buyer/settings';
   const messagesPath = userRole === 'freelancer' ? '/freelancer/messages' : userRole === 'buyer' ? '/buyer/messages' : '/inbox';
 
+  const learnLinks = [
+    {
+      title: 'Documentation',
+      description: 'Learn how Fivesom works for buyers and freelancers.',
+      to: '/docs',
+      icon: BookOpenText,
+    },
+    {
+      title: 'Blog',
+      description: 'Read marketplace news, practical guides and stories.',
+      to: '/blog',
+      icon: Newspaper,
+    },
+    {
+      title: 'Events',
+      description: 'Explore the complete Fivesom marketplace journey.',
+      to: '/how-it-works',
+      icon: CalendarDays,
+    },
+    {
+      title: 'About',
+      description: 'Meet the mission and people behind Fivesom.',
+      to: '/about',
+      icon: Building2,
+    },
+  ];
+
   const handleLogout = async () => {
     await signOut();
     navigate('/');
@@ -97,7 +143,52 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-7 text-sm font-medium">
             <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">Home</Link>
             <Link to="/explore" className="text-muted-foreground hover:text-foreground transition-colors">Explore</Link>
-            <Link to="/how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">How It Works</Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="h-10 gap-1.5 px-2 text-sm font-medium text-muted-foreground hover:text-foreground data-[state=open]:bg-accent data-[state=open]:text-foreground"
+                >
+                  How It Works
+                  <ChevronDown className="h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180" aria-hidden />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="center"
+                sideOffset={12}
+                className="w-[min(760px,calc(100vw-2rem))] overflow-hidden rounded-lg border-border bg-popover p-0 shadow-xl"
+              >
+                <div className="grid md:grid-cols-[220px_1fr]">
+                  <div className="border-b border-border bg-muted/40 p-6 md:border-b-0 md:border-r">
+                    <p className="text-base font-semibold text-foreground">Learn about Fivesom</p>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      Find the guidance, stories and information you need.
+                    </p>
+                    <Link
+                      to="/how-it-works"
+                      className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80"
+                    >
+                      See how it works <ArrowRight className="h-4 w-4" aria-hidden />
+                    </Link>
+                  </div>
+                  <div className="grid gap-1 p-3 sm:grid-cols-2 sm:p-4">
+                    {learnLinks.map(({ title, description, to, icon: Icon }) => (
+                      <DropdownMenuItem key={title} asChild className="h-auto cursor-pointer items-start rounded-md p-3 focus:bg-accent">
+                        <Link to={to} className="flex gap-3">
+                          <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                            <Icon className="h-4 w-4" aria-hidden />
+                          </span>
+                          <span>
+                            <span className="block text-sm font-semibold text-foreground">{title}</span>
+                            <span className="mt-1 block text-xs leading-5 text-muted-foreground">{description}</span>
+                          </span>
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -252,7 +343,41 @@ const Navbar = () => {
           <div className="md:hidden py-4 space-y-4">
             <Link to="/" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Home</Link>
             <Link to="/explore" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Explore</Link>
-            <Link to="/how-it-works" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>How It Works</Link>
+            <div className="border-y border-border py-1">
+              <Button
+                variant="ghost"
+                className="h-11 w-full justify-between px-0 text-base font-normal text-foreground hover:bg-transparent hover:text-primary"
+                onClick={() => setIsLearnMenuOpen((open) => !open)}
+                aria-expanded={isLearnMenuOpen}
+                aria-controls="mobile-learn-menu"
+              >
+                How It Works
+                <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${isLearnMenuOpen ? 'rotate-180' : ''}`} aria-hidden />
+              </Button>
+              {isLearnMenuOpen && (
+                <div id="mobile-learn-menu" className="space-y-1 pb-3">
+                  <Link
+                    to="/how-it-works"
+                    onClick={() => { setIsMenuOpen(false); setIsLearnMenuOpen(false); }}
+                    className="flex min-h-12 items-center justify-between rounded-md bg-muted/60 px-3 py-2.5 text-sm font-semibold text-foreground"
+                  >
+                    See how Fivesom works
+                    <ArrowRight className="h-4 w-4 text-primary" aria-hidden />
+                  </Link>
+                  {learnLinks.map(({ title, to, icon: Icon }) => (
+                    <Link
+                      key={title}
+                      to={to}
+                      onClick={() => { setIsMenuOpen(false); setIsLearnMenuOpen(false); }}
+                      className="flex min-h-12 items-center gap-3 rounded-md px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-accent hover:text-primary"
+                    >
+                      <Icon className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+                      {title}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
             <button onClick={toggleTheme} className="flex items-center space-x-2 w-full text-left">
               {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
               <span>Toggle Theme</span>
