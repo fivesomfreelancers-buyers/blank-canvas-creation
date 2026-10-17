@@ -118,7 +118,7 @@ const AdminGigReview = () => {
     setBusyId(gig.id);
     try {
       const { error } = await (supabase as any).rpc('admin_review_gig', {
-        p_gig_id: gig.id, p_decision: 'approve', p_issues: [], p_feedback: null,
+        _gig_id: gig.id, _decision: 'approve', _issues: [], _feedback: null,
       });
       if (error) throw error;
       await confirmPersisted(gig.id, 'approve');
@@ -140,7 +140,7 @@ const AdminGigReview = () => {
     setBusyId(returnTarget.id);
     try {
       const { error } = await (supabase as any).rpc('admin_review_gig', {
-        p_gig_id: returnTarget.id, p_decision: 'changes', p_issues: checkedIssues, p_feedback: feedback.trim(),
+        _gig_id: returnTarget.id, _decision: 'changes', _issues: checkedIssues, _feedback: feedback.trim(),
       });
       if (error) throw error;
       await confirmPersisted(returnTarget.id, 'changes');
