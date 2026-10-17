@@ -7,9 +7,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Search, Package, Eye, FileText, Link2, RefreshCw, Image as ImageIcon, MessageSquare, Paperclip } from 'lucide-react';
+import { Search, Package, Eye, FileText, Link2, RefreshCw, Image as ImageIcon, MessageSquare, Paperclip, AlertTriangle } from 'lucide-react';
 
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
+import { DeadlineCountdown } from '@/components/orders/DeadlineCountdown';
 
 import { safeExternalUrl } from '@/lib/safeUrl';
 
