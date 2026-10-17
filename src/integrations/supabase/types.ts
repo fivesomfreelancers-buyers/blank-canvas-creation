@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.1"
   }
   public: {
     Tables: {
@@ -898,6 +898,54 @@ export type Database = {
           },
         ]
       }
+      gig_review_history: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          feedback: string | null
+          freelancer_user_id: string | null
+          gig_id: string
+          id: string
+          issues: string[]
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          feedback?: string | null
+          freelancer_user_id?: string | null
+          gig_id: string
+          id?: string
+          issues?: string[]
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          feedback?: string | null
+          freelancer_user_id?: string | null
+          gig_id?: string
+          id?: string
+          issues?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gig_review_history_gig_id_fkey"
+            columns: ["gig_id"]
+            isOneToOne: false
+            referencedRelation: "gigs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gig_review_history_gig_id_fkey"
+            columns: ["gig_id"]
+            isOneToOne: false
+            referencedRelation: "public_gig_rating_stats"
+            referencedColumns: ["gig_id"]
+          },
+        ]
+      }
       gig_reviews: {
         Row: {
           buyer_id: string
@@ -963,10 +1011,17 @@ export type Database = {
           id: string
           images: string[] | null
           is_vip: boolean
+          review_deadline: string | null
+          review_feedback: string | null
+          review_issues: string[]
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by: string | null
           slug: string | null
           status: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id: string | null
           subcategory_slug: string | null
+          submitted_at: string | null
           tags: string[] | null
           thumbnail_url: string | null
           title: string
@@ -984,10 +1039,17 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_vip?: boolean
+          review_deadline?: string | null
+          review_feedback?: string | null
+          review_issues?: string[]
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id?: string | null
           subcategory_slug?: string | null
+          submitted_at?: string | null
           tags?: string[] | null
           thumbnail_url?: string | null
           title: string
@@ -1005,10 +1067,17 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_vip?: boolean
+          review_deadline?: string | null
+          review_feedback?: string | null
+          review_issues?: string[]
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["gig_status"] | null
           subcategory_id?: string | null
           subcategory_slug?: string | null
+          submitted_at?: string | null
           tags?: string[] | null
           thumbnail_url?: string | null
           title?: string
@@ -1183,6 +1252,44 @@ export type Database = {
           },
         ]
       }
+      order_delivery_files: {
+        Row: {
+          created_at: string
+          delivery_id: string
+          file_name: string
+          file_size: number | null
+          file_type: string | null
+          file_url: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          delivery_id: string
+          file_name: string
+          file_size?: number | null
+          file_type?: string | null
+          file_url: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          delivery_id?: string
+          file_name?: string
+          file_size?: number | null
+          file_type?: string | null
+          file_url?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_delivery_files_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "order_deliveries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_requirement_files: {
         Row: {
           created_at: string | null
@@ -1262,10 +1369,15 @@ export type Database = {
           buyer_id: string
           buyer_service_fee: number
           created_at: string | null
+          deadline_reminder_sent_at: string | null
+          delivery_deadline: string | null
+          delivery_duration_days: number | null
           freelancer_earnings: number | null
           freelancer_id: string
           gig_id: string | null
           id: string
+          order_started_at: string | null
+          overdue_at: string | null
           package_name: string | null
           payment_method: string | null
           payment_proof_url: string | null
@@ -1282,10 +1394,15 @@ export type Database = {
           buyer_id: string
           buyer_service_fee?: number
           created_at?: string | null
+          deadline_reminder_sent_at?: string | null
+          delivery_deadline?: string | null
+          delivery_duration_days?: number | null
           freelancer_earnings?: number | null
           freelancer_id: string
           gig_id?: string | null
           id?: string
+          order_started_at?: string | null
+          overdue_at?: string | null
           package_name?: string | null
           payment_method?: string | null
           payment_proof_url?: string | null
@@ -1302,10 +1419,15 @@ export type Database = {
           buyer_id?: string
           buyer_service_fee?: number
           created_at?: string | null
+          deadline_reminder_sent_at?: string | null
+          delivery_deadline?: string | null
+          delivery_duration_days?: number | null
           freelancer_earnings?: number | null
           freelancer_id?: string
           gig_id?: string | null
           id?: string
+          order_started_at?: string | null
+          overdue_at?: string | null
           package_name?: string | null
           payment_method?: string | null
           payment_proof_url?: string | null
@@ -2120,6 +2242,24 @@ export type Database = {
         }
         Returns: string
       }
+      admin_overdue_orders: {
+        Args: never
+        Returns: {
+          amount: number
+          buyer_email: string
+          buyer_id: string
+          buyer_name: string
+          delivery_deadline: string
+          freelancer_email: string
+          freelancer_name: string
+          freelancer_user_id: string
+          gig_title: string
+          id: string
+          overdue_at: string
+          package_name: string
+          status: string
+        }[]
+      }
       admin_reject_blue_tick: {
         Args: { _application_id: string; _notes?: string }
         Returns: undefined
@@ -2132,6 +2272,15 @@ export type Database = {
       admin_request_blue_tick_info: {
         Args: { _application_id: string; _reason: string }
         Returns: undefined
+      }
+      admin_review_gig: {
+        Args: {
+          _decision: string
+          _feedback?: string
+          _gig_id: string
+          _issues?: string[]
+        }
+        Returns: string
       }
       admin_revoke_blue_tick: {
         Args: { _reason?: string; _user_id: string }
@@ -2155,6 +2304,15 @@ export type Database = {
       broadcast_news: {
         Args: { _attachment_url: string; _audience: string; _body: string }
         Returns: number
+      }
+      can_view_gig: {
+        Args: {
+          _freelancer_id: string
+          _gig_id: string
+          _review: string
+          _status: Database["public"]["Enums"]["gig_status"]
+        }
+        Returns: boolean
       }
       can_view_profile: {
         Args: { _target: string; _viewer: string }
@@ -2216,6 +2374,8 @@ export type Database = {
         Returns: number
       }
       get_withdrawal_fee_percent: { Args: never; Returns: number }
+      gig_owner_user: { Args: { _freelancer_id: string }; Returns: string }
+      gig_review_bypass: { Args: never; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -2264,9 +2424,17 @@ export type Database = {
         Args: { _audience: string; _user_id: string }
         Returns: boolean
       }
+      notify_gig_owner: {
+        Args: { _body: string; _user_id: string }
+        Returns: undefined
+      }
       order_is_freelancer_visible: {
         Args: { _order_id: string }
         Returns: boolean
+      }
+      order_package_duration_days: {
+        Args: { _gig_id: string; _package_name: string }
+        Returns: number
       }
       platform_stats: {
         Args: never
@@ -2383,6 +2551,7 @@ export type Database = {
         Args: { _application_id: string }
         Returns: undefined
       }
+      submit_gig_for_review: { Args: { _gig_id: string }; Returns: string }
       sync_profile_role: { Args: { _user_id: string }; Returns: undefined }
       touch_last_seen: { Args: never; Returns: undefined }
       user_owns_support_ticket: {
