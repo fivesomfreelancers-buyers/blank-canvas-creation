@@ -27,7 +27,7 @@ export function useAdminBadges() {
     const sb: any = supabase;
     const [
       orders, disputes, reports, reviews,
-      st, bst, fst, withdrawals, verifications, vip, sysconvo, unreadDm,
+      st, bst, fst, withdrawals, verifications, vip, sysconvo, unreadDm, gigReview,
     ] = await Promise.all([
       headCount(sb.from('orders').select('id', { count: 'exact', head: true }).eq('status', 'pending')),
       headCount(sb.from('disputes').select('id', { count: 'exact', head: true }).eq('status', 'open')),
@@ -41,6 +41,7 @@ export function useAdminBadges() {
       headCount(sb.from('vip_memberships').select('id', { count: 'exact', head: true }).eq('payment_status', 'pending')),
       sb.from('system_conversations').select('unread_admin, type'),
       headCount(sb.from('messages').select('id', { count: 'exact', head: true }).eq('is_read', false)),
+      headCount(sb.from('gigs').select('id', { count: 'exact', head: true }).eq('review_status', 'pending_review')),
     ]);
     const rows = (sysconvo.data || []) as Array<{ unread_admin: number; type: string }>;
     const fivesomSupportUnread = rows
@@ -54,6 +55,7 @@ export function useAdminBadges() {
       chats: 0,
 
       fivesom_support: fivesomSupportUnread,
+      gig_review: gigReview,
     });
 
   }, []);
@@ -64,7 +66,7 @@ export function useAdminBadges() {
       'orders', 'disputes', 'user_reports', 'gig_reviews',
       'support_tickets', 'buyer_support_tickets', 'freelancer_support_tickets',
       'withdrawals', 'verification_documents', 'vip_memberships',
-      'system_conversations', 'system_messages', 'messages',
+      'system_conversations', 'system_messages', 'messages', 'gigs',
     ];
     const channel = supabase.channel('admin-badges');
     tables.forEach((t) =>
