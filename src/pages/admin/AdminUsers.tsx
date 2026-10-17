@@ -35,6 +35,9 @@ const AdminUsers = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
+  const [range, setRange] = useState('all');
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
   const [editUser, setEditUser] = useState<UserRow | null>(null);
   const [editScore, setEditScore] = useState(0);
   const [editBio, setEditBio] = useState('');
@@ -166,9 +169,23 @@ const AdminUsers = () => {
     load();
   };
 
+  const inRange = useCallback((u: UserRow) => {
+    if (range === 'all') return true;
+    const t = new Date(u.created_at || u.member_since || 0).getTime();
+    if (range === 'custom') {
+      const f = from ? new Date(from + 'T00:00:00').getTime() : -Infinity;
+      const e = to ? new Date(to + 'T23:59:59').getTime() : Infinity;
+      return t >= f && t <= e;
+    }
+    if (range === '1') { const d = new Date(); d.setHours(0, 0, 0, 0); return t >= d.getTime(); }
+    return t >= Date.now() - Number(range) * 86400000;
+  }, [range, from, to]);
+
+  const ranged = useMemo(() => users.filter(inRange), [users, inRange]);
+
   const filtered = useMemo(() => {
     const s = search.trim().toLowerCase();
-    return users.filter((u) => {
+    return ranged.filter((u) => {
       const matchS = !s
         || (u.full_name || '').toLowerCase().includes(s)
         || (u.username || '').toLowerCase().includes(s)
@@ -176,11 +193,12 @@ const AdminUsers = () => {
       const matchR = roleFilter === 'all' || (u.role || 'user') === roleFilter;
       return matchS && matchR;
     });
-  }, [users, search, roleFilter]);
+  }, [ranged, search, roleFilter]);
 
-  const totalUsers = users.length;
-  const freelancerCount = users.filter((u) => u.role === 'freelancer' || u.freelancer).length;
-  const buyerCount = users.filter((u) => u.role === 'buyer').length;
+  const totalUsers = ranged.length;
+  const freelancerCount = ranged.filter((u) => u.role === 'freelancer' || u.freelancer).length;
+  const buyerCount = ranged.filter((u) => u.role === 'buyer').length;
+  const rangeLabel = range === 'all' ? '' : range === 'custom' ? ' (custom range)' : range === '1' ? ' (today)' : ` (last ${range} days)`;
 
   if (loading) {
     return (
@@ -237,6 +255,24 @@ const AdminUsers = () => {
                 <SelectItem value="admin">Admins</SelectItem>
               </SelectContent>
             </Select>
+            <Select value={range} onValueChange={setRange}>
+              <SelectTrigger className="w-40 h-9"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All time</SelectItem>
+                <SelectItem value="1">Today</SelectItem>
+                <SelectItem value="7">Last 7 days</SelectItem>
+                <SelectItem value="28">Last 28 days</SelectItem>
+                <SelectItem value="60">Last 60 days</SelectItem>
+                <SelectItem value="365">Last 365 days</SelectItem>
+                <SelectItem value="custom">Custom</SelectItem>
+              </SelectContent>
+            </Select>
+            {range === 'custom' && (
+              <>
+                <Input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="h-9 w-40" aria-label="From date" />
+                <Input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="h-9 w-40" aria-label="To date" />
+              </>
+            )}
           </div>
         </CardHeader>
         <CardContent>
