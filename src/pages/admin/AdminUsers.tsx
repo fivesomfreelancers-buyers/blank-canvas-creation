@@ -213,7 +213,7 @@ const AdminUsers = () => {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
-          { label: 'Total Users', value: totalUsers, icon: Users, tone: 'bg-primary/10 text-primary' },
+          { label: range === 'all' ? 'Total Users' : 'New Users' + rangeLabel, value: totalUsers, icon: Users, tone: 'bg-primary/10 text-primary' },
           { label: 'Freelancers', value: freelancerCount, icon: Briefcase, tone: 'bg-green-500/10 text-green-500' },
           { label: 'Buyers', value: buyerCount, icon: ShoppingCart, tone: 'bg-yellow-500/10 text-yellow-500' },
         ].map((c) => (
@@ -234,7 +234,7 @@ const AdminUsers = () => {
       {/* Search & Table */}
       <Card className="border-border">
         <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-2">
-          <CardTitle className="text-base font-semibold">All Users ({filtered.length})</CardTitle>
+          <CardTitle className="text-base font-semibold">{range === 'all' ? 'All Users' : 'New Users' + rangeLabel} ({filtered.length})</CardTitle>
           <div className="flex items-center gap-2 flex-wrap">
             <div className="relative w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
