@@ -129,6 +129,14 @@ const PaymentPage = () => {
   const serviceFee = 1;
   const totalAmount = selectedPackage.price + serviceFee;
 
+  // Estimated deadline: now + the selected package's delivery duration (e.g. "3 days").
+  const deliveryDays = (() => {
+    const match = String(selectedPackage.delivery || '').match(/(\d+)/);
+    return match ? Math.max(1, parseInt(match[1], 10)) : 1;
+  })();
+  const estimatedDeadline = new Date(Date.now() + deliveryDays * 24 * 60 * 60 * 1000)
+    .toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' });
+
   const selectedMobileOption = mobileMoneyOptions.find(m => m.id === selectedMobileMethod);
   const selectedCurrency = selectedMobileOption?.currencies[selectedCurrencyIndex];
 
