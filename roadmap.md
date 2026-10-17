@@ -11,6 +11,8 @@
 
 ## Existing unresolved verification
 
+- [ ] Fix returned-gig editing and resubmission; verify Pending Review and a fresh five-hour deadline
+
 - [ ] Authenticated cross-browser onboarding checks remain blocked by external unmanaged authentication
 
 ## Completed follow-ups (Sep 27)
