@@ -10,6 +10,7 @@ import GalleryPublish from '@/components/gig/GalleryPublish';
 import { supabase } from '@/integrations/supabase/client';
 import { compressImage, compressImages } from '@/lib/imageCompress';
 import { gigImageFileName } from '@/lib/seo/gigImages';
+import { submitSavedGigForReview } from '@/lib/gigSubmission';
 
 export interface GigData {
   title: string;
@@ -190,7 +191,7 @@ const CreateGig = () => {
         const tExt = thumb.name.split('.').pop() || 'jpg';
         const tName = `${mediaFolder}/${gigImageFileName(gigData.title, imageIndex, tExt)}`;
         const { error: tErr } = await supabase.storage.from('gig-images').upload(tName, thumb, { contentType: thumb.type });
-        if (tErr) console.error('Video thumbnail upload error:', tErr);
+        if (tErr) throw tErr;
         else { imageUrls.push(supabase.storage.from('gig-images').getPublicUrl(tName).data.publicUrl); imageIndex += 1; }
       }
 
@@ -199,7 +200,7 @@ const CreateGig = () => {
         const fileExt = imageFile.name.split('.').pop() || 'jpg';
         const fileName = `${mediaFolder}/${gigImageFileName(gigData.title, imageIndex, fileExt)}`;
         const { error: uploadError } = await supabase.storage.from('gig-images').upload(fileName, imageFile, { contentType: imageFile.type });
-        if (uploadError) { console.error('Image upload error:', uploadError); continue; }
+        if (uploadError) throw uploadError;
         const { data: publicUrl } = supabase.storage.from('gig-images').getPublicUrl(fileName);
         imageUrls.push(publicUrl.publicUrl);
         imageIndex += 1;
@@ -212,7 +213,7 @@ const CreateGig = () => {
         const ext = gigData.video.name.split('.').pop();
         const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
         const { error: vErr } = await supabase.storage.from('gig-media').upload(fileName, gigData.video, { contentType: gigData.video.type || 'video/mp4' });
-        if (vErr) { console.error('Video upload error:', vErr); }
+        if (vErr) throw vErr;
         else { videoUrl = supabase.storage.from('gig-media').getPublicUrl(fileName).data.publicUrl; }
       }
 
@@ -222,7 +223,7 @@ const CreateGig = () => {
         const ext = doc.name.split('.').pop();
         const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
         const { error: dErr } = await supabase.storage.from('gig-media').upload(fileName, doc, { contentType: doc.type || 'application/octet-stream' });
-        if (dErr) { console.error('Doc upload error:', dErr); continue; }
+        if (dErr) throw dErr;
         docUrls.push({ url: supabase.storage.from('gig-media').getPublicUrl(fileName).data.publicUrl, name: doc.name });
       }
 
@@ -243,7 +244,6 @@ const CreateGig = () => {
           description: gigData.description || 'No description provided',
           base_price: parseFloat(activePackage.price),
           delivery_time_days: parseInt(activePackage.deliveryTime) || 7,
-          status: 'active',
           tags: gigData.tags,
           buyer_requirements: gigData.buyerRequirements,
           category_slug: gigData.category,
@@ -259,14 +259,17 @@ const CreateGig = () => {
         gigRecord = data;
 
         // Delete old packages and re-insert
-        await supabase.from('gig_packages').delete().eq('gig_id', gigId);
+        const { error: deletePackagesError } = await supabase.from('gig_packages').delete().eq('gig_id', gigId);
+        if (deletePackagesError) throw deletePackagesError;
 
         // Replace gig_media entries when new ones are uploaded
         if (videoUrl) {
-          await supabase.from('gig_media').delete().eq('gig_id', gigId).eq('file_type', 'video');
+          const { error: deleteVideoError } = await supabase.from('gig_media').delete().eq('gig_id', gigId).eq('file_type', 'video');
+          if (deleteVideoError) throw deleteVideoError;
         }
         if (docUrls.length > 0) {
-          await supabase.from('gig_media').delete().eq('gig_id', gigId).eq('file_type', 'document');
+          const { error: deleteDocumentsError } = await supabase.from('gig_media').delete().eq('gig_id', gigId).eq('file_type', 'document');
+          if (deleteDocumentsError) throw deleteDocumentsError;
         }
       } else {
         // Create new gig
@@ -304,7 +307,7 @@ const CreateGig = () => {
 
       if (packageEntries.length > 0) {
         const { error: pkgError } = await supabase.from('gig_packages').insert(packageEntries);
-        if (pkgError) console.error('Error saving packages:', pkgError);
+        if (pkgError) throw pkgError;
       }
 
       // Insert gig media (video + documents) into gig_media table
@@ -313,44 +316,42 @@ const CreateGig = () => {
       for (const d of docUrls) mediaEntries.push({ gig_id: gigRecord.id, file_type: 'document', file_url: d.url });
       if (mediaEntries.length > 0) {
         const { error: mErr } = await supabase.from('gig_media').insert(mediaEntries);
-        if (mErr) console.error('Error saving gig media:', mErr);
+        if (mErr) throw mErr;
       }
 
       // Save FAQs
       if (gigData.faqs.length > 0 && freelancer) {
         // Delete old FAQs for this freelancer then re-insert
         if (isEditMode) {
-          await supabase.from('freelancer_faqs').delete().eq('freelancer_id', freelancer.id);
+          const { error: deleteFaqError } = await supabase.from('freelancer_faqs').delete().eq('freelancer_id', freelancer.id);
+          if (deleteFaqError) throw deleteFaqError;
         }
         const faqEntries = gigData.faqs
           .filter(f => f.question.trim() && f.answer.trim())
           .map(f => ({ freelancer_id: freelancer.id, question: f.question, answer: f.answer }));
         if (faqEntries.length > 0) {
-          await supabase.from('freelancer_faqs').insert(faqEntries);
+          const { error: faqError } = await supabase.from('freelancer_faqs').insert(faqEntries);
+          if (faqError) throw faqError;
         }
       }
 
-      // New gigs go through admin/founder review before they are visible to buyers.
-      if (!isEditMode) {
-        const { error: reviewError } = await (supabase as any).rpc('submit_gig_for_review', { _gig_id: gigRecord.id });
-        if (reviewError) throw reviewError;
-        const { data: saved } = await (supabase as any)
-          .from('gigs').select('review_status, status, review_deadline').eq('id', gigRecord.id).single();
-        if (!saved || saved.review_status !== 'pending_review' || saved.status !== 'draft') {
-          throw new Error('The gig was saved but its review state could not be confirmed. Open My Gigs and press Publish again.');
-        }
-      }
+      // Corrected gigs must resubmit too; never write an active status from this form.
+      const saved = await submitSavedGigForReview(supabase as any, gigRecord.id,
+        !isEditMode || !['approved', 'published'].includes(gigRecord.review_status));
+      const pendingReview = saved.review_status === 'pending_review';
 
       toast({
-        title: isEditMode ? "Gig Updated!" : "Gig Submitted for Review!",
-        description: isEditMode
-          ? "Your gig has been updated."
-          : "Our team will review your gig within 5 hours. You will get an answer — approved or returned with corrections.",
+        title: pendingReview ? "Gig Submitted for Review!" : "Gig Updated!",
+        description: pendingReview
+          ? "Our team will review your gig within 5 hours. You will get an answer — approved or returned with corrections."
+          : "Your gig has been updated.",
       });
       navigate('/freelancer/gigs');
     } catch (error) {
       console.error('Error publishing gig:', error);
-      toast({ title: "Error Publishing Gig", description: "Please try again later.", variant: "destructive" });
+      const message = error && typeof error === 'object' && 'message' in error
+        ? String(error.message) : "Please try submitting again.";
+      toast({ title: "Error Publishing Gig", description: message, variant: "destructive" });
     }
   };
 

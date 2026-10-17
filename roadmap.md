@@ -11,6 +11,9 @@
 
 ## Existing unresolved verification
 
+- [x] Fix returned-gig editing and resubmission; five regression tests verify Pending Review and the five-hour deadline
+- [ ] Verify corrected-gig resubmission through a signed-in freelancer session — blocked by external unmanaged authentication
+
 - [ ] Authenticated cross-browser onboarding checks remain blocked by external unmanaged authentication
 
 ## Completed follow-ups (Sep 27)
