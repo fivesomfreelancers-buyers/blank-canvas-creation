@@ -9,6 +9,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { MessageSquare, Download, Star, RefreshCw, CheckCircle, Clock, User, X, Link2, ArrowLeft, ExternalLink, AlertTriangle, Lock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { DeadlineCountdown } from '@/components/orders/DeadlineCountdown';
 import FeedbackModal from '@/components/feedback/FeedbackModal';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import DisputeChat from '@/components/dispute/DisputeChat';

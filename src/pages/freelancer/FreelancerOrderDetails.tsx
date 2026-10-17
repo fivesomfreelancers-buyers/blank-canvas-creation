@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Clock, MessageSquare, Package, Download, FileText, Image, Video, Link2, ArrowLeft, User, RefreshCw } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { DeadlineCountdown } from '@/components/orders/DeadlineCountdown';
 import AttachmentPreview from '@/components/chat/AttachmentPreview';
 import DisputeChat from '@/components/dispute/DisputeChat';
 import { safeExternalUrl } from '@/lib/safeUrl';
