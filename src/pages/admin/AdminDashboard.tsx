@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard, Users, Trophy, DollarSign, Scale, LogOut, Shield, Sparkles,
   ShieldCheck, Package, MessageSquare, CreditCard, Wallet, Star, FolderTree,
-  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag, Megaphone, Headphones, Newspaper, Crown, BadgeCheck, Briefcase, Globe,
+  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag, Megaphone, Headphones, Newspaper, Crown, BadgeCheck, Briefcase, Globe, Clock,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';

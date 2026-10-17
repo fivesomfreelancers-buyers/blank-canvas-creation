@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard, ShieldCheck, Package, MessageSquare, Headphones, Megaphone,
-  Flag, Trophy, Scale, Crown, LogOut, Bell, Briefcase, Users, Newspaper,
+  Flag, Trophy, Scale, Crown, LogOut, Bell, Briefcase, Users, Newspaper, Clock,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
