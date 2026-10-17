@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { gigPath } from '@/lib/urls';
 import { getGigLimitForVipTier, resolveVipTier } from '@/lib/vipTheme';
 import { deleteGigCompletely, DELETE_GIG_CONFIRM } from '@/lib/deleteGig';
+import { asReviewStatus, formatReviewCountdown, REVIEW_STATUS_CLASS, REVIEW_STATUS_LABEL } from '@/lib/gigReview';
 
 const FreelancerGigs = () => {
   const navigate = useNavigate();
@@ -169,10 +170,37 @@ const FreelancerGigs = () => {
                           </span>
                         </div>
                       </div>
-                      <Badge variant={gig.status === 'active' ? 'default' : 'secondary'} className="w-fit">{gig.status}</Badge>
+                      <div className="flex flex-col items-start sm:items-end gap-1">
+                        <Badge variant={gig.status === 'active' ? 'default' : 'secondary'} className="w-fit">{gig.status}</Badge>
+                        {(() => {
+                          const rs = asReviewStatus(gig.review_status);
+                          if (rs === 'published') return null;
+                          return (
+                            <>
+                              <Badge className={`w-fit ${REVIEW_STATUS_CLASS[rs]}`}>{REVIEW_STATUS_LABEL[rs]}</Badge>
+                              {rs === 'pending_review' && (
+                                <span className="text-xs text-muted-foreground">
+                                  Review within 5 hours{gig.review_deadline ? ` · ${formatReviewCountdown(gig.review_deadline)}` : ''} — hidden from buyers until approved.
+                                </span>
+                              )}
+                            </>
+                          );
+                        })()}
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent className="pt-0">
+                    {asReviewStatus(gig.review_status) === 'changes_required' && gig.review_feedback && (
+                      <div className="mb-3 rounded-md border border-orange-500/30 bg-orange-500/10 p-3 text-sm">
+                        <div className="font-medium text-foreground">Returned for correction — fix these and press Edit to resubmit:</div>
+                        {Array.isArray(gig.review_issues) && gig.review_issues.length > 0 && (
+                          <ul className="list-disc pl-5 mt-1 text-muted-foreground">
+                            {gig.review_issues.map((i: string) => <li key={i}>{i}</li>)}
+                          </ul>
+                        )}
+                        <p className="mt-1 text-foreground">{gig.review_feedback}</p>
+                      </div>
+                    )}
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                       <div className="text-sm text-muted-foreground line-clamp-2">{gig.description}</div>
                       <div className="flex flex-col sm:flex-row gap-2 sm:space-x-2">

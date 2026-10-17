@@ -278,7 +278,7 @@ const CreateGig = () => {
           delivery_time_days: parseInt(activePackage.deliveryTime) || 7,
           images: imageUrls.length > 0 ? imageUrls : null,
           thumbnail_url: thumbnailUrl,
-          status: 'active',
+          status: 'draft',
           tags: gigData.tags,
           buyer_requirements: gigData.buyerRequirements,
           category_slug: gigData.category,
@@ -330,7 +330,23 @@ const CreateGig = () => {
         }
       }
 
-      toast({ title: isEditMode ? "Gig Updated!" : "Gig Published Successfully!", description: isEditMode ? "Your gig has been updated." : "Your gig is now live on the Explore page." });
+      // New gigs go through admin/founder review before they are visible to buyers.
+      if (!isEditMode) {
+        const { error: reviewError } = await (supabase as any).rpc('submit_gig_for_review', { _gig_id: gigRecord.id });
+        if (reviewError) throw reviewError;
+        const { data: saved } = await (supabase as any)
+          .from('gigs').select('review_status, status, review_deadline').eq('id', gigRecord.id).single();
+        if (!saved || saved.review_status !== 'pending_review' || saved.status !== 'draft') {
+          throw new Error('The gig was saved but its review state could not be confirmed. Open My Gigs and press Publish again.');
+        }
+      }
+
+      toast({
+        title: isEditMode ? "Gig Updated!" : "Gig Submitted for Review!",
+        description: isEditMode
+          ? "Your gig has been updated."
+          : "Our team will review your gig within 5 hours. You will get an answer — approved or returned with corrections.",
+      });
       navigate('/freelancer/gigs');
     } catch (error) {
       console.error('Error publishing gig:', error);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard, Users, Trophy, DollarSign, Scale, LogOut, Shield, Sparkles,
   ShieldCheck, Package, MessageSquare, CreditCard, Wallet, Star, FolderTree,
-  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag, Megaphone, Headphones, Newspaper, Crown, BadgeCheck, Briefcase, Globe,
+  LifeBuoy, Bell, Lock, Activity, Settings as SettingsIcon, Flag, Megaphone, Headphones, Newspaper, Crown, BadgeCheck, Briefcase, Globe, Clock,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -37,6 +37,7 @@ import AdminVip from './AdminVip';
 import AdminBlueTick from './AdminBlueTick';
 import AdminSomAdz from './AdminSomAdz';
 import AdminGigs from './AdminGigs';
+import AdminGigReview from './AdminGigReview';
 import AdminAboutTeam from './AdminAboutTeam';
 import AdminBlog from './AdminBlog';
 import AdminSeoChecks from './AdminSeoChecks';
@@ -50,6 +51,7 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
   { label: 'Operations', items: [
     { key: 'users', label: 'Users', icon: Users },
     { key: 'verifications', label: 'Verifications', icon: ShieldCheck },
+    { key: 'gig_review', label: 'Gigs Pending', icon: Clock },
     { key: 'blue_tick', label: 'Blue Tick Requests', icon: BadgeCheck },
     { key: 'gigs', label: 'Gigs', icon: Briefcase },
     { key: 'orders', label: 'Orders', icon: Package },
@@ -122,6 +124,7 @@ const AdminDashboardInner = () => {
       case 'overview': return <AdminOverview />;
       case 'users': return <AdminUsers />;
       case 'verifications': return <AdminVerifications />;
+      case 'gig_review': return <AdminGigReview />;
       case 'blue_tick': return <AdminBlueTick />;
       case 'gigs': return <AdminGigs />;
       case 'orders': return <AdminOrders />;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard, ShieldCheck, Package, MessageSquare, Headphones, Megaphone,
-  Flag, Trophy, Scale, Crown, LogOut, Bell, Briefcase, Users, Newspaper,
+  Flag, Trophy, Scale, Crown, LogOut, Bell, Briefcase, Users, Newspaper, Clock,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -29,18 +29,20 @@ import AdminReports from '@/pages/admin/AdminReports';
 import AdminRanking from '@/pages/admin/AdminRanking';
 import AdminDisputes from '@/pages/admin/AdminDisputes';
 import AdminGigs from '@/pages/admin/AdminGigs';
+import AdminGigReview from '@/pages/admin/AdminGigReview';
 import AdminUsers from '@/pages/admin/AdminUsers';
 import AdminAboutTeam from '@/pages/admin/AdminAboutTeam';
 import AdminBlog from '@/pages/admin/AdminBlog';
 
 type TabKey =
-  | 'overview' | 'verifications' | 'orders' | 'chats'
+  | 'overview' | 'verifications' | 'gig_review' | 'orders' | 'chats'
   | 'fivesom_support' | 'fivesom_news' | 'reports' | 'ranking' | 'disputes'
   | 'gigs' | 'users' | 'about_team' | 'blog';
 
 const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'overview', label: 'Dashboard', icon: LayoutDashboard },
   { key: 'verifications', label: 'Verifications', icon: ShieldCheck, badge: 'verifications' },
+  { key: 'gig_review', label: 'Gigs Pending', icon: Clock, badge: 'gig_review' },
   { key: 'gigs', label: 'Gigs', icon: Briefcase },
   { key: 'users', label: 'Users', icon: Users },
   { key: 'orders', label: 'Orders', icon: Package },
@@ -57,6 +59,7 @@ const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
 const titles: Record<TabKey, string> = {
   overview: 'Founder Dashboard',
   verifications: 'Verifications',
+  gig_review: 'Gigs Pending',
   gigs: 'Gigs Management',
   users: 'Users Management',
   orders: 'Orders',
@@ -106,6 +109,7 @@ const FounderDashboardInner = () => {
     switch (activeTab) {
       case 'overview': return <AdminOverview />;
       case 'verifications': return <AdminVerifications />;
+      case 'gig_review': return <AdminGigReview />;
       case 'gigs': return <AdminGigs />;
       case 'users': return <AdminUsers />;
       case 'orders': return <AdminOrders />;
