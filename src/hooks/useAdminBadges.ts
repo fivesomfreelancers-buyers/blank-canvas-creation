@@ -4,13 +4,14 @@ import { supabase } from '@/integrations/supabase/client';
 export type AdminBadgeKey =
   | 'orders' | 'chats' | 'disputes' | 'reports' | 'reviews'
   | 'support' | 'withdrawals' | 'verifications' | 'vip'
-  | 'fivesom_support';
+  | 'fivesom_support' | 'gig_review';
 
 export type AdminBadges = Record<AdminBadgeKey, number>;
 
 const EMPTY: AdminBadges = {
   orders: 0, chats: 0, disputes: 0, reports: 0, reviews: 0,
   support: 0, withdrawals: 0, verifications: 0, vip: 0, fivesom_support: 0,
+  gig_review: 0,
 };
 
 async function headCount(q: any): Promise<number> {
