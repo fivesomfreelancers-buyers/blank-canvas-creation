@@ -182,6 +182,9 @@ const FreelancerOrderDetails = () => {
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
                   <span>Order Date: {new Date(order.created_at).toLocaleDateString()}</span>
                   <span className="text-xl font-bold text-green-600">${Number(order.amount).toFixed(2)}</span>
+                  {(order.status === 'pending' || order.status === 'in_progress') && (
+                    <DeadlineCountdown deadline={order.delivery_deadline} overdueAt={order.overdue_at} viewer="freelancer" className="w-full" />
+                  )}
                 </div>
               </CardContent>
             </Card>
