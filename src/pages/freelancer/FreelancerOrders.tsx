@@ -136,6 +136,14 @@ const FreelancerOrders = () => {
                         <CardTitle className="text-lg sm:text-xl line-clamp-2">{order.gigs?.title || 'Order'}</CardTitle>
                         <p className="mt-1 text-muted-foreground truncate">Ordered by: {order.buyer_name || 'Buyer'}</p>
                         <p className="text-sm text-muted-foreground">Order Date: {new Date(order.created_at).toLocaleDateString()}</p>
+                        {(order.status === 'pending' || order.status === 'in_progress') && (
+                          <DeadlineCountdown
+                            deadline={order.delivery_deadline}
+                            overdueAt={order.overdue_at}
+                            viewer="freelancer"
+                            className="mt-1"
+                          />
+                        )}
                       </div>
                     </div>
                     <div className="sm:text-right shrink-0">
