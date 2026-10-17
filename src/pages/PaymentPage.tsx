@@ -304,6 +304,20 @@ const PaymentPage = () => {
 
               <Separator />
 
+              {/* Order Delivery Information — estimated deadline from the selected package */}
+              <div className="rounded-lg border border-primary/30 bg-primary/5 p-4 space-y-2">
+                <h4 className="font-semibold text-sm sm:text-base">📦 Order Delivery Information</h4>
+                <div className="text-xs sm:text-sm space-y-1">
+                  <div className="flex justify-between gap-2"><span className="text-muted-foreground">Freelancer</span><span className="font-medium text-right">{gig.freelancer.name}</span></div>
+                  <div className="flex justify-between gap-2"><span className="text-muted-foreground">Selected Package</span><span className="font-medium text-right">{selectedPackage.name}</span></div>
+                  <div className="flex justify-between gap-2"><span className="text-muted-foreground">Delivery Duration</span><span className="font-medium text-right">{selectedPackage.delivery}</span></div>
+                  <div className="flex justify-between gap-2"><span className="text-muted-foreground">Estimated Deadline</span><span className="font-medium text-right">{estimatedDeadline}</span></div>
+                </div>
+                <p className="text-xs text-muted-foreground">Your freelancer is expected to deliver your order by this date and time. The official countdown starts once your payment succeeds.</p>
+              </div>
+
+              <Separator />
+
               <div className="space-y-2">
                 <div className="flex justify-between"><span>Gig Price</span><span>${selectedPackage.price}</span></div>
                 <div className="flex justify-between text-sm text-muted-foreground"><span>Buyer Service Fee</span><span>${serviceFee}</span></div>
