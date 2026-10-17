@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Clock, MessageSquare, Package, Eye } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { DeadlineCountdown } from '@/components/orders/DeadlineCountdown';
 
 const FreelancerOrders = () => {
   const navigate = useNavigate();

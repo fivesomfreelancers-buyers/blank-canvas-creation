@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MessageSquare, Star, CheckCircle, RefreshCw, Eye, PackageCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { DeadlineCountdown } from '@/components/orders/DeadlineCountdown';
 
 const BuyerOrders = () => {
   const navigate = useNavigate();
