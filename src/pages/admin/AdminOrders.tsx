@@ -134,10 +134,53 @@ const AdminOrders = () => {
     return matchS && matchF;
   });
 
+  // Overdue orders: active orders past their delivery deadline. Never auto-cancelled — admin decides.
+  const overdueOrders = orders.filter(
+    (o) =>
+      (o.status === 'pending' || o.status === 'in_progress') &&
+      o.delivery_deadline &&
+      new Date(o.delivery_deadline).getTime() < Date.now()
+  );
+
   if (loading) return <div className="flex justify-center py-16"><div className="animate-spin h-8 w-8 border-b-2 border-primary rounded-full" /></div>;
 
   return (
     <div className="space-y-6">
+      {overdueOrders.length > 0 && (
+        <Card className="border-destructive/50 bg-destructive/5">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-4 w-4" /> Overdue Orders — Requires Review ({overdueOrders.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-xs text-muted-foreground">
+              Orders are never cancelled automatically. Review each case and decide the next step (contact, cancel, or refund through the existing payment flow).
+            </p>
+            {overdueOrders.map((o) => (
+              <div key={o.id} className="flex flex-col gap-3 rounded-lg border border-destructive/30 bg-card p-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0 space-y-1">
+                  <p className="font-medium text-sm truncate">{o.gig_title || 'Order'} · ${Number(o.amount).toFixed(2)}</p>
+                  <p className="text-xs text-muted-foreground">
+                    Buyer: {o.buyer_name || '—'} · Freelancer: {o.seller_name || '—'} · Package: {o.package_name || '—'}
+                  </p>
+                  <DeadlineCountdown deadline={o.delivery_deadline} overdueAt={o.overdue_at} viewer="admin" />
+                </div>
+                <div className="flex flex-wrap gap-2 shrink-0">
+                  <Button variant="outline" size="sm" onClick={() => setViewing(o)}>
+                    <Eye className="h-3.5 w-3.5 mr-1" /> Review
+                  </Button>
+                  {o.seller_user_id && (
+                    <Button variant="outline" size="sm" asChild>
+                      <a href={`/admin/chats`}>Contact freelancer</a>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
           { label: 'Total', value: orders.length },
