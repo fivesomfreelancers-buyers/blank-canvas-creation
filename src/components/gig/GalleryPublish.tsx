@@ -23,7 +23,7 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
     setImageError(null);
     const valid = files.filter((f) => /^image\/(jpeg|png|webp)$/.test(f.type) && f.size <= 5 * 1024 * 1024);
     if (valid.length < files.length) setImageError('Only JPG, PNG or WEBP images up to 5MB are accepted.');
-    const room = 3 - gigData.images.length;
+    const room = 3 - gigData.images.length - (gigData.existingImages?.length || 0);
     if (valid.length > room) setImageError('You can upload up to 3 images.');
     if (room > 0 && valid.length) updateGigData({ images: [...gigData.images, ...valid.slice(0, room)] });
   };
@@ -80,13 +80,17 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
     updateGigData({ images: newImages });
   };
 
+  const removeExistingImage = (index: number) => {
+    updateGigData({ existingImages: (gigData.existingImages || []).filter((_, i) => i !== index) });
+  };
+
   const removeVideo = () => {
-    updateGigData({ video: undefined });
+    updateGigData({ video: undefined, existingVideoUrl: undefined });
     setVideoError(null);
   };
 
   const removeVideoThumbnail = () => {
-    updateGigData({ videoThumbnail: undefined });
+    updateGigData({ videoThumbnail: undefined, existingVideoThumb: undefined });
   };
 
 
@@ -104,10 +108,12 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
     }
   };
 
-  const videoNeedsThumb = !!gigData.video && !gigData.videoThumbnail;
-  const hasMedia =
-    !videoNeedsThumb &&
-    (gigData.images.length >= 3 || (!!gigData.video && !!gigData.videoThumbnail) || hasExistingMedia);
+  const existingImages = gigData.existingImages || [];
+  const totalImages = existingImages.length + gigData.images.length;
+  const anyVideo = !!gigData.video || !!gigData.existingVideoUrl;
+  const thumbSrc = gigData.videoThumbnail ? URL.createObjectURL(gigData.videoThumbnail) : gigData.existingVideoThumb;
+  const videoNeedsThumb = anyVideo && !thumbSrc;
+  const hasMedia = !videoNeedsThumb && (totalImages >= 3 || (anyVideo && !!thumbSrc));
   const hasText = !!gigData.title?.trim() && !!gigData.description?.trim();
   const isValid = hasMedia && hasText;
 
@@ -124,8 +130,17 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
         <p className="text-sm text-muted-foreground mb-2">Upload high-quality images that showcase your work. At least 3 images or a video (with a thumbnail) are required to publish.</p>
         
         {/* Current Images */}
-        {gigData.images.length > 0 && (
+        {totalImages > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            {existingImages.map((url, index) => (
+              <div key={url} className="relative">
+                <img src={url} alt={`Saved gig image ${index + 1}`} className="w-full h-32 object-contain bg-muted rounded-lg border" />
+                <span className="absolute bottom-2 left-2 rounded bg-background/80 px-1.5 py-0.5 text-[10px] text-foreground">Current</span>
+                <Button size="sm" variant="destructive" className="absolute top-2 right-2 h-6 w-6 p-0" onClick={() => removeExistingImage(index)} aria-label="Remove image">
+                  <X className="w-3 h-3" />
+                </Button>
+              </div>
+            ))}
             {gigData.images.map((image, index) => (
               <div key={index} className="relative">
                 <img
@@ -147,7 +162,7 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
         )}
 
         {/* Upload Images */}
-        {gigData.images.length < 3 && (
+        {totalImages < 3 && (
           <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-cyan-400 transition-colors">
             <Image className="mx-auto h-12 w-12 text-muted-foreground mb-2" />
             <label htmlFor="images" className="cursor-pointer">
@@ -165,7 +180,7 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
             </label>
             <p className="text-xs text-muted-foreground mt-1">JPG, PNG up to 5MB each</p>
             <p className="text-xs text-muted-foreground">
-              {gigData.images.length}/3 images uploaded
+              {totalImages}/3 images uploaded
             </p>
           </div>
         )}
@@ -186,6 +201,15 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
               <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg border">
                 <Video className="w-5 h-5 text-muted-foreground shrink-0" />
                 <span className="text-sm truncate flex-1">{gigData.video.name}</span>
+                <Button size="sm" variant="outline" onClick={removeVideo}>
+                  <X className="w-3 h-3" />
+                </Button>
+              </div>
+            ) : gigData.existingVideoUrl ? (
+              <div className="relative">
+                <video src={gigData.existingVideoUrl} poster={gigData.existingVideoThumb} controls preload="metadata" className="w-full h-32 bg-muted rounded-lg border object-contain" />
+                <span className="absolute bottom-2 left-2 rounded bg-background/80 px-1.5 py-0.5 text-[10px] text-foreground">Current video</span>
+                <Button size="sm" variant="destructive" className="absolute top-2 right-2 h-6 w-6 p-0" onClick={removeVideo} aria-label="Remove video">
                 <Button size="sm" variant="outline" onClick={removeVideo}>
                   <X className="w-3 h-3" />
                 </Button>
@@ -211,10 +235,10 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
 
           {/* Video cover image (thumbnail) */}
           <div>
-            {gigData.videoThumbnail ? (
+            {thumbSrc ? (
               <div className="relative">
                 <img
-                  src={URL.createObjectURL(gigData.videoThumbnail)}
+                  src={thumbSrc}
                   alt="Video cover"
                   className="w-full h-32 object-contain bg-muted rounded-lg border"
                 />
@@ -308,8 +332,8 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
           </div>
           <div>
             <p><strong>Active Packages:</strong> {Object.values(gigData.packages).filter(pkg => pkg.isActive).length}</p>
-            <p><strong>Images:</strong> {gigData.images.length}</p>
-            <p><strong>Video:</strong> {gigData.video ? 'Yes' : 'No'}</p>
+            <p><strong>Images:</strong> {totalImages}</p>
+            <p><strong>Video:</strong> {anyVideo ? 'Yes' : 'No'}</p>
           </div>
         </div>
       </div>
@@ -319,7 +343,7 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
           {!hasText && <p>Add a gig title and description before publishing.</p>}
           {videoNeedsThumb && <p>You uploaded a video — a video thumbnail is required.</p>}
           {!hasMedia && !videoNeedsThumb && (
-            <p>Upload at least 3 images ({gigData.images.length}/3) or a video with its thumbnail before publishing.</p>
+            <p>Upload at least 3 images ({totalImages}/3) or a video with its thumbnail before publishing.</p>
           )}
         </div>
       )}
