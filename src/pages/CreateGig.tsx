@@ -29,6 +29,10 @@ export interface GigData {
   video?: File;
   /** Cover image shown on top of the gig video (and used as gig thumbnail) */
   videoThumbnail?: File;
+  /** Edit mode: already-saved media URLs the freelancer keeps unless removed */
+  existingImages?: string[];
+  existingVideoUrl?: string;
+  existingVideoThumb?: string;
   documents: File[];
 }
 export interface PackageData {
@@ -83,6 +87,13 @@ const CreateGig = () => {
           !!(gig as any).video_url
         );
 
+        const { data: videoRow } = await supabase.from('gig_media').select('file_url')
+          .eq('gig_id', gigId).eq('file_type', 'video').limit(1).maybeSingle();
+        const savedImages: string[] = Array.isArray((gig as any).images) && (gig as any).images.length
+          ? (gig as any).images
+          : ((gig as any).thumbnail_url ? [(gig as any).thumbnail_url] : []);
+        const savedVideo: string | undefined = videoRow?.file_url || undefined;
+
         const { data: packages } = await supabase.from('gig_packages').select('*').eq('gig_id', gigId);
 
         const pkgMap: any = {
@@ -119,6 +130,9 @@ const CreateGig = () => {
           faqs,
           buyerRequirements: gig.buyer_requirements || '',
           images: [],
+          existingVideoUrl: savedVideo,
+          existingVideoThumb: savedVideo ? savedImages[0] : undefined,
+          existingImages: savedVideo ? savedImages.slice(1) : savedImages,
           documents: [],
         });
       } catch (err) {
@@ -157,8 +171,15 @@ const CreateGig = () => {
         toast({ title: "Thumbnail required", description: "Please upload a thumbnail for your gig video.", variant: "destructive" });
         return;
       }
-      const hasNewMedia = gigData.images.length >= 3 || (!!gigData.video && !!gigData.videoThumbnail);
-      if (!hasNewMedia && !hasExistingMedia) {
+      const keptImages = gigData.existingImages || [];
+      const anyVideo = !!gigData.video || !!gigData.existingVideoUrl;
+      const anyThumb = !!gigData.videoThumbnail || !!gigData.existingVideoThumb;
+      if (anyVideo && !anyThumb) {
+        toast({ title: "Thumbnail required", description: "Please upload a thumbnail for your gig video.", variant: "destructive" });
+        return;
+      }
+      const hasNewMedia = keptImages.length + gigData.images.length >= 3 || (anyVideo && anyThumb);
+      if (!hasNewMedia) {
         toast({ title: "Media required", description: "Upload at least 3 images or a video with its thumbnail before publishing your gig.", variant: "destructive" });
         return;
       }
@@ -193,7 +214,11 @@ const CreateGig = () => {
         const { error: tErr } = await supabase.storage.from('gig-images').upload(tName, thumb, { contentType: thumb.type });
         if (tErr) throw tErr;
         else { imageUrls.push(supabase.storage.from('gig-images').getPublicUrl(tName).data.publicUrl); imageIndex += 1; }
+      } else if (anyVideo && gigData.existingVideoThumb) {
+        imageUrls.push(gigData.existingVideoThumb); imageIndex += 1;
       }
+      // Previously saved images the freelancer kept
+      for (const url of keptImages) { imageUrls.push(url); imageIndex += 1; }
 
       const optimizedImages = await compressImages(gigData.images);
       for (const imageFile of optimizedImages) {
@@ -249,10 +274,8 @@ const CreateGig = () => {
           category_slug: gigData.category,
           subcategory_slug: gigData.subcategory,
         };
-        if (imageUrls.length > 0) {
-          updateData.images = imageUrls;
-          updateData.thumbnail_url = thumbnailUrl;
-        }
+        updateData.images = imageUrls.length > 0 ? imageUrls : null;
+        updateData.thumbnail_url = thumbnailUrl;
 
         const { data, error } = await supabase.from('gigs').update(updateData).eq('id', gigId).select().single();
         if (error) throw error;
@@ -263,7 +286,7 @@ const CreateGig = () => {
         if (deletePackagesError) throw deletePackagesError;
 
         // Replace gig_media entries when new ones are uploaded
-        if (videoUrl) {
+        if (videoUrl || !gigData.existingVideoUrl) {
           const { error: deleteVideoError } = await supabase.from('gig_media').delete().eq('gig_id', gigId).eq('file_type', 'video');
           if (deleteVideoError) throw deleteVideoError;
         }
