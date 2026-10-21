@@ -210,7 +210,6 @@ const GalleryPublish = ({ gigData, updateGigData, onPrevious, onPublish, hasExis
                 <video src={gigData.existingVideoUrl} poster={gigData.existingVideoThumb} controls preload="metadata" className="w-full h-32 bg-muted rounded-lg border object-contain" />
                 <span className="absolute bottom-2 left-2 rounded bg-background/80 px-1.5 py-0.5 text-[10px] text-foreground">Current video</span>
                 <Button size="sm" variant="destructive" className="absolute top-2 right-2 h-6 w-6 p-0" onClick={removeVideo} aria-label="Remove video">
-                <Button size="sm" variant="outline" onClick={removeVideo}>
                   <X className="w-3 h-3" />
                 </Button>
               </div>
