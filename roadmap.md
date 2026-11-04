@@ -1,5 +1,9 @@
 # Mobile-first FIVESOM redesign
 
+## Email restoration
+- [ ] Diagnose and restore message, order, support, and news email delivery
+- [ ] Add durable retries and verify accepted delivery without exposing secrets
+
 - [x] Establish shared mobile viewport, safe-area, touch-target, and overflow foundations
 - [x] Redesign mobile navigation and dashboard navigation without changing desktop
 - [x] Rebuild mobile messaging list, chat viewport, composer, attachments, and unread indicators
