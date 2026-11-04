@@ -3,6 +3,7 @@
 //
 // Called by database triggers via pg_net. Requests must carry the shared hook secret.
 
+import { sendNotificationEmail } from "../_shared/email-provider.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
 import { buildOrderEventEmail, orderEmailSubject } from "../_shared/order-email.ts";
 
@@ -41,8 +42,8 @@ Deno.serve(async (req) => {
     }
 
     const admin = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
       { auth: { persistSession: false } },
     );
 
@@ -121,31 +122,15 @@ Deno.serve(async (req) => {
       siteUrl: SITE_URL,
     });
 
-    const res = await fetch(`${GATEWAY_URL}/emails`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${lovableKey}`,
-        "X-Connection-Api-Key": resendKey,
-      },
-      body: JSON.stringify({
+    const sent = await sendNotificationEmail({
         from: FROM,
         to: [to],
         subject: orderEmailSubject(isOrder ? "new_order" : "delivery", gigTitle),
         html,
-      }),
-    });
-
-    if (!res.ok) {
-      const details = await res.text();
-      console.error(`Resend request failed [${res.status}]: ${details}`);
-      return json({ error: "Email provider request failed" }, 502);
-    }
-
-    const sent = await res.json().catch(() => ({}));
+      }, `order/${kind}/${kind === "delivery" ? payload.delivery_id : orderId}`);
     return json({ sent: true, id: (sent as any)?.id ?? null });
   } catch (err) {
     console.error("send-order-email error:", err);
-    return json({ error: "Unexpected error" }, 500);
+    return json({ error: err instanceof Error ? err.message : "Unexpected error" }, 500);
   }
 });

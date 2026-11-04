@@ -3,6 +3,7 @@
 // Invoked by a database trigger on public.system_messages (via pg_net) for
 // admin/system messages. Requests must carry the shared hook secret.
 
+import { sendNotificationEmail } from "../_shared/email-provider.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
 import { buildSystemNotificationEmail, systemEmailSubject } from "../_shared/system-email.ts";
 
@@ -41,8 +42,8 @@ Deno.serve(async (req) => {
     }
 
     const admin = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
       { auth: { persistSession: false } },
     );
 
@@ -89,31 +90,15 @@ Deno.serve(async (req) => {
       recipientName: profile?.full_name ?? null,
     });
 
-    const res = await fetch(`${GATEWAY_URL}/emails`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${lovableKey}`,
-        "X-Connection-Api-Key": resendKey,
-      },
-      body: JSON.stringify({
+    const sent = await sendNotificationEmail({
         from: FROM,
         to: [to],
         subject: systemEmailSubject(channel),
         html,
-      }),
-    });
-
-    if (!res.ok) {
-      const details = await res.text();
-      console.error(`Resend request failed [${res.status}]: ${details}`);
-      return json({ error: "Email provider request failed" }, 502);
-    }
-
-    const sent = await res.json().catch(() => ({}));
+      }, `system/${messageId}`);
     return json({ sent: true, channel, id: (sent as any)?.id ?? null });
   } catch (err) {
     console.error("send-system-email error:", err);
-    return json({ error: "Unexpected error" }, 500);
+    return json({ error: err instanceof Error ? err.message : "Unexpected error" }, 500);
   }
 });
