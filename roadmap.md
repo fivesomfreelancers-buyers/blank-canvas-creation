@@ -1,8 +1,10 @@
 # Mobile-first FIVESOM redesign
 
 ## Email restoration
-- [ ] Diagnose and restore message, order, support, and news email delivery
-- [ ] Add durable retries and verify accepted delivery without exposing secrets
+- [x] Diagnose notification failure: deployed email requests return provider 403 project authorization denied
+- [ ] Restore message, order, support, and news email delivery — blocked by connector authorization failure after successful relink and redeploy
+- [x] Verify existing email outbox and active once-per-minute retry schedule; failed notifications remain queued
+- [ ] Verify accepted notification delivery — blocked by provider authorization
 
 - [x] Establish shared mobile viewport, safe-area, touch-target, and overflow foundations
 - [x] Redesign mobile navigation and dashboard navigation without changing desktop
