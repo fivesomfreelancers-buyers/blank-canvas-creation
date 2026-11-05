@@ -1,5 +1,10 @@
 # Mobile-first FIVESOM redesign
 
+## Buyer acquisition and search visibility
+- [ ] Audit live Fivesom presence and existing buyer/SEO features against the supplied brief
+- [ ] Improve buyer-focused discovery, useful service content, and acquisition measurement while preserving existing workflows
+- [ ] Verify public buyer journeys and report actual changes separately from unverified search rankings
+
 ## Email restoration
 - [x] Diagnose notification failure: deployed email requests return provider 403 project authorization denied
 - [ ] Restore message, order, support, and news email delivery — blocked by connector authorization failure after successful relink and redeploy
