@@ -541,6 +541,54 @@ export type Database = {
           },
         ]
       }
+      email_notification_outbox: {
+        Row: {
+          attempts: number
+          created_at: string
+          event_key: string
+          function_name: string
+          id: string
+          last_error: string | null
+          next_attempt_at: string
+          payload: Json
+          provider_id: string | null
+          request_id: number | null
+          requested_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          event_key: string
+          function_name: string
+          id?: string
+          last_error?: string | null
+          next_attempt_at?: string
+          payload: Json
+          provider_id?: string | null
+          request_id?: number | null
+          requested_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          event_key?: string
+          function_name?: string
+          id?: string
+          last_error?: string | null
+          next_attempt_at?: string
+          payload?: Json
+          provider_id?: string | null
+          request_id?: number | null
+          requested_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       Fivesom_ad: {
         Row: {
           audience: string
@@ -2380,6 +2428,7 @@ export type Database = {
         Args: { _message_id: string }
         Returns: Json
       }
+      dispatch_notification_emails: { Args: never; Returns: number }
       effective_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
