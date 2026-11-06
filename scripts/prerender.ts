@@ -10,6 +10,10 @@ import { CATEGORIES } from "../src/lib/categories";
 import { getCategoryContent } from "../src/lib/seo/categoryContent";
 import { MARKETS } from "../src/content/markets";
 import { HOME_FAQ } from "../src/lib/seo/homeFaq";
+import { faqPageSchema } from "../src/lib/seo/homeFaq";
+import { organizationSchema, webSiteSchema, serviceSchema } from "../src/lib/seo/schemas";
+import { canonicalSeoUrl } from "../src/lib/seo/site";
+import { BUYER_GUIDE } from "../src/content/buyerGuide";
 import en from "../src/content/docs/en";
 import so from "../src/content/docs/so";
 import ar from "../src/content/docs/ar";
@@ -42,12 +46,13 @@ interface Page {
   type?: string;
   jsonLd?: object[];
   lang?: string;
+  noindex?: boolean;
 }
 
 const crumbs = (trail: { name: string; path: string }[]) => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  itemListElement: trail.map((t, i) => ({ "@type": "ListItem", position: i + 1, name: t.name, item: `${SITE}${t.path}` })),
+  itemListElement: trail.map((t, i) => ({ "@type": "ListItem", position: i + 1, name: t.name, item: canonicalSeoUrl(t.path) })),
 });
 const crumbHtml = (trail: { name: string; path: string }[]) =>
   `<nav aria-label="Breadcrumb"><ol>${trail.map((t) => `<li><a href="${t.path}">${e(t.name)}</a></li>`).join("")}</ol></nav>`;
@@ -79,18 +84,20 @@ function render(p: Page): string {
   let html = template;
   const drop = [
     /<title>[\s\S]*?<\/title>/i,
+    /<meta\s+name="robots"[^>]*>/gi,
     /<meta\s+name="description"[\s\S]*?\/>/i,
     /<link\s+rel="canonical"[^>]*\/>/i,
     /<meta\s+property="og:(title|description|type|url|image|image:alt|image:width|image:height)"[\s\S]*?\/>/gi,
     /<meta\s+name="twitter:(title|description|image)"[\s\S]*?\/>/gi,
   ];
   for (const re of drop) html = html.replace(re, "");
-  const url = `${SITE}${p.path === "/" ? "/" : p.path}`;
+  const url = canonicalSeoUrl(p.path);
   const img = p.image || `${SITE}/og-image.png`;
   const head = [
     `<title>${e(p.title)}</title>`,
     `<meta name="description" content="${e(p.description)}" />`,
     `<link rel="canonical" href="${e(url)}" />`,
+    `<meta name="robots" content="${p.noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'}" />`,
     `<meta property="og:title" content="${e(p.title)}" />`,
     `<meta property="og:description" content="${e(p.description)}" />`,
     `<meta property="og:type" content="${p.type || "website"}" />`,
@@ -100,7 +107,7 @@ function render(p: Page): string {
     `<meta name="twitter:title" content="${e(p.title)}" />`,
     `<meta name="twitter:description" content="${e(p.description)}" />`,
     `<meta name="twitter:image" content="${e(img)}" />`,
-    ...(p.jsonLd || []).map((j) => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, "\\u003c")}</script>`),
+    ...(p.jsonLd || []).map((j) => `<script data-prerender-schema type="application/ld+json">${JSON.stringify(j).replace(/</g, "\\u003c")}</script>`),
   ].join("\n    ");
   html = html.replace(/<\/head>/i, `    ${head}\n  </head>`);
   if (p.lang && p.lang !== "en") html = html.replace(/<html lang="en">/i, `<html lang="${p.lang}"${p.lang === "ar" ? ' dir="rtl"' : ""}>`);
@@ -135,6 +142,7 @@ pages.push({
   description:
     "FIVESOM is an African and Somali freelancer marketplace connecting skilled freelancers with clients worldwide. Hire for design, web development, video and writing — payment is held in escrow until you accept the work.",
   h1: "Hire Skilled African Freelancers",
+  jsonLd: [organizationSchema, webSiteSchema, serviceSchema, faqPageSchema()],
   body: `<p>FIVESOM is an African and Somali freelancer marketplace. It connects freelancers from Somalia and across Africa with clients worldwide for logo design, graphic design, web and app development, video editing and content writing.</p><p>Clients pay when they order, the payment is held in escrow, and it is released to the freelancer only after the client accepts the delivered work.</p>${serviceLinks}${countryLinks}<section><h2>Frequently asked questions</h2>${HOME_FAQ.map((f) => `<h3>${e(f.question)}</h3><p>${e(f.answer)}</p>`).join("")}</section>`,
 });
 
@@ -158,7 +166,7 @@ const fixed: [string, string, string, string, string][] = [
   ["/legal/cookies", "Cookie Policy | FIVESOM", "How FIVESOM uses cookies and how to manage your preferences.", "Cookie Policy", "How FIVESOM uses cookies."],
 ];
 for (const [path, title, description, h1, text] of fixed) {
-  pages.push({ path, title, description, h1, body: `<p>${e(text)}</p>${path === "/services" ? serviceLinks : ""}` });
+  pages.push({ path, title, description, h1, noindex: path.startsWith('/register'), body: `<p>${e(text)}</p>${path === "/services" ? serviceLinks : ""}` });
 }
 
 // Categories + subcategories
@@ -222,8 +230,8 @@ for (const [lang, d] of Object.entries(DICTS)) {
 }
 
 async function dynamicPages() {
-  const gigs = await rest<{ slug: string; title: string; description: string | null; thumbnail_url: string | null; images: string[] | null; category_slug: string | null; base_price: number | null; delivery_time_days: number | null; freelancer_id: string }>(
-    "gigs?select=slug,title,description,thumbnail_url,images,category_slug,base_price,delivery_time_days,freelancer_id&status=eq.active&slug=not.is.null&limit=5000",
+  const gigs = await rest<{ slug: string; title: string; description: string | null; thumbnail_url: string | null; images: string[] | null; category_slug: string | null; subcategory_slug: string | null; base_price: number | null; delivery_time_days: number | null; freelancer_id: string }>(
+    "gigs?select=slug,title,description,thumbnail_url,images,category_slug,subcategory_slug,base_price,delivery_time_days,freelancer_id&status=eq.active&slug=not.is.null&limit=5000",
   );
   const freelancers = await rest<{ id: string; user_id: string }>("public_freelancers?select=id,user_id&limit=5000");
   const profiles = await rest<{ id: string; full_name: string | null; username: string | null; bio: string | null; profile_image_url: string | null; professional_title?: string | null }>(
@@ -233,6 +241,19 @@ async function dynamicPages() {
   const fToProfile = new Map(freelancers.map((f) => [f.id, byUser.get(f.user_id)]));
   const gigsBySeller = new Map<string, typeof gigs>();
   const isImg = (u?: string | null) => (u && /^https:\/\//.test(u) ? u : undefined);
+
+  // Link real active services from discovery pages even without JavaScript.
+  for (const page of pages) {
+    if (page.path !== '/explore' && !page.path.startsWith('/services/')) continue;
+    const [, , category, subcategory] = page.path.split('/');
+    const relevant = page.path === '/explore' ? gigs : gigs.filter((g) =>
+      g.category_slug === category && (!subcategory || g.subcategory_slug === subcategory));
+    page.noindex = page.path !== '/explore' && relevant.length === 0;
+    page.body += links('Available freelance services', relevant.map((g) => ({
+      href: canonicalSeoUrl(`/gig/${encodeURIComponent(g.slug)}`),
+      label: `${g.title}${g.base_price != null ? ` — from $${Number(g.base_price).toFixed(2)}` : ''}`,
+    })));
+  }
 
   for (const g of gigs) {
     const seller = fToProfile.get(g.freelancer_id);
@@ -246,7 +267,7 @@ async function dynamicPages() {
       title: `${clip(g.title, 60)}${cat ? ` | ${cat.name}` : ""} | FIVESOM`,
       description: clip(`${g.description || g.title}`, 160),
       h1: g.title,
-      type: "product",
+      type: "website",
       image,
       body: `${crumbHtml(trail)}${image ? `<img src="${e(image)}" alt="${e(`${g.title} — freelance service on FIVESOM${sellerName ? ` by ${sellerName}` : ""}`)}" width="640" height="360" style="max-width:100%;height:auto" />` : ""}<p>${e(clip(g.description || "", 1200))}</p><ul>${g.base_price ? `<li>Starting price: $${Number(g.base_price).toFixed(2)}</li>` : ""}${g.delivery_time_days ? `<li>Delivery: ${g.delivery_time_days} days</li>` : ""}${cat ? `<li>Category: <a href="/services/${cat.slug}">${e(cat.name)}</a></li>` : ""}${seller?.username ? `<li>Seller: <a href="/freelancer/${e(seller.username)}">${e(sellerName)}</a></li>` : ""}</ul>`,
       jsonLd: [crumbs(trail)],
@@ -254,7 +275,8 @@ async function dynamicPages() {
   }
 
   for (const [username, list] of gigsBySeller) {
-    const p = profiles.find((x) => x.username === username)!;
+    const p = profiles.find((x) => x.username === username);
+    if (!p) continue;
     const name = p.full_name || username;
     const trail = [{ name: "Home", path: "/" }, { name: name, path: `/freelancer/${username}` }];
     pages.push({
@@ -271,5 +293,7 @@ async function dynamicPages() {
 }
 
 await dynamicPages();
+const home = pages.find((page) => page.path === '/');
+if (home) home.body += `<section><h2>${e(BUYER_GUIDE.heading)}</h2><p>${e(BUYER_GUIDE.intro)}</p>${BUYER_GUIDE.steps.map((step) => `<h3>${e(step.title)}</h3><p>${e(step.text)}</p>`).join('')}<a href="/services/">Compare freelance services</a></section>`;
 for (const p of pages) write(p);
 console.log(`prerender: wrote ${pages.length} static pages`);

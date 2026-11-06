@@ -13,7 +13,7 @@ export const HOME_FAQ: FaqItem[] = [
   {
     question: 'What is FIVESOM?',
     answer:
-      'FIVESOM (fivesom.net) is a freelance marketplace where clients hire verified freelancers and freelancers sell their services. Buyers browse gigs in design, web development, video editing, writing, translation and digital marketing, pay into escrow, and release the money only after they accept the delivered work.',
+      'FIVESOM (fivesom.net) is an African-focused, Somali-rooted global freelance marketplace. Businesses and individuals in Africa, Asia, Europe and beyond can compare services in design, web development, video editing, writing, translation and digital marketing, pay into escrow, and release the money after accepting the delivered work.',
   },
   {
     question: 'How does FIVESOM work?',

@@ -12,6 +12,7 @@ import GigCard from '@/components/gig/GigCard';
 import { CATEGORIES, getCategoryBySlug } from '@/lib/categories';
 import { useSearchParams } from 'react-router-dom';
 import { useGigSearch } from '@/hooks/useGigSearch';
+import { trackBuyerEvent } from '@/lib/buyerAnalytics';
 
 const Explore = () => {
   const { theme } = useTheme();
@@ -52,6 +53,11 @@ const Explore = () => {
   }, [searchQuery, selectedCategory, selectedSubcategory, setSearchParams]);
 
   const totalPages = Math.ceil(total / gigsPerPage);
+  useEffect(() => {
+    if (!searchQuery.trim()) return;
+    const timer = window.setTimeout(() => trackBuyerEvent('service_search'), 1000);
+    return () => window.clearTimeout(timer);
+  }, [searchQuery]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

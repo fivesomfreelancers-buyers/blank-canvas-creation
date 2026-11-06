@@ -130,21 +130,21 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
           <TypingHeadline
             className="text-primary"
             phrases={[
-              'Turn your skills into income.',
-              'Find clients and grow your career.',
-              'Work with clients worldwide.',
-              'Build your freelance business.',
-              'Get paid for your skills.',
+              'Bring your next project to life.',
+              'Find a designer for your brand.',
+              'Build a website for your business.',
+              'Create videos your audience remembers.',
+              'Compare services. Choose your freelancer.',
             ]}
           />
         </p>
 
         <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-          FIVESOM is an African and Somali freelancer marketplace. It connects freelancers from
-          Somalia and across Africa — Ethiopia, Kenya, Nigeria, Ghana and beyond — with clients
-          worldwide for logo design, graphic design, web and app development, video editing and
-          content writing. Every order is protected by escrow: your payment is held securely and
-          released to the freelancer only after you accept the delivered work.
+          Find logo design, websites, video editing and content writing for your next project.
+          FIVESOM is an African-focused, Somali-rooted global freelancer marketplace connecting
+          businesses and individuals in Africa, Asia, Europe and beyond with digital talent.
+          Compare portfolios, package prices and delivery times before ordering.
+          Your payment stays in escrow until you accept the delivered work.
         </p>
 
         <div className="mx-auto mb-6 max-w-3xl">
@@ -197,7 +197,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
             <ShieldCheck className="w-4 h-4 text-primary" aria-hidden /> Escrow-protected payments
           </li>
           <li className="inline-flex items-center gap-2">
-            <Star className="w-4 h-4 text-primary" aria-hidden /> Verified freelancer profiles
+            <Star className="w-4 h-4 text-primary" aria-hidden /> Compare portfolios and seller reviews
           </li>
           {gigCount > 0 && (
             <li className="inline-flex items-center gap-2">
@@ -214,7 +214,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
         </ul>
 
         <div>
-          <p className="text-xs sm:text-sm text-muted-foreground mb-3">Popular right now:</p>
+          <p className="text-xs sm:text-sm text-muted-foreground mb-3">Find services for your project:</p>
           <div className="flex flex-wrap justify-center gap-2">
             {POPULAR.map((term) => (
               <Link

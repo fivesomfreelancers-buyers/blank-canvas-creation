@@ -1,6 +1,6 @@
 # FIVESOM
 
-> FIVESOM (https://fivesom.net) — African & Somali Freelancer Marketplace — is a freelance marketplace connecting African freelancers with clients worldwide, where buyers hire verified freelancers and freelancers sell their services. Every order is protected by escrow: the buyer pays up front, the freelancer delivers through the platform, and the money is released only after the buyer accepts the delivery. FIVESOM is built with African and Somali freelancers in mind, supporting local mobile-money (USSD) payouts alongside card and bank payouts.
+> FIVESOM (https://fivesom.net/) is an African-focused, Somali-rooted global freelance marketplace. Businesses and individuals in Africa, Asia, Europe and beyond can compare portfolios, prices and delivery times for digital services. Buyers pay into escrow and review the delivery before releasing payment; disputed orders remain held for resolution. Identity verification is optional and shown by seller badges, not a requirement for every listing.
 
 ## What FIVESOM does
 
@@ -8,8 +8,9 @@
 - Buyers browse or search gigs, message the freelancer, order a package and pay securely.
 - Funds are held in escrow until the buyer accepts the delivered work; disputes are resolved by the FIVESOM support team.
 - Freelancer earnings land in a wallet and can be withdrawn (minimum $20) via local mobile money or card/bank payouts.
-- Trust signals: identity verification, Verified Seller badge, Blue Tick badge (40+ days active, 10+ orders, 4.5+ rating), VIP / featured seller program, buyer reviews and ratings.
+- Trust signals: optional identity verification, distinct Verified Seller and Blue Tick badges, VIP / featured seller program, and buyer reviews where available. Check the actual seller profile and gig rather than assuming every seller is verified or reviewed.
 - Joining, creating a profile and publishing gigs is free; FIVESOM earns a commission on completed orders.
+- Buyers pay the package price plus a separate $1 Buyer Service Fee shown at checkout. The buyer fee is not freelancer earnings.
 
 ## Answers to common questions
 
@@ -21,7 +22,7 @@
 ## Pages
 
 - [Home](https://fivesom.net/): What FIVESOM is, featured categories and FAQ.
-- [Explore](https://fivesom.net/explore): Browse and search active gigs from verified freelancers.
+- [Explore](https://fivesom.net/explore/): Browse and search active freelance services, compare packages and inspect seller profiles.
 - [How It Works](https://fivesom.net/how-it-works): Step-by-step guide for buyers and freelancers.
 - [Docs](https://fivesom.net/docs): Full A-Z documentation in English, Somali, Arabic and French.
 - [VIP](https://fivesom.net/vip): VIP / featured seller program.
@@ -33,4 +34,4 @@
 ## Optional
 
 - [Login](https://fivesom.net/login): Existing user sign-in.
-- Support email: noreply@fivesom.net
+- [Support](https://fivesom.net/support/): Help with orders, payments and disputes.

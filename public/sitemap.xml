@@ -1063,6 +1063,28 @@
     </image:image>
   </url>
   <url>
+    <loc>https://fivesom.net/gig/waxaan-kuu-qoraa-sheekooyin-carruur-oo-kobciya-aqoonta-iyo-maskaxda-da</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873362319-3ql9u.webp</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873363228-3osdtf.webp</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11 - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873363468-yt7m6j.webp</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11 - preview 3</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873363700-jpgq1u.webp</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11 - preview 4</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://fivesom.net/gig/i-will-design-a-modern-minimalist-logo-in-figma-for-your-brand</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -1761,6 +1783,24 @@
     </image:image>
   </url>
   <url>
+    <loc>https://fivesom.net/gig/gig-title-i-will-translate-somali-to-english-and-english-to-somali-pro</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/851b2604-1b79-45a9-9bf3-5714fad648ce/mw2q03t6ww7j/gig-title-i-will-translate-somali-to-english-and-english-to-.jpg</image:loc>
+      <image:title>Gig Title I will translate Somali to English and English to Somali professionally</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/851b2604-1b79-45a9-9bf3-5714fad648ce/mw2q03t6ww7j/gig-title-i-will-translate-somali-to-english-and-english-to--2.jpg</image:loc>
+      <image:title>Gig Title I will translate Somali to English and English to Somali professionally - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/851b2604-1b79-45a9-9bf3-5714fad648ce/mw2q03t6ww7j/gig-title-i-will-translate-somali-to-english-and-english-to--3.jpg</image:loc>
+      <image:title>Gig Title I will translate Somali to English and English to Somali professionally - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://fivesom.net/gig/your-dream-website-starts-here-i-design-modern-websites-that-help-your</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -2325,11 +2365,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/aden-asmar</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fivesom.net/freelancer/ikraan-muqtaar</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -2360,22 +2395,17 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/xawiiwa-cabdarashid</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fivesom.net/freelancer/ezeh-solomon</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/abdiaziz-abdirahman-ali</loc>
+    <loc>https://fivesom.net/freelancer/xawiiwa-cabdarashid</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/sakariye-saki</loc>
+    <loc>https://fivesom.net/freelancer/abdiaziz-abdirahman-ali</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2395,17 +2425,22 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fivesom.net/freelancer/seynab-nuur-cali</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/aden-asmar</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fivesom.net/freelancer/masnafarax-masna-farax</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fivesom.net/freelancer/upthi-aziiz-ahmed</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/xafiid-abdi</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2420,6 +2455,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fivesom.net/freelancer/xafiid-abdi</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fivesom.net/freelancer/khadan-ahmed</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -2430,12 +2470,17 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/abdirizak-moktar-abdi</loc>
+    <loc>https://fivesom.net/freelancer/mahad-honest</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/mahad-honest</loc>
+    <loc>https://fivesom.net/freelancer/sakariye-saki</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/abdirizak-moktar-abdi</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

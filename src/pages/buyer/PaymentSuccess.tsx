@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { supabase } from '@/integrations/supabase/client';
+import { trackBuyerEvent } from '@/lib/buyerAnalytics';
 
 const PaymentSuccess = () => {
   const [params] = useSearchParams();
@@ -30,6 +31,13 @@ const PaymentSuccess = () => {
       }
       setOrderId(data.orderId);
       setStatus('paid');
+      // Do not count a redirect or a failed verification as a purchase.
+      const eventKey = `fivesom.purchase-measured.${sessionId}`;
+      try {
+        if (!sessionStorage.getItem(eventKey) && trackBuyerEvent('purchase_confirmed')) {
+          sessionStorage.setItem(eventKey, '1');
+        }
+      } catch { /* Analytics must never interrupt verified payment completion. */ }
     };
     verify();
     return () => {

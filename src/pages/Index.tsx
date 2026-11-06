@@ -17,6 +17,7 @@ import { organizationSchema, webSiteSchema, serviceSchema } from '@/lib/seo/sche
 import { faqPageSchema } from '@/lib/seo/homeFaq';
 import { useGigSearch } from '@/hooks/useGigSearch';
 import { useHomeStats } from '@/hooks/useHomeStats';
+import BuyerGuide from '@/components/home/BuyerGuide';
 
 const Index = () => {
   const { gigs, loading } = useGigSearch({ pageSize: 48 });
@@ -38,6 +39,7 @@ const Index = () => {
           <PopularServices />
           <HowFivesomWorks />
           <EscrowSection />
+          <BuyerGuide />
           <MarketplaceJourneys />
           <FeaturedFreelancers gigs={gigs} loading={loading} />
           <TrustSafetySection />

@@ -107,10 +107,10 @@ async function gigMeta(slug: string): Promise<Meta | null> {
       `${gig.description || gig.title}${price}${days}${by ? ` Offered${by} on FIVESOM.` : " Hire African freelancers on FIVESOM with escrow-protected payment."}`,
       300,
     ),
-    canonical: `${SITE_URL}/gig/${encodeURIComponent(slug)}`,
+    canonical: `${SITE_URL}/gig/${encodeURIComponent(slug)}/`,
     image,
     imageAlt: `${clean(gig.title, 90)} — freelance service on FIVESOM${by}`,
-    type: "product",
+    type: "website",
   };
 }
 
@@ -132,7 +132,7 @@ async function freelancerMeta(username: string): Promise<Meta | null> {
       `${p.bio || `${name} offers freelance services on FIVESOM.`} View gigs, reviews and delivery times, and order with escrow-protected payment.`,
       300,
     ),
-    canonical: `${SITE_URL}/freelancer/${encodeURIComponent(username)}`,
+    canonical: `${SITE_URL}/freelancer/${encodeURIComponent(username)}/`,
     image: publicImage(p.profile_image_url),
     imageAlt: `${clean(name, 90)} — freelancer on FIVESOM`,
     type: "profile",

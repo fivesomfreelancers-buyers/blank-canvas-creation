@@ -28,6 +28,7 @@ import { isUuid, gigPath, freelancerPath } from '@/lib/urls';
 import { gigImageAlt } from '@/lib/seo/gigImages';
 import { breadcrumbSchema } from '@/lib/seo/schemas';
 import CopyLinkButton from '@/components/common/CopyLinkButton';
+import { trackBuyerEvent } from '@/lib/buyerAnalytics';
 
 /** "graphics-design" -> "Graphics Design" for schema/breadcrumb labels. */
 const prettyCategory = (slug: string) =>
@@ -139,6 +140,10 @@ const GigDetails = () => {
 
   // Realtime: refresh when a new review is added for this gig
   useEffect(() => {
+    if (gigId && gig?.status === 'active') trackBuyerEvent('gig_view');
+  }, [gigId, gig?.status]);
+
+  useEffect(() => {
     if (!gigId) return;
     const channel = supabase
       .channel(`gig-${gigId}-reviews`)
@@ -156,6 +161,7 @@ const GigDetails = () => {
     try {
       const conversationId = await getOrCreateConversation(user.id, gig.freelancerUserId);
       if (!conversationId) throw new Error('Could not create conversation');
+      trackBuyerEvent('contact_seller');
       if (contactMessage.trim()) {
         const { error } = await supabase.from('messages').insert({ sender_id: user.id, receiver_id: gig.freelancerUserId, conversation_id: conversationId, message: contactMessage.trim() });
         if (error) throw error;
@@ -181,6 +187,7 @@ const GigDetails = () => {
       return;
     }
     const orderPkg = pkg || packages.find(p => p.package_type === selectedPackage) || { name: 'Standard', price: gig.base_price, delivery_time: `${gig.delivery_time_days} days`, revisions: '2', features: [], package_type: selectedPackage };
+    trackBuyerEvent('begin_checkout');
     navigate('/payment', {
       state: {
         gig: { id: gig.id, title: gig.title, freelancer: { name: gig.freelancerName, avatar: gig.freelancerName?.[0] || 'F', profileImage: gig.freelancerImageUrl || '' } },

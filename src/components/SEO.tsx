@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { SITE_URL, canonicalSeoUrl, absoluteAssetUrl } from '@/lib/seo/site';
 
-export const SITE_URL = 'https://fivesom.net';
+export { SITE_URL } from '@/lib/seo/site';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 /** Turns "/explore" or a full URL into an absolute, self-referencing URL. */
 export const absoluteSeoUrl = (path: string): string => {
-  if (!path) return SITE_URL;
-  if (/^https?:\/\//i.test(path)) return path;
-  return `${SITE_URL}${path.startsWith('/') ? path : `/${path}`}`;
+  return absoluteAssetUrl(path);
 };
 
 interface SEOProps {
@@ -32,7 +31,7 @@ const SEO = ({
   noindex = false,
 }: SEOProps) => {
   const schemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
-  const url = absoluteSeoUrl(canonical);
+  const url = canonicalSeoUrl(canonical);
   const ogImage = image ? absoluteSeoUrl(image) : DEFAULT_OG_IMAGE;
 
   // index.html carries a site-wide share image for crawlers that do not run
@@ -45,6 +44,7 @@ const SEO = ({
   // the Netlify edge function, so the non-Helmet copy is dropped to keep exactly
   // one canonical per page.
   useEffect(() => {
+    document.querySelectorAll('script[data-prerender-schema]').forEach((el) => el.remove());
     document
       .querySelectorAll('meta[name="robots"]:not([data-rh])')
       .forEach((el) => el.remove());

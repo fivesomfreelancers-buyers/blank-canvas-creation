@@ -4,6 +4,7 @@ import { ArrowRight, ChevronRight } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import SEO, { SITE_URL } from '@/components/SEO';
+import { canonicalSeoUrl } from '@/lib/seo/site';
 import GigCard from '@/components/gig/GigCard';
 import { Button } from '@/components/ui/button';
 import {
@@ -37,13 +38,13 @@ const ServiceCategory: React.FC = () => {
   const unknown = !category || (subcategorySlug && !subcategory);
 
   const { gigs, total, loading } = useGigSearch({
-    category: unknown ? 'none' : category!.slug,
+    category: unknown ? 'none' : category?.slug,
     subcategory: subcategory?.slug ?? null,
     page,
     pageSize: PAGE_SIZE,
   });
 
-  if (unknown) {
+  if (unknown || !category) {
     return (
       <div className="min-h-screen bg-background">
         <SEO
@@ -69,7 +70,7 @@ const ServiceCategory: React.FC = () => {
 
   const name = subcategory ? `${subcategory.name}` : category.name;
   const path = subcategory ? `/services/${category.slug}/${subcategory.slug}` : `/services/${category.slug}`;
-  const url = `${SITE_URL}${path}`;
+  const url = canonicalSeoUrl(path);
 
   const title = subcategory
     ? `${subcategory.name} Services — Hire ${category.name} Freelancers | FIVESOM`
@@ -78,7 +79,7 @@ const ServiceCategory: React.FC = () => {
   const description = subcategory
     ? `Hire freelancers for ${subcategory.name.toLowerCase()} on FIVESOM. Compare packages, prices, delivery times and real reviews, and pay safely through escrow.`
     : content?.summary ??
-      `Hire verified ${category.name.toLowerCase()} freelancers on FIVESOM. Compare packages, prices and reviews, and pay safely through escrow.`;
+      `Hire ${category.name.toLowerCase()} freelancers on FIVESOM. Compare packages, prices and reviews, and pay safely through escrow.`;
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const hasGigs = total > 0;
@@ -121,7 +122,7 @@ const ServiceCategory: React.FC = () => {
       itemListElement: gigs.map((gig, i) => ({
         '@type': 'ListItem',
         position: (page - 1) * PAGE_SIZE + i + 1,
-        url: `${SITE_URL}${gigPath(gig)}`,
+        url: canonicalSeoUrl(gigPath(gig)),
         name: gig.title,
       })),
     });
@@ -148,7 +149,7 @@ const ServiceCategory: React.FC = () => {
         canonical={path}
         jsonLd={jsonLd}
         /* Keep empty service pages out of the index until real gigs exist. */
-        noindex={!loading && !hasGigs}
+        noindex={searchParams.size > 0 || (!loading && !hasGigs)}
       />
       <Navbar />
 

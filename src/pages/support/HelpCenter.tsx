@@ -6,6 +6,7 @@ import { Search, HelpCircle, MessageSquare, ArrowLeft } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import { BUYER_SERVICE_FEE } from '@/lib/orderAmounts';
 
 
 const HelpCenter = () => {
@@ -39,11 +40,11 @@ const HelpCenter = () => {
         },
         {
           question: "What payment methods do you accept?",
-          answer: "We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and bank transfers. All payments are processed securely through our encrypted payment system."
+          answer: "Choose from the payment methods displayed at checkout. Card payments and supported local mobile-money options are available; availability depends on the selected method."
         },
         {
           question: "When do freelancers get paid?",
-          answer: "Freelancers receive payment 7 days after the order is marked complete, giving buyers time to review the work and request revisions if needed. This ensures quality and satisfaction for all parties."
+          answer: "Order earnings become available in the freelancer wallet after the buyer accepts the delivery. If an order is disputed, funds stay held until the dispute is resolved. Freelancers then request a withdrawal."
         }
       ]
     },
@@ -77,7 +78,7 @@ const HelpCenter = () => {
         },
         {
           question: "What fees does FIVESOM charge?",
-          answer: "Fivesom charges a 15% commission on freelancer withdrawals. When you withdraw your earnings, 15% is deducted as the Fivesom fee and you receive the remaining 85%. Buyers are not charged any extra fee."
+          answer: `Buyers pay the package price plus a separate $${BUYER_SERVICE_FEE} Buyer Service Fee shown at checkout. This fee is not part of freelancer earnings. Fivesom charges a 15% commission on freelancer withdrawals; freelancers receive the remaining 85%.`
         }
       ]
     }

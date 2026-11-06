@@ -1,4 +1,4 @@
-import { SITE_URL } from '@/components/SEO';
+import { SITE_URL, canonicalSeoUrl } from './site';
 
 export const organizationSchema = {
   '@context': 'https://schema.org',
@@ -13,7 +13,7 @@ export const organizationSchema = {
     'FIVESOM is an African and Somali freelancer marketplace connecting African freelancers with clients worldwide, with escrow-protected orders and local payouts.',
   email: 'fivesomsupport@gmail.com',
   foundingDate: '2025',
-  areaServed: ['Worldwide', 'Africa', 'Somalia', 'Horn of Africa'],
+  areaServed: ['Worldwide', 'Africa', 'Asia', 'Europe'],
   knowsAbout: [
     'freelance marketplace',
     'hiring freelancers',
@@ -36,7 +36,7 @@ export const organizationSchema = {
       contactType: 'customer support',
       email: 'fivesomsupport@gmail.com',
       availableLanguage: ['en', 'so', 'ar'],
-      url: `${SITE_URL}/support`,
+      url: canonicalSeoUrl('/support'),
     },
   ],
 };
@@ -56,7 +56,7 @@ export const webSiteSchema = {
     '@type': 'SearchAction',
     target: {
       '@type': 'EntryPoint',
-      urlTemplate: `${SITE_URL}/explore?q={search_term_string}`,
+      urlTemplate: `${SITE_URL}/explore/?q={search_term_string}`,
     },
     'query-input': 'required name=search_term_string',
   },
@@ -68,10 +68,10 @@ export const serviceSchema = {
   name: 'FIVESOM freelance marketplace',
   serviceType: 'Online freelance services marketplace',
   provider: { '@id': `${SITE_URL}/#organization` },
-  areaServed: ['Worldwide', 'Africa', 'Somalia'],
-  url: `${SITE_URL}/explore`,
+  areaServed: ['Worldwide', 'Africa', 'Asia', 'Europe'],
+  url: canonicalSeoUrl('/explore'),
   description:
-    'Buyers order gigs from verified freelancers and pay into escrow; freelancers deliver work and get paid after the buyer accepts the delivery.',
+    'Buyers compare freelance services and pay into escrow; freelancers deliver work and get paid after the buyer accepts the delivery. Identity verification badges are shown on eligible seller profiles.',
 };
 
 export const breadcrumbSchema = (
@@ -83,6 +83,6 @@ export const breadcrumbSchema = (
     '@type': 'ListItem',
     position: i + 1,
     name: t.name,
-    item: `${SITE_URL}${t.path}`,
+    item: canonicalSeoUrl(t.path),
   })),
 });

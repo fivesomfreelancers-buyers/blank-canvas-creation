@@ -8,6 +8,7 @@ import { resolve } from "path";
 import { CATEGORIES } from "../src/lib/categories";
 import { MARKETS } from "../src/content/markets";
 import en from "../src/content/docs/en";
+import { canonicalSeoUrl } from "../src/lib/seo/site";
 
 const BASE_URL = "https://fivesom.net";
 
@@ -47,8 +48,6 @@ const staticEntries: SitemapEntry[] = [
   { path: "/blog", changefreq: "weekly", priority: "0.8" },
   // /login and /forgot-password are intentionally excluded: they are noindex
   // and/or disallowed in robots.txt, so listing them would be a conflict.
-  { path: "/register/buyer", changefreq: "yearly", priority: "0.4" },
-  { path: "/register/freelancer", changefreq: "yearly", priority: "0.4" },
 
   { path: "/legal/terms", changefreq: "yearly", priority: "0.3" },
   { path: "/legal/privacy", changefreq: "yearly", priority: "0.3" },
@@ -68,6 +67,7 @@ const categoryEntries: SitemapEntry[] = CATEGORIES.flatMap((c) => [
     priority: "0.7",
   })),
 ]);
+const populatedServicePaths = new Set<string>();
 
 // Country / region landing pages, straight from the market content file, so a
 // new market page is listed as soon as its content exists.
@@ -125,8 +125,10 @@ async function dynamicEntries(): Promise<SitemapEntry[]> {
     freelancer_id: string;
     thumbnail_url: string | null;
     images: string[] | null;
+    category_slug: string | null;
+    subcategory_slug: string | null;
   }>(
-    "gigs?select=slug,title,updated_at,freelancer_id,thumbnail_url,images&status=eq.active&slug=not.is.null&limit=5000",
+    "gigs?select=slug,title,updated_at,freelancer_id,thumbnail_url,images,category_slug,subcategory_slug&status=eq.active&slug=not.is.null&limit=5000",
   );
 
   const posts = await rest<{ slug: string; updated_at: string | null }>(
@@ -148,6 +150,10 @@ async function dynamicEntries(): Promise<SitemapEntry[]> {
 
   for (const gig of gigs) {
     if (!gig.slug) continue;
+    if (gig.category_slug) {
+      populatedServicePaths.add(`/services/${gig.category_slug}`);
+      if (gig.subcategory_slug) populatedServicePaths.add(`/services/${gig.category_slug}/${gig.subcategory_slug}`);
+    }
     activeFreelancerIds.add(gig.freelancer_id);
     // Gig gallery images are listed with the Gig URL so Google Images can index
     // the real service previews (max 10 per URL, absolute public storage URLs).
@@ -207,7 +213,7 @@ function generateSitemap(entries: SitemapEntry[]) {
     .map((e) =>
       [
         `  <url>`,
-        `    <loc>${BASE_URL}${e.path}</loc>`,
+        `    <loc>${escapeXml(canonicalSeoUrl(e.path))}</loc>`,
         e.lastmod ? `    <lastmod>${e.lastmod}</lastmod>` : null,
         e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
         e.priority ? `    <priority>${e.priority}</priority>` : null,
@@ -231,12 +237,13 @@ function generateSitemap(entries: SitemapEntry[]) {
   ].join("\n");
 }
 
+const dynamic = await dynamicEntries();
 const entries = [
   ...staticEntries,
   ...marketEntries,
-  ...categoryEntries,
+  ...categoryEntries.filter((entry) => populatedServicePaths.has(entry.path)),
   ...docsEntries,
-  ...(await dynamicEntries()),
+  ...dynamic,
 ];
 const sitemap = generateSitemap(entries);
 

@@ -15,6 +15,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { NEED_BUYER_MESSAGE } from '@/lib/roleUpgrade';
 import { supabase } from '@/integrations/supabase/client';
 import StripeCardForm from '@/components/payment/StripeCardForm';
+import { trackBuyerEvent } from '@/lib/buyerAnalytics';
 
 
 import zaadLogo from '@/assets/zaad-logo.png';
@@ -187,6 +188,7 @@ const PaymentPage = () => {
         });
         if (error) throw error;
         if (!data?.url) throw new Error('Checkout session could not be created');
+        trackBuyerEvent('checkout_created');
         window.location.href = data.url;
         return;
       }
