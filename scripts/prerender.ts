@@ -143,7 +143,7 @@ pages.push({
     "FIVESOM is an African and Somali freelancer marketplace connecting skilled freelancers with clients worldwide. Hire for design, web development, video and writing — payment is held in escrow until you accept the work.",
   h1: "Hire Skilled African Freelancers",
   jsonLd: [organizationSchema, webSiteSchema, serviceSchema, faqPageSchema()],
-  body: `<p>FIVESOM is an African and Somali freelancer marketplace. It connects freelancers from Somalia and across Africa with clients worldwide for logo design, graphic design, web and app development, video editing and content writing.</p><p>Clients pay when they order, the payment is held in escrow, and it is released to the freelancer only after the client accepts the delivered work.</p>${serviceLinks}${countryLinks}<section><h2>Frequently asked questions</h2>${HOME_FAQ.map((f) => `<h3>${e(f.question)}</h3><p>${e(f.answer)}</p>`).join("")}</section>`,
+  body: `<p>FIVESOM is an African and Somali freelancer marketplace. It connects freelancers from Somalia and across Africa with clients worldwide for logo design, graphic design, web and app development, video editing and content writing.</p><p>Clients pay when they order, the payment is held in escrow, and it is released to the freelancer only after the client accepts the delivered work.</p>${serviceLinks}${countryLinks}<section><h2>${e(BUYER_GUIDE.heading)}</h2><p>${e(BUYER_GUIDE.intro)}</p><ol>${BUYER_GUIDE.steps.map((step) => `<li><h3>${e(step.title)}</h3><p>${e(step.text)}</p></li>`).join("")}</ol><a href="/services/">Compare freelance services</a></section><section><h2>Frequently asked questions</h2>${HOME_FAQ.map((f) => `<h3>${e(f.question)}</h3><p>${e(f.answer)}</p>`).join("")}</section>`,
 });
 
 // Fixed public pages

@@ -6,3 +6,5 @@
 - Prerendered structured data shares the visible page schema sources and is replaced on client mount, preventing crawler-only claims and duplicate schema.
 - Buyer funnel events require analytics consent and contain no free text, user/order IDs or payment details; verified payment events are measurement only, never the financial ledger.
 - Buyer guide content is shared by the visible homepage and prerender output so acquisition content stays consistent for visitors and crawlers.
+- Optional tracking loads through the consent manager, with automatic page URLs disabled to avoid leaking checkout identifiers.
+- Admin buyer activity reads existing RLS-protected account/order counts; external analytics metrics must never be represented as local or financial records.

@@ -1,9 +1,13 @@
 # Mobile-first FIVESOM redesign
 
 ## Buyer acquisition and search visibility
-- [ ] Audit live Fivesom presence and existing buyer/SEO features against the supplied brief
-- [ ] Improve buyer-focused discovery, useful service content, and acquisition measurement while preserving existing workflows
-- [ ] Verify public buyer journeys and report actual changes separately from unverified search rankings
+- [x] Audit live Fivesom presence and existing buyer/SEO features against the supplied brief
+- [x] Improve buyer-focused discovery, shared buyer guide/prerender content, canonical URLs and consented acquisition measurement while preserving workflows
+- [x] Verify public buyer guide → services → Explore search, canonical and mobile widths 320–430px; no runtime errors
+- [x] Add Admin/Founder Buyer Activity with date-filtered account/order counts from existing protected tables, not fabricated traffic metrics
+- [ ] Verify Buyer Activity with a signed-in admin — blocked by external unmanaged authentication
+- [ ] Publish updated site to fivesom.net and confirm live crawl — requires owner's Netlify deployment; Google ranking is not guaranteed
+- [ ] Connect external Google Analytics traffic reports to the dashboard — no authorized reporting connection available; existing dashboard explicitly labels this limitation
 
 ## Email restoration
 - [x] Diagnose notification failure: deployed email requests return provider 403 project authorization denied

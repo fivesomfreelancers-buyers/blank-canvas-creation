@@ -41,12 +41,14 @@ import AdminGigReview from './AdminGigReview';
 import AdminAboutTeam from './AdminAboutTeam';
 import AdminBlog from './AdminBlog';
 import AdminSeoChecks from './AdminSeoChecks';
+import AdminBuyerActivity from './AdminBuyerActivity';
 import { useAdminBadges, type AdminBadgeKey } from '@/hooks/useAdminBadges';
 import { useTheme } from '@/components/ThemeProvider';
 
 const menuGroups: { label: string; items: { key: string; label: string; icon: any }[] }[] = [
   { label: 'Overview', items: [
     { key: 'overview', label: 'Dashboard', icon: LayoutDashboard },
+    { key: 'buyer_activity', label: 'Buyer Activity', icon: Activity },
   ]},
   { label: 'Operations', items: [
     { key: 'users', label: 'Users', icon: Users },
@@ -122,6 +124,7 @@ const AdminDashboardInner = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'overview': return <AdminOverview />;
+      case 'buyer_activity': return <AdminBuyerActivity />;
       case 'users': return <AdminUsers />;
       case 'verifications': return <AdminVerifications />;
       case 'gig_review': return <AdminGigReview />;
