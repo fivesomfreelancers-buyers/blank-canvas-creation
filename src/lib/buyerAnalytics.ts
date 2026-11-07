@@ -8,16 +8,11 @@ export function trackBuyerEvent(event: BuyerEvent): boolean {
   const analyticsWindow = window as Window & { gtag?: (...args: unknown[]) => void };
   if (!analyticsWindow.gtag) return false;
   // Explicitly replace automatic URL context: checkout URLs contain session IDs.
-  try {
-    analyticsWindow.gtag('event', event, {
-      page_location: 'https://fivesom.net/',
-      page_referrer: '',
-      page_title: 'FIVESOM buyer journey',
-      event_category: 'buyer_journey',
-    });
-    return true;
-  } catch {
-    // Measurement must never prevent contacting a seller or placing an order.
-    return false;
-  }
+  analyticsWindow.gtag('event', event, {
+    page_location: 'https://fivesom.net/',
+    page_referrer: '',
+    page_title: 'FIVESOM buyer journey',
+    event_category: 'buyer_journey',
+  });
+  return true;
 }

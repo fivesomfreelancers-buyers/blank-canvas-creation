@@ -11,7 +11,6 @@ import {
   rejectNonEssential,
 } from '@/lib/cookieConsent';
 import CookiePreferencesDialog from './CookiePreferencesDialog';
-import { syncConsentedTracking } from '@/lib/consentedTracking';
 
 /**
  * Global cookie consent UI: first-visit banner + preferences panel.
@@ -23,7 +22,6 @@ const CookieConsentManager: React.FC = () => {
 
   const refresh = useCallback(() => {
     setShowBanner(getConsent() === null);
-    syncConsentedTracking();
   }, []);
 
   useEffect(() => {
