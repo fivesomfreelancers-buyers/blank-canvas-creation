@@ -6,17 +6,17 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/explore</loc>
+    <loc>https://fivesom.net/explore/</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services</loc>
+    <loc>https://fivesom.net/services/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/how-it-works</loc>
+    <loc>https://fivesom.net/how-it-works/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <image:image>
@@ -37,997 +37,732 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/vip</loc>
+    <loc>https://fivesom.net/vip/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/about</loc>
+    <loc>https://fivesom.net/about/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/blog</loc>
+    <loc>https://fivesom.net/blog/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/register/buyer</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/register/freelancer</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/legal/terms</loc>
+    <loc>https://fivesom.net/legal/terms/</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/legal/privacy</loc>
+    <loc>https://fivesom.net/legal/privacy/</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/legal/cookies</loc>
+    <loc>https://fivesom.net/legal/cookies/</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/support</loc>
+    <loc>https://fivesom.net/support/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/support/help-center</loc>
+    <loc>https://fivesom.net/support/help-center/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/support/trust-safety</loc>
+    <loc>https://fivesom.net/support/trust-safety/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/africa</loc>
+    <loc>https://fivesom.net/freelancers/africa/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/somalia</loc>
+    <loc>https://fivesom.net/freelancers/somalia/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/somaliland</loc>
+    <loc>https://fivesom.net/freelancers/somaliland/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/ethiopia</loc>
+    <loc>https://fivesom.net/freelancers/ethiopia/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/djibouti</loc>
+    <loc>https://fivesom.net/freelancers/djibouti/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/kenya</loc>
+    <loc>https://fivesom.net/freelancers/kenya/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/nigeria</loc>
+    <loc>https://fivesom.net/freelancers/nigeria/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/ghana</loc>
+    <loc>https://fivesom.net/freelancers/ghana/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/tanzania</loc>
+    <loc>https://fivesom.net/freelancers/tanzania/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/uganda</loc>
+    <loc>https://fivesom.net/freelancers/uganda/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/rwanda</loc>
+    <loc>https://fivesom.net/freelancers/rwanda/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/south-africa</loc>
+    <loc>https://fivesom.net/freelancers/south-africa/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancers/egypt</loc>
+    <loc>https://fivesom.net/freelancers/egypt/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/logo-design</loc>
+    <loc>https://fivesom.net/services/logo-design/</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/logo-design/minimal-logo</loc>
+    <loc>https://fivesom.net/services/logo-design/minimal-logo/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/logo-design/3d-logo</loc>
+    <loc>https://fivesom.net/services/logo-design/modern-logo/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/logo-design/modern-logo</loc>
+    <loc>https://fivesom.net/services/logo-design/business-logo/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/logo-design/business-logo</loc>
+    <loc>https://fivesom.net/services/logo-design/typography-logo/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/logo-design/mascot-logo</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/logo-design/typography-logo</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/video-editing</loc>
+    <loc>https://fivesom.net/services/video-editing/</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/video-editing/short-videos</loc>
+    <loc>https://fivesom.net/services/video-editing/short-videos/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/video-editing/youtube-editing</loc>
+    <loc>https://fivesom.net/services/video-editing/youtube-editing/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/video-editing/tiktok-reels</loc>
+    <loc>https://fivesom.net/services/video-editing/tiktok-reels/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/video-editing/motion-graphics</loc>
+    <loc>https://fivesom.net/services/video-editing/commercial-video/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/video-editing/wedding-video</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/video-editing/commercial-video</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/motion-graphics</loc>
+    <loc>https://fivesom.net/services/web-design/</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/motion-graphics/logo-animation</loc>
+    <loc>https://fivesom.net/services/web-design/business-website/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/motion-graphics/intro-videos</loc>
+    <loc>https://fivesom.net/services/web-design/portfolio-website/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/motion-graphics/outro-videos</loc>
+    <loc>https://fivesom.net/services/web-design/ecommerce-design/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/motion-graphics/explainer-videos</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/motion-graphics/animated-ads</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/motion-graphics/social-media-motion</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/motion-graphics/typography-animation</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/motion-graphics/character-animation</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/motion-graphics/2d-motion-design</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/motion-graphics/ui-animation</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/motion-graphics/lottie-animation</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/web-design</loc>
+    <loc>https://fivesom.net/services/content-writing/</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/web-design/landing-page</loc>
+    <loc>https://fivesom.net/services/content-writing/blog-posts/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/web-design/business-website</loc>
+    <loc>https://fivesom.net/services/content-writing/translation/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/web-design/portfolio-website</loc>
+    <loc>https://fivesom.net/services/content-writing/book-writing/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/web-design/ecommerce-design</loc>
+    <loc>https://fivesom.net/services/content-writing/kids-book-writing/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/web-design/blog-design</loc>
+    <loc>https://fivesom.net/services/content-writing/story-book-writing/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/content-writing</loc>
+    <loc>https://fivesom.net/services/graphic-design/</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/content-writing/blog-posts</loc>
+    <loc>https://fivesom.net/services/graphic-design/poster-design/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/content-writing/product-descriptions</loc>
+    <loc>https://fivesom.net/services/graphic-design/social-media-graphics/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/content-writing/social-media-copy</loc>
+    <loc>https://fivesom.net/services/graphic-design/menu-design/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/content-writing/website-copy</loc>
+    <loc>https://fivesom.net/services/graphic-design/illustration/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/content-writing/translation</loc>
+    <loc>https://fivesom.net/services/graphic-design/photo-editing/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/content-writing/book-writing</loc>
+    <loc>https://fivesom.net/services/graphic-design/branding-kit/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/content-writing/kids-book-writing</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/content-writing/story-book-writing</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/content-writing/ebook-writing</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/content-writing/islamic-book-writing</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/content-writing/poetry-writing</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/content-writing/book-editing-proofreading</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/app-ui-design</loc>
+    <loc>https://fivesom.net/services/web-development/</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/app-ui-design/mobile-app-ui</loc>
+    <loc>https://fivesom.net/services/web-development/business-website-dev/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/app-ui-design/web-app-design</loc>
+    <loc>https://fivesom.net/services/web-development/ecommerce-dev/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/app-ui-design/dashboard-design</loc>
+    <loc>https://fivesom.net/services/web-development/web-app/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/services/app-ui-design/wireframes</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/app-ui-design/ux-prototyping</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/flyer-design</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/poster-design</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/banner-design</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/business-card</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/social-media-graphics</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/brochure-design</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/menu-design</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/invitation-design</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/packaging-design</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/t-shirt-design</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/book-cover-design</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/infographic-design</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/illustration</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/photo-editing</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/graphic-design/branding-kit</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/app-development</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/app-development/ios-app</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/app-development/android-app</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/app-development/cross-platform-app</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/app-development/app-maintenance</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/app-development/app-bug-fixing</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/app-development/app-publishing</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/web-development</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/web-development/landing-page-dev</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/web-development/business-website-dev</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/web-development/ecommerce-dev</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/web-development/wordpress</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/web-development/web-app</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/web-development/api-backend</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/services/web-development/website-bug-fixing</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs</loc>
+    <loc>https://fivesom.net/docs/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/getting-started</loc>
+    <loc>https://fivesom.net/docs/getting-started/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/creating-account</loc>
+    <loc>https://fivesom.net/docs/creating-account/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/account-security</loc>
+    <loc>https://fivesom.net/docs/account-security/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/freelancer-profile</loc>
+    <loc>https://fivesom.net/docs/freelancer-profile/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/creating-gig</loc>
+    <loc>https://fivesom.net/docs/creating-gig/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/packages-pricing</loc>
+    <loc>https://fivesom.net/docs/packages-pricing/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/earnings-fees</loc>
+    <loc>https://fivesom.net/docs/earnings-fees/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/withdrawals</loc>
+    <loc>https://fivesom.net/docs/withdrawals/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/finding-freelancers</loc>
+    <loc>https://fivesom.net/docs/finding-freelancers/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/buying-gig</loc>
+    <loc>https://fivesom.net/docs/buying-gig/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/order-requirements</loc>
+    <loc>https://fivesom.net/docs/order-requirements/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/reviewing-delivery</loc>
+    <loc>https://fivesom.net/docs/reviewing-delivery/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/messaging-communication</loc>
+    <loc>https://fivesom.net/docs/messaging-communication/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/delivering-order</loc>
+    <loc>https://fivesom.net/docs/delivering-order/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/revisions</loc>
+    <loc>https://fivesom.net/docs/revisions/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/disputes</loc>
+    <loc>https://fivesom.net/docs/disputes/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/escrow-payments</loc>
+    <loc>https://fivesom.net/docs/escrow-payments/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/privacy-trust</loc>
+    <loc>https://fivesom.net/docs/privacy-trust/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/verification</loc>
+    <loc>https://fivesom.net/docs/verification/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/blue-tick</loc>
+    <loc>https://fivesom.net/docs/blue-tick/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/vip-membership</loc>
+    <loc>https://fivesom.net/docs/vip-membership/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/support</loc>
+    <loc>https://fivesom.net/docs/support/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/so</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/getting-started</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/creating-account</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/account-security</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/freelancer-profile</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/creating-gig</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/packages-pricing</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/earnings-fees</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/withdrawals</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/finding-freelancers</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/buying-gig</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/order-requirements</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/reviewing-delivery</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/messaging-communication</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/delivering-order</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/revisions</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/disputes</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/escrow-payments</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/privacy-trust</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/verification</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/blue-tick</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/vip-membership</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/so/support</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/docs/ar</loc>
+    <loc>https://fivesom.net/docs/so/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/getting-started</loc>
+    <loc>https://fivesom.net/docs/so/getting-started/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/creating-account</loc>
+    <loc>https://fivesom.net/docs/so/creating-account/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/account-security</loc>
+    <loc>https://fivesom.net/docs/so/account-security/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/freelancer-profile</loc>
+    <loc>https://fivesom.net/docs/so/freelancer-profile/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/creating-gig</loc>
+    <loc>https://fivesom.net/docs/so/creating-gig/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/packages-pricing</loc>
+    <loc>https://fivesom.net/docs/so/packages-pricing/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/earnings-fees</loc>
+    <loc>https://fivesom.net/docs/so/earnings-fees/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/withdrawals</loc>
+    <loc>https://fivesom.net/docs/so/withdrawals/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/finding-freelancers</loc>
+    <loc>https://fivesom.net/docs/so/finding-freelancers/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/buying-gig</loc>
+    <loc>https://fivesom.net/docs/so/buying-gig/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/order-requirements</loc>
+    <loc>https://fivesom.net/docs/so/order-requirements/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/reviewing-delivery</loc>
+    <loc>https://fivesom.net/docs/so/reviewing-delivery/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/messaging-communication</loc>
+    <loc>https://fivesom.net/docs/so/messaging-communication/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/delivering-order</loc>
+    <loc>https://fivesom.net/docs/so/delivering-order/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/revisions</loc>
+    <loc>https://fivesom.net/docs/so/revisions/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/disputes</loc>
+    <loc>https://fivesom.net/docs/so/disputes/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/escrow-payments</loc>
+    <loc>https://fivesom.net/docs/so/escrow-payments/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/privacy-trust</loc>
+    <loc>https://fivesom.net/docs/so/privacy-trust/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/verification</loc>
+    <loc>https://fivesom.net/docs/so/verification/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/blue-tick</loc>
+    <loc>https://fivesom.net/docs/so/blue-tick/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/vip-membership</loc>
+    <loc>https://fivesom.net/docs/so/vip-membership/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/ar/support</loc>
+    <loc>https://fivesom.net/docs/so/support/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr</loc>
+    <loc>https://fivesom.net/docs/ar/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/getting-started</loc>
+    <loc>https://fivesom.net/docs/ar/getting-started/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/creating-account</loc>
+    <loc>https://fivesom.net/docs/ar/creating-account/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/account-security</loc>
+    <loc>https://fivesom.net/docs/ar/account-security/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/freelancer-profile</loc>
+    <loc>https://fivesom.net/docs/ar/freelancer-profile/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/creating-gig</loc>
+    <loc>https://fivesom.net/docs/ar/creating-gig/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/packages-pricing</loc>
+    <loc>https://fivesom.net/docs/ar/packages-pricing/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/earnings-fees</loc>
+    <loc>https://fivesom.net/docs/ar/earnings-fees/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/withdrawals</loc>
+    <loc>https://fivesom.net/docs/ar/withdrawals/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/finding-freelancers</loc>
+    <loc>https://fivesom.net/docs/ar/finding-freelancers/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/buying-gig</loc>
+    <loc>https://fivesom.net/docs/ar/buying-gig/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/order-requirements</loc>
+    <loc>https://fivesom.net/docs/ar/order-requirements/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/reviewing-delivery</loc>
+    <loc>https://fivesom.net/docs/ar/reviewing-delivery/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/messaging-communication</loc>
+    <loc>https://fivesom.net/docs/ar/messaging-communication/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/delivering-order</loc>
+    <loc>https://fivesom.net/docs/ar/delivering-order/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/revisions</loc>
+    <loc>https://fivesom.net/docs/ar/revisions/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/disputes</loc>
+    <loc>https://fivesom.net/docs/ar/disputes/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/escrow-payments</loc>
+    <loc>https://fivesom.net/docs/ar/escrow-payments/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/privacy-trust</loc>
+    <loc>https://fivesom.net/docs/ar/privacy-trust/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/verification</loc>
+    <loc>https://fivesom.net/docs/ar/verification/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/blue-tick</loc>
+    <loc>https://fivesom.net/docs/ar/blue-tick/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/vip-membership</loc>
+    <loc>https://fivesom.net/docs/ar/vip-membership/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/docs/fr/support</loc>
+    <loc>https://fivesom.net/docs/ar/support/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-somali-arabic-and-english-texts</loc>
+    <loc>https://fivesom.net/docs/fr/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/getting-started/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/creating-account/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/account-security/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/freelancer-profile/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/creating-gig/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/packages-pricing/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/earnings-fees/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/withdrawals/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/finding-freelancers/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/buying-gig/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/order-requirements/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/reviewing-delivery/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/messaging-communication/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/delivering-order/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/revisions/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/disputes/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/escrow-payments/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/privacy-trust/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/verification/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/blue-tick/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/vip-membership/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/docs/fr/support/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-translate-somali-arabic-and-english-texts/</loc>
     <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1045,7 +780,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts-2</loc>
+    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts-2/</loc>
     <lastmod>2026-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1063,7 +798,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/waxaan-kuu-qoraa-sheekooyin-carruur-oo-kobciya-aqoonta-iyo-maskaxda-da</loc>
+    <loc>https://fivesom.net/gig/waxaan-kuu-qoraa-sheekooyin-carruur-oo-kobciya-aqoonta-iyo-maskaxda-da/</loc>
     <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1085,7 +820,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-a-modern-minimalist-logo-in-figma-for-your-brand</loc>
+    <loc>https://fivesom.net/gig/i-will-design-a-modern-minimalist-logo-in-figma-for-your-brand/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1103,7 +838,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-somali-to-english-and-do-data-entry</loc>
+    <loc>https://fivesom.net/gig/i-will-translate-somali-to-english-and-do-data-entry/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1113,7 +848,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-engalish</loc>
+    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-engalish/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1123,7 +858,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-business-posters-and-social-media-posts-usi</loc>
+    <loc>https://fivesom.net/gig/i-will-design-professional-business-posters-and-social-media-posts-usi/</loc>
     <lastmod>2026-10-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1145,7 +880,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-create-a-professional-custom-logo-for-your-business</loc>
+    <loc>https://fivesom.net/gig/i-will-create-a-professional-custom-logo-for-your-business/</loc>
     <lastmod>2026-10-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1163,7 +898,17 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts-and-graphics</loc>
+    <loc>https://fivesom.net/gig/i-will-create-professional-commercial-videos-for-your-business/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/11887562-f3fc-4d0b-8a67-4f9c872c1653/muydqjmvwnpk/i-will-create-professional-commercial-videos-for-your-busine.jpeg</image:loc>
+      <image:title>I will create professional commercial videos for your business</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts-and-graphics/</loc>
     <lastmod>2026-10-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1181,7 +926,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-build-a-professional-modern-responsive-website-or-web-applicati</loc>
+    <loc>https://fivesom.net/gig/i-will-build-a-professional-modern-responsive-website-or-web-applicati/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1195,7 +940,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-build-custom-full-stack-web-applications-and-business-systems</loc>
+    <loc>https://fivesom.net/gig/i-will-build-custom-full-stack-web-applications-and-business-systems/</loc>
     <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1213,7 +958,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-or-redesign-shopify-squarespace-and-gohighlevel-websites</loc>
+    <loc>https://fivesom.net/gig/i-will-design-or-redesign-shopify-squarespace-and-gohighlevel-websites/</loc>
     <lastmod>2026-10-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1231,7 +976,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts-and-flyers</loc>
+    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts-and-flyers/</loc>
     <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1249,7 +994,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-create-professional-twitch-youtube-and-kick-stream-screens</loc>
+    <loc>https://fivesom.net/gig/i-will-create-professional-twitch-youtube-and-kick-stream-screens/</loc>
     <lastmod>2026-10-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1271,7 +1016,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-somali-to-english-and-english-to-somali</loc>
+    <loc>https://fivesom.net/gig/i-will-translate-somali-to-english-and-english-to-somali/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1281,7 +1026,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-build-a-responsive-personal-portfolio-website</loc>
+    <loc>https://fivesom.net/gig/i-will-build-a-responsive-personal-portfolio-website/</loc>
     <lastmod>2026-10-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1299,7 +1044,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-logos-and-posters-for-your-business</loc>
+    <loc>https://fivesom.net/gig/i-will-design-professional-logos-and-posters-for-your-business/</loc>
     <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1317,13 +1062,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-create-professional-and-engaging-videos-for-your-brand</loc>
+    <loc>https://fivesom.net/gig/i-will-create-professional-and-engaging-videos-for-your-brand/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-somali-english-and-arabic-accurately</loc>
+    <loc>https://fivesom.net/gig/i-will-translate-somali-english-and-arabic-accurately/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1333,7 +1078,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-a-professional-modern-logo-for-your-business</loc>
+    <loc>https://fivesom.net/gig/i-will-design-a-professional-modern-logo-for-your-business/</loc>
     <lastmod>2026-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1355,7 +1100,25 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-accurately-and-clearly-i-will-check</loc>
+    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-english-3/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/17103ecb-cf57-425e-bcd8-a920f4e2e35d/mw5971plilvx/i-will-translate-english-to-somali-and-somali-to-english.webp</image:loc>
+      <image:title>I will translate English to Somali and Somali to English</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/17103ecb-cf57-425e-bcd8-a920f4e2e35d/mw5971plilvx/i-will-translate-english-to-somali-and-somali-to-english-2.webp</image:loc>
+      <image:title>I will translate English to Somali and Somali to English - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/17103ecb-cf57-425e-bcd8-a920f4e2e35d/mw5971plilvx/i-will-translate-english-to-somali-and-somali-to-english-3.webp</image:loc>
+      <image:title>I will translate English to Somali and Somali to English - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-accurately-and-clearly-i-will-check/</loc>
     <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1373,7 +1136,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-do-data-entry-and-typing</loc>
+    <loc>https://fivesom.net/gig/i-will-do-data-entry-and-typing/</loc>
     <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1391,7 +1154,25 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-professionally-translate-somali-arabic-and-english-documents</loc>
+    <loc>https://fivesom.net/gig/i-will-design-professional-and-attractive-social-media-posters/</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/83835f7f-c942-40ff-8d2a-58e8e9a169f0/mw6mi8obsymb/i-will-design-professional-and-attractive-social-media-poste.png</image:loc>
+      <image:title>I will design professional and attractive social media posters</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/83835f7f-c942-40ff-8d2a-58e8e9a169f0/mw6mi8obsymb/i-will-design-professional-and-attractive-social-media-poste-2.webp</image:loc>
+      <image:title>I will design professional and attractive social media posters - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/83835f7f-c942-40ff-8d2a-58e8e9a169f0/mw6mi8obsymb/i-will-design-professional-and-attractive-social-media-poste-3.webp</image:loc>
+      <image:title>I will design professional and attractive social media posters - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-professionally-translate-somali-arabic-and-english-documents/</loc>
     <lastmod>2026-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1409,7 +1190,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-edit-professional-videos-for-youtube-tiktok-and-instagram-reels</loc>
+    <loc>https://fivesom.net/gig/i-will-edit-professional-videos-for-youtube-tiktok-and-instagram-reels/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1427,7 +1208,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-create-professional-social-media-posts-for-your-business</loc>
+    <loc>https://fivesom.net/gig/i-will-create-professional-social-media-posts-for-your-business/</loc>
     <lastmod>2026-10-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1449,7 +1230,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-a-unique-and-professional-logo-for-your-business</loc>
+    <loc>https://fivesom.net/gig/i-will-design-a-unique-and-professional-logo-for-your-business/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1467,7 +1248,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-create-a-professional-and-responsive-website-for-your-business</loc>
+    <loc>https://fivesom.net/gig/i-will-create-a-professional-and-responsive-website-for-your-business/</loc>
     <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1485,7 +1266,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-write-and-format-professional-reports-and-word-documents</loc>
+    <loc>https://fivesom.net/gig/i-will-write-and-format-professional-reports-and-word-documents/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1503,7 +1284,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/waxaan-kuu-dhisayaa-website-casri-ah-oo-ganacsi-online-ah</loc>
+    <loc>https://fivesom.net/gig/waxaan-kuu-dhisayaa-website-casri-ah-oo-ganacsi-online-ah/</loc>
     <lastmod>2026-10-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1521,7 +1302,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-desing-a-professional-modern-logo</loc>
+    <loc>https://fivesom.net/gig/i-will-desing-a-professional-modern-logo/</loc>
     <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1539,17 +1320,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-create-professional-commercial-videos-for-your-business</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/11887562-f3fc-4d0b-8a67-4f9c872c1653/muydqjmvwnpk/i-will-create-professional-commercial-videos-for-your-busine.jpeg</image:loc>
-      <image:title>I will create professional commercial videos for your business</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-a-professional-modern-logo</loc>
+    <loc>https://fivesom.net/gig/i-will-design-a-professional-modern-logo/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1571,7 +1342,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-type-documents-and-text</loc>
+    <loc>https://fivesom.net/gig/i-will-type-documents-and-text/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1589,7 +1360,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-write-seo-friendly-blog-posts-and-articles-in-simple-english</loc>
+    <loc>https://fivesom.net/gig/i-will-write-seo-friendly-blog-posts-and-articles-in-simple-english/</loc>
     <lastmod>2026-11-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1611,13 +1382,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-english</loc>
+    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-english/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/waxaan-kuu-qoraa-sheekooyin-carruur-oo-xiiso-leh</loc>
+    <loc>https://fivesom.net/gig/waxaan-kuu-qoraa-sheekooyin-carruur-oo-xiiso-leh/</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1635,7 +1406,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-somali-to-english-and-english-to-somali-2</loc>
+    <loc>https://fivesom.net/gig/i-will-translate-somali-to-english-and-english-to-somali-2/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1645,7 +1416,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-a-professional-modern-logo-and-brand-identity</loc>
+    <loc>https://fivesom.net/gig/i-will-design-a-professional-modern-logo-and-brand-identity/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1655,7 +1426,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts</loc>
+    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts/</loc>
     <lastmod>2026-10-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1673,7 +1444,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-write-and-edit-clear-somali-articles-and-content</loc>
+    <loc>https://fivesom.net/gig/i-will-write-and-edit-clear-somali-articles-and-content/</loc>
     <lastmod>2026-11-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1691,7 +1462,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-create-custom-animated-stream-overlays-and-obs-graphics</loc>
+    <loc>https://fivesom.net/gig/i-will-create-custom-animated-stream-overlays-and-obs-graphics/</loc>
     <lastmod>2026-10-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1709,7 +1480,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-modern-logo-brand-and-social-media-design</loc>
+    <loc>https://fivesom.net/gig/i-will-design-modern-logo-brand-and-social-media-design/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1727,7 +1498,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-record-clear-and-professional-somali-voice-recordings</loc>
+    <loc>https://fivesom.net/gig/i-will-record-clear-and-professional-somali-voice-recordings/</loc>
     <lastmod>2026-11-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1745,7 +1516,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-build-a-modern-and-responsive-website-for-your-business</loc>
+    <loc>https://fivesom.net/gig/i-will-build-a-modern-and-responsive-website-for-your-business/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1759,13 +1530,13 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/waxaan-muuqaladada-ka-dhigi-doona-mid-soo-jiidaso-leh</loc>
+    <loc>https://fivesom.net/gig/waxaan-muuqaladada-ka-dhigi-doona-mid-soo-jiidaso-leh/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-a-professional-yt-thumbnail</loc>
+    <loc>https://fivesom.net/gig/i-will-design-a-professional-yt-thumbnail/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1783,7 +1554,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/gig-title-i-will-translate-somali-to-english-and-english-to-somali-pro</loc>
+    <loc>https://fivesom.net/gig/gig-title-i-will-translate-somali-to-english-and-english-to-somali-pro/</loc>
     <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1801,7 +1572,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/your-dream-website-starts-here-i-design-modern-websites-that-help-your</loc>
+    <loc>https://fivesom.net/gig/your-dream-website-starts-here-i-design-modern-websites-that-help-your/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1819,7 +1590,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/professional-graphic-designer-creative-modern-designs-creative-graphic</loc>
+    <loc>https://fivesom.net/gig/professional-graphic-designer-creative-modern-designs-creative-graphic/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1833,7 +1604,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/creative-logo-design-for-your-brand</loc>
+    <loc>https://fivesom.net/gig/creative-logo-design-for-your-brand/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1851,7 +1622,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-create-a-professional-business-website-using-html-css-and-javas</loc>
+    <loc>https://fivesom.net/gig/i-will-create-a-professional-business-website-using-html-css-and-javas/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1861,7 +1632,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-a-modern-professional-portfolio-website</loc>
+    <loc>https://fivesom.net/gig/i-will-design-a-modern-professional-portfolio-website/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1883,7 +1654,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-provide-fast-and-accurate</loc>
+    <loc>https://fivesom.net/gig/i-will-provide-fast-and-accurate/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1893,7 +1664,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-custom-canva-graphics-and-social-media-posts</loc>
+    <loc>https://fivesom.net/gig/i-will-design-custom-canva-graphics-and-social-media-posts/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1911,7 +1682,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-eye-catching-youtube-thumbnails-that-get-clicks</loc>
+    <loc>https://fivesom.net/gig/i-will-design-eye-catching-youtube-thumbnails-that-get-clicks/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1929,7 +1700,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-edit-professional-short-form-videos-for-tiktok-and-reels</loc>
+    <loc>https://fivesom.net/gig/i-will-edit-professional-short-form-videos-for-tiktok-and-reels/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1939,7 +1710,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-english-2</loc>
+    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-english-2/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1957,7 +1728,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-create-attractive-and-professional-graphic-designs-for-individuals-b</loc>
+    <loc>https://fivesom.net/gig/i-create-attractive-and-professional-graphic-designs-for-individuals-b/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1975,7 +1746,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-edit-professional-tiktok-videos-and-instagram-reels</loc>
+    <loc>https://fivesom.net/gig/i-will-edit-professional-tiktok-videos-and-instagram-reels/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1993,7 +1764,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-edit-professional-pubg-gaming-videos-and-social-media-reels</loc>
+    <loc>https://fivesom.net/gig/i-will-edit-professional-pubg-gaming-videos-and-social-media-reels/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -2015,7 +1786,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-be-your-virtual-assistant-for-data-entry-and-admin-tasks</loc>
+    <loc>https://fivesom.net/gig/i-will-be-your-virtual-assistant-for-data-entry-and-admin-tasks/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -2033,7 +1804,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-write-professional-articles-blog-posts-and-healthcare-content</loc>
+    <loc>https://fivesom.net/gig/i-will-write-professional-articles-blog-posts-and-healthcare-content/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -2043,7 +1814,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-professionally-translate-english-to-somali-and-vice-versa</loc>
+    <loc>https://fivesom.net/gig/i-will-professionally-translate-english-to-somali-and-vice-versa/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -2061,7 +1832,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-do-professional-somali-female-voice-over-for-your-video-ad</loc>
+    <loc>https://fivesom.net/gig/i-will-do-professional-somali-female-voice-over-for-your-video-ad/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -2079,7 +1850,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/title-i-will-do-accurate-data-entry-web-research-and-excel-tasks-descr</loc>
+    <loc>https://fivesom.net/gig/title-i-will-do-accurate-data-entry-web-research-and-excel-tasks-descr/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -2097,7 +1868,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-do-accurate-data-entry-typing-and-copy-paste</loc>
+    <loc>https://fivesom.net/gig/i-will-do-accurate-data-entry-typing-and-copy-paste/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -2115,7 +1886,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-posters-banners-and-flyers-for-your-busines</loc>
+    <loc>https://fivesom.net/gig/i-will-design-professional-posters-banners-and-flyers-for-your-busines/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -2129,7 +1900,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-write-engaging-content-blog-posts-and-social-media-captions-for</loc>
+    <loc>https://fivesom.net/gig/i-will-write-engaging-content-blog-posts-and-social-media-captions-for/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -2147,7 +1918,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-english-to-arabic-and-arabic-to-english-accurately</loc>
+    <loc>https://fivesom.net/gig/i-will-translate-english-to-arabic-and-arabic-to-english-accurately/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -2165,327 +1936,337 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/daadir-cade</loc>
+    <loc>https://fivesom.net/freelancer/daadir-cade/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/saeed</loc>
+    <loc>https://fivesom.net/freelancer/saeed/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/najiib-hassan</loc>
+    <loc>https://fivesom.net/freelancer/najiib-hassan/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/safa-abdikarim</loc>
+    <loc>https://fivesom.net/freelancer/safa-abdikarim/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/mohammed-abdirashid</loc>
+    <loc>https://fivesom.net/freelancer/mohammed-abdirashid/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/fardowso-muuse</loc>
+    <loc>https://fivesom.net/freelancer/fardowso-muuse/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/ajayi-favour</loc>
+    <loc>https://fivesom.net/freelancer/ajayi-favour/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/xamda-cawil</loc>
+    <loc>https://fivesom.net/freelancer/xamda-cawil/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/hafsa-hassan-ahmed</loc>
+    <loc>https://fivesom.net/freelancer/hafsa-hassan-ahmed/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/amar-hassen-mohammednur</loc>
+    <loc>https://fivesom.net/freelancer/amar-hassen-mohammednur/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/yahya-abdi</loc>
+    <loc>https://fivesom.net/freelancer/yahya-abdi/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/isxaq-axmad</loc>
+    <loc>https://fivesom.net/freelancer/isxaq-axmad/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/cabdirahmaan-bashiir</loc>
+    <loc>https://fivesom.net/freelancer/cabdirahmaan-bashiir/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/ridwan-said</loc>
+    <loc>https://fivesom.net/freelancer/ridwan-said/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/khadra-c-salaan</loc>
+    <loc>https://fivesom.net/freelancer/khadra-c-salaan/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/asmahodandev</loc>
+    <loc>https://fivesom.net/freelancer/asmahodandev/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/saalim-mahatt</loc>
+    <loc>https://fivesom.net/freelancer/saalim-mahatt/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/najax-yazen</loc>
+    <loc>https://fivesom.net/freelancer/prince-murimi/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/prince-murimi</loc>
+    <loc>https://fivesom.net/freelancer/goatmason/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/goatmason</loc>
+    <loc>https://fivesom.net/freelancer/fardows-abdi-kaadir/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/fardows-abdi-kaadir</loc>
+    <loc>https://fivesom.net/freelancer/hafso-ainte/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/hafso-ainte</loc>
+    <loc>https://fivesom.net/freelancer/cabdi-casiis-ibraahim/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/cabdi-casiis-ibraahim</loc>
+    <loc>https://fivesom.net/freelancer/moha-daahe/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/moha-daahe</loc>
+    <loc>https://fivesom.net/freelancer/abdiwadud-jama/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/abdiwadud-jama</loc>
+    <loc>https://fivesom.net/freelancer/isma-yare/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/isma-yare</loc>
+    <loc>https://fivesom.net/freelancer/bahal-nool/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/bahal-nool</loc>
+    <loc>https://fivesom.net/freelancer/yasmin-ali/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/yasmin-ali</loc>
+    <loc>https://fivesom.net/freelancer/ikhlaas-ibrahim/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/ikhlaas-ibrahim</loc>
+    <loc>https://fivesom.net/freelancer/fatima-casiis/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/fatima-casiis</loc>
+    <loc>https://fivesom.net/freelancer/mohamett-updy/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/mohamett-updy</loc>
+    <loc>https://fivesom.net/freelancer/mohamed-ahmed-muhdin/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/maxamed-dalmar</loc>
+    <loc>https://fivesom.net/freelancer/sunday-victor/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/mohamed-ahmed-muhdin</loc>
+    <loc>https://fivesom.net/freelancer/luis-barnaba/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/sunday-victor</loc>
+    <loc>https://fivesom.net/freelancer/mohame-abdullhi-ali/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/luis-barnaba</loc>
+    <loc>https://fivesom.net/freelancer/ahmed-mooge/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/mohame-abdullhi-ali</loc>
+    <loc>https://fivesom.net/freelancer/abdiaziiz-mahad/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/ahmed-mooge</loc>
+    <loc>https://fivesom.net/freelancer/najiya-yasin/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/abdiaziiz-mahad</loc>
+    <loc>https://fivesom.net/freelancer/fahiima-mohamoud/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/najiya-yasin</loc>
+    <loc>https://fivesom.net/freelancer/najax-yazen/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/fahiima-mohamoud</loc>
+    <loc>https://fivesom.net/freelancer/ikraan-muqtaar/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/ikraan-muqtaar</loc>
+    <loc>https://fivesom.net/freelancer/hibaaq-apdirahman/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/hibaaq-apdirahman</loc>
+    <loc>https://fivesom.net/freelancer/ahmed-nour-abdulrahim/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/ahmed-nour-abdulrahim</loc>
+    <loc>https://fivesom.net/freelancer/xamdaan/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/xamdaan</loc>
+    <loc>https://fivesom.net/freelancer/sofia-asad/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/sofia-asad</loc>
+    <loc>https://fivesom.net/freelancer/fuaad-shucayb-xuseen/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/fuaad-shucayb-xuseen</loc>
+    <loc>https://fivesom.net/freelancer/ezeh-solomon/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/ezeh-solomon</loc>
+    <loc>https://fivesom.net/freelancer/xawiiwa-cabdarashid/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/xawiiwa-cabdarashid</loc>
+    <loc>https://fivesom.net/freelancer/abdiaziz-abdirahman-ali/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/abdiaziz-abdirahman-ali</loc>
+    <loc>https://fivesom.net/freelancer/sundus-daahir-sundus-daahir/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/julius-overlayforge</loc>
+    <loc>https://fivesom.net/freelancer/cabdiraxmaan-muxumed/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/cabdiraxmaan-muxumed</loc>
+    <loc>https://fivesom.net/freelancer/maxamed-dalmar/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/kos-ahmed</loc>
+    <loc>https://fivesom.net/freelancer/seynab-nuur-cali/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/seynab-nuur-cali</loc>
+    <loc>https://fivesom.net/freelancer/kos-ahmed/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/aden-asmar</loc>
+    <loc>https://fivesom.net/freelancer/aden-asmar/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/masnafarax-masna-farax</loc>
+    <loc>https://fivesom.net/freelancer/masnafarax-masna-farax/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/upthi-aziiz-ahmed</loc>
+    <loc>https://fivesom.net/freelancer/upthi-aziiz-ahmed/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/ubax-abdilahi</loc>
+    <loc>https://fivesom.net/freelancer/ubax-abdilahi/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/amira-yusuf</loc>
+    <loc>https://fivesom.net/freelancer/amira-yusuf/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/xafiid-abdi</loc>
+    <loc>https://fivesom.net/freelancer/xafiid-abdi/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/khadan-ahmed</loc>
+    <loc>https://fivesom.net/freelancer/khadan-ahmed/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/shop-zen</loc>
+    <loc>https://fivesom.net/freelancer/shop-zen/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/mahad-honest</loc>
+    <loc>https://fivesom.net/freelancer/mahad-honest/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/sakariye-saki</loc>
+    <loc>https://fivesom.net/freelancer/julius-overlayforge/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/abdirizak-moktar-abdi</loc>
+    <loc>https://fivesom.net/freelancer/rays-design/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/khaalid-maxamed</loc>
+    <loc>https://fivesom.net/freelancer/sakariye-saki/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/khaalid-maxamed/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/abdirizak-moktar-abdi/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
