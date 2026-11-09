@@ -10,6 +10,7 @@ import { Upload, FileText, Image, Video, X, CheckCircle, Clock, Link2, Plus, Ale
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { safeExternalUrl } from '@/lib/safeUrl';
+import { exceedsOrderFileLimit } from '@/lib/orderUploadLimits';
 
 
 const FreelancerDeliverWork = () => {
@@ -63,9 +64,8 @@ const FreelancerDeliverWork = () => {
     const files = e.target.files;
     if (files) {
       const newFiles = Array.from(files);
-      const totalSize = [...uploadedFiles, ...newFiles].reduce((sum, f) => sum + f.size, 0);
-      if (totalSize > 50 * 1024 * 1024) {
-        toast({ title: "Files too large (max 50MB)", description: "Total file size must be under 50MB. For bigger files, paste a Google Drive or Dropbox link in the delivery link field.", variant: "destructive" });
+      if (exceedsOrderFileLimit(newFiles)) {
+        toast({ title: "File too large (max 1GB)", description: "Each file can be up to 1GB. For larger files, paste a Google Drive or Dropbox link in the delivery link field.", variant: "destructive" });
         return;
       }
       setUploadedFiles(prev => [...prev, ...newFiles]);
@@ -223,7 +223,7 @@ const FreelancerDeliverWork = () => {
                   <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
                     <Upload className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
                     <p className="text-muted-foreground mb-1">Upload your delivery file</p>
-                    <p className="text-xs text-muted-foreground mb-3">Images, Documents, Archives — Max 50MB</p>
+                    <p className="text-xs text-muted-foreground mb-3">Images, Videos, Documents, Archives — Max 1GB per file</p>
                     <Input
                       type="file"
                       multiple
@@ -272,7 +272,7 @@ const FreelancerDeliverWork = () => {
                     onChange={(e) => setDeliveryLink(e.target.value)}
                     placeholder="https://drive.google.com/... or Dropbox / YouTube link"
                   />
-                  <p className="text-xs text-muted-foreground">Use for large files like videos. Upload to Google Drive, Dropbox, etc. and paste the link here.</p>
+                  <p className="text-xs text-muted-foreground">For files larger than 1GB, upload to Google Drive or Dropbox and paste the link here.</p>
                 </CardContent>
               </Card>
 
@@ -299,8 +299,8 @@ const FreelancerDeliverWork = () => {
                   <div className="text-sm text-blue-700 dark:text-blue-300">
                     <p className="font-medium mb-1">Delivery Tips</p>
                     <ul className="list-disc list-inside space-y-1">
-                      <li>Small files (&lt;50MB) → Upload directly</li>
-                      <li>Large files (videos, etc.) → Use Google Drive / Dropbox link</li>
+                      <li>Files up to 1GB each → Upload directly</li>
+                      <li>Files larger than 1GB → Use Google Drive / Dropbox link</li>
                       <li>The buyer will review and accept your delivery</li>
                     </ul>
                   </div>

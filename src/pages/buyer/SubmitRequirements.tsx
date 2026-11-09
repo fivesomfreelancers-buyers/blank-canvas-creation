@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft } from 'lucide-react';
 import { safeExternalUrl } from '@/lib/safeUrl';
+import { exceedsOrderFileLimit } from '@/lib/orderUploadLimits';
 
 const SubmitRequirements = () => {
   const { orderId } = useParams();
@@ -25,9 +26,8 @@ const SubmitRequirements = () => {
     const files = e.target.files;
     if (files) {
       const newFiles = Array.from(files);
-      const totalSize = [...uploadedFiles, ...newFiles].reduce((sum, f) => sum + f.size, 0);
-      if (totalSize > 50 * 1024 * 1024) {
-        toast({ title: "Files too large (max 50MB)", description: "Total file size must be under 50MB. For bigger files, share a Google Drive or Dropbox link instead.", variant: "destructive" });
+      if (exceedsOrderFileLimit(newFiles)) {
+        toast({ title: "File too large (max 1GB)", description: "Each file can be up to 1GB. For larger files, share a Google Drive or Dropbox link instead.", variant: "destructive" });
         return;
       }
       setUploadedFiles(prev => [...prev, ...newFiles]);
@@ -118,6 +118,7 @@ const SubmitRequirements = () => {
         requirementId = reqData.id;
       }
 
+      if (!requirementId) throw new Error('Requirements could not be saved.');
       // Upload files to private storage and save metadata rows
       const failed: string[] = [];
       for (const file of uploadedFiles) {
@@ -137,7 +138,7 @@ const SubmitRequirements = () => {
           .getPublicUrl(filePath);
 
         const { error: fileErr } = await supabase.from('order_requirement_files').insert({
-          order_requirement_id: requirementId!,
+          order_requirement_id: requirementId,
           file_url: publicUrl,
           file_name: file.name,
           file_size: file.size,
@@ -228,7 +229,7 @@ const SubmitRequirements = () => {
               <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
                 <Upload className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
                 <p className="text-muted-foreground mb-1">Drag and drop files or click to browse</p>
-                <p className="text-xs text-muted-foreground mb-3">Images, Videos, Documents, ZIP — Max 50MB total</p>
+                <p className="text-xs text-muted-foreground mb-3">Images, Videos, Documents, ZIP — Max 1GB per file</p>
                 <Input
                   type="file"
                   multiple
