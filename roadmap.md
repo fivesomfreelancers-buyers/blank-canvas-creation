@@ -16,11 +16,13 @@
 - [ ] Confirm specific bilingual/service buyer content with real customer project evidence before creating segment pages; no fabricated offers or country inventory
 
 ## Email restoration
-- [ ] November 9: verify provider acceptance, repair retry throttling and audit gig/message/event coverage; inbox confirmation requires recipient evidence
+- [x] November 9: verify provider acceptance, repair retry throttling and audit gig/message/event coverage; five fresh queued emails received provider IDs after throttling
+- [x] Deploy deduplicated Admin/Founder gig submission/resubmission notification sender and correct review links
+- [ ] Complete presence-aware grouping and additional revision/review/dispute/payment/withdrawal event coverage; implementation remains outstanding, inbox and signed-in tests require recipient evidence/unmanaged authentication
 - [x] Diagnose notification failure: deployed email requests return provider 403 project authorization denied
-- [ ] Restore message, order, support, and news email delivery — blocked by connector authorization failure after successful relink and redeploy
+- [x] Restore shared provider path for messages/support/news; provider IDs verified, direct-key configuration no longer requires gateway keys
 - [x] Verify existing email outbox and active once-per-minute retry schedule; failed notifications remain queued
-- [ ] Verify accepted notification delivery — blocked by provider authorization
+- [ ] Verify new gig and paid-order inbox delivery — no real submission/order test or recipient inbox evidence available
 
 - [x] Establish shared mobile viewport, safe-area, touch-target, and overflow foundations
 - [x] Redesign mobile navigation and dashboard navigation without changing desktop

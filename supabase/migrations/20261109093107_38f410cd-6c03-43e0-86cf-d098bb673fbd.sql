@@ -1,0 +1,1 @@
+UPDATE public.email_notification_outbox SET next_attempt_at=now() WHERE status='pending' AND last_error LIKE 'Email provider [429]%' AND next_attempt_at>now();
