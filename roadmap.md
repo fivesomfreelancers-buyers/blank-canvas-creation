@@ -16,6 +16,7 @@
 - [ ] Confirm specific bilingual/service buyer content with real customer project evidence before creating segment pages; no fabricated offers or country inventory
 
 ## Email restoration
+- [ ] November 9: verify provider acceptance, repair retry throttling and audit gig/message/event coverage; inbox confirmation requires recipient evidence
 - [x] Diagnose notification failure: deployed email requests return provider 403 project authorization denied
 - [ ] Restore message, order, support, and news email delivery — blocked by connector authorization failure after successful relink and redeploy
 - [x] Verify existing email outbox and active once-per-minute retry schedule; failed notifications remain queued
