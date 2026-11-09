@@ -1,0 +1,1 @@
+ALTER POLICY "Published posts are readable by everyone" ON public.blog_posts USING (status = 'published');

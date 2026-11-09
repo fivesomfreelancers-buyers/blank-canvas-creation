@@ -33,6 +33,7 @@ Disallow: /freelancer/help
 Disallow: /freelancer/settings
 Disallow: /freelancer/profile
 Disallow: /freelancer/verify
+Disallow: /freelancer/applications
 
 # Search engines
 User-agent: Googlebot

@@ -8,13 +8,14 @@ import { WORLD_LANGUAGES } from '@/lib/languages';
 import { JOB_DURATIONS, Job } from '@/lib/jobs';
 import { useJobsData } from '@/hooks/useJobsData';
 import JobCard from './JobCard';
+import { isIndexableJob } from '@/lib/seo/publicJobs';
 export default function JobsMarketplace() {
   const { rows, loading, error, refresh } = useJobsData<Job>('jobs', 'status', 'published');
   const [query, setQuery] = useState(''); const [category, setCategory] = useState('');
   const [experience, setExperience] = useState(''); const [location, setLocation] = useState('');
   const [duration, setDuration] = useState(''); const [language, setLanguage] = useState('');
   const [min, setMin] = useState(''); const [max, setMax] = useState(''); const [filters, setFilters] = useState(false);
-  const jobs = rows.filter(j => (!query || `${j.title} ${j.description} ${j.skills.join(' ')}`.toLowerCase().includes(query.toLowerCase())) && (!category || j.category === category) && (!experience || j.experience === experience) && (!location || j.work_location === location) && (!duration || j.duration === duration) && (!language || j.languages.includes(language)) && (!min || Number(j.budget_max) >= Number(min)) && (!max || Number(j.budget_min) <= Number(max)));
+  const jobs = rows.filter(j => isIndexableJob(j) && (!query || `${j.title} ${j.description} ${j.skills.join(' ')}`.toLowerCase().includes(query.toLowerCase())) && (!category || j.category === category) && (!experience || j.experience === experience) && (!location || j.work_location === location) && (!duration || j.duration === duration) && (!language || j.languages.includes(language)) && (!min || Number(j.budget_max) >= Number(min)) && (!max || Number(j.budget_min) <= Number(max)));
   const selectClass = 'h-11 min-w-0 rounded-md border border-input bg-background px-3 text-sm text-foreground';
   return <section className="space-y-6">
     <div className="flex flex-wrap items-end justify-between gap-4"><div><h1 className="font-heading text-3xl font-bold text-foreground">Find your next opportunity</h1><p className="mt-2 text-muted-foreground">Projects from buyers. Clear scope. Your next collaboration.</p></div><Button asChild><Link to="/buyer/jobs/new"><Plus size={17} /> Post a Job</Link></Button></div>

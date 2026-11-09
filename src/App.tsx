@@ -13,6 +13,7 @@ import Index from "./pages/Index";
 // Everything else is code-split: a visitor only downloads the page they open.
 const Explore = lazy(() => import("./pages/Explore"));
 const JobDetails = lazy(() => import('./pages/jobs/JobDetails'));
+const PublicJobs = lazy(() => import('./pages/jobs/PublicJobs'));
 const ApplyJob = lazy(() => import('./pages/jobs/ApplyJob'));
 const PostJob = lazy(() => import('./pages/jobs/PostJob'));
 const MyJobs = lazy(() => import('./pages/jobs/MyJobs'));
@@ -119,6 +120,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/explore" element={<Explore />} />
+              <Route path="/jobs" element={<PublicJobs />} />
               <Route path="/jobs/:jobId" element={<JobDetails />} />
               <Route path="/jobs/:jobId/apply" element={<ProtectedRoute require="freelancer"><ApplyJob /></ProtectedRoute>} />
               <Route path="/buyer/jobs" element={<ProtectedRoute require="buyer"><div className="min-h-screen bg-background p-4 sm:p-8"><MyJobs /></div></ProtectedRoute>} />

@@ -25,6 +25,7 @@
 
 - [Home](https://fivesom.net/): What FIVESOM is, featured categories and FAQ.
 - [Explore](https://fivesom.net/explore/): Browse and search active freelance services, compare packages and inspect seller profiles.
+- [Jobs](https://fivesom.net/jobs/): Browse approved, open buyer projects and apply as a freelancer.
 - [How It Works](https://fivesom.net/how-it-works): Step-by-step guide for buyers and freelancers.
 - [Docs](https://fivesom.net/docs): Full A-Z documentation in English, Somali, Arabic and French.
 - [VIP](https://fivesom.net/vip): VIP / featured seller program.

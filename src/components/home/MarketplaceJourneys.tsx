@@ -59,7 +59,7 @@ const MarketplaceJourneys: React.FC = () => (
         </ol>
         <ScrollReveal delay={180}>
           <Link to="/register/freelancer" className="home-story-link">Become a Freelancer <ArrowRight className="h-4 w-4" aria-hidden /></Link>
-          <Link to="/explore?view=jobs" className="home-secondary-link ml-4">Explore Jobs</Link>
+          <Link to="/jobs" className="home-secondary-link ml-4">Explore Jobs</Link>
         </ScrollReveal>
       </div>
     </section>

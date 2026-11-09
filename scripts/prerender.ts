@@ -149,6 +149,7 @@ pages.push({
 // Fixed public pages
 const fixed: [string, string, string, string, string][] = [
   ["/explore", "Find Freelancers & Compare Services | FIVESOM", "Find skilled African freelancers for your business. Compare design, website, video and writing services, portfolios, package prices and delivery times on FIVESOM.", "Find the right service for your next project", "Compare real work, seller ratings, delivery options, and clear starting prices."],
+  ["/jobs", "Freelance Jobs & Project Opportunities | FIVESOM", "Explore approved buyer projects on FIVESOM. Find work in design, websites, video and writing, or post your own project to receive freelancer proposals.", "Find your next opportunity", "Projects from buyers. Clear scope. Your next collaboration. Buyers can post a job with scope, budget and deadline; jobs stay private until Admin or Founder approval."],
   ["/services", "Freelance Services by Category | Hire African Freelancers | FIVESOM", "All freelance service categories on FIVESOM: logo design, graphic design, web development, app development, video editing, content writing and more, delivered by African freelancers.", "Freelance services on FIVESOM", "Choose a category to see gigs from African and Somali freelancers."],
   ["/how-it-works", "How FIVESOM Works | Hire Freelancers with Escrow Protection", "How hiring and selling works on FIVESOM: find a freelancer, pay into escrow, receive the delivery, accept it and release payment. Freelancers withdraw earnings to local payout methods.", "How FIVESOM works", "1. Find a freelancer and compare gig packages. 2. Order and pay — the money is held in escrow. 3. The freelancer delivers through the order page. 4. You accept the delivery and the payment is released to the freelancer's wallet, which they can withdraw."],
   ["/about", "About FIVESOM — African & Somali Freelancer Marketplace", "FIVESOM is an African-focused, Somali-rooted freelance marketplace connecting African digital talent with clients around the world through protected, escrow-based orders.", "About FIVESOM", "FIVESOM is an African and Somali freelancer marketplace. It was founded so freelancers in Somalia and across Africa can sell their services to global clients and get paid in ways that work locally."],
@@ -248,6 +249,8 @@ async function dynamicPages() {
     description: clip(job.description, 155), h1: job.title,
     body: `<p>${e(job.description)}</p><h2>Requirements</h2><p>${e(job.requirements)}</p><h2>Deliverables</h2><p>${e(job.deliverables)}</p><a href="/jobs/${e(job.id)}/apply">Apply Job</a>`,
   });
+  const jobsIndex = pages.find(p => p.path === '/jobs');
+  if (jobsIndex) jobsIndex.body += links('Open projects', jobs.map(j => ({ href: canonicalSeoUrl(`/jobs/${j.id}`), label: j.title }))) + '<a href="/buyer/jobs/new">Post a Job</a>';
   const isImg = (u?: string | null) => (u && /^https:\/\//.test(u) ? u : undefined);
 
   // Link real active services from discovery pages even without JavaScript.

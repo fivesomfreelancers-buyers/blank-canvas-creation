@@ -11,6 +11,11 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://fivesom.net/jobs/</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://fivesom.net/services/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -68,6 +73,11 @@
   </url>
   <url>
     <loc>https://fivesom.net/support/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/support/contact/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -762,267 +772,45 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-somali-arabic-and-english-texts/</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/3b32805c-8bc2-4b39-888c-af4a17774d08/mvjeg1md9r0o/i-will-translate-somali-arabic-and-english-texts.jpeg</image:loc>
-      <image:title>I will translate Somali, Arabic, and English texts</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/3b32805c-8bc2-4b39-888c-af4a17774d08/mvjeg1md9r0o/i-will-translate-somali-arabic-and-english-texts-2.webp</image:loc>
-      <image:title>I will translate Somali, Arabic, and English texts - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/3b32805c-8bc2-4b39-888c-af4a17774d08/mvjeg1md9r0o/i-will-translate-somali-arabic-and-english-texts-3.webp</image:loc>
-      <image:title>I will translate Somali, Arabic, and English texts - preview 3</image:title>
-    </image:image>
+    <loc>https://fivesom.net/blog/new-fivesom-gig-requirements-important-update/</loc>
+    <lastmod>2026-10-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts-2/</loc>
-    <lastmod>2026-10-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bb089541-7532-45fd-8173-bdc82c78fdd1/mvmosq4cdszg/i-will-design-professional-social-media-posts.webp</image:loc>
-      <image:title>I will design professional social media posts</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bb089541-7532-45fd-8173-bdc82c78fdd1/mvmosq4cdszg/i-will-design-professional-social-media-posts-2.webp</image:loc>
-      <image:title>I will design professional social media posts - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bb089541-7532-45fd-8173-bdc82c78fdd1/mvmosq4cdszg/i-will-design-professional-social-media-posts-3.webp</image:loc>
-      <image:title>I will design professional social media posts - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/waxaan-kuu-qoraa-sheekooyin-carruur-oo-kobciya-aqoonta-iyo-maskaxda-da/</loc>
-    <lastmod>2026-11-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873362319-3ql9u.webp</image:loc>
-      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873363228-3osdtf.webp</image:loc>
-      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11 - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873363468-yt7m6j.webp</image:loc>
-      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11 - preview 3</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873363700-jpgq1u.webp</image:loc>
-      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11 - preview 4</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-a-modern-minimalist-logo-in-figma-for-your-brand/</loc>
+    <loc>https://fivesom.net/gig/i-will-write-engaging-content-blog-posts-and-social-media-captions-for/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c5da8d75-6765-424c-9174-cb4021c78a5e/1786552899173-m9d1le.jpeg</image:loc>
-      <image:title>I will design a modern, minimalist logo in Figma for your brand.</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/8634f120-d89d-4ca2-8e39-4824d1d27def/mv8cjehs05je/i-will-write-engaging-content-blog-posts-and-social-media-ca.jpg</image:loc>
+      <image:title>I will write engaging content, blog posts, and social media captions for your bu</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c5da8d75-6765-424c-9174-cb4021c78a5e/1786552925058-a5e01j.jpeg</image:loc>
-      <image:title>I will design a modern, minimalist logo in Figma for your brand. - preview 2</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/8634f120-d89d-4ca2-8e39-4824d1d27def/mv8cjehs05je/i-will-write-engaging-content-blog-posts-and-social-media-ca-2.jpg</image:loc>
+      <image:title>I will write engaging content, blog posts, and social media captions for your bu - preview 2</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c5da8d75-6765-424c-9174-cb4021c78a5e/1786552947146-ww59cg.jpeg</image:loc>
-      <image:title>I will design a modern, minimalist logo in Figma for your brand. - preview 3</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/8634f120-d89d-4ca2-8e39-4824d1d27def/mv8cjehs05je/i-will-write-engaging-content-blog-posts-and-social-media-ca-3.jpg</image:loc>
+      <image:title>I will write engaging content, blog posts, and social media captions for your bu - preview 3</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-somali-to-english-and-do-data-entry/</loc>
+    <loc>https://fivesom.net/gig/your-dream-website-starts-here-i-design-modern-websites-that-help-your/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/9a786919-88aa-4848-b146-a3d39f46f3e4/mul90behyql7/i-will-translate-somali-to-english-and-do-data-entry.webp</image:loc>
-      <image:title>I will translate Somali to English and do data entry</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-engalish/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/a6f15784-b8bd-4df1-9e7c-e762e3e11e87/mupiqr76zavb/i-will-translate-english-to-somali-and-somali-to-engalish.jpg</image:loc>
-      <image:title>I will translate English to Somali and Somali To engalish</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-business-posters-and-social-media-posts-usi/</loc>
-    <lastmod>2026-10-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/235ae46b-f2a6-43ce-9e05-8454fc6ac4b8/mvrjxsfyeox3/i-will-design-professional-business-posters-and-social-media.webp</image:loc>
-      <image:title>I will design professional business posters and social media posts using Canva</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bcec03f1-057f-4403-aa0b-1861d6db9e70/1787243444348-5j3j1r.jpg</image:loc>
+      <image:title>Your dream website starts here. I design modern websites that help your business</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/235ae46b-f2a6-43ce-9e05-8454fc6ac4b8/mvrjxsfyeox3/i-will-design-professional-business-posters-and-social-media-2.webp</image:loc>
-      <image:title>I will design professional business posters and social media posts using Canva - preview 2</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bcec03f1-057f-4403-aa0b-1861d6db9e70/1787243447214-sjb968.jpg</image:loc>
+      <image:title>Your dream website starts here. I design modern websites that help your business - preview 2</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/235ae46b-f2a6-43ce-9e05-8454fc6ac4b8/mvrjxsfyeox3/i-will-design-professional-business-posters-and-social-media-3.webp</image:loc>
-      <image:title>I will design professional business posters and social media posts using Canva - preview 3</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/235ae46b-f2a6-43ce-9e05-8454fc6ac4b8/mvrjxsfyeox3/i-will-design-professional-business-posters-and-social-media-4.webp</image:loc>
-      <image:title>I will design professional business posters and social media posts using Canva - preview 4</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-create-a-professional-custom-logo-for-your-business/</loc>
-    <lastmod>2026-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e8858f25-507c-4057-acca-69cf5bba99ce/mvhn74begy53/i-will-create-a-professional-custom-logo-for-your-business.webp</image:loc>
-      <image:title>I will create a professional custom logo for your business</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e8858f25-507c-4057-acca-69cf5bba99ce/mvhn74begy53/i-will-create-a-professional-custom-logo-for-your-business-2.webp</image:loc>
-      <image:title>I will create a professional custom logo for your business - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e8858f25-507c-4057-acca-69cf5bba99ce/mvhn74begy53/i-will-create-a-professional-custom-logo-for-your-business-3.jpg</image:loc>
-      <image:title>I will create a professional custom logo for your business - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-create-professional-commercial-videos-for-your-business/</loc>
-    <lastmod>2026-11-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/11887562-f3fc-4d0b-8a67-4f9c872c1653/muydqjmvwnpk/i-will-create-professional-commercial-videos-for-your-busine.jpeg</image:loc>
-      <image:title>I will create professional commercial videos for your business</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts-and-graphics/</loc>
-    <lastmod>2026-10-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6eaf2de4-61c9-4325-99b1-df7fb1efa6a8/mvrbjlt668sf/i-will-design-professional-social-media-posts-and-graphics.webp</image:loc>
-      <image:title>I will design professional social media posts and graphics</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6eaf2de4-61c9-4325-99b1-df7fb1efa6a8/mvrbjlt668sf/i-will-design-professional-social-media-posts-and-graphics-2.webp</image:loc>
-      <image:title>I will design professional social media posts and graphics - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6eaf2de4-61c9-4325-99b1-df7fb1efa6a8/mvrbjlt668sf/i-will-design-professional-social-media-posts-and-graphics-3.webp</image:loc>
-      <image:title>I will design professional social media posts and graphics - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-build-a-professional-modern-responsive-website-or-web-applicati/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1406bd2d-4808-4397-934e-5eb23598f3db/1788438046827-qf5yyh.png</image:loc>
-      <image:title>I will build a professional modern responsive website or web application</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1406bd2d-4808-4397-934e-5eb23598f3db/1788438050936-gaangb.png</image:loc>
-      <image:title>I will build a professional modern responsive website or web application - preview 2</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-build-custom-full-stack-web-applications-and-business-systems/</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/533e2939-95dd-41ec-9b15-959254180531/mvjgss4kv7y3/i-will-build-custom-full-stack-web-applications-and-business-3.webp</image:loc>
-      <image:title>I will build custom full-stack web applications and business systems</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/533e2939-95dd-41ec-9b15-959254180531/mvjgyqe7r1rj/i-will-build-custom-full-stack-web-applications-and-business-2.png</image:loc>
-      <image:title>I will build custom full-stack web applications and business systems - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/533e2939-95dd-41ec-9b15-959254180531/mvjgyqe7r1rj/i-will-build-custom-full-stack-web-applications-and-business-3.webp</image:loc>
-      <image:title>I will build custom full-stack web applications and business systems - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-or-redesign-shopify-squarespace-and-gohighlevel-websites/</loc>
-    <lastmod>2026-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c2745799-df91-47e9-91e1-c4d40a97c252/mvi045ceou15/i-will-design-or-redesign-shopify-squarespace-and-gohighleve.webp</image:loc>
-      <image:title>I will design or redesign Shopify Squarespace and GoHighLevel websites</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c2745799-df91-47e9-91e1-c4d40a97c252/mvi045ceou15/i-will-design-or-redesign-shopify-squarespace-and-gohighleve-2.webp</image:loc>
-      <image:title>I will design or redesign Shopify Squarespace and GoHighLevel websites - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c2745799-df91-47e9-91e1-c4d40a97c252/mvi045ceou15/i-will-design-or-redesign-shopify-squarespace-and-gohighleve-3.webp</image:loc>
-      <image:title>I will design or redesign Shopify Squarespace and GoHighLevel websites - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts-and-flyers/</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/d085b022-ac4f-44e9-b68f-e08f940e6c23/mvjk1i3d5vfn/i-will-design-professional-social-media-posts-and-flyers.webp</image:loc>
-      <image:title>I will design professional social media posts and flyers</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/d085b022-ac4f-44e9-b68f-e08f940e6c23/mvjk1i3d5vfn/i-will-design-professional-social-media-posts-and-flyers-2.webp</image:loc>
-      <image:title>I will design professional social media posts and flyers - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/d085b022-ac4f-44e9-b68f-e08f940e6c23/mvjk1i3d5vfn/i-will-design-professional-social-media-posts-and-flyers-3.webp</image:loc>
-      <image:title>I will design professional social media posts and flyers - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-create-professional-twitch-youtube-and-kick-stream-screens/</loc>
-    <lastmod>2026-10-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvs3kfsk7e40/i-will-create-professional-twitch-youtube-and-kick-stream-sc.gif</image:loc>
-      <image:title>I will create professional Twitch, YouTube and Kick stream screens</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvs3kfsk7e40/i-will-create-professional-twitch-youtube-and-kick-stream-sc-2.webp</image:loc>
-      <image:title>I will create professional Twitch, YouTube and Kick stream screens - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvs3kfsk7e40/i-will-create-professional-twitch-youtube-and-kick-stream-sc-3.webp</image:loc>
-      <image:title>I will create professional Twitch, YouTube and Kick stream screens - preview 3</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvs3kfsk7e40/i-will-create-professional-twitch-youtube-and-kick-stream-sc-4.webp</image:loc>
-      <image:title>I will create professional Twitch, YouTube and Kick stream screens - preview 4</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-translate-somali-to-english-and-english-to-somali/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/16bfaeeb-0913-4b9f-b4fd-b72542898e46/munrmsgol97v/i-will-translate-somali-to-english-and-english-to-somali.jpg</image:loc>
-      <image:title>I will translate somali to English and English to somali</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bcec03f1-057f-4403-aa0b-1861d6db9e70/1787243449285-a42gwi.jpg</image:loc>
+      <image:title>Your dream website starts here. I design modern websites that help your business - preview 3</image:title>
     </image:image>
   </url>
   <url>
@@ -1041,322 +829,6 @@
     <image:image>
       <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0e457feb-2347-4626-94b5-0a89ef953859/mvi9rind9co5/i-will-build-a-responsive-personal-portfolio-website-3.png</image:loc>
       <image:title>i will build a responsive personal portfolio website - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-logos-and-posters-for-your-business/</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/acf53050-0ec5-4209-9293-e24cf5ee1205/mvjwnyure0on/i-will-design-professional-logos-and-posters-for-your-busine.webp</image:loc>
-      <image:title>I will design professional logos and posters for your business</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/acf53050-0ec5-4209-9293-e24cf5ee1205/mvjwnyure0on/i-will-design-professional-logos-and-posters-for-your-busine-2.webp</image:loc>
-      <image:title>I will design professional logos and posters for your business - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/acf53050-0ec5-4209-9293-e24cf5ee1205/mvjwnyure0on/i-will-design-professional-logos-and-posters-for-your-busine-3.webp</image:loc>
-      <image:title>I will design professional logos and posters for your business - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-create-professional-and-engaging-videos-for-your-brand/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-translate-somali-english-and-arabic-accurately/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/54b496f7-f341-4fd3-8b35-06f51e033c97/mube1cmlv1qc/i-will-translate-somali-english-and-arabic-accurately.webp</image:loc>
-      <image:title>I will translate Somali English and Arabic accurately</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-a-professional-modern-logo-for-your-business/</loc>
-    <lastmod>2026-10-30</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/a0c53ff4-1e53-4b39-98d8-bcb88d79a323/mvsexe68zfug/i-will-design-a-professional-modern-logo-for-your-business.webp</image:loc>
-      <image:title>I will design a professional modern logo for your business</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/a0c53ff4-1e53-4b39-98d8-bcb88d79a323/mvsexe68zfug/i-will-design-a-professional-modern-logo-for-your-business-2.jpg</image:loc>
-      <image:title>I will design a professional modern logo for your business - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/a0c53ff4-1e53-4b39-98d8-bcb88d79a323/mvsexe68zfug/i-will-design-a-professional-modern-logo-for-your-business-3.jpg</image:loc>
-      <image:title>I will design a professional modern logo for your business - preview 3</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/a0c53ff4-1e53-4b39-98d8-bcb88d79a323/mvsexe68zfug/i-will-design-a-professional-modern-logo-for-your-business-4.jpg</image:loc>
-      <image:title>I will design a professional modern logo for your business - preview 4</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-english-3/</loc>
-    <lastmod>2026-11-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/17103ecb-cf57-425e-bcd8-a920f4e2e35d/mw5971plilvx/i-will-translate-english-to-somali-and-somali-to-english.webp</image:loc>
-      <image:title>I will translate English to Somali and Somali to English</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/17103ecb-cf57-425e-bcd8-a920f4e2e35d/mw5971plilvx/i-will-translate-english-to-somali-and-somali-to-english-2.webp</image:loc>
-      <image:title>I will translate English to Somali and Somali to English - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/17103ecb-cf57-425e-bcd8-a920f4e2e35d/mw5971plilvx/i-will-translate-english-to-somali-and-somali-to-english-3.webp</image:loc>
-      <image:title>I will translate English to Somali and Somali to English - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-accurately-and-clearly-i-will-check/</loc>
-    <lastmod>2026-10-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/99eb9eee-b056-4ec0-bd7b-0d7f1a871451/mvt6magj4psv/i-will-translate-english-to-somali-accurately-and-clearly-i-.webp</image:loc>
-      <image:title>I will translate English to Somali accurately and clearly. I will check grammar,</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/99eb9eee-b056-4ec0-bd7b-0d7f1a871451/mvt6magj4psv/i-will-translate-english-to-somali-accurately-and-clearly-i--2.jpg</image:loc>
-      <image:title>I will translate English to Somali accurately and clearly. I will check grammar, - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/99eb9eee-b056-4ec0-bd7b-0d7f1a871451/mvt6magj4psv/i-will-translate-english-to-somali-accurately-and-clearly-i--3.webp</image:loc>
-      <image:title>I will translate English to Somali accurately and clearly. I will check grammar, - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-do-data-entry-and-typing/</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/4a70c8ae-3b4c-4e71-af6f-81076c7b548d/mvjj1k1lxom7/i-will-do-data-entry-and-typing.jpg</image:loc>
-      <image:title>I will do data entry and typing</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/4a70c8ae-3b4c-4e71-af6f-81076c7b548d/mvjj1k1lxom7/i-will-do-data-entry-and-typing-2.jpg</image:loc>
-      <image:title>I will do data entry and typing - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/4a70c8ae-3b4c-4e71-af6f-81076c7b548d/mvjj1k1lxom7/i-will-do-data-entry-and-typing-3.jpg</image:loc>
-      <image:title>I will do data entry and typing - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-and-attractive-social-media-posters/</loc>
-    <lastmod>2026-11-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/83835f7f-c942-40ff-8d2a-58e8e9a169f0/mw6mi8obsymb/i-will-design-professional-and-attractive-social-media-poste.png</image:loc>
-      <image:title>I will design professional and attractive social media posters</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/83835f7f-c942-40ff-8d2a-58e8e9a169f0/mw6mi8obsymb/i-will-design-professional-and-attractive-social-media-poste-2.webp</image:loc>
-      <image:title>I will design professional and attractive social media posters - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/83835f7f-c942-40ff-8d2a-58e8e9a169f0/mw6mi8obsymb/i-will-design-professional-and-attractive-social-media-poste-3.webp</image:loc>
-      <image:title>I will design professional and attractive social media posters - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-professionally-translate-somali-arabic-and-english-documents/</loc>
-    <lastmod>2026-10-30</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6af36d03-9720-46ed-a5e6-1198c736d449/mvujy3rbk3du/i-will-professionally-translate-somali-arabic-and-english-do.webp</image:loc>
-      <image:title>I will professionally translate Somali, Arabic, and English documents</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6af36d03-9720-46ed-a5e6-1198c736d449/mvujy3rbk3du/i-will-professionally-translate-somali-arabic-and-english-do-2.webp</image:loc>
-      <image:title>I will professionally translate Somali, Arabic, and English documents - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6af36d03-9720-46ed-a5e6-1198c736d449/mvujy3rbk3du/i-will-professionally-translate-somali-arabic-and-english-do-3.webp</image:loc>
-      <image:title>I will professionally translate Somali, Arabic, and English documents - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-edit-professional-videos-for-youtube-tiktok-and-instagram-reels/</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/fc89104d-7f0a-448a-87b0-82d43a4960c0/mvkz5y4zkbp9/i-will-edit-professional-videos-for-youtube-tiktok-and-insta.webp</image:loc>
-      <image:title>I will edit professional videos for YouTube, TikTok and Instagram Reels</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/fc89104d-7f0a-448a-87b0-82d43a4960c0/mvkz5y4zkbp9/i-will-edit-professional-videos-for-youtube-tiktok-and-insta-2.webp</image:loc>
-      <image:title>I will edit professional videos for YouTube, TikTok and Instagram Reels - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/fc89104d-7f0a-448a-87b0-82d43a4960c0/mvkz5y4zkbp9/i-will-edit-professional-videos-for-youtube-tiktok-and-insta-3.webp</image:loc>
-      <image:title>I will edit professional videos for YouTube, TikTok and Instagram Reels - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-create-professional-social-media-posts-for-your-business/</loc>
-    <lastmod>2026-10-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/b24b5feb-7774-4c28-b332-45e4a514faf8/mvw4fmtw06gw/i-will-create-professional-social-media-posts-for-your-busin.jpg</image:loc>
-      <image:title>I will create professional social media posts for your business</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/b24b5feb-7774-4c28-b332-45e4a514faf8/mvw4fmtw06gw/i-will-create-professional-social-media-posts-for-your-busin-2.webp</image:loc>
-      <image:title>I will create professional social media posts for your business - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/b24b5feb-7774-4c28-b332-45e4a514faf8/mvw4fmtw06gw/i-will-create-professional-social-media-posts-for-your-busin-3.png</image:loc>
-      <image:title>I will create professional social media posts for your business - preview 3</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/b24b5feb-7774-4c28-b332-45e4a514faf8/mvw4fmtw06gw/i-will-create-professional-social-media-posts-for-your-busin-4.png</image:loc>
-      <image:title>I will create professional social media posts for your business - preview 4</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-a-unique-and-professional-logo-for-your-business/</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/aaa71fc8-96bf-41d6-bf4c-4731149f811f/mviet21r2ic9/i-will-design-a-unique-and-professional-logo-for-your-busine.jpg</image:loc>
-      <image:title>I will design a unique and professional logo for your business</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/aaa71fc8-96bf-41d6-bf4c-4731149f811f/mviet21r2ic9/i-will-design-a-unique-and-professional-logo-for-your-busine-2.jpg</image:loc>
-      <image:title>I will design a unique and professional logo for your business - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/aaa71fc8-96bf-41d6-bf4c-4731149f811f/mviet21r2ic9/i-will-design-a-unique-and-professional-logo-for-your-busine-3.jpg</image:loc>
-      <image:title>I will design a unique and professional logo for your business - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-create-a-professional-and-responsive-website-for-your-business/</loc>
-    <lastmod>2026-10-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6138e862-bedf-43f2-941c-c684ed9ed32d/mvdnhyoxwaat/writing-gig-title-i-will-create-a-professional-and-responsiv.webp</image:loc>
-      <image:title>Writing Gig Title I will create a professional and responsive website for your b</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6138e862-bedf-43f2-941c-c684ed9ed32d/mvdnhyoxwaat/writing-gig-title-i-will-create-a-professional-and-responsiv-2.webp</image:loc>
-      <image:title>Writing Gig Title I will create a professional and responsive website for your b - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6138e862-bedf-43f2-941c-c684ed9ed32d/mvdnhyoxwaat/writing-gig-title-i-will-create-a-professional-and-responsiv-3.webp</image:loc>
-      <image:title>Writing Gig Title I will create a professional and responsive website for your b - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-write-and-format-professional-reports-and-word-documents/</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/16e0fa8c-4f1b-4ff3-8a7b-235fb04d2214/mvld9jdxw7gl/i-will-write-and-format-professional-reports-and-word-docume.jpeg</image:loc>
-      <image:title>I will write and format professional reports and Word documents</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/16e0fa8c-4f1b-4ff3-8a7b-235fb04d2214/mvld9jdxw7gl/i-will-write-and-format-professional-reports-and-word-docume-2.jpeg</image:loc>
-      <image:title>I will write and format professional reports and Word documents - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/16e0fa8c-4f1b-4ff3-8a7b-235fb04d2214/mvld9jdxw7gl/i-will-write-and-format-professional-reports-and-word-docume-3.jpeg</image:loc>
-      <image:title>I will write and format professional reports and Word documents - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/waxaan-kuu-dhisayaa-website-casri-ah-oo-ganacsi-online-ah/</loc>
-    <lastmod>2026-10-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1786378887087-vccw95.png</image:loc>
-      <image:title>Waxaan Kuu Dhisayaa Website Casri ah oo Ganacsi Online ah</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1786378887756-va2tr8.png</image:loc>
-      <image:title>Waxaan Kuu Dhisayaa Website Casri ah oo Ganacsi Online ah - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1786378888351-c37x4.png</image:loc>
-      <image:title>Waxaan Kuu Dhisayaa Website Casri ah oo Ganacsi Online ah - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-desing-a-professional-modern-logo/</loc>
-    <lastmod>2026-10-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1d3ea703-f05c-44e3-9114-f85dfb08ab8e/mvdr8smyoolw/i-will-desing-a-professional-modern-logo.webp</image:loc>
-      <image:title>I will design a professional modern logo</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1d3ea703-f05c-44e3-9114-f85dfb08ab8e/mvdr8smyoolw/i-will-desing-a-professional-modern-logo-2.webp</image:loc>
-      <image:title>I will design a professional modern logo - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1d3ea703-f05c-44e3-9114-f85dfb08ab8e/mvdr8smyoolw/i-will-desing-a-professional-modern-logo-3.webp</image:loc>
-      <image:title>I will design a professional modern logo - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-a-professional-modern-logo/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/67cfe4f0-c074-4ed5-8821-542091e73d4a/mupnpgxlbajv/i-will-design-a-professional-modern-logo.webp</image:loc>
-      <image:title>I will design a professional modern logo</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/67cfe4f0-c074-4ed5-8821-542091e73d4a/mupnpgxlbajv/i-will-design-a-professional-modern-logo-2.webp</image:loc>
-      <image:title>I will design a professional modern logo - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/67cfe4f0-c074-4ed5-8821-542091e73d4a/mupnpgxlbajv/i-will-design-a-professional-modern-logo-3.webp</image:loc>
-      <image:title>I will design a professional modern logo - preview 3</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/67cfe4f0-c074-4ed5-8821-542091e73d4a/mupnpgxlbajv/i-will-design-a-professional-modern-logo-4.webp</image:loc>
-      <image:title>I will design a professional modern logo - preview 4</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-type-documents-and-text/</loc>
-    <lastmod>2026-10-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1d9683d9-f22c-4798-8e2f-9e2b35721991/mvotyjb6xrjx/i-will-type-documents-and-text.webp</image:loc>
-      <image:title>I will type documents and text</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1d9683d9-f22c-4798-8e2f-9e2b35721991/mvotyjb6xrjx/i-will-type-documents-and-text-2.webp</image:loc>
-      <image:title>I will type documents and text - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1d9683d9-f22c-4798-8e2f-9e2b35721991/mvotyjb6xrjx/i-will-type-documents-and-text-3.webp</image:loc>
-      <image:title>I will type documents and text - preview 3</image:title>
     </image:image>
   </url>
   <url>
@@ -1382,158 +854,44 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-english/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/waxaan-kuu-qoraa-sheekooyin-carruur-oo-xiiso-leh/</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bb251aa1-dd81-4935-a72e-78f0c7c15f45/mvfjvwyjvc7r/waxaan-kuu-qoraa-sheekooyin-carruur-oo-xiiso-leh.jpg</image:loc>
-      <image:title>Waxaan kuu qoraa sheekooyin carruur oo xiiso leh</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bb251aa1-dd81-4935-a72e-78f0c7c15f45/mvfjvwyjvc7r/waxaan-kuu-qoraa-sheekooyin-carruur-oo-xiiso-leh-2.jpg</image:loc>
-      <image:title>Waxaan kuu qoraa sheekooyin carruur oo xiiso leh - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bb251aa1-dd81-4935-a72e-78f0c7c15f45/mvfjvwyjvc7r/waxaan-kuu-qoraa-sheekooyin-carruur-oo-xiiso-leh-3.jpg</image:loc>
-      <image:title>Waxaan kuu qoraa sheekooyin carruur oo xiiso leh - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-translate-somali-to-english-and-english-to-somali-2/</loc>
+    <loc>https://fivesom.net/gig/i-will-edit-professional-pubg-gaming-videos-and-social-media-reels/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/03144d97-5308-479a-91e6-e055713d91ed/mup6k5czipov/i-will-translate-somali-to-english-and-english-to-somali.webp</image:loc>
-      <image:title>I will translate Somali to English and English to Somali</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/2c7f1156-e276-4a42-acd5-69daca5c5ecd/mv3zz67s4rud/i-will-edit-professional-pubg-gaming-videos-and-social-media.jpg</image:loc>
+      <image:title>I will edit professional PUBG gaming videos and social media reels</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/2c7f1156-e276-4a42-acd5-69daca5c5ecd/mv3zz67s4rud/i-will-edit-professional-pubg-gaming-videos-and-social-media-2.webp</image:loc>
+      <image:title>I will edit professional PUBG gaming videos and social media reels - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/2c7f1156-e276-4a42-acd5-69daca5c5ecd/mv3zz67s4rud/i-will-edit-professional-pubg-gaming-videos-and-social-media-3.webp</image:loc>
+      <image:title>I will edit professional PUBG gaming videos and social media reels - preview 3</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/2c7f1156-e276-4a42-acd5-69daca5c5ecd/mv3zz67s4rud/i-will-edit-professional-pubg-gaming-videos-and-social-media-4.webp</image:loc>
+      <image:title>I will edit professional PUBG gaming videos and social media reels - preview 4</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-a-professional-modern-logo-and-brand-identity/</loc>
+    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-english-2/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/35f588d3-f469-4e3b-9ec3-532e4f278680/mupjnpt0t8kn/i-will-design-a-professional-modern-logo-and-brand-identity.webp</image:loc>
-      <image:title>I will design a professional modern logo and brand identity</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts/</loc>
-    <lastmod>2026-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e8858f25-507c-4057-acca-69cf5bba99ce/mvhmlcjbmkc1/i-will-design-professional-social-media-posts.webp</image:loc>
-      <image:title>I will design professional social media posts</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/5f3b9dda-08c7-4c67-a870-2ecfb41e0fce/muzg7a81c30n/i-will-translate-english-to-somali-and-somali-to-english.png</image:loc>
+      <image:title>I will translate English to Somali and Somali to English</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e8858f25-507c-4057-acca-69cf5bba99ce/mvhmlcjbmkc1/i-will-design-professional-social-media-posts-2.webp</image:loc>
-      <image:title>I will design professional social media posts - preview 2</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/5f3b9dda-08c7-4c67-a870-2ecfb41e0fce/muzg7a81c30n/i-will-translate-english-to-somali-and-somali-to-english-2.png</image:loc>
+      <image:title>I will translate English to Somali and Somali to English - preview 2</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e8858f25-507c-4057-acca-69cf5bba99ce/mvhmlcjbmkc1/i-will-design-professional-social-media-posts-3.webp</image:loc>
-      <image:title>I will design professional social media posts - preview 3</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/5f3b9dda-08c7-4c67-a870-2ecfb41e0fce/muzg7a81c30n/i-will-translate-english-to-somali-and-somali-to-english-3.png</image:loc>
+      <image:title>I will translate English to Somali and Somali to English - preview 3</image:title>
     </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-write-and-edit-clear-somali-articles-and-content/</loc>
-    <lastmod>2026-11-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/aaf2d3e9-a238-4a90-8f5d-68cddd4f8bc2/mvz7ivb08m5p/i-will-write-and-edit-clear-somali-articles-and-content.webp</image:loc>
-      <image:title>I will write and edit clear Somali articles and content</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/aaf2d3e9-a238-4a90-8f5d-68cddd4f8bc2/mvz7ivb08m5p/i-will-write-and-edit-clear-somali-articles-and-content-2.webp</image:loc>
-      <image:title>I will write and edit clear Somali articles and content - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/aaf2d3e9-a238-4a90-8f5d-68cddd4f8bc2/mvz7ivb08m5p/i-will-write-and-edit-clear-somali-articles-and-content-3.webp</image:loc>
-      <image:title>I will write and edit clear Somali articles and content - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-create-custom-animated-stream-overlays-and-obs-graphics/</loc>
-    <lastmod>2026-10-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvpzvututjnk/i-will-create-custom-animated-stream-overlays-and-obs-graphi.webp</image:loc>
-      <image:title>I will create custom animated stream overlays and OBS graphics</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvpzvututjnk/i-will-create-custom-animated-stream-overlays-and-obs-graphi-2.webp</image:loc>
-      <image:title>I will create custom animated stream overlays and OBS graphics - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvpzvututjnk/i-will-create-custom-animated-stream-overlays-and-obs-graphi-3.webp</image:loc>
-      <image:title>I will create custom animated stream overlays and OBS graphics - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-design-modern-logo-brand-and-social-media-design/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/51699b55-3c7e-4ac1-8c2a-6460948ab4fa/mukvp9iy56ug/i-will-design-modern-logo-brand-and-social-media-design.svg</image:loc>
-      <image:title>i will design modern logo brand and social media design</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/51699b55-3c7e-4ac1-8c2a-6460948ab4fa/mukvp9iy56ug/i-will-design-modern-logo-brand-and-social-media-design-2.jpg</image:loc>
-      <image:title>i will design modern logo brand and social media design - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/51699b55-3c7e-4ac1-8c2a-6460948ab4fa/mukvp9iy56ug/i-will-design-modern-logo-brand-and-social-media-design-3.webp</image:loc>
-      <image:title>i will design modern logo brand and social media design - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-record-clear-and-professional-somali-voice-recordings/</loc>
-    <lastmod>2026-11-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/cbfbbe24-ea12-4984-ad8f-f291c9f32c1b/mvzbgtmo3gt9/i-will-record-clear-and-professional-somali-voice-recordings.webp</image:loc>
-      <image:title>I will record clear and professional Somali voice recordings</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/cbfbbe24-ea12-4984-ad8f-f291c9f32c1b/mvzbgtmo3gt9/i-will-record-clear-and-professional-somali-voice-recordings-2.webp</image:loc>
-      <image:title>I will record clear and professional Somali voice recordings - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/cbfbbe24-ea12-4984-ad8f-f291c9f32c1b/mvzbgtmo3gt9/i-will-record-clear-and-professional-somali-voice-recordings-3.webp</image:loc>
-      <image:title>I will record clear and professional Somali voice recordings - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-build-a-modern-and-responsive-website-for-your-business/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/7dba76f2-cf57-4342-a50e-cd0146d07f37/1786370554624-l7bxod.png</image:loc>
-      <image:title>I will build a modern and responsive website for your business</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/7dba76f2-cf57-4342-a50e-cd0146d07f37/1786370555375-wo6awvi.png</image:loc>
-      <image:title>I will build a modern and responsive website for your business - preview 2</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/waxaan-muuqaladada-ka-dhigi-doona-mid-soo-jiidaso-leh/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fivesom.net/gig/i-will-design-a-professional-yt-thumbnail/</loc>
@@ -1551,56 +909,6 @@
     <image:image>
       <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/346f1311-d0ec-4ebb-844b-26b4dbf65a92/1786814574660-zeepnw.png</image:loc>
       <image:title>I will design a professional yt thumbnail - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/gig-title-i-will-translate-somali-to-english-and-english-to-somali-pro/</loc>
-    <lastmod>2026-11-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/851b2604-1b79-45a9-9bf3-5714fad648ce/mw2q03t6ww7j/gig-title-i-will-translate-somali-to-english-and-english-to-.jpg</image:loc>
-      <image:title>Gig Title I will translate Somali to English and English to Somali professionally</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/851b2604-1b79-45a9-9bf3-5714fad648ce/mw2q03t6ww7j/gig-title-i-will-translate-somali-to-english-and-english-to--2.jpg</image:loc>
-      <image:title>Gig Title I will translate Somali to English and English to Somali professionally - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/851b2604-1b79-45a9-9bf3-5714fad648ce/mw2q03t6ww7j/gig-title-i-will-translate-somali-to-english-and-english-to--3.jpg</image:loc>
-      <image:title>Gig Title I will translate Somali to English and English to Somali professionally - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/your-dream-website-starts-here-i-design-modern-websites-that-help-your/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bcec03f1-057f-4403-aa0b-1861d6db9e70/1787243444348-5j3j1r.jpg</image:loc>
-      <image:title>Your dream website starts here. I design modern websites that help your business</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bcec03f1-057f-4403-aa0b-1861d6db9e70/1787243447214-sjb968.jpg</image:loc>
-      <image:title>Your dream website starts here. I design modern websites that help your business - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bcec03f1-057f-4403-aa0b-1861d6db9e70/1787243449285-a42gwi.jpg</image:loc>
-      <image:title>Your dream website starts here. I design modern websites that help your business - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/professional-graphic-designer-creative-modern-designs-creative-graphic/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/756dc8cd-c34e-4569-bea0-21ec5a5e3473/1788701314916-r1plgl.png</image:loc>
-      <image:title>Professional Graphic Designer | Creative &amp; Modern Designs Creative  logo design</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/756dc8cd-c34e-4569-bea0-21ec5a5e3473/1788701369499-53t3v.png</image:loc>
-      <image:title>Professional Graphic Designer | Creative &amp; Modern Designs Creative  logo design - preview 2</image:title>
     </image:image>
   </url>
   <url>
@@ -1622,13 +930,257 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-create-a-professional-business-website-using-html-css-and-javas/</loc>
+    <loc>https://fivesom.net/gig/i-create-attractive-and-professional-graphic-designs-for-individuals-b/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/791dd3c5-9750-4cef-92fa-f6aa9a42f941/1788866220424-xie677.webp</image:loc>
-      <image:title>I will create a professional business website using HTML CSS and JavaScript</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/92701ae7-5b85-49de-8c1f-06483a5bece1/mv0nqyp4kmbd/i-create-attractive-and-professional-graphic-designs-for-ind.jfif</image:loc>
+      <image:title>I create attractive and professional graphic designs for individuals, businesses</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/92701ae7-5b85-49de-8c1f-06483a5bece1/mv0nqyp4kmbd/i-create-attractive-and-professional-graphic-designs-for-ind-2.jfif</image:loc>
+      <image:title>I create attractive and professional graphic designs for individuals, businesses - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/92701ae7-5b85-49de-8c1f-06483a5bece1/mv0nqyp4kmbd/i-create-attractive-and-professional-graphic-designs-for-ind-3.jfif</image:loc>
+      <image:title>I create attractive and professional graphic designs for individuals, businesses - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-desing-a-professional-modern-logo/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1d3ea703-f05c-44e3-9114-f85dfb08ab8e/mvdr8smyoolw/i-will-desing-a-professional-modern-logo.webp</image:loc>
+      <image:title>I will design a professional modern logo</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1d3ea703-f05c-44e3-9114-f85dfb08ab8e/mvdr8smyoolw/i-will-desing-a-professional-modern-logo-2.webp</image:loc>
+      <image:title>I will design a professional modern logo - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1d3ea703-f05c-44e3-9114-f85dfb08ab8e/mvdr8smyoolw/i-will-desing-a-professional-modern-logo-3.webp</image:loc>
+      <image:title>I will design a professional modern logo - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-design-custom-canva-graphics-and-social-media-posts/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c9355fca-b9f1-4a24-90d0-bc9287ecff2c/mufmgr64oh0x/i-will-design-custom-canva-graphics-and-social-media-posts.webp</image:loc>
+      <image:title>I will design custom Canva graphics and social media posts</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c9355fca-b9f1-4a24-90d0-bc9287ecff2c/mufmgr64oh0x/i-will-design-custom-canva-graphics-and-social-media-posts-2.webp</image:loc>
+      <image:title>I will design custom Canva graphics and social media posts - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c9355fca-b9f1-4a24-90d0-bc9287ecff2c/mufmgr64oh0x/i-will-design-custom-canva-graphics-and-social-media-posts-3.webp</image:loc>
+      <image:title>I will design custom Canva graphics and social media posts - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-build-a-modern-and-responsive-website-for-your-business/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/7dba76f2-cf57-4342-a50e-cd0146d07f37/1786370554624-l7bxod.png</image:loc>
+      <image:title>I will build a modern and responsive website for your business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/7dba76f2-cf57-4342-a50e-cd0146d07f37/1786370555375-wo6awvi.png</image:loc>
+      <image:title>I will build a modern and responsive website for your business - preview 2</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-design-professional-business-posters-and-social-media-posts-usi/</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/235ae46b-f2a6-43ce-9e05-8454fc6ac4b8/mvrjxsfyeox3/i-will-design-professional-business-posters-and-social-media.webp</image:loc>
+      <image:title>I will design professional business posters and social media posts using Canva</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/235ae46b-f2a6-43ce-9e05-8454fc6ac4b8/mvrjxsfyeox3/i-will-design-professional-business-posters-and-social-media-2.webp</image:loc>
+      <image:title>I will design professional business posters and social media posts using Canva - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/235ae46b-f2a6-43ce-9e05-8454fc6ac4b8/mvrjxsfyeox3/i-will-design-professional-business-posters-and-social-media-3.webp</image:loc>
+      <image:title>I will design professional business posters and social media posts using Canva - preview 3</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/235ae46b-f2a6-43ce-9e05-8454fc6ac4b8/mvrjxsfyeox3/i-will-design-professional-business-posters-and-social-media-4.webp</image:loc>
+      <image:title>I will design professional business posters and social media posts using Canva - preview 4</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-edit-professional-videos-for-youtube-tiktok-and-instagram-reels/</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/fc89104d-7f0a-448a-87b0-82d43a4960c0/mvkz5y4zkbp9/i-will-edit-professional-videos-for-youtube-tiktok-and-insta.webp</image:loc>
+      <image:title>I will edit professional videos for YouTube, TikTok and Instagram Reels</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/fc89104d-7f0a-448a-87b0-82d43a4960c0/mvkz5y4zkbp9/i-will-edit-professional-videos-for-youtube-tiktok-and-insta-2.webp</image:loc>
+      <image:title>I will edit professional videos for YouTube, TikTok and Instagram Reels - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/fc89104d-7f0a-448a-87b0-82d43a4960c0/mvkz5y4zkbp9/i-will-edit-professional-videos-for-youtube-tiktok-and-insta-3.webp</image:loc>
+      <image:title>I will edit professional videos for YouTube, TikTok and Instagram Reels - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/title-i-will-do-accurate-data-entry-web-research-and-excel-tasks-descr/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/126d46d3-1711-4d32-897b-e117fd931193/mv6hp71ky68i/title-i-will-do-accurate-data-entry-web-research-and-excel-t.webp</image:loc>
+      <image:title>Title: I will do accurate data entry, web research, and Excel tasks  Description</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/126d46d3-1711-4d32-897b-e117fd931193/mv6hp71ky68i/title-i-will-do-accurate-data-entry-web-research-and-excel-t-2.webp</image:loc>
+      <image:title>Title: I will do accurate data entry, web research, and Excel tasks  Description - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/126d46d3-1711-4d32-897b-e117fd931193/mv6hp71ky68i/title-i-will-do-accurate-data-entry-web-research-and-excel-t-3.webp</image:loc>
+      <image:title>Title: I will do accurate data entry, web research, and Excel tasks  Description - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-english-3/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/17103ecb-cf57-425e-bcd8-a920f4e2e35d/mw5971plilvx/i-will-translate-english-to-somali-and-somali-to-english.webp</image:loc>
+      <image:title>I will translate English to Somali and Somali to English</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/17103ecb-cf57-425e-bcd8-a920f4e2e35d/mw5971plilvx/i-will-translate-english-to-somali-and-somali-to-english-2.webp</image:loc>
+      <image:title>I will translate English to Somali and Somali to English - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/17103ecb-cf57-425e-bcd8-a920f4e2e35d/mw5971plilvx/i-will-translate-english-to-somali-and-somali-to-english-3.webp</image:loc>
+      <image:title>I will translate English to Somali and Somali to English - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/waxaan-kuu-qoraa-sheekooyin-carruur-oo-xiiso-leh/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bb251aa1-dd81-4935-a72e-78f0c7c15f45/mvfjvwyjvc7r/waxaan-kuu-qoraa-sheekooyin-carruur-oo-xiiso-leh.jpg</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo xiiso leh</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bb251aa1-dd81-4935-a72e-78f0c7c15f45/mvfjvwyjvc7r/waxaan-kuu-qoraa-sheekooyin-carruur-oo-xiiso-leh-2.jpg</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo xiiso leh - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bb251aa1-dd81-4935-a72e-78f0c7c15f45/mvfjvwyjvc7r/waxaan-kuu-qoraa-sheekooyin-carruur-oo-xiiso-leh-3.jpg</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo xiiso leh - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-translate-somali-to-english-and-do-data-entry/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/9a786919-88aa-4848-b146-a3d39f46f3e4/mul90behyql7/i-will-translate-somali-to-english-and-do-data-entry.webp</image:loc>
+      <image:title>I will translate Somali to English and do data entry</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-record-clear-and-professional-somali-voice-recordings/</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/cbfbbe24-ea12-4984-ad8f-f291c9f32c1b/mvzbgtmo3gt9/i-will-record-clear-and-professional-somali-voice-recordings.webp</image:loc>
+      <image:title>I will record clear and professional Somali voice recordings</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/cbfbbe24-ea12-4984-ad8f-f291c9f32c1b/mvzbgtmo3gt9/i-will-record-clear-and-professional-somali-voice-recordings-2.webp</image:loc>
+      <image:title>I will record clear and professional Somali voice recordings - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/cbfbbe24-ea12-4984-ad8f-f291c9f32c1b/mvzbgtmo3gt9/i-will-record-clear-and-professional-somali-voice-recordings-3.webp</image:loc>
+      <image:title>I will record clear and professional Somali voice recordings - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-design-professional-logos-and-posters-for-your-business/</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/acf53050-0ec5-4209-9293-e24cf5ee1205/mvjwnyure0on/i-will-design-professional-logos-and-posters-for-your-busine.webp</image:loc>
+      <image:title>I will design professional logos and posters for your business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/acf53050-0ec5-4209-9293-e24cf5ee1205/mvjwnyure0on/i-will-design-professional-logos-and-posters-for-your-busine-2.webp</image:loc>
+      <image:title>I will design professional logos and posters for your business - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/acf53050-0ec5-4209-9293-e24cf5ee1205/mvjwnyure0on/i-will-design-professional-logos-and-posters-for-your-busine-3.webp</image:loc>
+      <image:title>I will design professional logos and posters for your business - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-accurately-and-clearly-i-will-check/</loc>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/99eb9eee-b056-4ec0-bd7b-0d7f1a871451/mvt6magj4psv/i-will-translate-english-to-somali-accurately-and-clearly-i-.webp</image:loc>
+      <image:title>I will translate English to Somali accurately and clearly. I will check grammar,</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/99eb9eee-b056-4ec0-bd7b-0d7f1a871451/mvt6magj4psv/i-will-translate-english-to-somali-accurately-and-clearly-i--2.jpg</image:loc>
+      <image:title>I will translate English to Somali accurately and clearly. I will check grammar, - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/99eb9eee-b056-4ec0-bd7b-0d7f1a871451/mvt6magj4psv/i-will-translate-english-to-somali-accurately-and-clearly-i--3.webp</image:loc>
+      <image:title>I will translate English to Somali accurately and clearly. I will check grammar, - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-write-and-edit-clear-somali-articles-and-content/</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/aaf2d3e9-a238-4a90-8f5d-68cddd4f8bc2/mvz7ivb08m5p/i-will-write-and-edit-clear-somali-articles-and-content.webp</image:loc>
+      <image:title>I will write and edit clear Somali articles and content</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/aaf2d3e9-a238-4a90-8f5d-68cddd4f8bc2/mvz7ivb08m5p/i-will-write-and-edit-clear-somali-articles-and-content-2.webp</image:loc>
+      <image:title>I will write and edit clear Somali articles and content - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/aaf2d3e9-a238-4a90-8f5d-68cddd4f8bc2/mvz7ivb08m5p/i-will-write-and-edit-clear-somali-articles-and-content-3.webp</image:loc>
+      <image:title>I will write and edit clear Somali articles and content - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-engalish/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/a6f15784-b8bd-4df1-9e7c-e762e3e11e87/mupiqr76zavb/i-will-translate-english-to-somali-and-somali-to-engalish.jpg</image:loc>
+      <image:title>I will translate English to Somali and Somali To engalish</image:title>
     </image:image>
   </url>
   <url>
@@ -1654,31 +1206,85 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-provide-fast-and-accurate/</loc>
-    <lastmod>2026-10-17</lastmod>
+    <loc>https://fivesom.net/gig/waxaan-kuu-qoraa-sheekooyin-carruur-oo-kobciya-aqoonta-iyo-maskaxda-da/</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0d27e63e-419a-4825-8ff3-9223046caf47/mufg17dy5blo/i-will-provide-fast-and-accurate.webp</image:loc>
-      <image:title>I will provide fast and accurate</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873362319-3ql9u.webp</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873363228-3osdtf.webp</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11 - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873363468-yt7m6j.webp</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11 - preview 3</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1788873363700-jpgq1u.webp</image:loc>
+      <image:title>Waxaan kuu qoraa sheekooyin carruur oo kobciya aqoonta iyo maskaxda da&apos;da 4–11 - preview 4</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-custom-canva-graphics-and-social-media-posts/</loc>
+    <loc>https://fivesom.net/gig/i-will-design-a-professional-modern-logo-and-brand-identity/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c9355fca-b9f1-4a24-90d0-bc9287ecff2c/mufmgr64oh0x/i-will-design-custom-canva-graphics-and-social-media-posts.webp</image:loc>
-      <image:title>I will design custom Canva graphics and social media posts</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/35f588d3-f469-4e3b-9ec3-532e4f278680/mupjnpt0t8kn/i-will-design-a-professional-modern-logo-and-brand-identity.webp</image:loc>
+      <image:title>I will design a professional modern logo and brand identity</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-create-custom-animated-stream-overlays-and-obs-graphics/</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvpzvututjnk/i-will-create-custom-animated-stream-overlays-and-obs-graphi.webp</image:loc>
+      <image:title>I will create custom animated stream overlays and OBS graphics</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c9355fca-b9f1-4a24-90d0-bc9287ecff2c/mufmgr64oh0x/i-will-design-custom-canva-graphics-and-social-media-posts-2.webp</image:loc>
-      <image:title>I will design custom Canva graphics and social media posts - preview 2</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvpzvututjnk/i-will-create-custom-animated-stream-overlays-and-obs-graphi-2.webp</image:loc>
+      <image:title>I will create custom animated stream overlays and OBS graphics - preview 2</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c9355fca-b9f1-4a24-90d0-bc9287ecff2c/mufmgr64oh0x/i-will-design-custom-canva-graphics-and-social-media-posts-3.webp</image:loc>
-      <image:title>I will design custom Canva graphics and social media posts - preview 3</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvpzvututjnk/i-will-create-custom-animated-stream-overlays-and-obs-graphi-3.webp</image:loc>
+      <image:title>I will create custom animated stream overlays and OBS graphics - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-build-a-professional-modern-responsive-website-or-web-applicati/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1406bd2d-4808-4397-934e-5eb23598f3db/1788438046827-qf5yyh.png</image:loc>
+      <image:title>I will build a professional modern responsive website or web application</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1406bd2d-4808-4397-934e-5eb23598f3db/1788438050936-gaangb.png</image:loc>
+      <image:title>I will build a professional modern responsive website or web application - preview 2</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-design-a-unique-and-professional-logo-for-your-business/</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/aaa71fc8-96bf-41d6-bf4c-4731149f811f/mviet21r2ic9/i-will-design-a-unique-and-professional-logo-for-your-busine.jpg</image:loc>
+      <image:title>I will design a unique and professional logo for your business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/aaa71fc8-96bf-41d6-bf4c-4731149f811f/mviet21r2ic9/i-will-design-a-unique-and-professional-logo-for-your-busine-2.jpg</image:loc>
+      <image:title>I will design a unique and professional logo for your business - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/aaa71fc8-96bf-41d6-bf4c-4731149f811f/mviet21r2ic9/i-will-design-a-unique-and-professional-logo-for-your-busine-3.jpg</image:loc>
+      <image:title>I will design a unique and professional logo for your business - preview 3</image:title>
     </image:image>
   </url>
   <url>
@@ -1700,52 +1306,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-edit-professional-short-form-videos-for-tiktok-and-reels/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1e2e8b69-583c-48d9-84d5-05b35be28777/muqkfal0f000/i-will-edit-professional-short-form-videos-for-tiktok-and-re.jpg</image:loc>
-      <image:title>​I will edit professional short-form videos for TikTok and Reels</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-english-2/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/5f3b9dda-08c7-4c67-a870-2ecfb41e0fce/muzg7a81c30n/i-will-translate-english-to-somali-and-somali-to-english.png</image:loc>
-      <image:title>I will translate English to Somali and Somali to English</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/5f3b9dda-08c7-4c67-a870-2ecfb41e0fce/muzg7a81c30n/i-will-translate-english-to-somali-and-somali-to-english-2.png</image:loc>
-      <image:title>I will translate English to Somali and Somali to English - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/5f3b9dda-08c7-4c67-a870-2ecfb41e0fce/muzg7a81c30n/i-will-translate-english-to-somali-and-somali-to-english-3.png</image:loc>
-      <image:title>I will translate English to Somali and Somali to English - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://fivesom.net/gig/i-create-attractive-and-professional-graphic-designs-for-individuals-b/</loc>
-    <lastmod>2026-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/92701ae7-5b85-49de-8c1f-06483a5bece1/mv0nqyp4kmbd/i-create-attractive-and-professional-graphic-designs-for-ind.jfif</image:loc>
-      <image:title>I create attractive and professional graphic designs for individuals, businesses</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/92701ae7-5b85-49de-8c1f-06483a5bece1/mv0nqyp4kmbd/i-create-attractive-and-professional-graphic-designs-for-ind-2.jfif</image:loc>
-      <image:title>I create attractive and professional graphic designs for individuals, businesses - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/92701ae7-5b85-49de-8c1f-06483a5bece1/mv0nqyp4kmbd/i-create-attractive-and-professional-graphic-designs-for-ind-3.jfif</image:loc>
-      <image:title>I create attractive and professional graphic designs for individuals, businesses - preview 3</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://fivesom.net/gig/i-will-edit-professional-tiktok-videos-and-instagram-reels/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -1764,107 +1324,187 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-edit-professional-pubg-gaming-videos-and-social-media-reels/</loc>
+    <loc>https://fivesom.net/gig/i-will-edit-professional-short-form-videos-for-tiktok-and-reels/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/2c7f1156-e276-4a42-acd5-69daca5c5ecd/mv3zz67s4rud/i-will-edit-professional-pubg-gaming-videos-and-social-media.jpg</image:loc>
-      <image:title>I will edit professional PUBG gaming videos and social media reels</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/2c7f1156-e276-4a42-acd5-69daca5c5ecd/mv3zz67s4rud/i-will-edit-professional-pubg-gaming-videos-and-social-media-2.webp</image:loc>
-      <image:title>I will edit professional PUBG gaming videos and social media reels - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/2c7f1156-e276-4a42-acd5-69daca5c5ecd/mv3zz67s4rud/i-will-edit-professional-pubg-gaming-videos-and-social-media-3.webp</image:loc>
-      <image:title>I will edit professional PUBG gaming videos and social media reels - preview 3</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/2c7f1156-e276-4a42-acd5-69daca5c5ecd/mv3zz67s4rud/i-will-edit-professional-pubg-gaming-videos-and-social-media-4.webp</image:loc>
-      <image:title>I will edit professional PUBG gaming videos and social media reels - preview 4</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1e2e8b69-583c-48d9-84d5-05b35be28777/muqkfal0f000/i-will-edit-professional-short-form-videos-for-tiktok-and-re.jpg</image:loc>
+      <image:title>​I will edit professional short-form videos for TikTok and Reels</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-be-your-virtual-assistant-for-data-entry-and-admin-tasks/</loc>
-    <lastmod>2026-10-17</lastmod>
+    <loc>https://fivesom.net/gig/i-will-type-documents-and-text/</loc>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/230331b7-d337-43e3-80f6-fc6164519075/mv3x1u7s1zri/i-will-be-your-virtual-assistant-for-data-entry-and-admin-ta.webp</image:loc>
-      <image:title>I will be your virtual assistant for data entry and admin tasks</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1d9683d9-f22c-4798-8e2f-9e2b35721991/mvotyjb6xrjx/i-will-type-documents-and-text.webp</image:loc>
+      <image:title>I will type documents and text</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/230331b7-d337-43e3-80f6-fc6164519075/mv3x1u7s1zri/i-will-be-your-virtual-assistant-for-data-entry-and-admin-ta-2.webp</image:loc>
-      <image:title>I will be your virtual assistant for data entry and admin tasks - preview 2</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1d9683d9-f22c-4798-8e2f-9e2b35721991/mvotyjb6xrjx/i-will-type-documents-and-text-2.webp</image:loc>
+      <image:title>I will type documents and text - preview 2</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/230331b7-d337-43e3-80f6-fc6164519075/mv3x1u7s1zri/i-will-be-your-virtual-assistant-for-data-entry-and-admin-ta-3.webp</image:loc>
-      <image:title>I will be your virtual assistant for data entry and admin tasks - preview 3</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/1d9683d9-f22c-4798-8e2f-9e2b35721991/mvotyjb6xrjx/i-will-type-documents-and-text-3.webp</image:loc>
+      <image:title>I will type documents and text - preview 3</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-write-professional-articles-blog-posts-and-healthcare-content/</loc>
-    <lastmod>2026-10-17</lastmod>
+    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts-and-graphics/</loc>
+    <lastmod>2026-10-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e0a1551e-8ba0-40f0-822b-7534caa2038c/mv5c36vm52pd/i-will-write-professional-articles-blog-posts-and-healthcare.webp</image:loc>
-      <image:title>I will write professional articles, blog posts, and healthcare content</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6eaf2de4-61c9-4325-99b1-df7fb1efa6a8/mvrbjlt668sf/i-will-design-professional-social-media-posts-and-graphics.webp</image:loc>
+      <image:title>I will design professional social media posts and graphics</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6eaf2de4-61c9-4325-99b1-df7fb1efa6a8/mvrbjlt668sf/i-will-design-professional-social-media-posts-and-graphics-2.webp</image:loc>
+      <image:title>I will design professional social media posts and graphics - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6eaf2de4-61c9-4325-99b1-df7fb1efa6a8/mvrbjlt668sf/i-will-design-professional-social-media-posts-and-graphics-3.webp</image:loc>
+      <image:title>I will design professional social media posts and graphics - preview 3</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-professionally-translate-english-to-somali-and-vice-versa/</loc>
+    <loc>https://fivesom.net/gig/i-will-create-a-professional-business-website-using-html-css-and-javas/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c661ac36-c465-4043-ac48-eb5997bf8699/mv5m7pbga3uh/i-will-professionally-translate-english-to-somali-and-vice-v.jpeg</image:loc>
-      <image:title>I will professionally translate English to Somali and vice versa</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c661ac36-c465-4043-ac48-eb5997bf8699/mv5m7pbga3uh/i-will-professionally-translate-english-to-somali-and-vice-v-2.jpeg</image:loc>
-      <image:title>I will professionally translate English to Somali and vice versa - preview 2</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c661ac36-c465-4043-ac48-eb5997bf8699/mv5m7pbga3uh/i-will-professionally-translate-english-to-somali-and-vice-v-3.jpeg</image:loc>
-      <image:title>I will professionally translate English to Somali and vice versa - preview 3</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/791dd3c5-9750-4cef-92fa-f6aa9a42f941/1788866220424-xie677.webp</image:loc>
+      <image:title>I will create a professional business website using HTML CSS and JavaScript</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-do-professional-somali-female-voice-over-for-your-video-ad/</loc>
-    <lastmod>2026-10-17</lastmod>
+    <loc>https://fivesom.net/gig/i-will-write-and-format-professional-reports-and-word-documents/</loc>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/eff593b8-0726-4153-987f-22ddb4d62be6/mv58j8x0889f/i-will-do-professional-somali-female-voice-over-for-your-vid.webp</image:loc>
-      <image:title>I will do professional Somali female voice over for your business ad, YouTube an</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/16e0fa8c-4f1b-4ff3-8a7b-235fb04d2214/mvld9jdxw7gl/i-will-write-and-format-professional-reports-and-word-docume.jpeg</image:loc>
+      <image:title>I will write and format professional reports and Word documents</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/eff593b8-0726-4153-987f-22ddb4d62be6/mv58j8x0889f/i-will-do-professional-somali-female-voice-over-for-your-vid-2.webp</image:loc>
-      <image:title>I will do professional Somali female voice over for your business ad, YouTube an - preview 2</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/16e0fa8c-4f1b-4ff3-8a7b-235fb04d2214/mvld9jdxw7gl/i-will-write-and-format-professional-reports-and-word-docume-2.jpeg</image:loc>
+      <image:title>I will write and format professional reports and Word documents - preview 2</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/eff593b8-0726-4153-987f-22ddb4d62be6/mv58j8x0889f/i-will-do-professional-somali-female-voice-over-for-your-vid-3.webp</image:loc>
-      <image:title>I will do professional Somali female voice over for your business ad, YouTube an - preview 3</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/16e0fa8c-4f1b-4ff3-8a7b-235fb04d2214/mvld9jdxw7gl/i-will-write-and-format-professional-reports-and-word-docume-3.jpeg</image:loc>
+      <image:title>I will write and format professional reports and Word documents - preview 3</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/title-i-will-do-accurate-data-entry-web-research-and-excel-tasks-descr/</loc>
+    <loc>https://fivesom.net/gig/i-will-translate-somali-to-english-and-english-to-somali-2/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/126d46d3-1711-4d32-897b-e117fd931193/mv6hp71ky68i/title-i-will-do-accurate-data-entry-web-research-and-excel-t.webp</image:loc>
-      <image:title>Title: I will do accurate data entry, web research, and Excel tasks  Description</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/03144d97-5308-479a-91e6-e055713d91ed/mup6k5czipov/i-will-translate-somali-to-english-and-english-to-somali.webp</image:loc>
+      <image:title>I will translate Somali to English and English to Somali</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-create-professional-and-engaging-videos-for-your-brand/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-build-custom-full-stack-web-applications-and-business-systems/</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/533e2939-95dd-41ec-9b15-959254180531/mvjgss4kv7y3/i-will-build-custom-full-stack-web-applications-and-business-3.webp</image:loc>
+      <image:title>I will build custom full-stack web applications and business systems</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/126d46d3-1711-4d32-897b-e117fd931193/mv6hp71ky68i/title-i-will-do-accurate-data-entry-web-research-and-excel-t-2.webp</image:loc>
-      <image:title>Title: I will do accurate data entry, web research, and Excel tasks  Description - preview 2</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/533e2939-95dd-41ec-9b15-959254180531/mvjgyqe7r1rj/i-will-build-custom-full-stack-web-applications-and-business-2.png</image:loc>
+      <image:title>I will build custom full-stack web applications and business systems - preview 2</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/126d46d3-1711-4d32-897b-e117fd931193/mv6hp71ky68i/title-i-will-do-accurate-data-entry-web-research-and-excel-t-3.webp</image:loc>
-      <image:title>Title: I will do accurate data entry, web research, and Excel tasks  Description - preview 3</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/533e2939-95dd-41ec-9b15-959254180531/mvjgyqe7r1rj/i-will-build-custom-full-stack-web-applications-and-business-3.webp</image:loc>
+      <image:title>I will build custom full-stack web applications and business systems - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-create-professional-social-media-posts-for-your-business/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/b24b5feb-7774-4c28-b332-45e4a514faf8/mvw4fmtw06gw/i-will-create-professional-social-media-posts-for-your-busin.jpg</image:loc>
+      <image:title>I will create professional social media posts for your business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/b24b5feb-7774-4c28-b332-45e4a514faf8/mvw4fmtw06gw/i-will-create-professional-social-media-posts-for-your-busin-2.webp</image:loc>
+      <image:title>I will create professional social media posts for your business - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/b24b5feb-7774-4c28-b332-45e4a514faf8/mvw4fmtw06gw/i-will-create-professional-social-media-posts-for-your-busin-3.png</image:loc>
+      <image:title>I will create professional social media posts for your business - preview 3</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/b24b5feb-7774-4c28-b332-45e4a514faf8/mvw4fmtw06gw/i-will-create-professional-social-media-posts-for-your-busin-4.png</image:loc>
+      <image:title>I will create professional social media posts for your business - preview 4</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-do-data-entry-and-typing/</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/4a70c8ae-3b4c-4e71-af6f-81076c7b548d/mvjj1k1lxom7/i-will-do-data-entry-and-typing.jpg</image:loc>
+      <image:title>I will do data entry and typing</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/4a70c8ae-3b4c-4e71-af6f-81076c7b548d/mvjj1k1lxom7/i-will-do-data-entry-and-typing-2.jpg</image:loc>
+      <image:title>I will do data entry and typing - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/4a70c8ae-3b4c-4e71-af6f-81076c7b548d/mvjj1k1lxom7/i-will-do-data-entry-and-typing-3.jpg</image:loc>
+      <image:title>I will do data entry and typing - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts/</loc>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e8858f25-507c-4057-acca-69cf5bba99ce/mvhmlcjbmkc1/i-will-design-professional-social-media-posts.webp</image:loc>
+      <image:title>I will design professional social media posts</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e8858f25-507c-4057-acca-69cf5bba99ce/mvhmlcjbmkc1/i-will-design-professional-social-media-posts-2.webp</image:loc>
+      <image:title>I will design professional social media posts - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e8858f25-507c-4057-acca-69cf5bba99ce/mvhmlcjbmkc1/i-will-design-professional-social-media-posts-3.webp</image:loc>
+      <image:title>I will design professional social media posts - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts-and-flyers/</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/d085b022-ac4f-44e9-b68f-e08f940e6c23/mvjk1i3d5vfn/i-will-design-professional-social-media-posts-and-flyers.webp</image:loc>
+      <image:title>I will design professional social media posts and flyers</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/d085b022-ac4f-44e9-b68f-e08f940e6c23/mvjk1i3d5vfn/i-will-design-professional-social-media-posts-and-flyers-2.webp</image:loc>
+      <image:title>I will design professional social media posts and flyers - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/d085b022-ac4f-44e9-b68f-e08f940e6c23/mvjk1i3d5vfn/i-will-design-professional-social-media-posts-and-flyers-3.webp</image:loc>
+      <image:title>I will design professional social media posts and flyers - preview 3</image:title>
     </image:image>
   </url>
   <url>
@@ -1886,35 +1526,171 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-design-professional-posters-banners-and-flyers-for-your-busines/</loc>
-    <lastmod>2026-10-17</lastmod>
+    <loc>https://fivesom.net/gig/i-will-design-or-redesign-shopify-squarespace-and-gohighlevel-websites/</loc>
+    <lastmod>2026-10-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/019c5724-5f41-4030-a15a-db10d6e8c18b/mv6u8zsvxg98/i-will-design-professional-posters-banners-and-flyers-for-yo.jpg</image:loc>
-      <image:title>I will design professional posters, banners, and flyers for your business</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c2745799-df91-47e9-91e1-c4d40a97c252/mvi045ceou15/i-will-design-or-redesign-shopify-squarespace-and-gohighleve.webp</image:loc>
+      <image:title>I will design or redesign Shopify Squarespace and GoHighLevel websites</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/019c5724-5f41-4030-a15a-db10d6e8c18b/mv6u8zsvxg98/i-will-design-professional-posters-banners-and-flyers-for-yo-2.jpg</image:loc>
-      <image:title>I will design professional posters, banners, and flyers for your business - preview 2</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c2745799-df91-47e9-91e1-c4d40a97c252/mvi045ceou15/i-will-design-or-redesign-shopify-squarespace-and-gohighleve-2.webp</image:loc>
+      <image:title>I will design or redesign Shopify Squarespace and GoHighLevel websites - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c2745799-df91-47e9-91e1-c4d40a97c252/mvi045ceou15/i-will-design-or-redesign-shopify-squarespace-and-gohighleve-3.webp</image:loc>
+      <image:title>I will design or redesign Shopify Squarespace and GoHighLevel websites - preview 3</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/gig/i-will-write-engaging-content-blog-posts-and-social-media-captions-for/</loc>
+    <loc>https://fivesom.net/gig/i-will-do-professional-somali-female-voice-over-for-your-video-ad/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/8634f120-d89d-4ca2-8e39-4824d1d27def/mv8cjehs05je/i-will-write-engaging-content-blog-posts-and-social-media-ca.jpg</image:loc>
-      <image:title>I will write engaging content, blog posts, and social media captions for your bu</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/eff593b8-0726-4153-987f-22ddb4d62be6/mv58j8x0889f/i-will-do-professional-somali-female-voice-over-for-your-vid.webp</image:loc>
+      <image:title>I will do professional Somali female voice over for your business ad, YouTube an</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/8634f120-d89d-4ca2-8e39-4824d1d27def/mv8cjehs05je/i-will-write-engaging-content-blog-posts-and-social-media-ca-2.jpg</image:loc>
-      <image:title>I will write engaging content, blog posts, and social media captions for your bu - preview 2</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/eff593b8-0726-4153-987f-22ddb4d62be6/mv58j8x0889f/i-will-do-professional-somali-female-voice-over-for-your-vid-2.webp</image:loc>
+      <image:title>I will do professional Somali female voice over for your business ad, YouTube an - preview 2</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/8634f120-d89d-4ca2-8e39-4824d1d27def/mv8cjehs05je/i-will-write-engaging-content-blog-posts-and-social-media-ca-3.jpg</image:loc>
-      <image:title>I will write engaging content, blog posts, and social media captions for your bu - preview 3</image:title>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/eff593b8-0726-4153-987f-22ddb4d62be6/mv58j8x0889f/i-will-do-professional-somali-female-voice-over-for-your-vid-3.webp</image:loc>
+      <image:title>I will do professional Somali female voice over for your business ad, YouTube an - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/waxaan-kuu-dhisayaa-website-casri-ah-oo-ganacsi-online-ah/</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1786378887087-vccw95.png</image:loc>
+      <image:title>Waxaan Kuu Dhisayaa Website Casri ah oo Ganacsi Online ah</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1786378887756-va2tr8.png</image:loc>
+      <image:title>Waxaan Kuu Dhisayaa Website Casri ah oo Ganacsi Online ah - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/48bb0536-0387-46cc-a0da-11b465c8fb8d/1786378888351-c37x4.png</image:loc>
+      <image:title>Waxaan Kuu Dhisayaa Website Casri ah oo Ganacsi Online ah - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-design-a-professional-modern-logo/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/67cfe4f0-c074-4ed5-8821-542091e73d4a/mupnpgxlbajv/i-will-design-a-professional-modern-logo.webp</image:loc>
+      <image:title>I will design a professional modern logo</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/67cfe4f0-c074-4ed5-8821-542091e73d4a/mupnpgxlbajv/i-will-design-a-professional-modern-logo-2.webp</image:loc>
+      <image:title>I will design a professional modern logo - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/67cfe4f0-c074-4ed5-8821-542091e73d4a/mupnpgxlbajv/i-will-design-a-professional-modern-logo-3.webp</image:loc>
+      <image:title>I will design a professional modern logo - preview 3</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/67cfe4f0-c074-4ed5-8821-542091e73d4a/mupnpgxlbajv/i-will-design-a-professional-modern-logo-4.webp</image:loc>
+      <image:title>I will design a professional modern logo - preview 4</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-translate-somali-arabic-and-english-texts/</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/3b32805c-8bc2-4b39-888c-af4a17774d08/mvjeg1md9r0o/i-will-translate-somali-arabic-and-english-texts.jpeg</image:loc>
+      <image:title>I will translate Somali, Arabic, and English texts</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/3b32805c-8bc2-4b39-888c-af4a17774d08/mvjeg1md9r0o/i-will-translate-somali-arabic-and-english-texts-2.webp</image:loc>
+      <image:title>I will translate Somali, Arabic, and English texts - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/3b32805c-8bc2-4b39-888c-af4a17774d08/mvjeg1md9r0o/i-will-translate-somali-arabic-and-english-texts-3.webp</image:loc>
+      <image:title>I will translate Somali, Arabic, and English texts - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-translate-somali-english-and-arabic-accurately/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/54b496f7-f341-4fd3-8b35-06f51e033c97/mube1cmlv1qc/i-will-translate-somali-english-and-arabic-accurately.webp</image:loc>
+      <image:title>I will translate Somali English and Arabic accurately</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-create-a-professional-and-responsive-website-for-your-business/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6138e862-bedf-43f2-941c-c684ed9ed32d/mvdnhyoxwaat/writing-gig-title-i-will-create-a-professional-and-responsiv.webp</image:loc>
+      <image:title>Writing Gig Title I will create a professional and responsive website for your b</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6138e862-bedf-43f2-941c-c684ed9ed32d/mvdnhyoxwaat/writing-gig-title-i-will-create-a-professional-and-responsiv-2.webp</image:loc>
+      <image:title>Writing Gig Title I will create a professional and responsive website for your b - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6138e862-bedf-43f2-941c-c684ed9ed32d/mvdnhyoxwaat/writing-gig-title-i-will-create-a-professional-and-responsiv-3.webp</image:loc>
+      <image:title>Writing Gig Title I will create a professional and responsive website for your b - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-professionally-translate-english-to-somali-and-vice-versa/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c661ac36-c465-4043-ac48-eb5997bf8699/mv5m7pbga3uh/i-will-professionally-translate-english-to-somali-and-vice-v.jpeg</image:loc>
+      <image:title>I will professionally translate English to Somali and vice versa</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c661ac36-c465-4043-ac48-eb5997bf8699/mv5m7pbga3uh/i-will-professionally-translate-english-to-somali-and-vice-v-2.jpeg</image:loc>
+      <image:title>I will professionally translate English to Somali and vice versa - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c661ac36-c465-4043-ac48-eb5997bf8699/mv5m7pbga3uh/i-will-professionally-translate-english-to-somali-and-vice-v-3.jpeg</image:loc>
+      <image:title>I will professionally translate English to Somali and vice versa - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-translate-somali-to-english-and-english-to-somali/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/16bfaeeb-0913-4b9f-b4fd-b72542898e46/munrmsgol97v/i-will-translate-somali-to-english-and-english-to-somali.jpg</image:loc>
+      <image:title>I will translate somali to English and English to somali</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-design-professional-social-media-posts-2/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bb089541-7532-45fd-8173-bdc82c78fdd1/mvmosq4cdszg/i-will-design-professional-social-media-posts.webp</image:loc>
+      <image:title>I will design professional social media posts</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bb089541-7532-45fd-8173-bdc82c78fdd1/mvmosq4cdszg/i-will-design-professional-social-media-posts-2.webp</image:loc>
+      <image:title>I will design professional social media posts - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/bb089541-7532-45fd-8173-bdc82c78fdd1/mvmosq4cdszg/i-will-design-professional-social-media-posts-3.webp</image:loc>
+      <image:title>I will design professional social media posts - preview 3</image:title>
     </image:image>
   </url>
   <url>
@@ -1936,67 +1712,247 @@
     </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/daadir-cade/</loc>
+    <loc>https://fivesom.net/gig/waxaan-muuqaladada-ka-dhigi-doona-mid-soo-jiidaso-leh/</loc>
+    <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/saeed/</loc>
+    <loc>https://fivesom.net/gig/i-will-design-modern-logo-brand-and-social-media-design/</loc>
+    <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/51699b55-3c7e-4ac1-8c2a-6460948ab4fa/mukvp9iy56ug/i-will-design-modern-logo-brand-and-social-media-design.svg</image:loc>
+      <image:title>i will design modern logo brand and social media design</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/51699b55-3c7e-4ac1-8c2a-6460948ab4fa/mukvp9iy56ug/i-will-design-modern-logo-brand-and-social-media-design-2.jpg</image:loc>
+      <image:title>i will design modern logo brand and social media design - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/51699b55-3c7e-4ac1-8c2a-6460948ab4fa/mukvp9iy56ug/i-will-design-modern-logo-brand-and-social-media-design-3.webp</image:loc>
+      <image:title>i will design modern logo brand and social media design - preview 3</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/najiib-hassan/</loc>
+    <loc>https://fivesom.net/gig/i-will-translate-english-to-somali-and-somali-to-english/</loc>
+    <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/safa-abdikarim/</loc>
+    <loc>https://fivesom.net/gig/i-will-be-your-virtual-assistant-for-data-entry-and-admin-tasks/</loc>
+    <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/230331b7-d337-43e3-80f6-fc6164519075/mv3x1u7s1zri/i-will-be-your-virtual-assistant-for-data-entry-and-admin-ta.webp</image:loc>
+      <image:title>I will be your virtual assistant for data entry and admin tasks</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/230331b7-d337-43e3-80f6-fc6164519075/mv3x1u7s1zri/i-will-be-your-virtual-assistant-for-data-entry-and-admin-ta-2.webp</image:loc>
+      <image:title>I will be your virtual assistant for data entry and admin tasks - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/230331b7-d337-43e3-80f6-fc6164519075/mv3x1u7s1zri/i-will-be-your-virtual-assistant-for-data-entry-and-admin-ta-3.webp</image:loc>
+      <image:title>I will be your virtual assistant for data entry and admin tasks - preview 3</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/mohammed-abdirashid/</loc>
+    <loc>https://fivesom.net/gig/i-will-design-professional-posters-banners-and-flyers-for-your-busines/</loc>
+    <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/019c5724-5f41-4030-a15a-db10d6e8c18b/mv6u8zsvxg98/i-will-design-professional-posters-banners-and-flyers-for-yo.jpg</image:loc>
+      <image:title>I will design professional posters, banners, and flyers for your business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/019c5724-5f41-4030-a15a-db10d6e8c18b/mv6u8zsvxg98/i-will-design-professional-posters-banners-and-flyers-for-yo-2.jpg</image:loc>
+      <image:title>I will design professional posters, banners, and flyers for your business - preview 2</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/fardowso-muuse/</loc>
+    <loc>https://fivesom.net/gig/gig-title-i-will-translate-somali-to-english-and-english-to-somali-pro/</loc>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/851b2604-1b79-45a9-9bf3-5714fad648ce/mw2q03t6ww7j/gig-title-i-will-translate-somali-to-english-and-english-to-.jpg</image:loc>
+      <image:title>Gig Title I will translate Somali to English and English to Somali professionally</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/851b2604-1b79-45a9-9bf3-5714fad648ce/mw2q03t6ww7j/gig-title-i-will-translate-somali-to-english-and-english-to--2.jpg</image:loc>
+      <image:title>Gig Title I will translate Somali to English and English to Somali professionally - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/851b2604-1b79-45a9-9bf3-5714fad648ce/mw2q03t6ww7j/gig-title-i-will-translate-somali-to-english-and-english-to--3.jpg</image:loc>
+      <image:title>Gig Title I will translate Somali to English and English to Somali professionally - preview 3</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/ajayi-favour/</loc>
+    <loc>https://fivesom.net/gig/i-will-design-a-modern-minimalist-logo-in-figma-for-your-brand/</loc>
+    <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c5da8d75-6765-424c-9174-cb4021c78a5e/1786552899173-m9d1le.jpeg</image:loc>
+      <image:title>I will design a modern, minimalist logo in Figma for your brand.</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c5da8d75-6765-424c-9174-cb4021c78a5e/1786552925058-a5e01j.jpeg</image:loc>
+      <image:title>I will design a modern, minimalist logo in Figma for your brand. - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/c5da8d75-6765-424c-9174-cb4021c78a5e/1786552947146-ww59cg.jpeg</image:loc>
+      <image:title>I will design a modern, minimalist logo in Figma for your brand. - preview 3</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/xamda-cawil/</loc>
+    <loc>https://fivesom.net/gig/i-will-create-professional-commercial-videos-for-your-business/</loc>
+    <lastmod>2026-11-06</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/11887562-f3fc-4d0b-8a67-4f9c872c1653/muydqjmvwnpk/i-will-create-professional-commercial-videos-for-your-busine.jpeg</image:loc>
+      <image:title>I will create professional commercial videos for your business</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/hafsa-hassan-ahmed/</loc>
+    <loc>https://fivesom.net/gig/i-will-professionally-translate-somali-arabic-and-english-documents/</loc>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6af36d03-9720-46ed-a5e6-1198c736d449/mvujy3rbk3du/i-will-professionally-translate-somali-arabic-and-english-do.webp</image:loc>
+      <image:title>I will professionally translate Somali, Arabic, and English documents</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6af36d03-9720-46ed-a5e6-1198c736d449/mvujy3rbk3du/i-will-professionally-translate-somali-arabic-and-english-do-2.webp</image:loc>
+      <image:title>I will professionally translate Somali, Arabic, and English documents - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/6af36d03-9720-46ed-a5e6-1198c736d449/mvujy3rbk3du/i-will-professionally-translate-somali-arabic-and-english-do-3.webp</image:loc>
+      <image:title>I will professionally translate Somali, Arabic, and English documents - preview 3</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/amar-hassen-mohammednur/</loc>
+    <loc>https://fivesom.net/gig/i-will-write-professional-articles-blog-posts-and-healthcare-content/</loc>
+    <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e0a1551e-8ba0-40f0-822b-7534caa2038c/mv5c36vm52pd/i-will-write-professional-articles-blog-posts-and-healthcare.webp</image:loc>
+      <image:title>I will write professional articles, blog posts, and healthcare content</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/yahya-abdi/</loc>
+    <loc>https://fivesom.net/gig/i-will-create-a-professional-custom-logo-for-your-business/</loc>
+    <lastmod>2026-10-21</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e8858f25-507c-4057-acca-69cf5bba99ce/mvhn74begy53/i-will-create-a-professional-custom-logo-for-your-business.webp</image:loc>
+      <image:title>I will create a professional custom logo for your business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e8858f25-507c-4057-acca-69cf5bba99ce/mvhn74begy53/i-will-create-a-professional-custom-logo-for-your-business-2.webp</image:loc>
+      <image:title>I will create a professional custom logo for your business - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/e8858f25-507c-4057-acca-69cf5bba99ce/mvhn74begy53/i-will-create-a-professional-custom-logo-for-your-business-3.jpg</image:loc>
+      <image:title>I will create a professional custom logo for your business - preview 3</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/isxaq-axmad/</loc>
+    <loc>https://fivesom.net/gig/i-will-design-a-professional-modern-logo-for-your-business/</loc>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/a0c53ff4-1e53-4b39-98d8-bcb88d79a323/mvsexe68zfug/i-will-design-a-professional-modern-logo-for-your-business.webp</image:loc>
+      <image:title>I will design a professional modern logo for your business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/a0c53ff4-1e53-4b39-98d8-bcb88d79a323/mvsexe68zfug/i-will-design-a-professional-modern-logo-for-your-business-2.jpg</image:loc>
+      <image:title>I will design a professional modern logo for your business - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/a0c53ff4-1e53-4b39-98d8-bcb88d79a323/mvsexe68zfug/i-will-design-a-professional-modern-logo-for-your-business-3.jpg</image:loc>
+      <image:title>I will design a professional modern logo for your business - preview 3</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/a0c53ff4-1e53-4b39-98d8-bcb88d79a323/mvsexe68zfug/i-will-design-a-professional-modern-logo-for-your-business-4.jpg</image:loc>
+      <image:title>I will design a professional modern logo for your business - preview 4</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/cabdirahmaan-bashiir/</loc>
+    <loc>https://fivesom.net/gig/professional-graphic-designer-creative-modern-designs-creative-graphic/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/756dc8cd-c34e-4569-bea0-21ec5a5e3473/1788701314916-r1plgl.png</image:loc>
+      <image:title>Professional Graphic Designer | Creative &amp; Modern Designs Creative  logo design</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/756dc8cd-c34e-4569-bea0-21ec5a5e3473/1788701369499-53t3v.png</image:loc>
+      <image:title>Professional Graphic Designer | Creative &amp; Modern Designs Creative  logo design - preview 2</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-design-professional-and-attractive-social-media-posters/</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/83835f7f-c942-40ff-8d2a-58e8e9a169f0/mw6mi8obsymb/i-will-design-professional-and-attractive-social-media-poste.png</image:loc>
+      <image:title>I will design professional and attractive social media posters</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/83835f7f-c942-40ff-8d2a-58e8e9a169f0/mw6mi8obsymb/i-will-design-professional-and-attractive-social-media-poste-2.webp</image:loc>
+      <image:title>I will design professional and attractive social media posters - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/83835f7f-c942-40ff-8d2a-58e8e9a169f0/mw6mi8obsymb/i-will-design-professional-and-attractive-social-media-poste-3.webp</image:loc>
+      <image:title>I will design professional and attractive social media posters - preview 3</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-provide-fast-and-accurate/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0d27e63e-419a-4825-8ff3-9223046caf47/mufg17dy5blo/i-will-provide-fast-and-accurate.webp</image:loc>
+      <image:title>I will provide fast and accurate</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/gig/i-will-create-professional-twitch-youtube-and-kick-stream-screens/</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvs3kfsk7e40/i-will-create-professional-twitch-youtube-and-kick-stream-sc.gif</image:loc>
+      <image:title>I will create professional Twitch, YouTube and Kick stream screens</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvs3kfsk7e40/i-will-create-professional-twitch-youtube-and-kick-stream-sc-2.webp</image:loc>
+      <image:title>I will create professional Twitch, YouTube and Kick stream screens - preview 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvs3kfsk7e40/i-will-create-professional-twitch-youtube-and-kick-stream-sc-3.webp</image:loc>
+      <image:title>I will create professional Twitch, YouTube and Kick stream screens - preview 3</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://afjcjjelgppctsnmtbek.supabase.co/storage/v1/object/public/gig-images/0fb8e2cf-d5fa-45bb-853c-365057153aae/mvs3kfsk7e40/i-will-create-professional-twitch-youtube-and-kick-stream-sc-4.webp</image:loc>
+      <image:title>I will create professional Twitch, YouTube and Kick stream screens - preview 4</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/maxamed-dalmar/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2006,147 +1962,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/khadra-c-salaan/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/asmahodandev/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/saalim-mahatt/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/prince-murimi/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/goatmason/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/fardows-abdi-kaadir/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/hafso-ainte/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/cabdi-casiis-ibraahim/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/moha-daahe/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/abdiwadud-jama/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/isma-yare/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/bahal-nool/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/yasmin-ali/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/ikhlaas-ibrahim/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/fatima-casiis/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/mohamett-updy/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/mohamed-ahmed-muhdin/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/sunday-victor/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/luis-barnaba/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/mohame-abdullhi-ali/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/ahmed-mooge/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/abdiaziiz-mahad/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fivesom.net/freelancer/najiya-yasin/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/fahiima-mohamoud/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/najax-yazen/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/ikraan-muqtaar/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/hibaaq-apdirahman/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/ahmed-nour-abdulrahim/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/xamdaan/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2156,22 +1972,32 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fivesom.net/freelancer/julius-overlayforge/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/najax-yazen/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/ikhlaas-ibrahim/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/daadir-cade/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/fardowso-muuse/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fivesom.net/freelancer/fuaad-shucayb-xuseen/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/ezeh-solomon/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/xawiiwa-cabdarashid/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/abdiaziz-abdirahman-ali/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2181,32 +2007,27 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/cabdiraxmaan-muxumed/</loc>
+    <loc>https://fivesom.net/freelancer/moha-daahe/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/maxamed-dalmar/</loc>
+    <loc>https://fivesom.net/freelancer/yasmin-ali/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/kos-ahmed/</loc>
+    <loc>https://fivesom.net/freelancer/abdiaziiz-mahad/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/seynab-nuur-cali/</loc>
+    <loc>https://fivesom.net/freelancer/goatmason/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/aden-asmar/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/masnafarax-masna-farax/</loc>
+    <loc>https://fivesom.net/freelancer/isma-yare/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2216,12 +2037,32 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/xafiid-abdi/</loc>
+    <loc>https://fivesom.net/freelancer/bahal-nool/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/ubax-abdilahi/</loc>
+    <loc>https://fivesom.net/freelancer/mohammed-abdirashid/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/saeed/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/ajayi-favour/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/masnafarax-masna-farax/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/aden-asmar/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2231,12 +2072,42 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/khadan-ahmed/</loc>
+    <loc>https://fivesom.net/freelancer/khadra-c-salaan/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/shop-zen/</loc>
+    <loc>https://fivesom.net/freelancer/abdirizak-moktar-abdi/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/cabdirahmaan-bashiir/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/cabdi-casiis-ibraahim/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/ikraan-muqtaar/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/saalim-mahatt/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/ubax-abdilahi/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/xawiiwa-cabdarashid/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2246,12 +2117,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/julius-overlayforge/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fivesom.net/freelancer/rays-design/</loc>
+    <loc>https://fivesom.net/freelancer/khaalid-maxamed/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -2261,12 +2127,162 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/khaalid-maxamed/</loc>
+    <loc>https://fivesom.net/freelancer/yahya-abdi/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fivesom.net/freelancer/abdirizak-moktar-abdi/</loc>
+    <loc>https://fivesom.net/freelancer/hafsa-hassan-ahmed/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/rays-design/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/seynab-nuur-cali/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/mohamett-updy/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/luis-barnaba/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/prince-murimi/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/fatima-casiis/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/fahiima-mohamoud/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/isxaq-axmad/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/cabdiraxmaan-muxumed/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/xamda-cawil/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/mohame-abdullhi-ali/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/xafiid-abdi/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/ahmed-nour-abdulrahim/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/shop-zen/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/xamdaan/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/mohamed-ahmed-muhdin/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/asmahodandev/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/ezeh-solomon/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/amar-hassen-mohammednur/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/hibaaq-apdirahman/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/safa-abdikarim/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/khadan-ahmed/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/sunday-victor/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/abdiaziz-abdirahman-ali/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/fardows-abdi-kaadir/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/abdiwadud-jama/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/kos-ahmed/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/hafso-ainte/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/najiib-hassan/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fivesom.net/freelancer/ahmed-mooge/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
