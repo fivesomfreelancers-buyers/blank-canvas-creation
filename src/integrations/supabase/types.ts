@@ -1189,6 +1189,7 @@ export type Database = {
           price: number
           scope: string
           status: string
+          terms_confirmed: boolean
           title: string
           updated_at: string
         }
@@ -1207,6 +1208,7 @@ export type Database = {
           price: number
           scope: string
           status?: string
+          terms_confirmed?: boolean
           title: string
           updated_at?: string
         }
@@ -1225,6 +1227,7 @@ export type Database = {
           price?: number
           scope?: string
           status?: string
+          terms_confirmed?: boolean
           title?: string
           updated_at?: string
         }
