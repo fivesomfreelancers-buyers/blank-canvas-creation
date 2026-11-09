@@ -2,20 +2,27 @@ export async function sendNotificationEmail(
   payload: Record<string, unknown>,
   eventKey: string,
 ): Promise<{ id: string }> {
-  const key = Deno.env.get("LOVABLE_API_KEY");
-  const connection = Deno.env.get("RESEND_API_KEY");
+  // A direct Resend key (stored in the backend) avoids gateway project-authorization failures.
+  const direct = Deno.env.get("RESEND_DIRECT_API_KEY");
+  const key = direct ?? Deno.env.get("LOVABLE_API_KEY");
+  const connection = direct ?? Deno.env.get("RESEND_API_KEY");
   if (!key || !connection) throw new Error("Email service not configured");
-  const response = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
-    method: "POST",
-    signal: AbortSignal.timeout(25000),
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${key}`,
-      "X-Connection-Api-Key": connection,
-      "Idempotency-Key": eventKey,
+  const response = await fetch(
+    direct ? "https://api.resend.com/emails" : "https://connector-gateway.lovable.dev/resend/emails",
+    {
+      method: "POST",
+      signal: AbortSignal.timeout(25000),
+      headers: direct
+        ? { "Content-Type": "application/json", Authorization: `Bearer ${direct}`, "Idempotency-Key": eventKey }
+        : {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${key}`,
+          "X-Connection-Api-Key": connection,
+          "Idempotency-Key": eventKey,
+        },
+      body: JSON.stringify(payload),
     },
-    body: JSON.stringify(payload),
-  });
+  );
   const result = await response.json().catch(() => ({}));
   if (!response.ok) {
     // Do not persist credentials or recipient data in retry diagnostics.
