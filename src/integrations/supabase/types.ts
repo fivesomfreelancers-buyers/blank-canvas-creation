@@ -2731,6 +2731,7 @@ export type Database = {
         Returns: number
       }
       build_freelancer_cv: { Args: never; Returns: Json }
+      buyer_acquisition_summary: { Args: never; Returns: Json }
       can_view_gig: {
         Args: {
           _freelancer_id: string
