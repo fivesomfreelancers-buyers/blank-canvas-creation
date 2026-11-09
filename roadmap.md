@@ -1,11 +1,12 @@
 # Mobile-first FIVESOM redesign
 
 ## Jobs marketplace
-- [ ] Add secure buyer jobs, manual one-hour review, applications, follows, CV snapshots and hiring agreements
-- [ ] Add Explore Jobs, buyer My Jobs, Admin/Founder Job Approvals and freelancer applications
-- [ ] Generate real-profile CV previews and PNG downloads with Fivesom.net watermark
-- [ ] Connect accepted agreements to existing orders/payment without changing gig workflows
-- [ ] Test validation, permissions, public/mobile views; report authenticated and email checks separately
+- [x] Add secure buyer jobs, manual one-hour review, applications, follows, CV snapshots and hiring agreements
+- [x] Add Explore Jobs, buyer My Jobs, Admin/Founder Job Approvals and freelancer applications
+- [x] Generate real-profile CV previews and PNG downloads with Fivesom.net watermark
+- [x] Connect accepted agreements to existing orders/payment without changing gig workflows
+- [x] Test validation and public/mobile views; 15 regression tests pass and 320–834px public views have no overflow
+- [ ] Verify signed-in posting, approval, CV export, application and real checkout — blocked by external unmanaged authentication; no real jobs exist for public detail verification
 
 ## Buyer acquisition and search visibility
 - [ ] Audit live Fivesom presence and existing buyer/SEO features against the supplied brief

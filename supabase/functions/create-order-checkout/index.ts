@@ -55,7 +55,7 @@ serve(async (req) => {
       const { data: agreement, error: agreementError } = await admin.from('job_agreements').select('*').eq('id', agreementId).single();
       if (agreementError || !agreement || agreement.buyer_id !== user.id || agreement.status !== 'awaiting_payment') throw new Error('Agreement is not ready for checkout');
       const { data: job } = await admin.from('jobs').select('payment_type,status').eq('id', agreement.job_id).single();
-      if (!job || job.payment_type !== 'fixed' || !['published','paused','in_progress'].includes(job.status)) throw new Error('This agreement cannot be funded');
+      if (!job || !agreement.terms_confirmed || !['published','paused','in_progress'].includes(job.status)) throw new Error('This agreement cannot be funded');
       const total = Number(agreement.price) + SERVICE_FEE_USD;
       const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', { apiVersion: '2025-08-27.basil' });
       const origin = req.headers.get('origin') || 'https://fivesom.net';
