@@ -34,6 +34,7 @@ import DisputeChat from '@/components/dispute/DisputeChat';
 import BlueTickCard from '@/components/freelancer/BlueTickCard';
 import { useNewOrders } from '@/hooks/useNewOrders';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
+import MyApplications from './jobs/MyApplications';
 
 interface UserProfile {
   full_name: string;
@@ -52,6 +53,7 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
   const sidebarItems = [
     { title: "Dashboard", icon: Home, key: "dashboard" },
     { title: "My Gigs", icon: Briefcase, key: "gigs" },
+    { title: "My Applications", icon: Briefcase, key: "applications" },
     { title: "Orders Received", icon: ShoppingBag, key: "orders" },
     { title: "Messages", icon: MessageSquare, key: "messages" },
     { title: "Deliver Work", icon: Package, key: "deliver" },
@@ -625,6 +627,7 @@ const FreelancerDashboard = () => {
           </div>
         );
       case 'gigs': return <FreelancerGigs />;
+      case 'applications': return <MyApplications />;
       case 'orders': return <FreelancerOrders />;
       case 'messages': return <FreelancerMessages />;
       case 'deliver': return <FreelancerDeliverWork />;

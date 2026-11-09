@@ -45,10 +45,12 @@ import BuyerMessages from './buyer/BuyerMessages';
 import BuyerHelp from './buyer/BuyerHelp';
 import BuyerSettings from './buyer/BuyerSettings';
 import { useNewDeliveries } from '@/hooks/useNewDeliveries';
+import MyJobs from './jobs/MyJobs';
 
 const sidebarItems = [
   { title: "Dashboard", icon: Home, key: "dashboard" },
   { title: "My Orders", icon: ShoppingBag, key: "orders" },
+  { title: "My Jobs", icon: ShoppingBag, key: "jobs" },
   { title: "Messages", icon: MessageSquare, key: "messages" },
   { title: "Help Center", icon: HelpCircle, key: "help" },
   { title: "Settings", icon: Settings, key: "settings" },
@@ -331,6 +333,8 @@ const BuyerDashboard = () => {
 
       case 'orders':
         return <BuyerOrders />;
+      case 'jobs':
+        return <MyJobs />;
       case 'messages':
         return <BuyerMessages />;
       case 'help':

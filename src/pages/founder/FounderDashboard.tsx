@@ -30,6 +30,7 @@ import AdminRanking from '@/pages/admin/AdminRanking';
 import AdminDisputes from '@/pages/admin/AdminDisputes';
 import AdminGigs from '@/pages/admin/AdminGigs';
 import AdminGigReview from '@/pages/admin/AdminGigReview';
+import JobApprovals from '@/pages/jobs/JobApprovals';
 import AdminUsers from '@/pages/admin/AdminUsers';
 import AdminAboutTeam from '@/pages/admin/AdminAboutTeam';
 import AdminBlog from '@/pages/admin/AdminBlog';
@@ -37,12 +38,13 @@ import AdminBlog from '@/pages/admin/AdminBlog';
 type TabKey =
   | 'overview' | 'verifications' | 'gig_review' | 'orders' | 'chats'
   | 'fivesom_support' | 'fivesom_news' | 'reports' | 'ranking' | 'disputes'
-  | 'gigs' | 'users' | 'about_team' | 'blog';
+  | 'gigs' | 'users' | 'about_team' | 'blog' | 'job_approvals';
 
 const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'overview', label: 'Dashboard', icon: LayoutDashboard },
   { key: 'verifications', label: 'Verifications', icon: ShieldCheck, badge: 'verifications' },
   { key: 'gig_review', label: 'Gigs Pending', icon: Clock, badge: 'gig_review' },
+  { key: 'job_approvals', label: 'Job Approvals', icon: Briefcase },
   { key: 'gigs', label: 'Gigs', icon: Briefcase },
   { key: 'users', label: 'Users', icon: Users },
   { key: 'orders', label: 'Orders', icon: Package },
@@ -60,6 +62,7 @@ const titles: Record<TabKey, string> = {
   overview: 'Founder Dashboard',
   verifications: 'Verifications',
   gig_review: 'Gigs Pending',
+  job_approvals: 'Job Approvals',
   gigs: 'Gigs Management',
   users: 'Users Management',
   orders: 'Orders',
@@ -110,6 +113,7 @@ const FounderDashboardInner = () => {
       case 'overview': return <AdminOverview />;
       case 'verifications': return <AdminVerifications />;
       case 'gig_review': return <AdminGigReview />;
+      case 'job_approvals': return <JobApprovals />;
       case 'gigs': return <AdminGigs />;
       case 'users': return <AdminUsers />;
       case 'orders': return <AdminOrders />;

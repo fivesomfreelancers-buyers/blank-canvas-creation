@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CVs retain the document palette when exported from either platform theme. */
+.cv-sheet {
+  --background: 0 0% 100%;
+  --foreground: 222 50% 13%;
+  --secondary: 212 100% 96%;
+  --secondary-foreground: 222 50% 13%;
+  --primary: 211 100% 45%;
+  --muted-foreground: 215 20% 42%;
+  --border: 214 30% 90%;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

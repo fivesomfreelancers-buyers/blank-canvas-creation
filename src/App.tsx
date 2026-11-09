@@ -12,6 +12,11 @@ import Index from "./pages/Index";
 
 // Everything else is code-split: a visitor only downloads the page they open.
 const Explore = lazy(() => import("./pages/Explore"));
+const JobDetails = lazy(() => import('./pages/jobs/JobDetails'));
+const ApplyJob = lazy(() => import('./pages/jobs/ApplyJob'));
+const PostJob = lazy(() => import('./pages/jobs/PostJob'));
+const MyJobs = lazy(() => import('./pages/jobs/MyJobs'));
+const MyApplications = lazy(() => import('./pages/jobs/MyApplications'));
 const Services = lazy(() => import("./pages/Services"));
 const ServiceCategory = lazy(() => import("./pages/ServiceCategory"));
 const GigDetails = lazy(() => import("./pages/GigDetails"));
@@ -114,6 +119,12 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/explore" element={<Explore />} />
+              <Route path="/jobs/:jobId" element={<JobDetails />} />
+              <Route path="/jobs/:jobId/apply" element={<ProtectedRoute require="freelancer"><ApplyJob /></ProtectedRoute>} />
+              <Route path="/buyer/jobs" element={<ProtectedRoute require="buyer"><div className="min-h-screen bg-background p-4 sm:p-8"><MyJobs /></div></ProtectedRoute>} />
+              <Route path="/buyer/jobs/new" element={<ProtectedRoute require="buyer"><PostJob /></ProtectedRoute>} />
+              <Route path="/buyer/jobs/:jobId/edit" element={<ProtectedRoute require="buyer"><PostJob /></ProtectedRoute>} />
+              <Route path="/freelancer/applications" element={<ProtectedRoute require="freelancer"><div className="min-h-screen bg-background p-4 sm:p-8"><MyApplications /></div></ProtectedRoute>} />
               <Route path="/services" element={<Services />} />
               <Route path="/services/:categorySlug" element={<ServiceCategory />} />
               <Route path="/services/:categorySlug/:subcategorySlug" element={<ServiceCategory />} />

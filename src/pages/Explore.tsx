@@ -13,11 +13,13 @@ import { CATEGORIES, getCategoryBySlug } from '@/lib/categories';
 import { useSearchParams } from 'react-router-dom';
 import { useGigSearch } from '@/hooks/useGigSearch';
 import { trackBuyerEvent } from '@/lib/buyerAnalytics';
+import JobsMarketplace from '@/components/jobs/JobsMarketplace';
 
 const Explore = () => {
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
   const [searchParams, setSearchParams] = useSearchParams();
+  const [marketplace, setMarketplace] = useState(searchParams.get('view') === 'jobs' ? 'jobs' : 'gigs');
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || 'all');
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>(searchParams.get('subcategory') || 'all');
@@ -46,11 +48,12 @@ const Explore = () => {
   // Keep the URL in sync with the active search + filters (shareable links)
   useEffect(() => {
     const params: Record<string, string> = {};
+    if (marketplace === 'jobs') params.view = 'jobs';
     if (searchQuery.trim()) params.q = searchQuery.trim();
     if (selectedCategory !== 'all') params.category = selectedCategory;
     if (selectedSubcategory !== 'all') params.subcategory = selectedSubcategory;
     setSearchParams(params, { replace: true });
-  }, [searchQuery, selectedCategory, selectedSubcategory, setSearchParams]);
+  }, [searchQuery, selectedCategory, selectedSubcategory, marketplace, setSearchParams]);
 
   const totalPages = Math.ceil(total / gigsPerPage);
   useEffect(() => {
@@ -100,6 +103,8 @@ const Explore = () => {
       
       <div className="px-4 pb-16 pt-24 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
+          <nav className="mb-8 flex gap-2 border-b border-border pb-4" aria-label="Marketplace"><Button variant={marketplace === 'gigs' ? 'default' : 'ghost'} onClick={() => setMarketplace('gigs')}>Gigs</Button><Button variant={marketplace === 'jobs' ? 'default' : 'ghost'} onClick={() => setMarketplace('jobs')}>Jobs</Button></nav>
+          {marketplace === 'jobs' ? <JobsMarketplace /> : <>
           <div className="mb-8 max-w-3xl">
             <span className="mb-3 block text-sm font-semibold text-primary">Fivesom marketplace</span>
             <h1 className="mb-3 text-3xl font-bold text-foreground md:text-5xl">Find the right service for your next project</h1>
@@ -247,6 +252,7 @@ const Explore = () => {
             </div>
           )}
 
+          </>}
         </div>
       </div>
     </div>
