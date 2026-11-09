@@ -11,6 +11,7 @@ import {
   rejectNonEssential,
 } from '@/lib/cookieConsent';
 import CookiePreferencesDialog from './CookiePreferencesDialog';
+import { startAnalyticsRuntime } from '@/lib/analyticsRuntime';
 
 /**
  * Global cookie consent UI: first-visit banner + preferences panel.
@@ -19,6 +20,7 @@ import CookiePreferencesDialog from './CookiePreferencesDialog';
 const CookieConsentManager: React.FC = () => {
   const [showBanner, setShowBanner] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
+  useEffect(() => startAnalyticsRuntime(), []);
 
   const refresh = useCallback(() => {
     setShowBanner(getConsent() === null);

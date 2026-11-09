@@ -9,10 +9,11 @@
 - [ ] Verify signed-in posting, approval, CV export, application and real checkout — blocked by external unmanaged authentication; no real jobs exist for public detail verification
 
 ## Buyer acquisition and search visibility
-- [ ] Complete November 9 brief: polished buyer-first Google/page copy, useful buyer discovery, sitemap/AI crawlability audit and truthful acquisition reporting
-- [ ] Audit live Fivesom presence and existing buyer/SEO features against the supplied brief
-- [ ] Improve buyer-focused discovery, useful service content, and acquisition measurement while preserving existing workflows
-- [ ] Verify public buyer journeys and report actual changes separately from unverified search rankings
+- [x] Audit November 9 brief and live Fivesom; polish buyer-first Google/page copy and preserve freelancer opportunities
+- [x] Add public Jobs discovery, paginated approval-filtered sitemap, private buyer acquisition summary and consent-aware analytics initialization
+- [x] Verify public buyer journeys and 20 regression tests; save truthful audit and next steps
+- [ ] Verify deployed Netlify copy, Google index coverage, GA4 country/referral/conversion reports and signed-in growth screen — blocked by external deployment/report access and unmanaged authentication
+- [ ] Confirm specific bilingual/service buyer content with real customer project evidence before creating segment pages; no fabricated offers or country inventory
 
 ## Email restoration
 - [x] Diagnose notification failure: deployed email requests return provider 403 project authorization denied

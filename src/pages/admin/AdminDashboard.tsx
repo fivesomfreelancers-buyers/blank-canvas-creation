@@ -14,6 +14,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import AdminGuard from '@/components/admin/AdminGuard';
 import AdminOverview from './AdminOverview';
+import BuyerAcquisition from './BuyerAcquisition';
 import AdminUsers from './AdminUsers';
 import AdminEscrow from './AdminEscrow';
 import AdminDisputes from './AdminDisputes';
@@ -48,6 +49,7 @@ import { useTheme } from '@/components/ThemeProvider';
 const menuGroups: { label: string; items: { key: string; label: string; icon: any }[] }[] = [
   { label: 'Overview', items: [
     { key: 'overview', label: 'Dashboard', icon: LayoutDashboard },
+    { key: 'buyer_acquisition', label: 'Buyer Acquisition', icon: Activity },
   ]},
   { label: 'Operations', items: [
     { key: 'users', label: 'Users', icon: Users },
@@ -124,6 +126,7 @@ const AdminDashboardInner = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'overview': return <AdminOverview />;
+      case 'buyer_acquisition': return <BuyerAcquisition />;
       case 'users': return <AdminUsers />;
       case 'verifications': return <AdminVerifications />;
       case 'gig_review': return <AdminGigReview />;

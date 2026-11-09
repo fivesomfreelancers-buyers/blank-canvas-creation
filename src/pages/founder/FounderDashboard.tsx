@@ -20,6 +20,7 @@ import FounderScreenGuard from '@/components/founder/FounderScreenGuard';
 
 // Reuse the existing (already secured) management screens — no duplication.
 import AdminOverview from '@/pages/admin/AdminOverview';
+import BuyerAcquisition from '@/pages/admin/BuyerAcquisition';
 import AdminVerifications from '@/pages/admin/AdminVerifications';
 import AdminOrders from '@/pages/admin/AdminOrders';
 import AdminChats from '@/pages/admin/AdminChats';
@@ -38,10 +39,11 @@ import AdminBlog from '@/pages/admin/AdminBlog';
 type TabKey =
   | 'overview' | 'verifications' | 'gig_review' | 'orders' | 'chats'
   | 'fivesom_support' | 'fivesom_news' | 'reports' | 'ranking' | 'disputes'
-  | 'gigs' | 'users' | 'about_team' | 'blog' | 'job_approvals';
+  | 'gigs' | 'users' | 'about_team' | 'blog' | 'job_approvals' | 'buyer_acquisition';
 
 const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'overview', label: 'Dashboard', icon: LayoutDashboard },
+  { key: 'buyer_acquisition', label: 'Buyer Acquisition', icon: Users },
   { key: 'verifications', label: 'Verifications', icon: ShieldCheck, badge: 'verifications' },
   { key: 'gig_review', label: 'Gigs Pending', icon: Clock, badge: 'gig_review' },
   { key: 'job_approvals', label: 'Job Approvals', icon: Briefcase },
@@ -60,6 +62,7 @@ const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
 
 const titles: Record<TabKey, string> = {
   overview: 'Founder Dashboard',
+  buyer_acquisition: 'Buyer Acquisition',
   verifications: 'Verifications',
   gig_review: 'Gigs Pending',
   job_approvals: 'Job Approvals',
@@ -111,6 +114,7 @@ const FounderDashboardInner = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'overview': return <AdminOverview />;
+      case 'buyer_acquisition': return <BuyerAcquisition />;
       case 'verifications': return <AdminVerifications />;
       case 'gig_review': return <AdminGigReview />;
       case 'job_approvals': return <JobApprovals />;
