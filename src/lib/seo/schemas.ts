@@ -1,4 +1,5 @@
 import { SITE_URL, canonicalSeoUrl } from './site';
+import { MARKETPLACE_POSITIONING } from '../../content/marketplacePositioning';
 
 export const organizationSchema = {
   '@context': 'https://schema.org',
@@ -10,7 +11,7 @@ export const organizationSchema = {
   logo: `${SITE_URL}/favicon.png`,
   image: `${SITE_URL}/og-image.png`,
   description:
-    'FIVESOM is an African and Somali freelancer marketplace connecting African freelancers with clients worldwide, with escrow-protected orders and local payouts.',
+    'FIVESOM is an African-focused, Somali-rooted global freelance marketplace where buyers compare services, post projects and hire digital professionals, and freelancers offer services and apply to approved jobs.',
   email: 'fivesomsupport@gmail.com',
   foundingDate: '2025',
   areaServed: ['Worldwide', 'Africa', 'Asia', 'Europe'],
@@ -51,7 +52,7 @@ export const webSiteSchema = {
   inLanguage: 'en',
   publisher: { '@id': `${SITE_URL}/#organization` },
   description:
-    'FIVESOM — African & Somali Freelancer Marketplace. Hire African freelancers worldwide with escrow-protected orders.',
+    MARKETPLACE_POSITIONING.description,
   potentialAction: {
     '@type': 'SearchAction',
     target: {

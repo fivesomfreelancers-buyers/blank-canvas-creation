@@ -11,6 +11,14 @@ export interface FaqItem {
 
 export const HOME_FAQ: FaqItem[] = [
   {
+    question: 'Can I post a project and receive freelancer proposals?',
+    answer: 'Yes. Create a buyer account and post a job with your scope, budget and deadline. Admin or Founder reviews it before it appears publicly; the review window is one hour and does not guarantee approval. Freelancers can apply to approved jobs. Select a proposal, agree on terms and complete checkout before work is funded.',
+  },
+  {
+    question: 'What does hiring through FIVESOM cost?',
+    answer: 'Buyers pay the selected service or agreed project price plus a flat $1 Buyer Service Fee. For example, a $10 service totals $11 at checkout. Prices vary by freelancer and scope. The buyer fee is separate from freelancer earnings and commissions.',
+  },
+  {
     question: 'What is FIVESOM?',
     answer:
       'FIVESOM (fivesom.net) is an African-focused, Somali-rooted global freelance marketplace. Businesses and individuals in Africa, Asia, Europe and beyond can compare services in design, web development, video editing, writing, translation and digital marketing, pay into escrow, and release the money after accepting the delivered work.',
@@ -38,7 +46,7 @@ export const HOME_FAQ: FaqItem[] = [
   {
     question: 'Is it free to join FIVESOM?',
     answer:
-      'Yes. Creating an account, building a profile and publishing gigs is free for freelancers, and browsing and messaging is free for buyers. FIVESOM only takes a service commission when an order is completed and funds are withdrawn.',
+      'Yes. Creating an account, building a profile and publishing gigs is free for freelancers, and browsing and messaging is free for buyers. Buyers pay a flat $1 Buyer Service Fee in addition to their service price; freelancer commissions are separate.',
   },
   {
     question: 'How do freelancers get paid on FIVESOM?',

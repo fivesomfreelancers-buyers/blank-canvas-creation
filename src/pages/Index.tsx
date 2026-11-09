@@ -18,6 +18,7 @@ import { faqPageSchema } from '@/lib/seo/homeFaq';
 import { useGigSearch } from '@/hooks/useGigSearch';
 import { useHomeStats } from '@/hooks/useHomeStats';
 import BuyerGuide from '@/components/home/BuyerGuide';
+import { MARKETPLACE_POSITIONING } from '@/content/marketplacePositioning';
 
 const Index = () => {
   const { gigs, loading } = useGigSearch({ pageSize: 48 });
@@ -26,8 +27,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
       <SEO
-        title="FIVESOM — African & Somali Freelancer Marketplace | Hire Freelancers Worldwide"
-        description="FIVESOM is an African and Somali freelancer marketplace connecting skilled freelancers with clients worldwide. Hire for design, web development, video and writing — payment is held in escrow until you accept the work."
+        title={MARKETPLACE_POSITIONING.title}
+        description={MARKETPLACE_POSITIONING.description}
         canonical="/"
         jsonLd={[organizationSchema, webSiteSchema, serviceSchema, faqPageSchema()]}
       />

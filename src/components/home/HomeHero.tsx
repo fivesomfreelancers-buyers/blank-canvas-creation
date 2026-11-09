@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import TypingHeadline from './TypingHeadline';
 import { CATEGORIES } from '@/lib/categories';
 import { Button } from '@/components/ui/button';
+import { MARKETPLACE_POSITIONING } from '@/content/marketplacePositioning';
+import { trackBuyerEvent } from '@/lib/buyerAnalytics';
 // Served as plain static files from /public so they work on any host (Netlify included).
 const HERO_POSTER = '/media/hero-bg-poster.jpg';
 
@@ -124,7 +126,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
         </div>
 
         <h1 className="mx-auto mb-3 max-w-5xl text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl">
-          Hire Skilled African Freelancers
+          {MARKETPLACE_POSITIONING.heading}
         </h1>
         <p aria-hidden="true" className="mx-auto mb-6 min-h-[1.3em] max-w-5xl text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
           <TypingHeadline
@@ -140,11 +142,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
         </p>
 
         <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-          Find logo design, websites, video editing and content writing for your next project.
-          FIVESOM is an African-focused, Somali-rooted global freelancer marketplace connecting
-          businesses and individuals in Africa, Asia, Europe and beyond with digital talent.
-          Compare portfolios, package prices and delivery times before ordering.
-          Your payment stays in escrow until you accept the delivered work.
+          {MARKETPLACE_POSITIONING.intro} {MARKETPLACE_POSITIONING.identity}
         </p>
 
         <div className="mx-auto mb-6 max-w-3xl">
@@ -188,14 +186,16 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center mb-8">
-          <Button size="lg" asChild><Link to="/explore">Find a freelancer</Link></Button>
-          <Button size="lg" variant="outline" asChild><Link to="/register/freelancer">Sell your services</Link></Button>
+          <Button size="lg" asChild><Link to="/buyer/jobs/new" onClick={() => trackBuyerEvent('post_project_click')}>Post Your Project <ArrowRight className="h-4 w-4" aria-hidden /></Link></Button>
+          <Button size="lg" variant="outline" asChild><Link to="/explore">Find a Freelancer</Link></Button>
+          <Link to="/register/freelancer" className="px-3 py-3 text-sm font-semibold text-primary underline-offset-4 hover:underline">Join as a Freelancer</Link>
         </div>
 
         <ul className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-muted-foreground mb-8">
           <li className="inline-flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-primary" aria-hidden /> Escrow-protected payments
           </li>
+          <li className="inline-flex items-center gap-2"><Globe2 className="w-4 h-4 text-primary" aria-hidden /> Flat $1 Buyer Service Fee</li>
           <li className="inline-flex items-center gap-2">
             <Star className="w-4 h-4 text-primary" aria-hidden /> Compare portfolios and seller reviews
           </li>

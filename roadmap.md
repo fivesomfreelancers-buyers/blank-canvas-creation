@@ -9,6 +9,7 @@
 - [ ] Verify signed-in posting, approval, CV export, application and real checkout — blocked by external unmanaged authentication; no real jobs exist for public detail verification
 
 ## Buyer acquisition and search visibility
+- [ ] Complete November 9 brief: polished buyer-first Google/page copy, useful buyer discovery, sitemap/AI crawlability audit and truthful acquisition reporting
 - [ ] Audit live Fivesom presence and existing buyer/SEO features against the supplied brief
 - [ ] Improve buyer-focused discovery, useful service content, and acquisition measurement while preserving existing workflows
 - [ ] Verify public buyer journeys and report actual changes separately from unverified search rankings

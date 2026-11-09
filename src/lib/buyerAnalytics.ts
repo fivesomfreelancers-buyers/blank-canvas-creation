@@ -1,6 +1,6 @@
 import { isAllowed } from './cookieConsent';
 
-export type BuyerEvent = 'service_search' | 'gig_view' | 'contact_seller' | 'begin_checkout' | 'checkout_created' | 'purchase_confirmed';
+export type BuyerEvent = 'service_search' | 'gig_view' | 'contact_seller' | 'begin_checkout' | 'checkout_created' | 'purchase_confirmed' | 'post_project_click';
 
 /** Funnel signals only: no search text, profile/order IDs or payment details. */
 export function trackBuyerEvent(event: BuyerEvent): boolean {

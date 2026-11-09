@@ -14,6 +14,7 @@ import { faqPageSchema } from "../src/lib/seo/homeFaq";
 import { organizationSchema, webSiteSchema, serviceSchema } from "../src/lib/seo/schemas";
 import { canonicalSeoUrl } from "../src/lib/seo/site";
 import { BUYER_GUIDE } from "../src/content/buyerGuide";
+import { MARKETPLACE_POSITIONING } from "../src/content/marketplacePositioning";
 import en from "../src/content/docs/en";
 import so from "../src/content/docs/so";
 import ar from "../src/content/docs/ar";
@@ -68,7 +69,7 @@ const serviceLinks = links(
   CATEGORIES.map((c) => ({ href: `/services/${c.slug}`, label: `${c.name} services` })),
 );
 const siteNav = `<nav aria-label="FIVESOM">${[
-  ["/", "FIVESOM home"], ["/explore", "Explore gigs"], ["/services", "Freelance services"],
+  ["/", "FIVESOM home"], ["/explore", "Find Freelancers"], ["/services", "Freelance services"],
   ["/freelancers/africa", "African freelancers"], ["/freelancers/somalia", "Somali freelancers"],
   ["/how-it-works", "How FIVESOM works"], ["/about", "About FIVESOM"], ["/docs", "Documentation"], ["/blog", "Blog"],
   ["/register/freelancer", "Join as a freelancer"], ["/register/buyer", "Hire a freelancer"],
@@ -138,17 +139,16 @@ const pages: Page[] = [];
 // Home
 pages.push({
   path: "/",
-  title: "FIVESOM — African & Somali Freelancer Marketplace | Hire Freelancers Worldwide",
-  description:
-    "FIVESOM is an African and Somali freelancer marketplace connecting skilled freelancers with clients worldwide. Hire for design, web development, video and writing — payment is held in escrow until you accept the work.",
-  h1: "Hire Skilled African Freelancers",
+  title: MARKETPLACE_POSITIONING.title,
+  description: MARKETPLACE_POSITIONING.description,
+  h1: MARKETPLACE_POSITIONING.heading,
   jsonLd: [organizationSchema, webSiteSchema, serviceSchema, faqPageSchema()],
-  body: `<p>FIVESOM is an African and Somali freelancer marketplace. It connects freelancers from Somalia and across Africa with clients worldwide for logo design, graphic design, web and app development, video editing and content writing.</p><p>Clients pay when they order, the payment is held in escrow, and it is released to the freelancer only after the client accepts the delivered work.</p>${serviceLinks}${countryLinks}<section><h2>Frequently asked questions</h2>${HOME_FAQ.map((f) => `<h3>${e(f.question)}</h3><p>${e(f.answer)}</p>`).join("")}</section>`,
+  body: `<p>${e(MARKETPLACE_POSITIONING.intro)} ${e(MARKETPLACE_POSITIONING.identity)}</p><section><h2>${e(BUYER_GUIDE.heading)}</h2><p>${e(BUYER_GUIDE.intro)}</p><ol>${BUYER_GUIDE.steps.map((s) => `<li><h3>${e(s.title)}</h3><p>${e(s.text)}</p></li>`).join('')}</ol><p>${e(BUYER_GUIDE.fee)}</p><a href="/buyer/jobs/new">Post Your Project</a></section><section><h2>${e(MARKETPLACE_POSITIONING.buyerHeading)}</h2><p>${e(MARKETPLACE_POSITIONING.buyerText)}</p></section><section><h2>${e(MARKETPLACE_POSITIONING.sellerHeading)}</h2><p>${e(MARKETPLACE_POSITIONING.sellerText)}</p><a href="/explore?view=jobs">Explore Jobs</a></section>${serviceLinks}${countryLinks}<section><h2>Frequently asked questions</h2>${HOME_FAQ.map((f) => `<h3>${e(f.question)}</h3><p>${e(f.answer)}</p>`).join("")}</section>`,
 });
 
 // Fixed public pages
 const fixed: [string, string, string, string, string][] = [
-  ["/explore", "Explore Freelance Services & Gigs | FIVESOM", "Browse gigs from African and Somali freelancers on FIVESOM. Compare design, development, writing and video services, then order with escrow-protected payment.", "Explore freelance services", "Search and compare active gigs from freelancers across Africa. Each gig shows its packages, price, delivery time and seller."],
+  ["/explore", "Find Freelancers & Compare Services | FIVESOM", "Find skilled African freelancers for your business. Compare design, website, video and writing services, portfolios, package prices and delivery times on FIVESOM.", "Find the right service for your next project", "Compare real work, seller ratings, delivery options, and clear starting prices."],
   ["/services", "Freelance Services by Category | Hire African Freelancers | FIVESOM", "All freelance service categories on FIVESOM: logo design, graphic design, web development, app development, video editing, content writing and more, delivered by African freelancers.", "Freelance services on FIVESOM", "Choose a category to see gigs from African and Somali freelancers."],
   ["/how-it-works", "How FIVESOM Works | Hire Freelancers with Escrow Protection", "How hiring and selling works on FIVESOM: find a freelancer, pay into escrow, receive the delivery, accept it and release payment. Freelancers withdraw earnings to local payout methods.", "How FIVESOM works", "1. Find a freelancer and compare gig packages. 2. Order and pay — the money is held in escrow. 3. The freelancer delivers through the order page. 4. You accept the delivery and the payment is released to the freelancer's wallet, which they can withdraw."],
   ["/about", "About FIVESOM — African & Somali Freelancer Marketplace", "FIVESOM is an African-focused, Somali-rooted freelance marketplace connecting African digital talent with clients around the world through protected, escrow-based orders.", "About FIVESOM", "FIVESOM is an African and Somali freelancer marketplace. It was founded so freelancers in Somalia and across Africa can sell their services to global clients and get paid in ways that work locally."],
@@ -231,7 +231,7 @@ for (const [lang, d] of Object.entries(DICTS)) {
 
 async function dynamicPages() {
   const gigs = await rest<{ slug: string; title: string; description: string | null; thumbnail_url: string | null; images: string[] | null; category_slug: string | null; subcategory_slug: string | null; base_price: number | null; delivery_time_days: number | null; freelancer_id: string }>(
-    "gigs?select=slug,title,description,thumbnail_url,images,category_slug,subcategory_slug,base_price,delivery_time_days,freelancer_id&status=eq.active&slug=not.is.null&limit=5000",
+    "gigs?select=slug,title,description,thumbnail_url,images,category_slug,subcategory_slug,base_price,delivery_time_days,freelancer_id&status=eq.active&review_status=eq.published&slug=not.is.null&limit=5000",
   );
   const freelancers = await rest<{ id: string; user_id: string }>("public_freelancers?select=id,user_id&limit=5000");
   const profiles = await rest<{ id: string; full_name: string | null; username: string | null; bio: string | null; profile_image_url: string | null; professional_title?: string | null }>(
@@ -240,6 +240,14 @@ async function dynamicPages() {
   const byUser = new Map(profiles.map((p) => [p.id, p]));
   const fToProfile = new Map(freelancers.map((f) => [f.id, byUser.get(f.user_id)]));
   const gigsBySeller = new Map<string, typeof gigs>();
+  const jobs = await rest<{ id: string; title: string; description: string; requirements: string; deliverables: string }>(
+    `jobs?select=id,title,description,requirements,deliverables&status=eq.published&application_deadline=gt.${encodeURIComponent(new Date().toISOString())}&limit=5000`,
+  );
+  for (const job of jobs) pages.push({
+    path: `/jobs/${job.id}`, title: `${clip(job.title, 60)} | FIVESOM Jobs`,
+    description: clip(job.description, 155), h1: job.title,
+    body: `<p>${e(job.description)}</p><h2>Requirements</h2><p>${e(job.requirements)}</p><h2>Deliverables</h2><p>${e(job.deliverables)}</p><a href="/jobs/${e(job.id)}/apply">Apply Job</a>`,
+  });
   const isImg = (u?: string | null) => (u && /^https:\/\//.test(u) ? u : undefined);
 
   // Link real active services from discovery pages even without JavaScript.

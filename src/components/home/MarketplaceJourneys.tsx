@@ -18,11 +18,12 @@ import {
   UserRoundCheck,
 } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
+import { MARKETPLACE_POSITIONING } from '@/content/marketplacePositioning';
 
 const FREELANCER_JOURNEY = [
   { icon: UserRoundCheck, title: 'Create your profile', text: 'Present your skills, experience, languages and portfolio to clients.' },
   { icon: Store, title: 'Create your gig', text: 'Package a clear service with samples, delivery times and transparent pricing.' },
-  { icon: Search, title: 'Find buyers', text: 'Be discovered by clients browsing the African freelancer marketplace.' },
+  { icon: Search, title: 'Find project opportunities', text: 'Apply to approved buyer jobs or be discovered through your service packages.' },
   { icon: PackageCheck, title: 'Complete orders', text: 'Collaborate in one place and deliver the finished work securely.' },
   { icon: Star, title: 'Build your reputation', text: 'Earn genuine reviews from buyers after completed marketplace orders.' },
   { icon: Banknote, title: 'Earn money', text: 'Approved earnings move to your FIVESOM wallet for withdrawal.' },
@@ -42,8 +43,8 @@ const MarketplaceJourneys: React.FC = () => (
       <div className="mx-auto max-w-7xl">
         <ScrollReveal className="max-w-3xl" from="left">
           <span className="home-kicker"><Sparkles className="h-3.5 w-3.5" aria-hidden /> For freelancers</span>
-          <h2 id="freelancer-journey-heading" className="home-story-title">Build a freelance career, one trusted order at a time</h2>
-          <p className="home-story-copy">FIVESOM gives African freelancers a professional path from creating a profile to earning from clients worldwide. Every stage stays connected, clear and visible.</p>
+          <h2 id="freelancer-journey-heading" className="home-story-title">{MARKETPLACE_POSITIONING.sellerHeading}</h2>
+          <p className="home-story-copy">{MARKETPLACE_POSITIONING.sellerText}</p>
         </ScrollReveal>
 
         <ol className="journey-rail mt-12 grid gap-4 md:grid-cols-3 lg:grid-cols-6">
@@ -58,6 +59,7 @@ const MarketplaceJourneys: React.FC = () => (
         </ol>
         <ScrollReveal delay={180}>
           <Link to="/register/freelancer" className="home-story-link">Become a Freelancer <ArrowRight className="h-4 w-4" aria-hidden /></Link>
+          <Link to="/explore?view=jobs" className="home-secondary-link ml-4">Explore Jobs</Link>
         </ScrollReveal>
       </div>
     </section>
@@ -66,8 +68,8 @@ const MarketplaceJourneys: React.FC = () => (
       <div className="mx-auto max-w-7xl">
         <ScrollReveal className="ml-auto max-w-3xl lg:text-right" from="right">
           <span className="home-kicker lg:ml-auto"><Handshake className="h-3.5 w-3.5" aria-hidden /> For buyers</span>
-          <h2 id="buyer-journey-heading" className="home-story-title">From discovering talent to approving great work</h2>
-          <p className="home-story-copy lg:ml-auto">Hiring freelancers should feel simple, not uncertain. Compare services, collaborate around a clear order and approve the result only when the delivery is ready.</p>
+          <h2 id="buyer-journey-heading" className="home-story-title">{MARKETPLACE_POSITIONING.buyerHeading}</h2>
+          <p className="home-story-copy lg:ml-auto">{MARKETPLACE_POSITIONING.buyerText}</p>
         </ScrollReveal>
 
         <ol className="buyer-flow mt-12 grid gap-4 md:grid-cols-5">

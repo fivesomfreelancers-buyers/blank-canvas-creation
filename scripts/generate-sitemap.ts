@@ -53,6 +53,7 @@ const staticEntries: SitemapEntry[] = [
   { path: "/legal/privacy", changefreq: "yearly", priority: "0.3" },
   { path: "/legal/cookies", changefreq: "yearly", priority: "0.3" },
   { path: "/support", changefreq: "monthly", priority: "0.4" },
+  { path: "/support/contact", changefreq: "monthly", priority: "0.4" },
   { path: "/support/help-center", changefreq: "monthly", priority: "0.4" },
   { path: "/support/trust-safety", changefreq: "monthly", priority: "0.4" },
 ];
@@ -101,20 +102,23 @@ function escapeXml(value: string) {
 }
 
 async function rest<T>(path: string): Promise<T[]> {
-  if (!SUPABASE_URL || !SUPABASE_KEY) return [];
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+  const [table, query = ''] = path.split('?');
+  const rows: T[] = [];
+  const size = 500;
+  for (let offset = 0; ; offset += size) {
+    const params = new URLSearchParams(query);
+    params.set('limit', String(size));
+    params.set('offset', String(offset));
+    if (!params.has('order')) params.set('order', 'id.asc');
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
     });
-    if (!res.ok) {
-      console.warn(`sitemap: ${path} -> ${res.status} ${await res.text()}`);
-      return [];
-    }
-    return (await res.json()) as T[];
-  } catch (err) {
-    console.warn(`sitemap: ${path} failed:`, (err as Error).message);
-    return [];
+    if (!res.ok) throw new Error(`Sitemap source ${table} unavailable (${res.status}); preserving the previous sitemap.`);
+    const batch = await res.json() as T[];
+    rows.push(...batch);
+    if (batch.length < size) break;
   }
+  return rows;
 }
 
 async function dynamicEntries(): Promise<SitemapEntry[]> {
@@ -128,7 +132,7 @@ async function dynamicEntries(): Promise<SitemapEntry[]> {
     category_slug: string | null;
     subcategory_slug: string | null;
   }>(
-    "gigs?select=slug,title,updated_at,freelancer_id,thumbnail_url,images,category_slug,subcategory_slug&status=eq.active&slug=not.is.null&limit=5000",
+    "gigs?select=slug,title,updated_at,freelancer_id,thumbnail_url,images,category_slug,subcategory_slug&status=eq.active&review_status=eq.published&slug=not.is.null",
   );
 
   const posts = await rest<{ slug: string; updated_at: string | null }>(
@@ -136,6 +140,10 @@ async function dynamicEntries(): Promise<SitemapEntry[]> {
   );
 
   const entries: SitemapEntry[] = [];
+  const jobs = await rest<{ id: string }>(
+    `jobs?select=id&status=eq.published&application_deadline=gt.${encodeURIComponent(new Date().toISOString())}`,
+  );
+  for (const job of jobs) entries.push({ path: `/jobs/${job.id}`, changefreq: 'daily', priority: '0.8' });
   const activeFreelancerIds = new Set<string>();
 
   for (const post of posts) {

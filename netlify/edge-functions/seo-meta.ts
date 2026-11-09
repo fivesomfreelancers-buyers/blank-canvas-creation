@@ -75,7 +75,7 @@ async function gigMeta(slug: string): Promise<Meta | null> {
     delivery_time_days: number | null;
     freelancer_id: string | null;
   }>(
-    `gigs?select=id,title,description,thumbnail_url,images,category_slug,base_price,delivery_time_days,freelancer_id&status=eq.active&slug=eq.${encodeURIComponent(slug)}&limit=1`,
+    `gigs?select=id,title,description,thumbnail_url,images,category_slug,base_price,delivery_time_days,freelancer_id&status=eq.active&review_status=eq.published&slug=eq.${encodeURIComponent(slug)}&limit=1`,
   );
   if (!gig?.title) return null;
 

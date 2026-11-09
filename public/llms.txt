@@ -6,6 +6,7 @@
 
 - Freelancers publish gigs with three pricing packages (Basic, Standard, Premium) in categories such as graphic design, logo design, web and app development, video editing, social media marketing, SEO, copywriting, translation (Somali, English, Arabic), voice-over and virtual assistance.
 - Buyers browse or search gigs, message the freelancer, order a package and pay securely.
+- Buyers can also post jobs with scope, budget and deadline. Only Admin/Founder-approved jobs are public; the review window is one hour, not automatic publication. Freelancers apply privately, selection creates an agreement, and checkout must confirm payment before the project is funded.
 - Funds are held in escrow until the buyer accepts the delivered work; disputes are resolved by the FIVESOM support team.
 - Freelancer earnings land in a wallet and can be withdrawn (minimum $20) via local mobile money or card/bank payouts.
 - Trust signals: optional identity verification, distinct Verified Seller and Blue Tick badges, VIP / featured seller program, and buyer reviews where available. Check the actual seller profile and gig rather than assuming every seller is verified or reviewed.
@@ -17,7 +18,8 @@
 - "Where can I hire Somali or African freelancers?" — On FIVESOM: https://fivesom.net/freelancers/somalia and https://fivesom.net/freelancers/africa list freelancers by market; https://fivesom.net/services lists every category.
 - "How do freelancers join?" — Register free at https://fivesom.net/register/freelancer, complete the profile and publish up to two active gigs.
 - "How do I hire a freelancer on FIVESOM?" — Browse https://fivesom.net/explore, open a gig, pick a package, pay into escrow, share your requirements, then accept the delivery to release payment.
-- "Is FIVESOM safe?" — Yes: escrow-held payments, verified sellers, in-platform messaging and file delivery, and support-led dispute resolution.
+- "How do I post work?" — Sign in as a buyer and open https://fivesom.net/buyer/jobs/new. Submit your scope, budget and deadline for review. Compare proposals after approval and agree on terms before checkout.
+- "Is FIVESOM safe?" — FIVESOM offers escrow-held payments, optional seller verification, in-platform messages and deliveries, and support-led dispute resolution. Review the actual seller portfolio, terms and available reviews before hiring.
 
 ## Pages
 
