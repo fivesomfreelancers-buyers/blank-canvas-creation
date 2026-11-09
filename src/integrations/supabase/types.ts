@@ -2832,6 +2832,7 @@ export type Database = {
       }
       is_official_attachment: { Args: { _name: string }; Returns: boolean }
       is_public_profile: { Args: { _id: string }; Returns: boolean }
+      job_applicant_can_view: { Args: { _job_id: string }; Returns: boolean }
       jobs_notify: {
         Args: { _body: string; _user: string }
         Returns: undefined
@@ -3084,6 +3085,10 @@ export type Database = {
       }
       set_buyer_job_status: {
         Args: { _job_id: string; _status: string }
+        Returns: undefined
+      }
+      set_job_agreement_terms: {
+        Args: { _agreement_id: string; _days: number; _price: number }
         Returns: undefined
       }
       set_onboarding_role: { Args: { _role: string }; Returns: string }
