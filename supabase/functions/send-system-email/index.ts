@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
     if (msgErr) throw msgErr;
     if (!msg) return json({ skipped: "message_not_found" });
     if (msg.sender_type === "user") return json({ skipped: "user_message" });
-    if (msg.is_read_user) return json({ skipped: "already_read" });
+    // Every Fivesom Support/News message is emailed, even if already opened in-app.
 
     const { data: convo, error: convoErr } = await admin
       .from("system_conversations")
