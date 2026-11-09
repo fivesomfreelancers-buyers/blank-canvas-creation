@@ -37,3 +37,10 @@ Deno.test("Provider acceptance uses the event idempotency key", async () => {
     if (connection === undefined) Deno.env.delete("RESEND_API_KEY"); else Deno.env.set("RESEND_API_KEY", connection);
   }
 });
+
+Deno.test('Provider success without acceptance ID is rejected', async () => {
+  const original = globalThis.fetch;
+  globalThis.fetch = async () => new Response('{}', { status: 200 });
+  try { await assertRejects(() => sendNotificationEmail({}, 'test/missing-id'), Error, 'no acceptance ID'); }
+  finally { globalThis.fetch = original; }
+});

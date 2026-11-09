@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
 
     const lovableKey = Deno.env.get("LOVABLE_API_KEY");
     const resendKey = Deno.env.get("RESEND_API_KEY");
-    if (!lovableKey || !resendKey) return json({ error: "Email service not configured" }, 500);
+    if (!Deno.env.get('RESEND_DIRECT_API_KEY') && (!lovableKey || !resendKey)) return json({ error: "Email service not configured" }, 500);
 
     const payload = await req.json().catch(() => ({}));
     const kind: string = payload?.kind;
