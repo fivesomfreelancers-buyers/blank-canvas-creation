@@ -103,7 +103,7 @@ const Explore = () => {
       
       <div className="px-4 pb-16 pt-24 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <nav className="mb-8 flex gap-2 border-b border-border pb-4" aria-label="Marketplace"><Button variant={marketplace === 'gigs' ? 'default' : 'ghost'} onClick={() => setMarketplace('gigs')}>Gigs</Button><Button variant={marketplace === 'jobs' ? 'default' : 'ghost'} onClick={() => setMarketplace('jobs')}>Jobs</Button></nav>
+          <nav className="mb-8 flex gap-2 border-b border-border pb-4" aria-label="Marketplace"><Button variant={marketplace === 'gigs' ? 'default' : 'ghost'} onClick={() => setMarketplace('gigs')}>Talent</Button><Button variant={marketplace === 'jobs' ? 'default' : 'ghost'} onClick={() => setMarketplace('jobs')}>Jobs</Button></nav>
           {marketplace === 'jobs' ? <JobsMarketplace /> : <>
           <div className="mb-8 max-w-3xl">
             <span className="mb-3 block text-sm font-semibold text-primary">Fivesom marketplace</span>
