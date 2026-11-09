@@ -33,7 +33,8 @@ serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     const gigId = typeof body.gigId === "string" ? body.gigId : "";
     const packageType = typeof body.packageType === "string" ? body.packageType : "";
-    if (!gigId || !packageType) {
+    const agreementId = typeof body.agreementId === 'string' ? body.agreementId : '';
+    if (!agreementId && (!gigId || !packageType)) {
       return new Response(JSON.stringify({ error: "gigId and packageType are required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -49,6 +50,22 @@ serve(async (req) => {
     // Throttle: per-user cap on this endpoint.
     const rl = await consumeRateLimit(admin, "fn:order-checkout", user.id, 10, 600);
     if (!rl.allowed) return tooManyRequests(rl.retryAfter, corsHeaders);
+
+    if (agreementId) {
+      const { data: agreement, error: agreementError } = await admin.from('job_agreements').select('*').eq('id', agreementId).single();
+      if (agreementError || !agreement || agreement.buyer_id !== user.id || agreement.status !== 'awaiting_payment') throw new Error('Agreement is not ready for checkout');
+      const { data: job } = await admin.from('jobs').select('payment_type,status').eq('id', agreement.job_id).single();
+      if (!job || job.payment_type !== 'fixed' || !['published','paused','in_progress'].includes(job.status)) throw new Error('This agreement cannot be funded');
+      const total = Number(agreement.price) + SERVICE_FEE_USD;
+      const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', { apiVersion: '2025-08-27.basil' });
+      const origin = req.headers.get('origin') || 'https://fivesom.net';
+      const meta = { job_agreement_id: agreement.id, buyer_id: user.id, freelancer_id: agreement.freelancer_id, amount_usd: String(total), service_fee_usd: String(SERVICE_FEE_USD), payout_mode: 'wallet', package_name: agreement.title };
+      const session = await stripe.checkout.sessions.create({ mode: 'payment', customer_email: user.email,
+        line_items: [{ price_data: { currency: 'usd', unit_amount: Math.round(total * 100), product_data: { name: agreement.title, description: 'Fivesom project agreement — includes $1 buyer service fee' } }, quantity: 1 }],
+        metadata: meta, payment_intent_data: { metadata: meta }, success_url: `${origin}/buyer/payment-success?session_id={CHECKOUT_SESSION_ID}`, cancel_url: `${origin}/buyer/jobs`,
+      }, { idempotencyKey: `job-agreement-${agreement.id}` });
+      return new Response(JSON.stringify({ url: session.url }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
 
     // Price and gig data are resolved server-side — never trusted from the client.
     const { data: gig, error: gigErr } = await admin
@@ -137,7 +154,7 @@ serve(async (req) => {
       // connected account minus the platform application fee.
       sessionParams.payment_intent_data = {
         application_fee_amount: Math.min(applicationFeeCents, totalCents - 1),
-        transfer_data: { destination: seller!.stripe_account_id as string },
+        transfer_data: { destination: seller?.stripe_account_id as string },
         metadata: {
           gig_id: gig.id,
           buyer_id: user.id,

@@ -4,6 +4,7 @@
 
 export interface PaymentOrderMeta {
   gig_id?: string;
+  job_agreement_id?: string;
   buyer_id?: string;
   freelancer_id?: string;
   package_name?: string;
@@ -26,6 +27,16 @@ interface EnsureArgs {
  * Returns null when the payment carries no Fivesom order metadata.
  */
 export async function ensurePaidOrder({ admin, meta, paymentIntentId, sessionId }: EnsureArgs): Promise<string | null> {
+  const jobMeta = meta as PaymentOrderMeta | null | undefined;
+  if (jobMeta?.job_agreement_id) {
+    if (!jobMeta.buyer_id || !paymentIntentId) throw new Error('Incomplete job payment metadata');
+    const { data, error } = await admin.rpc('finalize_job_payment', {
+      _agreement_id: jobMeta.job_agreement_id, _buyer_id: jobMeta.buyer_id,
+      _amount: Number(jobMeta.amount_usd), _intent: paymentIntentId, _session: sessionId || null,
+    });
+    if (error) throw error;
+    return data;
+  }
   // 1. Already created?
   if (paymentIntentId) {
     const { data } = await admin

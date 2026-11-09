@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import type { SupabaseClient } from '@supabase/supabase-js';
 export function useJobsData<T>(table: 'jobs' | 'job_applications' | 'job_agreements', column?: string, value?: string) {
   const [rows, setRows] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const refresh = useCallback(async () => {
-    let query = supabase.from(table).select('*').order('created_at', { ascending: false }).limit(1000);
+    // Dynamic table filters are RLS-enforced; avoid recursive generated relationship unions.
+    let query = (supabase as SupabaseClient).from(table).select('*').order('created_at', { ascending: false }).limit(1000);
     if (column && value) query = query.eq(column, value);
     const { data, error: err } = await query;
     setError(err?.message || '');
