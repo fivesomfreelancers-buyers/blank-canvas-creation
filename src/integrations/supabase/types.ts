@@ -381,6 +381,24 @@ export type Database = {
         }
         Relationships: []
       }
+      buyer_follows: {
+        Row: {
+          buyer_id: string
+          created_at: string
+          follower_id: string
+        }
+        Insert: {
+          buyer_id: string
+          created_at?: string
+          follower_id: string
+        }
+        Update: {
+          buyer_id?: string
+          created_at?: string
+          follower_id?: string
+        }
+        Relationships: []
+      }
       buyer_support_tickets: {
         Row: {
           category: string | null
@@ -1155,6 +1173,321 @@ export type Database = {
           },
         ]
       }
+      job_agreements: {
+        Row: {
+          application_id: string
+          buyer_id: string
+          created_at: string
+          deliverables: string
+          delivery_days: number
+          freelancer_accepted_at: string | null
+          freelancer_id: string
+          freelancer_user_id: string
+          id: string
+          job_id: string
+          order_id: string | null
+          price: number
+          scope: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          application_id: string
+          buyer_id: string
+          created_at?: string
+          deliverables: string
+          delivery_days: number
+          freelancer_accepted_at?: string | null
+          freelancer_id: string
+          freelancer_user_id: string
+          id?: string
+          job_id: string
+          order_id?: string | null
+          price: number
+          scope: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          application_id?: string
+          buyer_id?: string
+          created_at?: string
+          deliverables?: string
+          delivery_days?: number
+          freelancer_accepted_at?: string | null
+          freelancer_id?: string
+          freelancer_user_id?: string
+          id?: string
+          job_id?: string
+          order_id?: string | null
+          price?: number
+          scope?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_agreements_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: true
+            referencedRelation: "job_applications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_agreements_freelancer_id_fkey"
+            columns: ["freelancer_id"]
+            isOneToOne: false
+            referencedRelation: "freelancers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_agreements_freelancer_id_fkey"
+            columns: ["freelancer_id"]
+            isOneToOne: false
+            referencedRelation: "public_freelancers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_agreements_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_agreements_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: true
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_applications: {
+        Row: {
+          answers: Json
+          created_at: string
+          cv_path: string
+          cv_snapshot: Json
+          delivery_days: number
+          freelancer_id: string
+          freelancer_user_id: string
+          id: string
+          job_id: string
+          proposal: string
+          proposed_price: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          answers?: Json
+          created_at?: string
+          cv_path: string
+          cv_snapshot: Json
+          delivery_days: number
+          freelancer_id: string
+          freelancer_user_id: string
+          id?: string
+          job_id: string
+          proposal: string
+          proposed_price: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          answers?: Json
+          created_at?: string
+          cv_path?: string
+          cv_snapshot?: Json
+          delivery_days?: number
+          freelancer_id?: string
+          freelancer_user_id?: string
+          id?: string
+          job_id?: string
+          proposal?: string
+          proposed_price?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_applications_freelancer_id_fkey"
+            columns: ["freelancer_id"]
+            isOneToOne: false
+            referencedRelation: "freelancers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_applications_freelancer_id_fkey"
+            columns: ["freelancer_id"]
+            isOneToOne: false
+            referencedRelation: "public_freelancers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_applications_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_review_history: {
+        Row: {
+          action: string
+          actor_id: string
+          created_at: string
+          feedback: string | null
+          id: string
+          job_id: string
+        }
+        Insert: {
+          action: string
+          actor_id: string
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          job_id: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          job_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_review_history_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jobs: {
+        Row: {
+          additional_requirements: string
+          application_deadline: string | null
+          attachments: Json
+          budget_max: number
+          budget_min: number
+          buyer_id: string
+          category: string
+          created_at: string
+          currency: string
+          deliverables: string
+          delivery_date: string | null
+          description: string
+          duration: string
+          experience: string
+          freelancer_count: string
+          id: string
+          languages: string[]
+          milestones: string
+          overdue_notified_at: string | null
+          payment_type: string
+          project_type: string
+          published_at: string | null
+          questions: string[]
+          reminder_sent_at: string | null
+          requirements: string
+          review_deadline: string | null
+          review_feedback: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          skills: string[]
+          start_date: string | null
+          status: string
+          submitted_at: string | null
+          title: string
+          updated_at: string
+          work_location: string
+        }
+        Insert: {
+          additional_requirements?: string
+          application_deadline?: string | null
+          attachments?: Json
+          budget_max?: number
+          budget_min?: number
+          buyer_id: string
+          category?: string
+          created_at?: string
+          currency?: string
+          deliverables?: string
+          delivery_date?: string | null
+          description?: string
+          duration?: string
+          experience?: string
+          freelancer_count?: string
+          id?: string
+          languages?: string[]
+          milestones?: string
+          overdue_notified_at?: string | null
+          payment_type?: string
+          project_type?: string
+          published_at?: string | null
+          questions?: string[]
+          reminder_sent_at?: string | null
+          requirements?: string
+          review_deadline?: string | null
+          review_feedback?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          skills?: string[]
+          start_date?: string | null
+          status?: string
+          submitted_at?: string | null
+          title?: string
+          updated_at?: string
+          work_location?: string
+        }
+        Update: {
+          additional_requirements?: string
+          application_deadline?: string | null
+          attachments?: Json
+          budget_max?: number
+          budget_min?: number
+          buyer_id?: string
+          category?: string
+          created_at?: string
+          currency?: string
+          deliverables?: string
+          delivery_date?: string | null
+          description?: string
+          duration?: string
+          experience?: string
+          freelancer_count?: string
+          id?: string
+          languages?: string[]
+          milestones?: string
+          overdue_notified_at?: string | null
+          payment_type?: string
+          project_type?: string
+          published_at?: string | null
+          questions?: string[]
+          reminder_sent_at?: string | null
+          requirements?: string
+          review_deadline?: string | null
+          review_feedback?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          skills?: string[]
+          start_date?: string | null
+          status?: string
+          submitted_at?: string | null
+          title?: string
+          updated_at?: string
+          work_location?: string
+        }
+        Relationships: []
+      }
       message_translations: {
         Row: {
           created_at: string
@@ -1424,6 +1757,7 @@ export type Database = {
           freelancer_id: string
           gig_id: string | null
           id: string
+          job_agreement_id: string | null
           order_started_at: string | null
           overdue_at: string | null
           package_name: string | null
@@ -1449,6 +1783,7 @@ export type Database = {
           freelancer_id: string
           gig_id?: string | null
           id?: string
+          job_agreement_id?: string | null
           order_started_at?: string | null
           overdue_at?: string | null
           package_name?: string | null
@@ -1474,6 +1809,7 @@ export type Database = {
           freelancer_id?: string
           gig_id?: string | null
           id?: string
+          job_agreement_id?: string | null
           order_started_at?: string | null
           overdue_at?: string | null
           package_name?: string | null
@@ -1515,6 +1851,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "public_gig_rating_stats"
             referencedColumns: ["gig_id"]
+          },
+          {
+            foreignKeyName: "orders_job_agreement_id_fkey"
+            columns: ["job_agreement_id"]
+            isOneToOne: true
+            referencedRelation: "job_agreements"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -2283,6 +2626,10 @@ export type Database = {
       }
     }
     Functions: {
+      accept_job_agreement: {
+        Args: { _agreement_id: string }
+        Returns: undefined
+      }
       accept_order_delivery: { Args: { _order_id: string }; Returns: undefined }
       admin_delete_news: { Args: { _broadcast_id: string }; Returns: number }
       admin_delete_orders: { Args: { _ids: string[] }; Returns: number }
@@ -2380,6 +2727,7 @@ export type Database = {
         Args: { _attachment_url: string; _audience: string; _body: string }
         Returns: number
       }
+      build_freelancer_cv: { Args: never; Returns: Json }
       can_view_gig: {
         Args: {
           _freelancer_id: string
@@ -2393,6 +2741,7 @@ export type Database = {
         Args: { _target: string; _viewer: string }
         Returns: boolean
       }
+      check_job_review_deadlines: { Args: never; Returns: undefined }
       check_rate_limit: {
         Args: {
           _bucket: string
@@ -2434,6 +2783,16 @@ export type Database = {
         Returns: Database["public"]["Enums"]["app_role"]
       }
       expire_vip_memberships: { Args: never; Returns: number }
+      finalize_job_payment: {
+        Args: {
+          _agreement_id: string
+          _amount: number
+          _buyer_id: string
+          _intent: string
+          _session?: string
+        }
+        Returns: string
+      }
       freelancer_privileged_snapshot: { Args: { _id: string }; Returns: Json }
       get_account_state: { Args: never; Returns: Json }
       get_blue_tick_eligibility: { Args: { _user_id?: string }; Returns: Json }
@@ -2449,6 +2808,7 @@ export type Database = {
         Args: { _freelancer_id: string }
         Returns: number
       }
+      get_job_buyer: { Args: { _job_id: string }; Returns: Json }
       get_withdrawal_fee_percent: { Args: never; Returns: number }
       gig_owner_user: { Args: { _freelancer_id: string }; Returns: string }
       gig_review_bypass: { Args: never; Returns: boolean }
@@ -2472,6 +2832,14 @@ export type Database = {
       }
       is_official_attachment: { Args: { _name: string }; Returns: boolean }
       is_public_profile: { Args: { _id: string }; Returns: boolean }
+      jobs_notify: {
+        Args: { _body: string; _user: string }
+        Returns: undefined
+      }
+      jobs_validate: {
+        Args: { _j: Database["public"]["Tables"]["jobs"]["Row"] }
+        Returns: undefined
+      }
       list_founders: {
         Args: never
         Returns: {
@@ -2531,6 +2899,57 @@ export type Database = {
         Args: { _label: string; _message_id: string; _url: string }
         Returns: Json
       }
+      review_buyer_job: {
+        Args: { _action: string; _feedback?: string; _job_id: string }
+        Returns: {
+          additional_requirements: string
+          application_deadline: string | null
+          attachments: Json
+          budget_max: number
+          budget_min: number
+          buyer_id: string
+          category: string
+          created_at: string
+          currency: string
+          deliverables: string
+          delivery_date: string | null
+          description: string
+          duration: string
+          experience: string
+          freelancer_count: string
+          id: string
+          languages: string[]
+          milestones: string
+          overdue_notified_at: string | null
+          payment_type: string
+          project_type: string
+          published_at: string | null
+          questions: string[]
+          reminder_sent_at: string | null
+          requirements: string
+          review_deadline: string | null
+          review_feedback: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          skills: string[]
+          start_date: string | null
+          status: string
+          submitted_at: string | null
+          title: string
+          updated_at: string
+          work_location: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "jobs"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      review_job_application: {
+        Args: { _application_id: string; _status: string }
+        Returns: string
+      }
       save_blue_tick_application_draft:
         | {
             Args: {
@@ -2568,6 +2987,53 @@ export type Database = {
             }
             Returns: string
           }
+      save_buyer_job: {
+        Args: { _job_id?: string; _payload: Json; _submit?: boolean }
+        Returns: {
+          additional_requirements: string
+          application_deadline: string | null
+          attachments: Json
+          budget_max: number
+          budget_min: number
+          buyer_id: string
+          category: string
+          created_at: string
+          currency: string
+          deliverables: string
+          delivery_date: string | null
+          description: string
+          duration: string
+          experience: string
+          freelancer_count: string
+          id: string
+          languages: string[]
+          milestones: string
+          overdue_notified_at: string | null
+          payment_type: string
+          project_type: string
+          published_at: string | null
+          questions: string[]
+          reminder_sent_at: string | null
+          requirements: string
+          review_deadline: string | null
+          review_feedback: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          skills: string[]
+          start_date: string | null
+          status: string
+          submitted_at: string | null
+          title: string
+          updated_at: string
+          work_location: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "jobs"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       search_gig_tags: {
         Args: { p_limit?: number; p_query?: string }
         Returns: {
@@ -2616,6 +3082,10 @@ export type Database = {
           vip_tier: string
         }[]
       }
+      set_buyer_job_status: {
+        Args: { _job_id: string; _status: string }
+        Returns: undefined
+      }
       set_onboarding_role: { Args: { _role: string }; Returns: string }
       shares_order_with_freelancer: {
         Args: { _freelancer_id: string; _viewer: string }
@@ -2628,6 +3098,17 @@ export type Database = {
         Returns: undefined
       }
       submit_gig_for_review: { Args: { _gig_id: string }; Returns: string }
+      submit_job_application: {
+        Args: {
+          _answers: Json
+          _cv_path: string
+          _days: number
+          _job_id: string
+          _price: number
+          _proposal: string
+        }
+        Returns: string
+      }
       sync_profile_role: { Args: { _user_id: string }; Returns: undefined }
       touch_last_seen: { Args: never; Returns: undefined }
       user_owns_support_ticket: {
