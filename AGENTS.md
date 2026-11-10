@@ -12,5 +12,6 @@
 - Buyer acquisition summaries use a server-authorized Admin/Founder aggregate RPC; unknown external source metrics stay unavailable rather than fabricated.
 - Sitemap reads paginate and fail without replacing the previous file when public sources fail; only approved open jobs and published gigs are listed to keep private work out of search.
 - Jobs use separate job/application/agreement records and authenticated database RPCs; public reads are approval-gated and hiring enters the existing idempotent paid-order pipeline so gig workflows and the financial ledger stay intact.
+- Explore job-posting controls fail closed until authoritative account state confirms a completed active buyer; excluding only freelancers exposes controls during loading and to other roles.
 - CV previews and exports share the same real-profile snapshot component; private application files use signed Storage URLs so public profile content does not make proposals public.
 - Order requirements and delivery forms share per-file size validation matching their Storage buckets, keeping labels and rejection rules consistent.
