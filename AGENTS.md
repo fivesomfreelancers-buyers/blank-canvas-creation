@@ -15,3 +15,4 @@
 - Explore job-posting controls fail closed until authoritative account state confirms a completed active buyer; excluding only freelancers exposes controls during loading and to other roles.
 - CV previews and exports share the same real-profile snapshot component; private application files use signed Storage URLs so public profile content does not make proposals public.
 - Order requirements and delivery forms share per-file size validation matching their Storage buckets, keeping labels and rejection rules consistent.- Human checks: Turnstile tokens are verified only in the turnstile-verify function; database triggers on messages/gigs/jobs/applications require a server-recorded pass so browser-only bypass fails.
+- Off-platform contact detection lives in the database (detect_offplatform_contact + enforce_content_safety triggers); the browser highlighter and report_content_scan RPC only display and log, so blocking cannot be bypassed client-side.

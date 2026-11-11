@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { compressImage } from '@/lib/imageCompress';
 import supportLogoAsset from '@/assets/fivesom-support-logo.png';
 import newsLogoAsset from '@/assets/fivesom-news-logo.png';
+import { assertSafeContent } from '@/lib/contentSafety';
 import { toast } from 'sonner';
 import { moderateText, moderateImageFile, recordStrike, isChatBlocked } from '@/lib/chatModeration';
 import { getOrCreateConversation as createConversation } from '@/lib/conversations';
@@ -379,6 +380,10 @@ export function useConversations() {
     if (!text || !selectedConversationId || !currentUserId) return;
     if (selectedKind === 'news') return; // read-only
 
+    if (selectedKind !== 'support') {
+      try { await assertSafeContent('message', text); }
+      catch (e) { toast.error((e as Error).message, { duration: 10000 }); return; }
+    }
     const ok = await deliverText(text);
     if (ok) {
       setNewMessage('');

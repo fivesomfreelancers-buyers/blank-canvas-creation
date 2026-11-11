@@ -1,3 +1,4 @@
+import { assertSafeContent } from '@/lib/contentSafety';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Check, FileText, Plus, Save, Send, X } from 'lucide-react';
@@ -19,7 +20,7 @@ export default function PostJob() {
   const change = (key: keyof Job, value: unknown) => setJob(j => ({ ...j, [key]: value }));
   const save = async (submit: boolean) => {
     const invalid = submit ? validateJob(job) : null; if (invalid) { toast.error(invalid); return; }
-    setSaving(true); try { const { data, error } = await supabase.rpc('save_buyer_job', { _payload: JSON.parse(JSON.stringify(job)), _job_id: jobId || undefined, _submit: submit }); if (error) throw error; if (!data?.id || (submit && data.status !== 'pending_approval')) throw new Error('Could not confirm the saved job.'); toast.success(submit ? 'Job submitted for approval. Review window: 1 hour.' : 'Draft saved.'); navigate('/buyer/jobs'); } catch (e) { toast.error(e instanceof Error ? e.message : 'Could not save your job.'); } finally { setSaving(false); }
+    setSaving(true); try { await assertSafeContent('job', JSON.stringify(job)); const { data, error } = await supabase.rpc('save_buyer_job', { _payload: JSON.parse(JSON.stringify(job)), _job_id: jobId || undefined, _submit: submit }); if (error) throw error; if (!data?.id || (submit && data.status !== 'pending_approval')) throw new Error('Could not confirm the saved job.'); toast.success(submit ? 'Job submitted for approval. Review window: 1 hour.' : 'Draft saved.'); navigate('/buyer/jobs'); } catch (e) { toast.error(e instanceof Error ? e.message : 'Could not save your job.'); } finally { setSaving(false); }
   };
   const field = (key: keyof Job, label: string, type = 'text', placeholder = '') => <div className="space-y-2"><Label htmlFor={key}>{label}</Label><Input id={key} type={type} placeholder={placeholder} min={type === 'number' ? 0 : undefined} value={String(job[key] ?? '')} onChange={e => change(key, type === 'number' ? Number(e.target.value) : e.target.value || null)} /></div>;
   const area = (key: keyof Job, label: string, placeholder: string) => <div className="space-y-2"><Label htmlFor={key}>{label}</Label><Textarea id={key} rows={5} value={String(job[key] || '')} onChange={e => change(key, e.target.value)} placeholder={placeholder} /></div>;

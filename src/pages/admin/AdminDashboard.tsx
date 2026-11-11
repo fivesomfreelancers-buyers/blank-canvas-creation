@@ -29,6 +29,8 @@ import AdminCategories from './AdminCategories';
 import AdminSupport from './AdminSupport';
 import AdminNotifications from './AdminNotifications';
 import AdminSecurity from './AdminSecurity';
+import AdminAntiScam from './AdminAntiScam';
+import { ShieldAlert } from 'lucide-react';
 import AdminLogs from './AdminLogs';
 import AdminSettings from './AdminSettings';
 import AdminReports from './AdminReports';
@@ -78,6 +80,7 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
     { key: 'reports', label: 'Reports', icon: Flag },
     { key: 'reviews', label: 'Reviews', icon: Star },
     { key: 'support', label: 'Support Tickets', icon: LifeBuoy },
+    { key: 'anti_scam', label: 'Security & Anti-Scam', icon: ShieldAlert },
     { key: 'security', label: 'Security', icon: Lock },
   ]},
   { label: 'System', items: [
@@ -146,6 +149,7 @@ const AdminDashboardInner = () => {
       case 'fivesom_support': return <AdminFivesomSupport />;
       case 'fivesom_news': return <AdminFivesomNews />;
       case 'somadz': return <AdminSomAdz />;
+      case 'anti_scam': return <AdminAntiScam />;
       case 'security': return <AdminSecurity />;
       case 'categories': return <AdminCategories />;
       case 'notifications': return <AdminNotifications />;

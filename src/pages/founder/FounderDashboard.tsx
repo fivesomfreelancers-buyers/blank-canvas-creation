@@ -35,11 +35,13 @@ import JobApprovals from '@/pages/jobs/JobApprovals';
 import AdminUsers from '@/pages/admin/AdminUsers';
 import AdminAboutTeam from '@/pages/admin/AdminAboutTeam';
 import AdminBlog from '@/pages/admin/AdminBlog';
+import AdminAntiScam from '@/pages/admin/AdminAntiScam';
+import { ShieldAlert } from 'lucide-react';
 
 type TabKey =
   | 'overview' | 'verifications' | 'gig_review' | 'orders' | 'chats'
   | 'fivesom_support' | 'fivesom_news' | 'reports' | 'ranking' | 'disputes'
-  | 'gigs' | 'users' | 'about_team' | 'blog' | 'job_approvals' | 'buyer_acquisition';
+  | 'gigs' | 'users' | 'about_team' | 'blog' | 'job_approvals' | 'buyer_acquisition' | 'anti_scam';
 
 const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'overview', label: 'Dashboard', icon: LayoutDashboard },
@@ -57,12 +59,14 @@ const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'reports', label: 'User Reports', icon: Flag, badge: 'reports' },
   { key: 'ranking', label: 'Ranking', icon: Trophy },
   { key: 'disputes', label: 'Disputes', icon: Scale, badge: 'disputes' },
+  { key: 'anti_scam', label: 'Security & Anti-Scam', icon: ShieldAlert },
   { key: 'about_team', label: 'About / Team', icon: Users },
 ];
 
 const titles: Record<TabKey, string> = {
   overview: 'Founder Dashboard',
   buyer_acquisition: 'Buyer Acquisition',
+  anti_scam: 'Security & Anti-Scam Monitoring',
   verifications: 'Verifications',
   gig_review: 'Gigs Pending',
   job_approvals: 'Job Approvals',
@@ -115,6 +119,7 @@ const FounderDashboardInner = () => {
     switch (activeTab) {
       case 'overview': return <AdminOverview />;
       case 'buyer_acquisition': return <BuyerAcquisition />;
+      case 'anti_scam': return <AdminAntiScam />;
       case 'verifications': return <AdminVerifications />;
       case 'gig_review': return <AdminGigReview />;
       case 'job_approvals': return <JobApprovals />;

@@ -2,6 +2,9 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import AutoGrowTextarea from './AutoGrowTextarea';
+import SuspiciousText from '@/components/security/SuspiciousText';
+import SecurityWarning from '@/components/security/SecurityWarning';
+import { hasSuspicious } from '@/lib/contentSafety';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Smile, Paperclip, Loader2, Pin, Check, CheckCheck, ArrowLeft } from 'lucide-react';
 
@@ -204,7 +207,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                               : `bg-card text-foreground border ${lastOfGroup ? 'rounded-bl-md' : ''}`
                           }`}
                         >
-                          <p className="chat-text">{msg.message}</p>
+                          <p className="chat-text"><SuspiciousText text={msg.message} /></p>
                           {msg.attachment_url && (
                             <AttachmentPreview
                               url={msg.attachment_url}
@@ -267,6 +270,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                   onChange={handleImageUpload}
                 />
 
+                {!isSystem && hasSuspicious(newMessage) && <div className="mb-2 w-full"><SecurityWarning text={newMessage} /></div>}
                 <div className="flex w-full min-w-0 items-end gap-2">
                   <div className="flex-1 min-w-0 flex items-end gap-1 bg-muted/60 border rounded-3xl px-2 py-1.5 focus-within:ring-2 focus-within:ring-ring/40 transition">
                     <Button
