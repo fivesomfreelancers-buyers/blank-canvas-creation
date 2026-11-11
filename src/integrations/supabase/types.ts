@@ -386,16 +386,19 @@ export type Database = {
           buyer_id: string
           created_at: string
           follower_id: string
+          notify: boolean
         }
         Insert: {
           buyer_id: string
           created_at?: string
           follower_id: string
+          notify?: boolean
         }
         Update: {
           buyer_id?: string
           created_at?: string
           follower_id?: string
+          notify?: boolean
         }
         Relationships: []
       }
@@ -2750,6 +2753,7 @@ export type Database = {
       }
       build_freelancer_cv: { Args: never; Returns: Json }
       buyer_acquisition_summary: { Args: never; Returns: Json }
+      buyer_follower_count: { Args: { _buyer_id: string }; Returns: number }
       can_view_gig: {
         Args: {
           _freelancer_id: string
