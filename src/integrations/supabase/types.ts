@@ -2029,6 +2029,54 @@ export type Database = {
         }
         Relationships: []
       }
+      security_incidents: {
+        Row: {
+          action: string
+          content: string
+          context: string
+          created_at: string
+          findings: Json
+          id: string
+          ref_id: string | null
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          risk: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          content: string
+          context: string
+          created_at?: string
+          findings?: Json
+          id?: string
+          ref_id?: string | null
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          risk: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          content?: string
+          context?: string
+          created_at?: string
+          findings?: Json
+          id?: string
+          ref_id?: string | null
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          risk?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       subcategories: {
         Row: {
           category_id: string
@@ -2251,6 +2299,36 @@ export type Database = {
           resolved_at?: string | null
           resolved_by?: string | null
           status?: string
+        }
+        Relationships: []
+      }
+      user_restrictions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          kind: string
+          reason: string | null
+          until: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind: string
+          reason?: string | null
+          until: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: string
+          reason?: string | null
+          until?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -2728,6 +2806,10 @@ export type Database = {
         }
         Returns: string
       }
+      admin_review_security_incident: {
+        Args: { _days?: number; _decision: string; _id: string; _note?: string }
+        Returns: undefined
+      }
       admin_revoke_blue_tick: {
         Args: { _reason?: string; _user_id: string }
         Returns: undefined
@@ -2803,6 +2885,7 @@ export type Database = {
         Args: { _message_id: string }
         Returns: Json
       }
+      detect_offplatform_contact: { Args: { _text: string }; Returns: Json }
       dispatch_notification_emails: { Args: never; Returns: number }
       effective_user_role: {
         Args: { _user_id: string }
@@ -2924,6 +3007,10 @@ export type Database = {
       }
       replace_system_message_attachment: {
         Args: { _label: string; _message_id: string; _url: string }
+        Returns: Json
+      }
+      report_content_scan: {
+        Args: { _content: string; _context: string; _ref_id?: string }
         Returns: Json
       }
       review_buyer_job: {
