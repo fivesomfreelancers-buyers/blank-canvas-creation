@@ -1173,6 +1173,24 @@ export type Database = {
           },
         ]
       }
+      human_verifications: {
+        Row: {
+          updated_at: string
+          user_id: string
+          verified_until: string
+        }
+        Insert: {
+          updated_at?: string
+          user_id: string
+          verified_until: string
+        }
+        Update: {
+          updated_at?: string
+          user_id?: string
+          verified_until?: string
+        }
+        Relationships: []
+      }
       job_agreements: {
         Row: {
           application_id: string
