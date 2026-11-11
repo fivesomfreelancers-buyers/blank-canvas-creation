@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import HumanVerificationGate from "@/components/security/HumanVerificationGate";
 import MobileFormAssist from "@/components/mobile/MobileFormAssist";
 
 // The homepage stays in the main bundle so the first paint is instant.
@@ -112,6 +113,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <HumanVerificationGate />
 
           <MobileFormAssist />
 

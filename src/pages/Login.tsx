@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { authCooldownRemaining, clearAuthFailures, cooldownMessage, recordAuthFailure } from '@/lib/authThrottle';
 import { accountLandingPath, fetchAccountState } from '@/lib/accountState';
 import { setAuthIntent } from '@/lib/authIntent';
+import Turnstile from '@/components/security/Turnstile';
 
 const Login = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -20,6 +21,7 @@ const Login = () => {
   const [resendLoading, setResendLoading] = useState(false);
   const [needsVerification, setNeedsVerification] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [human, setHuman] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { toast } = useToast();
@@ -36,6 +38,7 @@ const Login = () => {
   }, [user, authLoading, emailLoading, googleLoading, navigate, toast]);
 
   const handleGoogleLogin = async () => {
+    if (!human) { toast({ title: 'Verify you are human', description: 'Complete the check above first.', variant: 'destructive' }); return; }
     setAuthIntent('login');
     setGoogleLoading(true);
     try {
@@ -67,6 +70,7 @@ const Login = () => {
 
   const handleEmailLogin = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (!human) { toast({ title: 'Verify you are human', description: 'Complete the check above first.', variant: 'destructive' }); return; }
     if (!email.trim() || password.length < 6) {
       toast({ title: 'Sign-in failed', description: 'Enter a valid email and password.', variant: 'destructive' });
       return;
@@ -135,7 +139,8 @@ const Login = () => {
           </div>
         )}
 
-        <Button type="button" variant="outline" className="h-12 w-full bg-card font-semibold" onClick={handleGoogleLogin} disabled={googleLoading || emailLoading}>
+        <div className="mb-5"><Turnstile onVerified={setHuman} /></div>
+        <Button type="button" variant="outline" className="h-12 w-full bg-card font-semibold" onClick={handleGoogleLogin} disabled={!human || googleLoading || emailLoading}>
           {googleLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <><GoogleIcon /><span className="ml-3">Continue with Google</span></>}
         </Button>
         <div className="relative my-6 flex items-center justify-center"><div className="absolute inset-x-0 border-t border-border" /><span className="relative bg-background px-4 text-xs font-semibold text-muted-foreground">OR</span></div>
@@ -146,7 +151,7 @@ const Login = () => {
             <div className="flex items-center justify-between"><Label htmlFor="password">Password</Label><Link to="/forgot-password" className="text-sm font-semibold text-primary hover:underline">Forgot password?</Link></div>
             <div className="relative"><Input id="password" type={showPassword ? 'text' : 'password'} value={password} onChange={(event) => setPassword(event.target.value)} className="h-12 pr-11" autoComplete="current-password" required /><Button type="button" variant="ghost" size="icon" className="absolute right-1 top-2 h-8 w-8" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</Button></div>
           </div>
-          <Button type="submit" className="h-12 w-full font-semibold" disabled={emailLoading || googleLoading}>{emailLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <>Continue<ArrowRight className="ml-2 h-4 w-4" /></>}</Button>
+          <Button type="submit" className="h-12 w-full font-semibold" disabled={!human || emailLoading || googleLoading}>{emailLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <>Continue<ArrowRight className="ml-2 h-4 w-4" /></>}</Button>
         </form>
 
         {needsVerification && <div className="mt-5 rounded-md border border-border bg-card p-4"><p className="text-sm text-muted-foreground">Your email is not verified yet.</p><Button type="button" variant="secondary" className="mt-3 w-full" onClick={resendVerification} disabled={resendLoading}>{resendLoading ? 'Sending…' : 'Resend verification email'}</Button></div>}

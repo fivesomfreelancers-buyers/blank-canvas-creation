@@ -14,4 +14,4 @@
 - Jobs use separate job/application/agreement records and authenticated database RPCs; public reads are approval-gated and hiring enters the existing idempotent paid-order pipeline so gig workflows and the financial ledger stay intact.
 - Explore job-posting controls fail closed until authoritative account state confirms a completed active buyer; excluding only freelancers exposes controls during loading and to other roles.
 - CV previews and exports share the same real-profile snapshot component; private application files use signed Storage URLs so public profile content does not make proposals public.
-- Order requirements and delivery forms share per-file size validation matching their Storage buckets, keeping labels and rejection rules consistent.
+- Order requirements and delivery forms share per-file size validation matching their Storage buckets, keeping labels and rejection rules consistent.- Human checks: Turnstile tokens are verified only in the turnstile-verify function; database triggers on messages/gigs/jobs/applications require a server-recorded pass so browser-only bypass fails.

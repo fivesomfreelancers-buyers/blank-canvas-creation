@@ -22,6 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 import LanguageSelector from '@/components/profile/LanguageSelector';
 import { accountLandingPath, parseAccountState } from '@/lib/accountState';
 import { notifyMyPhotoChanged } from '@/hooks/useMyPhoto';
+import Turnstile from '@/components/security/Turnstile';
 
 const BUYER_INDUSTRIES = [
   'Technology / IT', 'E-commerce / Retail', 'Marketing / Media', 'Local Business',
@@ -42,6 +43,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
   const [checkEmail, setCheckEmail] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [human, setHuman] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -259,6 +261,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
   };
 
   const handleGoogle = async () => {
+    if (!human) { toast({ title: 'Verify you are human', description: 'Complete the check first.', variant: 'destructive' }); return; }
     saveOnboardingDraft(currentDraft());
     setAuthIntent('signup');
     setGoogleLoading(true);
@@ -324,6 +327,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
 
 
   const handleSubmit = async (event: React.FormEvent) => {
+    if (!user && !human) { event.preventDefault(); toast({ title: 'Verify you are human', description: 'Complete the check first.', variant: 'destructive' }); return; }
     event.preventDefault();
     const validation = validate();
     if (validation) {
@@ -441,7 +445,8 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
 
       {!user && (
         <>
-          <Button type="button" variant="outline" className="h-12 w-full bg-card font-semibold" onClick={handleGoogle} disabled={googleLoading || submitting}>
+          <div className="mb-5"><Turnstile onVerified={setHuman} /></div>
+          <Button type="button" variant="outline" className="h-12 w-full bg-card font-semibold" onClick={handleGoogle} disabled={!human || googleLoading || submitting}>
 
             {googleLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <><GoogleIcon /><span className="ml-3">Continue with Google</span></>}
           </Button>
@@ -509,7 +514,7 @@ const RoleRegistration = ({ role }: RoleRegistrationProps) => {
           <Label htmlFor={`${role}-terms`} className="text-sm font-normal leading-6 text-muted-foreground">I agree to the <Link to="/legal/terms" className="font-semibold text-primary hover:underline">Terms of Service</Link> and <Link to="/legal/privacy" className="font-semibold text-primary hover:underline">Privacy Policy</Link>.</Label>
         </div>
 
-        <Button type="submit" className="h-12 w-full font-semibold" disabled={submitting || googleLoading || authLoading}>{submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <>{user ? `Complete ${isFreelancer ? 'Freelancer' : 'Buyer'} setup` : 'Create my account'}<ArrowRight className="ml-2 h-4 w-4" /></>}</Button>
+        <Button type="submit" className="h-12 w-full font-semibold" disabled={(!user && !human) || submitting || googleLoading || authLoading}>{submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <>{user ? `Complete ${isFreelancer ? 'Freelancer' : 'Buyer'} setup` : 'Create my account'}<ArrowRight className="ml-2 h-4 w-4" /></>}</Button>
       </form>
 
       <div className="mt-6 flex flex-col items-center justify-between gap-3 border-t border-border pt-5 text-sm sm:flex-row">
