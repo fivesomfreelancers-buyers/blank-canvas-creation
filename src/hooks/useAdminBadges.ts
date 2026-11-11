@@ -4,14 +4,14 @@ import { supabase } from '@/integrations/supabase/client';
 export type AdminBadgeKey =
   | 'orders' | 'chats' | 'disputes' | 'reports' | 'reviews'
   | 'support' | 'withdrawals' | 'verifications' | 'vip'
-  | 'fivesom_support' | 'gig_review';
+  | 'fivesom_support' | 'gig_review' | 'job_approvals';
 
 export type AdminBadges = Record<AdminBadgeKey, number>;
 
 const EMPTY: AdminBadges = {
   orders: 0, chats: 0, disputes: 0, reports: 0, reviews: 0,
   support: 0, withdrawals: 0, verifications: 0, vip: 0, fivesom_support: 0,
-  gig_review: 0,
+  gig_review: 0, job_approvals: 0,
 };
 
 async function headCount(q: any): Promise<number> {
@@ -27,7 +27,7 @@ export function useAdminBadges() {
     const sb: any = supabase;
     const [
       orders, disputes, reports, reviews,
-      st, bst, fst, withdrawals, verifications, vip, sysconvo, unreadDm, gigReview,
+      st, bst, fst, withdrawals, verifications, vip, sysconvo, unreadDm, gigReview, jobApprovals,
     ] = await Promise.all([
       headCount(sb.from('orders').select('id', { count: 'exact', head: true }).eq('status', 'pending')),
       headCount(sb.from('disputes').select('id', { count: 'exact', head: true }).eq('status', 'open')),
@@ -42,6 +42,7 @@ export function useAdminBadges() {
       sb.from('system_conversations').select('unread_admin, type'),
       headCount(sb.from('messages').select('id', { count: 'exact', head: true }).eq('is_read', false)),
       headCount(sb.from('gigs').select('id', { count: 'exact', head: true }).eq('review_status', 'pending_review')),
+      headCount(sb.from('jobs').select('id', { count: 'exact', head: true }).eq('status', 'pending_approval')),
     ]);
     const rows = (sysconvo.data || []) as Array<{ unread_admin: number; type: string }>;
     const fivesomSupportUnread = rows
@@ -56,6 +57,7 @@ export function useAdminBadges() {
 
       fivesom_support: fivesomSupportUnread,
       gig_review: gigReview,
+      job_approvals: jobApprovals,
     });
 
   }, []);
@@ -66,7 +68,7 @@ export function useAdminBadges() {
       'orders', 'disputes', 'user_reports', 'gig_reviews',
       'support_tickets', 'buyer_support_tickets', 'freelancer_support_tickets',
       'withdrawals', 'verification_documents', 'vip_memberships',
-      'system_conversations', 'system_messages', 'messages', 'gigs',
+      'system_conversations', 'system_messages', 'messages', 'gigs', 'jobs',
     ];
     const channel = supabase.channel('admin-badges');
     tables.forEach((t) =>
