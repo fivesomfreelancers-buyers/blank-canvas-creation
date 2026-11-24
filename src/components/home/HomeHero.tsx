@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Search, ArrowRight, ShieldCheck, Globe2, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import TypingHeadline from './TypingHeadline';
+import TalentFlow from './TalentFlow';
+import type { SearchGigResult } from '@/hooks/useGigSearch';
 import { CATEGORIES } from '@/lib/categories';
 import { Button } from '@/components/ui/button';
 import { MARKETPLACE_POSITIONING } from '@/content/marketplacePositioning';
@@ -27,9 +29,10 @@ const POPULAR = [
 interface HomeHeroProps {
   gigCount: number;
   freelancerCount: number;
+  gigs?: SearchGigResult[];
 }
 
-const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
+const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount, gigs = [] }) => {
   const [q, setQ] = useState('');
   const navigate = useNavigate();
 
@@ -145,7 +148,9 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
           {MARKETPLACE_POSITIONING.intro} {MARKETPLACE_POSITIONING.identity}
         </p>
 
-        <div className="mx-auto mb-6 max-w-3xl">
+        <TalentFlow gigs={gigs} />
+
+        <div className="mx-auto mb-6 mt-4 max-w-3xl">
           <form
             onSubmit={submit}
             className="flex items-stretch gap-2 rounded-lg border border-border bg-card p-1.5 shadow-lg"

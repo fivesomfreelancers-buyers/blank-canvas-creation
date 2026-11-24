@@ -572,3 +572,11 @@
 .auth-shell label {
   color: hsl(var(--foreground));
 }
+
+/* Homepage talent flow: people enter right, become skills on the left */
+@keyframes talent-in { 0% { left: 100%; opacity: 0; } 8% { opacity: 1; } 46% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 50% { left: 50%; opacity: 0; transform: translate(-50%,-50%) scale(.5); } 100% { left: 50%; opacity: 0; } }
+@keyframes talent-out { 0%, 50% { left: 50%; opacity: 0; transform: translate(-50%,-50%) scale(.5); } 55% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 92% { opacity: 1; } 100% { left: 6%; opacity: 0; transform: translate(-50%,-50%) scale(1); } }
+.talent-in, .talent-out { transform: translate(-50%,-50%); animation: 10s linear infinite; }
+.talent-in { animation-name: talent-in; }
+.talent-out { animation-name: talent-out; }
+@media (prefers-reduced-motion: reduce) { .talent-in, .talent-out { animation: none; } .talent-out { left: 25%; } .talent-in { left: 75%; } }

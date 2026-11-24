@@ -1,15 +1,11 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import HomeHero from '../components/home/HomeHero';
-import LiveGigsMarquee from '../components/home/LiveGigsMarquee';
 import PopularServices from '../components/home/PopularServices';
 import HowFivesomWorks from '../components/home/HowFivesomWorks';
 import EscrowSection from '../components/home/EscrowSection';
 import FeaturedFreelancers from '../components/home/FeaturedFreelancers';
-import TrustSafetySection from '../components/home/TrustSafetySection';
 import HomeCta from '../components/home/HomeCta';
-import MarketplaceJourneys from '../components/home/MarketplaceJourneys';
-import InteractiveTutorial from '../components/InteractiveTutorial';
 import HomeFAQ from '../components/HomeFAQ';
 import { Footer } from '../components/Footer';
 import SEO from '../components/SEO';
@@ -17,7 +13,6 @@ import { organizationSchema, webSiteSchema, serviceSchema } from '@/lib/seo/sche
 import { faqPageSchema } from '@/lib/seo/homeFaq';
 import { useGigSearch } from '@/hooks/useGigSearch';
 import { useHomeStats } from '@/hooks/useHomeStats';
-import BuyerGuide from '@/components/home/BuyerGuide';
 import { MARKETPLACE_POSITIONING } from '@/content/marketplacePositioning';
 
 const Index = () => {
@@ -34,17 +29,12 @@ const Index = () => {
       />
       <Navbar />
       <main>
-        <HomeHero gigCount={activeGigs} freelancerCount={freelancers} />
-        <LiveGigsMarquee gigs={gigs} loading={loading} />
+        <HomeHero gigCount={activeGigs} freelancerCount={freelancers} gigs={gigs} />
         <div className="home-story">
           <PopularServices />
           <HowFivesomWorks />
-          <EscrowSection />
-          <BuyerGuide />
-          <MarketplaceJourneys />
           <FeaturedFreelancers gigs={gigs} loading={loading} />
-          <TrustSafetySection />
-          <InteractiveTutorial />
+          <EscrowSection />
           <HomeFAQ />
           <HomeCta />
         </div>
