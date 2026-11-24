@@ -1419,6 +1419,7 @@ export type Database = {
           payment_type: string
           project_type: string
           published_at: string | null
+          push_notified_at: string | null
           questions: string[]
           reminder_sent_at: string | null
           requirements: string
@@ -1457,6 +1458,7 @@ export type Database = {
           payment_type?: string
           project_type?: string
           published_at?: string | null
+          push_notified_at?: string | null
           questions?: string[]
           reminder_sent_at?: string | null
           requirements?: string
@@ -1495,6 +1497,7 @@ export type Database = {
           payment_type?: string
           project_type?: string
           published_at?: string | null
+          push_notified_at?: string | null
           questions?: string[]
           reminder_sent_at?: string | null
           requirements?: string
@@ -3038,6 +3041,7 @@ export type Database = {
           payment_type: string
           project_type: string
           published_at: string | null
+          push_notified_at: string | null
           questions: string[]
           reminder_sent_at: string | null
           requirements: string
@@ -3126,6 +3130,7 @@ export type Database = {
           payment_type: string
           project_type: string
           published_at: string | null
+          push_notified_at: string | null
           questions: string[]
           reminder_sent_at: string | null
           requirements: string
