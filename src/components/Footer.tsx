@@ -30,7 +30,7 @@ export const Footer: React.FC = () => {
                 className="object-contain transition-opacity duration-300"
               />
               <span className="text-xl font-bold text-foreground">
-                FIVESOM
+                {'\n'}
               </span>
             </div>
             <p className="text-sm text-muted-foreground mb-4">

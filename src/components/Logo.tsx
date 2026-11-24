@@ -21,7 +21,7 @@ export const Logo: React.FC<LogoProps> = ({ className = "", linkTo = "/" }) => {
         className={`h-[60px] w-auto object-contain transition-opacity duration-300 ${className}`}
       />
       <span className="text-2xl font-bold text-foreground tracking-tight">
-        Fivesom
+        {'\n'}
       </span>
     </div>
   );
