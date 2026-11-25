@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Loader2, Trash2 } from 'lucide-react';
+import { Loader2, Trash2, LayoutGrid, GraduationCap, ChevronDown, Users, Crown, BookOpen, FilePlus2, Layers, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { ACADEMY_PLANS, courseLimit, db, uploadAcademyFile, uploadPublicCourseMedia, videoDurationSeconds } from '@/lib/academy';
@@ -18,6 +18,8 @@ import { ACADEMY_PLANS, courseLimit, db, uploadAcademyFile, uploadPublicCourseMe
 const emptyCourse = { title: '', short_description: '', description: '', category: '', language: 'English', level: 'Beginner', price: '0', duration: '', objectives: '', requirements: '' };
 
 const InstructorStudio = () => {
+  const [view, setView] = useState('overview');
+  const [open, setOpen] = useState<Record<string, boolean>>({ courses: true });
   const { user } = useAuth();
   const [plan, setPlan] = useState<string | null | undefined>(undefined);
   const [courses, setCourses] = useState<any[]>([]);
@@ -45,7 +47,7 @@ const InstructorStudio = () => {
   };
   useEffect(() => { load(); }, [user]);
   const loadLessons = async (c: any) => {
-    setSelected(c);
+    setSelected(c); setView('content');
     const { data } = await db.from('academy_lessons').select('*').eq('course_id', c.id).order('position');
     setLessons(data ?? []);
   };
@@ -53,7 +55,6 @@ const InstructorStudio = () => {
   const createCourse = async (submitForReview: boolean) => {
     if (!user) return;
     if (!form.title.trim() || !form.short_description.trim() || !form.description.trim() || !form.category.trim()) { toast.error('Title, short description, description and category are required.'); return; }
-    if (intro && (await videoDurationSeconds(intro)) > 65) { toast.error('The course introduction video must be 1 minute or less.'); return; }
     try {
       setBusy('Saving course…');
       const thumbnail_url = thumb ? await uploadPublicCourseMedia(user.id, thumb) : null;
@@ -61,7 +62,7 @@ const InstructorStudio = () => {
       const { error } = await db.from('academy_courses').insert({ ...form, price: Number(form.price) || 0, instructor_id: user.id, thumbnail_url, intro_video_url, status: submitForReview ? 'pending_review' : 'draft' });
       if (error) throw new Error(error.message);
       toast.success(submitForReview ? 'Course submitted for Fivesom review.' : 'Course saved as draft.');
-      setForm(emptyCourse); setThumb(null); setIntro(null); load();
+      setForm(emptyCourse); setThumb(null); setIntro(null); setView('all'); load();
     } catch (e: any) { toast.error(e.message); } finally { setBusy(''); }
   };
 
@@ -92,35 +93,68 @@ const InstructorStudio = () => {
   };
   const removeLesson = async (id: string) => { await db.from('academy_lessons').delete().eq('id', id); loadLessons(selected); };
 
-  const shell = (c: React.ReactNode) => (<div className="min-h-screen bg-background"><SEO title="Instructor Studio — Fivesom Academy" description="Manage your Fivesom Academy courses." canonical="/academy/studio" /><Navbar /><main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">{c}</main><Footer /></div>);
+  const shell = (c: React.ReactNode) => (<div className="min-h-screen bg-background"><SEO title="Instructor Studio — Fivesom Academy" description="Manage your Fivesom Academy courses." canonical="/academy/studio" /><Navbar /><main className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-10">{c}</main><Footer /></div>);
   if (plan === undefined) return shell(<Loader2 className="h-6 w-6 animate-spin mx-auto" />);
   if (!plan) return shell(<Card><CardContent className="p-8 text-center space-y-3"><p>Instructor Studio opens after your instructor application is approved.</p><Button asChild><Link to="/academy/become-instructor">Become an Instructor</Link></Button></CardContent></Card>);
 
   const limit = courseLimit(plan);
   const used = courses.filter((c) => c.status !== 'rejected').length;
   const p = ACADEMY_PLANS[plan as keyof typeof ACADEMY_PLANS];
+  const totalStudents = Object.values(students).reduce((a, b) => a + b, 0);
+  const by = (s: string[]) => courses.filter((c) => s.includes(c.status));
   const txt = (k: string, label: string, area = false) => (<div className={`space-y-1.5 ${area ? 'sm:col-span-2' : ''}`}><Label>{label}</Label>{area ? <Textarea rows={3} value={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.value })} /> : <Input value={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.value })} />}</div>);
 
-  return shell(<>
-    <div className="flex flex-wrap items-end justify-between gap-3">
-      <div><h1 className="text-3xl font-bold">Instructor Studio</h1><p className="text-muted-foreground">{p.name} plan · {p.liveDays} live day(s)/week · {used}/{limit} courses used · {Object.values(students).reduce((a, b) => a + b, 0)} students</p></div>
-      <Button asChild variant="outline"><Link to="/academy">View Academy</Link></Button>
-    </div>
+  const nav: { key: string; title: string; icon: any; children?: { key: string; title: string; count?: number }[] }[] = [
+    { key: 'overview', title: 'Overview', icon: LayoutGrid },
+    { key: 'courses', title: 'Courses', icon: GraduationCap, children: [
+      { key: 'all', title: 'My Courses', count: courses.length }, { key: 'create', title: 'Add New Course' },
+      { key: 'draft', title: 'Drafts', count: by(['draft', 'changes_requested', 'unpublished']).length },
+      { key: 'pending', title: 'Pending Review', count: by(['pending_review']).length },
+      { key: 'published', title: 'Published', count: by(['published']).length },
+      { key: 'rejected', title: 'Rejected', count: by(['rejected']).length } ] },
+    { key: 'content', title: 'Course Content', icon: Layers },
+    { key: 'students', title: 'Students', icon: Users },
+    { key: 'plan', title: 'Subscription & Plan', icon: Crown },
+  ];
+  const titles: Record<string, string> = { overview: 'Overview', all: 'My Courses', create: 'Add New Course', draft: 'Draft Courses', pending: 'Pending Review', published: 'Published Courses', rejected: 'Rejected Courses', content: 'Course Content', students: 'Students', plan: 'Subscription & Plan' };
 
-    <section className="space-y-3"><h2 className="text-xl font-bold">My Courses</h2>
-      {courses.length === 0 && <p className="text-sm text-muted-foreground">No courses yet.</p>}
-      {courses.map((c) => (<Card key={c.id}><CardContent className="p-4 flex flex-wrap items-center gap-3">
-        <div className="flex-1 min-w-0"><p className="font-semibold truncate">{c.title}</p><p className="text-xs text-muted-foreground">{students[c.id] ?? 0} students{c.review_reason ? ` · Fivesom note: ${c.review_reason}` : ''}</p></div>
-        <Badge variant="secondary">{c.status.replace('_', ' ')}</Badge>
-        <Button size="sm" variant="outline" onClick={() => loadLessons(c)}>Lessons</Button>
-        {['draft', 'changes_requested', 'unpublished'].includes(c.status) && <Button size="sm" onClick={() => setStatus(c, 'pending_review')}>Submit for review</Button>}
-        {c.status === 'published' && <Button size="sm" variant="outline" asChild><Link to={`/academy/course/${c.id}`}>Open</Link></Button>}
-      </CardContent></Card>))}
-    </section>
+  const sidebar = (<aside className="lg:w-64 shrink-0 rounded-3xl border border-border bg-card p-3 lg:sticky lg:top-24 self-start">
+    <p className="px-3 pt-2 pb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Instructor Studio</p>
+    <nav className="space-y-1">{nav.map((n) => {
+      const active = view === n.key || n.children?.some((c) => c.key === view);
+      return (<div key={n.key}>
+        <button type="button" onClick={() => n.children ? setOpen({ ...open, [n.key]: !open[n.key] }) : setView(n.key)} className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${active && !n.children ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted'}`}>
+          <n.icon className="h-4 w-4" /><span className="flex-1 text-left">{n.title}</span>
+          {n.children && <ChevronDown className={`h-4 w-4 transition-transform ${open[n.key] ? 'rotate-180 text-primary' : ''}`} />}
+        </button>
+        {n.children && open[n.key] && (<div className="ml-5 mt-1 space-y-1 border-l-2 border-primary/30 pl-3 animate-fade-in">{n.children.map((c) => (
+          <button key={c.key} type="button" onClick={() => setView(c.key)} className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors ${view === c.key ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}>
+            <span>{c.title}</span>{c.count !== undefined && <span className="text-xs opacity-80">{c.count}</span>}</button>))}</div>)}
+      </div>);
+    })}</nav>
+  </aside>);
 
-    {selected && (<Card><CardContent className="p-5 space-y-4">
-      <h2 className="text-xl font-bold">Lessons — {selected.title}</h2>
-      <p className="text-sm text-muted-foreground">Organise your course into sections (chapters). Each section can hold many lessons.</p>
+  const stat = (label: string, value: React.ReactNode, Icon: any) => (<div className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5"><span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground"><Icon className="h-6 w-6" /></span><div><p className="text-sm text-muted-foreground">{label}</p><p className="text-2xl font-bold">{value}</p></div></div>);
+
+  const table = (list: any[]) => (<div className="overflow-hidden rounded-2xl border border-border bg-card">
+    {list.length === 0 ? <p className="p-8 text-center text-sm text-muted-foreground">No courses here yet.</p> : (<div className="overflow-x-auto"><table className="w-full text-sm">
+      <thead className="bg-muted/50 text-left text-muted-foreground"><tr><th className="p-4 w-10">#</th><th className="p-4">Title</th><th className="p-4">Category</th><th className="p-4">Students</th><th className="p-4">Status</th><th className="p-4 text-right">Actions</th></tr></thead>
+      <tbody>{list.map((c, i) => (<tr key={c.id} className="border-t border-border hover:bg-muted/30">
+        <td className="p-4 text-muted-foreground">{i + 1}</td>
+        <td className="p-4"><p className="font-semibold">{c.title}</p>{c.review_reason && <p className="text-xs text-muted-foreground">Fivesom note: {c.review_reason}</p>}</td>
+        <td className="p-4"><Badge variant="secondary">{c.category}</Badge></td>
+        <td className="p-4">{students[c.id] ?? 0}</td>
+        <td className="p-4 capitalize">{c.status.replace('_', ' ')}</td>
+        <td className="p-4"><div className="flex justify-end gap-2">
+          <Button size="sm" variant="outline" onClick={() => loadLessons(c)}><Layers className="h-4 w-4" /> Lessons</Button>
+          {['draft', 'changes_requested', 'unpublished'].includes(c.status) && <Button size="sm" onClick={() => setStatus(c, 'pending_review')}>Submit</Button>}
+          {c.status === 'published' && <Button size="sm" variant="ghost" asChild><Link to={`/academy/course/${c.id}`}><Eye className="h-4 w-4" /></Link></Button>}
+        </div></td></tr>))}</tbody></table></div>)}
+  </div>);
+
+  const content = selected ? (<div className="rounded-2xl border border-border bg-card p-5 space-y-4">
+      <h2 className="text-xl font-bold">{selected.title}</h2>
+      <p className="text-sm text-muted-foreground">Organise your course into sections. Each section can hold many lessons.</p>
       {Array.from(new Set(lessons.map((l) => l.module))).map((m, si) => (
         <div key={m} className="rounded-xl border border-border">
           <div className="flex items-center gap-3 border-b border-border p-3"><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-bold">{String(si + 1).padStart(2, '0')}</span><b className="flex-1">{m}</b><span className="text-xs text-muted-foreground">{lessons.filter((l) => l.module === m).length} lessons</span><Button size="sm" variant="ghost" onClick={() => setLf({ ...lf, module: m })}>+ Lesson</Button></div>
@@ -141,10 +175,10 @@ const InstructorStudio = () => {
         <div className="space-y-1.5 sm:col-span-2"><Label>Text lesson</Label><Textarea rows={3} value={lf.text} onChange={(e) => setLf({ ...lf, text: e.target.value })} /></div>
       </div>
       <Button disabled={!!busy} onClick={addLesson}>{busy || 'Add lesson'}</Button>
-    </CardContent></Card>)}
+    </div>) : (<div className="rounded-2xl border border-border bg-card p-8 text-center space-y-3"><BookOpen className="mx-auto h-8 w-8 text-primary" /><p className="text-muted-foreground">Choose a course to add sections and lessons.</p>
+      <div className="flex flex-wrap justify-center gap-2">{courses.map((c) => <Button key={c.id} size="sm" variant="outline" onClick={() => loadLessons(c)}>{c.title}</Button>)}</div></div>);
 
-    {used < limit ? (<Card><CardContent className="p-5 space-y-4">
-      <h2 className="text-xl font-bold">Create Course</h2>
+  const create = used < limit ? (<div className="rounded-2xl border border-border bg-card p-5 space-y-4">
       <div className="grid sm:grid-cols-2 gap-4">
         {txt('title', 'Course title *')}{txt('category', 'Category *')}
         {txt('short_description', 'Short description *', true)}{txt('description', 'Full course description *', true)}
@@ -154,10 +188,30 @@ const InstructorStudio = () => {
         {txt('duration', 'Estimated duration')}
         {txt('objectives', 'What students will learn', true)}{txt('requirements', 'Requirements', true)}
         <div className="space-y-1.5"><Label>Thumbnail</Label><Input type="file" accept="image/*" onChange={(e) => setThumb(e.target.files?.[0] ?? null)} /></div>
-        <div className="space-y-1.5"><Label>Intro video (max 1 minute)</Label><Input type="file" accept="video/*" onChange={(e) => setIntro(e.target.files?.[0] ?? null)} /></div>
+        <div className="space-y-1.5"><Label>Intro video</Label><Input type="file" accept="video/*" onChange={(e) => setIntro(e.target.files?.[0] ?? null)} /></div>
       </div>
       <div className="flex flex-wrap gap-3"><Button variant="outline" disabled={!!busy} onClick={() => createCourse(false)}>Save draft</Button><Button disabled={!!busy} onClick={() => createCourse(true)}>{busy || 'Submit for approval'}</Button></div>
-    </CardContent></Card>) : <p className="text-sm text-muted-foreground">You have used all {limit} course slot(s) on your {p.name} plan.</p>}
-  </>);
+    </div>) : <p className="rounded-2xl border border-border bg-card p-6 text-sm text-muted-foreground">You have used all {limit} course slot(s) on your {p.name} plan.</p>;
+
+  const body: Record<string, React.ReactNode> = {
+    overview: (<div className="space-y-6"><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {stat('Active courses', by(['published']).length, GraduationCap)}{stat('Pending review', by(['pending_review']).length, Loader2)}{stat('Drafts', by(['draft', 'changes_requested', 'unpublished']).length, FilePlus2)}{stat('Students', totalStudents, Users)}</div>
+      <div className="flex items-center justify-between"><h2 className="text-xl font-bold">Course List</h2><Button onClick={() => setView('create')}><FilePlus2 className="h-4 w-4" /> New course</Button></div>{table(courses)}</div>),
+    all: table(courses), draft: table(by(['draft', 'changes_requested', 'unpublished'])), pending: table(by(['pending_review'])), published: table(by(['published'])), rejected: table(by(['rejected'])),
+    create, content,
+    students: (<div className="overflow-hidden rounded-2xl border border-border bg-card"><table className="w-full text-sm"><thead className="bg-muted/50 text-left text-muted-foreground"><tr><th className="p-4">Course</th><th className="p-4">Enrolled students</th></tr></thead><tbody>{courses.map((c) => <tr key={c.id} className="border-t border-border"><td className="p-4 font-medium">{c.title}</td><td className="p-4">{students[c.id] ?? 0}</td></tr>)}</tbody></table>{courses.length === 0 && <p className="p-8 text-center text-sm text-muted-foreground">No students yet.</p>}</div>),
+    plan: (<div className="grid gap-4 sm:grid-cols-3">{stat('Current plan', p.name, Crown)}{stat('Courses used', `${used}/${limit}`, GraduationCap)}{stat('Live days / week', p.liveDays, Users)}</div>),
+  };
+
+  return shell(<div className="flex flex-col gap-6 lg:flex-row">
+    {sidebar}
+    <section className="flex-1 min-w-0 space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-border bg-card px-6 py-5">
+        <div><h1 className="text-2xl font-bold">{titles[view]}</h1><p className="text-sm text-muted-foreground">{p.name} plan · {used}/{limit} courses · {totalStudents} students</p></div>
+        <Button asChild variant="outline"><Link to="/academy">View Academy</Link></Button>
+      </div>
+      {body[view]}
+    </section>
+  </div>);
 };
 export default InstructorStudio;
