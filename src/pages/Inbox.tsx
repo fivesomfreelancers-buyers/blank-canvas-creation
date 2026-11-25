@@ -51,7 +51,7 @@ const Inbox: React.FC = () => {
         {chat.loading ? (
           <div className="text-center py-12 text-muted-foreground">Loading messages...</div>
         ) : (
-          <MessagesLayout chat={chat} heightClass="h-[640px]" />
+          <MessagesLayout chat={chat} />
         )}
       </div>
     </div>

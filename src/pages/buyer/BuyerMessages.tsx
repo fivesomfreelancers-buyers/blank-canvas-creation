@@ -42,7 +42,7 @@ const BuyerMessages = () => {
         {chat.loading ? (
           <div className="text-center py-12 text-muted-foreground">Loading messages...</div>
         ) : (
-          <MessagesLayout chat={chat} heightClass="h-[700px]" />
+          <MessagesLayout chat={chat} />
         )}
       </div>
     </div>

@@ -16,7 +16,7 @@ interface MessagesLayoutProps {
  * - Mobile: WhatsApp-style — the list fills the screen, and selecting a
  *   conversation swaps to a full-width chat view with a back button.
  */
-const MessagesLayout: React.FC<MessagesLayoutProps> = ({ chat, heightClass = 'h-[640px]' }) => {
+const MessagesLayout: React.FC<MessagesLayoutProps> = ({ chat, heightClass = '' }) => {
   const isMobile = useIsMobile();
   const showChat = !!chat.selectedConversationId;
 
@@ -57,7 +57,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({ chat, heightClass = 'h-
   }
 
   return (
-    <div className={`grid grid-cols-1 lg:grid-cols-[340px_1fr] overflow-hidden rounded-2xl border bg-card shadow-sm ${heightClass}`}>
+    <div className={`grid grid-cols-1 lg:grid-cols-[360px_1fr] xl:grid-cols-[400px_1fr] overflow-hidden rounded-2xl border bg-card shadow-sm h-[calc(100dvh-10rem)] min-h-[560px] [&>*]:min-h-0 ${heightClass}`}>
       <ConversationList
         conversations={chat.conversations}
         selectedConversationId={chat.selectedConversationId}
