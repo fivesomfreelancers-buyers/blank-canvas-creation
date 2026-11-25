@@ -45,6 +45,17 @@ const Explore = () => {
     pageSize: gigsPerPage,
   });
 
+  // Follow menu links that change the URL while already on Explore.
+  const urlCategory = searchParams.get('category') || 'all';
+  const urlSubcategory = searchParams.get('subcategory') || 'all';
+  const urlQuery = searchParams.get('q') || '';
+  useEffect(() => {
+    setSelectedCategory(urlCategory);
+    setSelectedSubcategory(urlSubcategory);
+    setSearchQuery((q) => (q.trim() === urlQuery ? q : urlQuery));
+    setCurrentPage(1);
+  }, [urlCategory, urlSubcategory, urlQuery]);
+
   // Keep the URL in sync with the active search + filters (shareable links)
   useEffect(() => {
     const params: Record<string, string> = {};

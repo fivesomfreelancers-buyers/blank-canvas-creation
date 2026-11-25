@@ -22,6 +22,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { Logo } from './Logo';
+import { ExploreMegaMenu, ExploreMobileMenu } from './nav/ExploreMegaMenu';
 import { useAuth } from '@/hooks/useAuth';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useNewOrders } from '@/hooks/useNewOrders';
@@ -142,7 +143,7 @@ const Navbar = () => {
           
           <div className="hidden md:flex items-center gap-7 text-sm font-medium">
             <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">Home</Link>
-            <Link to="/explore" className="text-muted-foreground hover:text-foreground transition-colors">Explore</Link>
+            <ExploreMegaMenu />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -334,7 +335,7 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 space-y-4">
             <Link to="/" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            <Link to="/explore" className="block text-foreground hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>Explore</Link>
+            <ExploreMobileMenu onNavigate={() => setIsMenuOpen(false)} />
             <div className="border-y border-border py-1">
               <Button
                 variant="ghost"
