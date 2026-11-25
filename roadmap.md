@@ -1,5 +1,11 @@
 # Mobile-first FIVESOM redesign
 
+## Academy live classroom
+- [ ] Add internal classroom entry, device preview and responsive teaching layout.
+- [ ] Connect secure multiparty video — requires LiveKit URL, API key and API secret.
+- [ ] Add student live schedules/My Learning and secure session lifecycle, scheduling limits and attendance.
+- [ ] Verify authenticated instructor/student live classroom end-to-end.
+
 ## Homepage appearance follow-up
 - [x] Remove the marked three freelancer discovery cards and replace client cards with a one-at-a-time glass showcase; hover, keyboard and touch selection verified at 320/390/834px plus desktop.
 - [x] Rebuild the video hero with large search, quick/trending tabs and working service suggestions.
