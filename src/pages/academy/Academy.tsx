@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { GraduationCap, PlayCircle, Check } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import LiveSchedule from '@/components/academy/LiveSchedule';
 import { ACADEMY_PLANS, db } from '@/lib/academy';
 
 const Academy = () => {
@@ -60,6 +61,7 @@ const Academy = () => {
           </section>
         )}
 
+        <LiveSchedule />
         <section id="courses">
           <h2 className="text-2xl font-bold mb-4">Courses</h2>
           {courses.length === 0 ? (

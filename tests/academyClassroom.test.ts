@@ -1,0 +1,12 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {mayEnterClassroom,joinError,RECORDING_ENABLED} from '../supabase/functions/academy-classroom/rules';
+import {ACADEMY_PLANS} from '../src/lib/academy';
+test('only assigned instructor or enrolled student can enter',()=>{assert.equal(mayEnterClassroom(false,false,true,false),false);assert.equal(mayEnterClassroom(false,true,true,false),true);assert.equal(mayEnterClassroom(true,false,false,false),true);});
+test('students cannot enter unpublished courses',()=>assert.equal(mayEnterClassroom(false,true,false,false),false));
+test('removed students cannot rejoin',()=>assert.equal(mayEnterClassroom(false,true,true,true),false));
+test('students must wait for instructor to start',()=>{assert.equal(joinError('scheduled',false),'Your instructor has not started this class yet.');assert.equal(joinError('scheduled',true),null);assert.equal(joinError('live',false),null);});
+test('ended or cancelled classes cannot be restarted',()=>{assert.equal(joinError('ended',true),'This live class has ended or was cancelled.');assert.equal(joinError('cancelled',false),'This live class has ended or was cancelled.');});
+test('live media recording is disabled',()=>assert.equal(RECORDING_ENABLED,false));
+test('Golden allows one live session weekly',()=>assert.equal(ACADEMY_PLANS.golden.liveDays,1));
+test('Platinum allows three live teaching days weekly',()=>assert.equal(ACADEMY_PLANS.platinum.liveDays,3));

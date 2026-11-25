@@ -43,7 +43,7 @@ const InstructorStudio = () => {
   useEffect(() => { loadLives(); }, [user]);
   const addLive = async () => {
     if (!user || !lvf.course_id || !lvf.title.trim() || !lvf.starts_at) { toast.error('Course, title and start time are required.'); return; }
-    const { error } = await db.from('academy_live_sessions').insert({ course_id: lvf.course_id, instructor_id: user.id, title: lvf.title, starts_at: new Date(lvf.starts_at).toISOString(), duration_minutes: parseInt(lvf.duration) || 60, meeting_url: lvf.meeting_url || null, notes: lvf.notes || null });
+    const { error } = await db.from('academy_live_sessions').insert({ course_id: lvf.course_id, instructor_id: user.id, title: lvf.title, starts_at: new Date(lvf.starts_at).toISOString(), duration_minutes: parseInt(lvf.duration) || 60, notes: lvf.notes || null });
     if (error) toast.error(error.message); else { toast.success('Live class scheduled'); setLvf({ ...lvf, title: '', starts_at: '', meeting_url: '', notes: '' }); loadLives(); }
   };
   const addPost = async () => {
@@ -224,14 +224,15 @@ const InstructorStudio = () => {
       <div className="space-y-1.5"><Label>Title *</Label><Input value={lvf.title} onChange={(e) => setLvf({ ...lvf, title: e.target.value })} /></div>
       <div className="space-y-1.5"><Label>Date & time *</Label><Input type="datetime-local" value={lvf.starts_at} onChange={(e) => setLvf({ ...lvf, starts_at: e.target.value })} /></div>
       <div className="space-y-1.5"><Label>Duration (minutes)</Label><Input type="number" value={lvf.duration} onChange={(e) => setLvf({ ...lvf, duration: e.target.value })} /></div>
-      <div className="space-y-1.5 sm:col-span-2"><Label>Meeting link (Zoom, Google Meet…)</Label><Input value={lvf.meeting_url} onChange={(e) => setLvf({ ...lvf, meeting_url: e.target.value })} /></div>
+      
       <div className="space-y-1.5 sm:col-span-2"><Label>Notes for students</Label><Textarea rows={2} value={lvf.notes} onChange={(e) => setLvf({ ...lvf, notes: e.target.value })} /></div></div>
       <p className="text-xs text-muted-foreground">{p?.name} plan: {p?.liveDays} live day(s) per week.</p><Button onClick={addLive}>Schedule class</Button></div>
       <div className="overflow-hidden rounded-2xl border border-border bg-card">{lives.length === 0 ? <p className="p-8 text-center text-sm text-muted-foreground">No live classes scheduled.</p> : lives.map((l) => (<div key={l.id} className="flex flex-wrap items-center gap-3 border-b border-border p-4 last:border-0">
         <div className="flex-1 min-w-0"><p className="font-semibold">{l.title}</p><p className="text-xs text-muted-foreground">{courses.find((c) => c.id === l.course_id)?.title} · {new Date(l.starts_at).toLocaleString()} · {l.duration_minutes} min</p></div>
-        {new Date(l.starts_at) > new Date() ? <Badge>Upcoming</Badge> : <Badge variant="secondary">Past</Badge>}
-        {l.meeting_url && <Button size="sm" asChild><a href={l.meeting_url} target="_blank" rel="noreferrer">Go live</a></Button>}
-        <Button size="sm" variant="ghost" aria-label="Delete" onClick={async () => { await db.from('academy_live_sessions').delete().eq('id', l.id); loadLives(); }}><Trash2 className="h-4 w-4" /></Button></div>))}</div></div>),
+        <Badge variant={l.status === 'live' ? 'default' : 'secondary'}>{l.status === 'live' ? 'Live now' : l.status === 'ended' ? 'Ended' : l.status === 'cancelled' ? 'Cancelled' : 'Upcoming'}</Badge>
+        {!['ended','cancelled'].includes(l.status) && <Button size="sm" asChild><Link to={`/academy/classroom/${l.id}`}>{l.status === 'live' ? 'Open classroom' : 'Start live class'}</Link></Button>}
+        {l.status === 'scheduled' && <Button size="sm" variant="outline" onClick={async()=>{const {error}=await db.from('academy_live_sessions').update({status:'cancelled'}).eq('id',l.id); if(error) toast.error(error.message); else loadLives();}}>Cancel</Button>}
+        </div>))}</div></div>),
     community: (<div className="rounded-2xl border border-border bg-card p-5 space-y-4">
       <div className="flex flex-wrap gap-2">{courses.length === 0 ? <p className="text-sm text-muted-foreground">Create a course first.</p> : courses.map((c) => <Button key={c.id} size="sm" variant={cc === c.id ? 'default' : 'outline'} onClick={() => loadPosts(c.id)}>{c.title}</Button>)}</div>
       {cc && (<><div className="flex gap-2"><Textarea rows={2} placeholder="Post an announcement or answer students…" value={post} onChange={(e) => setPost(e.target.value)} /><Button onClick={addPost}>Post</Button></div>

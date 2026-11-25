@@ -730,3 +730,23 @@
 .rank-card-photo { display:flex; align-items:center; justify-content:center; align-self:center; width:9rem; height:9rem; flex:none; aspect-ratio:1/1; border-radius:9999px; border:3px solid hsl(0 0% 100% / .35); overflow:hidden; background: hsl(0 0% 100% / .15); }
 @media (max-width: 640px) { .rank-columns { gap:.75rem; height: 32rem; } .rank-track { gap:.75rem; } .rank-card { min-height: 15rem; padding: .9rem; } .rank-card-photo { width:6.5rem; height:6.5rem; } }
 @media (prefers-reduced-motion: reduce) { .rank-track { animation: none; } .rank-columns { overflow-y:auto; } }
+
+/* Private, live-only classroom surfaces. */
+.academy-classroom {
+ --background: 220 10% 8%; --foreground: 210 20% 96%;
+ --card: 220 10% 12%; --card-foreground: 210 20% 96%;
+ --muted: 220 10% 16%; --muted-foreground: 215 12% 72%;
+ --border: 220 10% 22%; --input: 220 10% 24%;
+ --lk-bg: hsl(var(--background)); --lk-bg2: hsl(var(--card));
+ --lk-fg: hsl(var(--foreground)); --lk-accent-bg: hsl(var(--primary));
+ --lk-control-bg: hsl(var(--muted)); --lk-border-color: hsl(var(--border));
+}
+.classroom-live-grid { height: calc(100dvh - 145px); min-height: 540px; display: grid; min-width: 0; }
+.classroom-with-host { grid-template-columns: minmax(0, 1fr) 250px; }
+.classroom-live-grid .lk-video-conference { min-width: 0; height: 100%; }
+@media (max-width: 900px) {
+ .classroom-with-host { grid-template-columns: minmax(0, 1fr); height: auto; }
+ .classroom-live-grid .lk-video-conference { height: calc(100dvh - 190px); min-height: 420px; }
+ .classroom-host { border-left: 0; border-top: 1px solid hsl(var(--border)); max-height: 300px; }
+ .academy-classroom .lk-control-bar { flex-wrap: wrap; height: auto; gap: 6px; }
+}

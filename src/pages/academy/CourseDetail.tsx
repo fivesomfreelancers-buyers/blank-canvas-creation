@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Lock, PlayCircle, CheckCircle2, FileText, Plus, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
+import LiveSchedule from '@/components/academy/LiveSchedule';
 import { db, signedUrl } from '@/lib/academy';
 
 const CourseDetail = () => {
@@ -80,6 +81,7 @@ const CourseDetail = () => {
           ) : course.intro_video_url ? (
             <video src={course.intro_video_url} controls className="w-full rounded-xl bg-muted" poster={course.thumbnail_url ?? undefined} />
           ) : course.thumbnail_url && <img src={course.thumbnail_url} alt="" className="w-full rounded-xl" />}
+          {(isOwner || enrollment) && <LiveSchedule courseId={course.id} />}
           <section><h2 className="text-xl font-bold mb-2">About this course</h2><p className="whitespace-pre-wrap text-sm">{course.description}</p></section>
           {course.objectives && <section><h2 className="text-xl font-bold mb-2">What you will learn</h2><p className="whitespace-pre-wrap text-sm">{course.objectives}</p></section>}
           {course.requirements && <section><h2 className="text-xl font-bold mb-2">Requirements</h2><p className="whitespace-pre-wrap text-sm">{course.requirements}</p></section>}

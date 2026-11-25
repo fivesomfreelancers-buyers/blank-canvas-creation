@@ -19,6 +19,7 @@ const CourseDetail = lazy(() => import('./pages/academy/CourseDetail'));
 const BecomeInstructor = lazy(() => import('./pages/academy/BecomeInstructor'));
 const AcademyPricing = lazy(() => import('./pages/academy/AcademyPricing'));
 const InstructorStudio = lazy(() => import('./pages/academy/InstructorStudio'));
+const LiveClassroom = lazy(() => import('./pages/academy/LiveClassroom'));
 const JobDetails = lazy(() => import('./pages/jobs/JobDetails'));
 const PublicJobs = lazy(() => import('./pages/jobs/PublicJobs'));
 const ApplyJob = lazy(() => import('./pages/jobs/ApplyJob'));
@@ -134,6 +135,7 @@ const App = () => (
               <Route path="/academy/course/:courseId" element={<CourseDetail />} />
               <Route path="/academy/become-instructor" element={<BecomeInstructor />} />
               <Route path="/academy/studio" element={<InstructorStudio />} />
+              <Route path="/academy/classroom/:sessionId" element={<LiveClassroom />} />
               <Route path="/jobs" element={<PublicJobs />} />
               <Route path="/jobs/:jobId" element={<JobDetails />} />
               <Route path="/jobs/:jobId/apply" element={<ProtectedRoute require="freelancer"><ApplyJob /></ProtectedRoute>} />
