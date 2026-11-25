@@ -275,6 +275,7 @@
     .client-showcase-panels { flex-direction: column; gap: 1rem; }
     .client-project-panel { flex: none; min-height: auto; padding: 1.25rem; transition: background-color 300ms ease; }
     .client-project-panel[data-active='true'] { flex: none; }
+    .client-project-details { min-height: 36rem; }
   }
   @media (prefers-reduced-motion: reduce) {
     .client-project-panel { transition: none; }

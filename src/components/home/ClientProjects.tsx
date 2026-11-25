@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowUpRight, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import lifeWolf from '@/assets/clients/lifewolf-cropped.png.asset.json';
@@ -10,10 +10,16 @@ const clients = [
 ];
 export default function ClientProjects() {
   const [active, setActive] = useState('LifeWolf');
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const id = window.setInterval(() => setActive(cur => clients[(clients.findIndex(c => c.name === cur) + 1) % clients.length].name), 4000);
+    return () => window.clearInterval(id);
+  }, [paused, active]);
   return <section className="client-showcase px-4 py-16 sm:px-6 lg:px-8" aria-labelledby="clients-heading">
     <div className="mx-auto max-w-7xl">
       <div className="mb-9 text-center"><p className="mb-3 text-xs font-semibold text-primary">CLIENT PROJECTS</p><h2 id="clients-heading" className="text-3xl font-semibold leading-tight text-foreground sm:text-4xl">Trusted by Businesses We've Helped Grow</h2><p className="mt-4 text-muted-foreground">Real businesses. Real projects. Real results.</p></div>
-      <div className="client-showcase-panels">{clients.map(client => {
+      <div className="client-showcase-panels" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={() => setPaused(false)}>{clients.map(client => {
         const selected = active === client.name;
         return <article key={client.name} data-active={selected} className="client-project-panel" onMouseEnter={() => setActive(client.name)} onFocusCapture={() => setActive(client.name)}>
           <Button variant="ghost" aria-expanded={selected} aria-controls={`client-${client.name}`} onClick={() => setActive(client.name)} className="client-project-selector h-auto w-full items-start justify-between gap-4 whitespace-normal rounded-none p-0 text-left text-foreground hover:bg-transparent hover:text-foreground">

@@ -138,8 +138,9 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-border bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/75">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Logo />
+        <div className="relative flex items-center justify-between h-16">
+          {!user && <Button asChild size="sm" className="md:hidden"><Link to="/register">Join</Link></Button>}
+          <div className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"><Logo /></div>
           
           <div className="hidden md:flex items-center gap-7 text-sm font-medium">
             <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">Home</Link>
@@ -318,7 +319,7 @@ const Navbar = () => {
             )}
           </div>
 
-          <div className="md:hidden flex items-center gap-1">
+          <div className="md:hidden ml-auto flex items-center gap-1">
             {user && <NotificationBell />}
             <Button
               variant="ghost"
