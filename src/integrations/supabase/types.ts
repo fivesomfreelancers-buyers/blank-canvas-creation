@@ -258,34 +258,46 @@ export type Database = {
           course_id: string
           created_at: string
           duration_minutes: number
+          ended_at: string | null
           id: string
           instructor_id: string
           meeting_url: string | null
           notes: string | null
+          started_at: string | null
           starts_at: string
+          status: string
           title: string
+          updated_at: string
         }
         Insert: {
           course_id: string
           created_at?: string
           duration_minutes?: number
+          ended_at?: string | null
           id?: string
           instructor_id: string
           meeting_url?: string | null
           notes?: string | null
+          started_at?: string | null
           starts_at: string
+          status?: string
           title: string
+          updated_at?: string
         }
         Update: {
           course_id?: string
           created_at?: string
           duration_minutes?: number
+          ended_at?: string | null
           id?: string
           instructor_id?: string
           meeting_url?: string | null
           notes?: string | null
+          started_at?: string | null
           starts_at?: string
+          status?: string
           title?: string
+          updated_at?: string
         }
         Relationships: [
           {
