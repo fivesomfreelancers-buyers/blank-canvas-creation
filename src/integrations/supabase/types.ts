@@ -253,8 +253,55 @@ export type Database = {
           },
         ]
       }
+      academy_live_attendance: {
+        Row: {
+          created_at: string
+          id: string
+          joined_at: string
+          last_joined_at: string
+          left_at: string | null
+          removed: boolean
+          session_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          joined_at?: string
+          last_joined_at?: string
+          left_at?: string | null
+          removed?: boolean
+          session_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          joined_at?: string
+          last_joined_at?: string
+          left_at?: string | null
+          removed?: boolean
+          session_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academy_live_attendance_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "academy_live_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       academy_live_sessions: {
         Row: {
+          allow_camera: boolean
+          allow_microphone: boolean
+          chat_enabled: boolean
           course_id: string
           created_at: string
           duration_minutes: number
@@ -270,6 +317,9 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          allow_camera?: boolean
+          allow_microphone?: boolean
+          chat_enabled?: boolean
           course_id: string
           created_at?: string
           duration_minutes?: number
@@ -285,6 +335,9 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          allow_camera?: boolean
+          allow_microphone?: boolean
+          chat_enabled?: boolean
           course_id?: string
           created_at?: string
           duration_minutes?: number
