@@ -30,7 +30,7 @@ const BecomeInstructor = () => {
   const [certs, setCerts] = useState<File[]>([]);
   const [video, setVideo] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
-  const [plan, setPlan] = useState<AcademyPlan | null>(null);
+  const [plan, setPlan] = useState<AcademyPlan | null>('golden');
   const [agree, setAgree] = useState({ terms: false, copyright: false, accurate: false });
   const [busy, setBusy] = useState('');
 
@@ -48,7 +48,7 @@ const BecomeInstructor = () => {
   const pickVideo = async (file: File | null) => {
     if (!file) return;
     const secs = await videoDurationSeconds(file);
-    if (secs && secs < MIN_VIDEO_SECONDS) { toast.error(`Your video is ${Math.round(secs / 60)} minutes. The introduction video must be about 30 minutes.`); return; }
+    if (secs && secs < MIN_VIDEO_SECONDS) toast.message(`Your video is ${Math.round(secs / 60)} minutes. About 30 minutes is recommended, but you can still submit.`);
     setVideo(file); setVideoPreview(URL.createObjectURL(file));
   };
 
@@ -56,7 +56,7 @@ const BecomeInstructor = () => {
   const submit = async () => {
     if (!user) return;
     const missing = required.filter((k) => !(f[k] ?? '').trim());
-    if (missing.length) { toast.error('Please fill in all required fields (marked *).'); return; }
+    if (missing.length) { toast.error(`Please fill in: ${missing.map((k) => k.replace(/_/g, ' ')).join(', ')}`); return; }
     if (!levels.length) { toast.error('Choose at least one student level.'); return; }
     if (!idDoc) { toast.error('Upload your government-issued ID.'); return; }
     if (!video) { toast.error('Upload your 30-minute introduction video.'); return; }
@@ -86,7 +86,7 @@ const BecomeInstructor = () => {
       const { data } = await db.from('instructor_applications').select('*').eq('user_id', user.id).maybeSingle();
       if (data?.status !== 'pending_review') throw new Error('Application could not be confirmed. Please try again.');
       setExisting(data);
-      toast.success('Your instructor application has been submitted successfully.');
+      toast.success('Your instructor application has been submitted successfully. No payment is needed now.');
     } catch (e: any) { toast.error(e.message || 'Submission failed'); }
     finally { setBusy(''); }
   };
