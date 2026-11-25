@@ -52,33 +52,25 @@ const BecomeInstructor = () => {
     setVideo(file); setVideoPreview(URL.createObjectURL(file));
   };
 
-  const required = ['legal_name', 'display_name', 'phone', 'country', 'city', 'languages', 'subjects', 'expertise', 'years', 'background', 'why', 'bio'];
   const submit = async () => {
     if (!user) return;
-    const missing = required.filter((k) => !(f[k] ?? '').trim());
-    if (missing.length) { toast.error(`Please fill in: ${missing.map((k) => k.replace(/_/g, ' ')).join(', ')}`); return; }
-    if (!levels.length) { toast.error('Choose at least one student level.'); return; }
-    if (!idDoc) { toast.error('Upload your government-issued ID.'); return; }
-    if (!video) { toast.error('Upload your 30-minute introduction video.'); return; }
-    if (!plan) { toast.error('Select the Golden or Platinum plan.'); return; }
-    if (!agree.terms || !agree.copyright || !agree.accurate) { toast.error('Please accept all agreements.'); return; }
     try {
       setBusy('Uploading ID…');
-      const id_document_path = await uploadAcademyFile('academy-applications', user.id, idDoc, 'id');
+      const id_document_path = idDoc ? await uploadAcademyFile('academy-applications', user.id, idDoc, 'id') : '';
       const selfie_path = selfie ? await uploadAcademyFile('academy-applications', user.id, selfie, 'id') : null;
       setBusy('Uploading certificates…');
       const certificate_paths = [];
       for (const c of certs) certificate_paths.push(await uploadAcademyFile('academy-applications', user.id, c, 'certificates'));
       setBusy('Uploading introduction video… (large files take time)');
-      const intro_video_path = await uploadAcademyFile('academy-applications', user.id, video, 'video');
+      const intro_video_path = video ? await uploadAcademyFile('academy-applications', user.id, video, 'video') : '';
       setBusy('Submitting…');
       const row = {
-        user_id: user.id, legal_name: f.legal_name, display_name: f.display_name, phone: f.phone, country: f.country, city: f.city,
-        date_of_birth: f.dob || null, teaching_languages: f.languages.split(',').map((s) => s.trim()).filter(Boolean),
-        subjects: f.subjects, expertise: f.expertise, years_experience: parseInt(f.years) || 0, background: f.background,
-        student_levels: levels, qualifications: f.qualifications || null, taught_before: taught, why_qualified: f.why, bio: f.bio,
+        user_id: user.id, legal_name: f.legal_name ?? '', display_name: f.display_name ?? '', phone: f.phone ?? '', country: f.country ?? '', city: f.city ?? '',
+        date_of_birth: f.dob || null, teaching_languages: (f.languages ?? '').split(',').map((s) => s.trim()).filter(Boolean),
+        subjects: f.subjects ?? '', expertise: f.expertise ?? '', years_experience: parseInt(f.years) || 0, background: f.background ?? '',
+        student_levels: levels, qualifications: f.qualifications || null, taught_before: taught, why_qualified: f.why ?? '', bio: f.bio ?? '',
         links: f.links || null, availability_days: days, availability_times: f.times || null, time_zone: f.tz || null,
-        id_document_path, selfie_path, certificate_paths, intro_video_path, plan, status: 'pending_review',
+        id_document_path, selfie_path, certificate_paths, intro_video_path, plan: plan ?? 'golden', status: 'pending_review',
       };
       const q = existing ? db.from('instructor_applications').update(row).eq('id', existing.id) : db.from('instructor_applications').insert(row);
       const { error } = await q;
