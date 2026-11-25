@@ -666,3 +666,41 @@
 .talent-in { animation-name: talent-in; }
 .talent-out { animation-name: talent-out; }
 @media (prefers-reduced-motion: reduce) { .talent-in, .talent-out { animation: none; } .talent-out { left: 25%; } .talent-in { left: 75%; } }
+
+/* Top 10 freelancer ranking (homepage) */
+.rank-panel { background: hsl(var(--hero-background, 220 20% 8%)); color: hsl(0 0% 100%); border-radius: 2rem; padding: clamp(1.5rem, 4vw, 4rem); }
+.rank-kicker { display:inline-block; font-size:.8rem; letter-spacing:.12em; text-transform:uppercase; color: hsl(205 98% 70%); font-weight:600; }
+.rank-title { font-size: clamp(2.4rem, 5vw, 4.2rem); line-height:1.02; font-weight:800; letter-spacing:-.03em; margin:.75rem 0 1.25rem; }
+.rank-copy { color: hsl(0 0% 100% / .65); font-size: clamp(1rem,1.4vw,1.25rem); max-width: 34rem; }
+.rank-cta { display:inline-flex; align-items:center; gap:.5rem; margin-top:2rem; padding:.9rem 1.6rem; border-radius:9999px; background:hsl(var(--primary)); color:hsl(var(--primary-foreground)); font-weight:600; transition: transform .2s, box-shadow .2s; }
+.rank-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 30px -10px hsl(var(--primary) / .7); }
+.rank-trust { display:flex; align-items:center; gap:.5rem; margin-top:1.25rem; font-size:.875rem; color: hsl(0 0% 100% / .6); }
+.rank-pill { display:flex; align-items:center; gap:1rem; padding:.6rem 1.4rem .6rem .6rem; border-radius:9999px; color:hsl(0 0% 100%); box-shadow: 0 10px 30px -12px hsl(0 0% 0% / .6); transition: transform .3s, box-shadow .3s; }
+.rank-pill:hover, .rank-pill:focus-visible { transform: scale(1.04); box-shadow: 0 16px 40px -10px hsl(0 0% 100% / .25); }
+.rank-pill-top { padding-block: .8rem; }
+.rank-more { display:block; max-height:0; overflow:hidden; opacity:0; font-size:.72rem; transition: max-height .3s, opacity .3s; }
+.rank-pill:hover .rank-more, .rank-pill:focus-visible .rank-more { max-height:1.5rem; opacity:.9; }
+.rank-avatar { flex-shrink:0; width:4.5rem; height:4.5rem; border-radius:9999px; display:flex; align-items:center; justify-content:center; background: hsl(0 0% 100% / .2); border:3px solid hsl(0 0% 100% / .35); }
+.rank-medal { display:flex; align-items:center; justify-content:center; width:1.9rem; height:1.9rem; border-radius:9999px; margin-bottom:.15rem; color: hsl(0 0% 10%); }
+.rank-avatar.rank-award-gold { border-color: hsl(45 95% 55%); box-shadow: 0 0 22px hsl(45 95% 55% / .75); }
+.rank-medal.rank-award-gold { background: linear-gradient(135deg, hsl(48 100% 70%), hsl(38 90% 45%)); }
+.rank-avatar.rank-award-silver { border-color: hsl(210 10% 82%); box-shadow: 0 0 16px hsl(210 10% 85% / .6); }
+.rank-medal.rank-award-silver { background: linear-gradient(135deg, hsl(0 0% 96%), hsl(210 8% 62%)); }
+.rank-avatar.rank-award-bronze { border-color: hsl(28 60% 50%); box-shadow: 0 0 14px hsl(28 60% 50% / .55); }
+.rank-medal.rank-award-bronze { background: linear-gradient(135deg, hsl(30 70% 65%), hsl(24 60% 35%)); }
+.rank-avatar.rank-award-platinum { border-color: hsl(190 30% 88%); border-style: double; border-width: 5px; }
+.rank-medal.rank-award-platinum { background: linear-gradient(135deg, hsl(190 40% 95%), hsl(200 15% 60%)); }
+.rank-avatar.rank-award-blue { border-color: hsl(205 98% 60%); box-shadow: 0 0 14px hsl(205 98% 60% / .6); }
+.rank-medal.rank-award-blue { background: linear-gradient(135deg, hsl(205 98% 75%), hsl(215 90% 40%)); color: hsl(0 0% 100%); }
+.rank-pill-1 { background: linear-gradient(135deg, #2E5831, #134418); }
+.rank-pill-2 { background: linear-gradient(135deg, #100E0A, #000000); border:1px solid hsl(0 0% 100% / .15); }
+.rank-pill-3 { background: linear-gradient(135deg, #BD0E0E, #A6090D); }
+.rank-pill-4 { background: linear-gradient(135deg, #F8C2A6, #EC472D); }
+.rank-pill-5 { background: linear-gradient(135deg, #849ACC, #353781); }
+.rank-pill-6 { background: linear-gradient(135deg, #EB9C22, #855813); }
+.rank-pill-7 { background: linear-gradient(135deg, #543A35, #331610); }
+.rank-pill-8 { background: linear-gradient(135deg, #0292FC, #BFE4FE); }
+.rank-pill-9 { background: linear-gradient(135deg, #F27DA0, #CC183F); }
+.rank-pill-10 { background: linear-gradient(135deg, #0B8F8C, #04365C); }
+@media (max-width: 640px) { .rank-avatar { width:3.5rem; height:3.5rem; } .rank-pill li { margin-inline-start:0 } }
+@media (prefers-reduced-motion: reduce) { .rank-pill, .rank-cta { transition:none; } .rank-pill:hover { transform:none; } }

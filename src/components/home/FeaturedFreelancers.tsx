@@ -1,167 +1,79 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, MapPin, Star, PackageCheck } from 'lucide-react';
+import { ArrowRight, Crown, Medal, Award, Gem, BadgeCheck } from 'lucide-react';
 import type { SearchGigResult } from '@/hooks/useGigSearch';
-import VerifiedBadge from '@/components/VerifiedBadge';
-import BlueTickBadge from '@/components/BlueTickBadge';
+import { rankFreelancers } from '@/lib/freelancerRanking';
 import ScrollReveal from './ScrollReveal';
 
-interface Props {
-  gigs: SearchGigResult[];
-  loading: boolean;
-}
+interface Props { gigs: SearchGigResult[]; loading: boolean }
 
-interface FreelancerCard {
-  id: string;
-  name: string;
-  avatar: string;
-  username: string | null;
-  location: string | null;
-  isVerified: boolean;
-  hasBlueTick: boolean;
-  completedOrders: number;
-  rating: number;
-  reviews: number;
-  isOnline: boolean;
-  services: string[];
-}
-
-const dedupe = (gigs: SearchGigResult[]): FreelancerCard[] => {
-  const map = new Map<string, FreelancerCard>();
-  for (const g of gigs) {
-    const existing = map.get(g.freelancerId);
-    if (existing) {
-      if (existing.services.length < 3) existing.services.push(g.title);
-      continue;
-    }
-    map.set(g.freelancerId, {
-      id: g.freelancerId,
-      name: g.freelancer,
-      avatar: g.freelancerAvatar,
-      username: g.freelancerUsername,
-      location: g.freelancerLocation,
-      isVerified: g.isVerified,
-      hasBlueTick: g.hasBlueTick,
-      completedOrders: g.completedOrders,
-      rating: g.rating,
-      reviews: g.reviews,
-      isOnline: g.isOnline,
-      services: [g.title],
-    });
-  }
-  return Array.from(map.values())
-    .sort(
-      (a, b) =>
-        Number(b.hasBlueTick) - Number(a.hasBlueTick) ||
-        Number(b.isVerified) - Number(a.isVerified) ||
-        b.completedOrders - a.completedOrders,
-    );
-};
+const AWARDS = [
+  { label: 'Champion', Icon: Crown, cls: 'rank-award-gold' },
+  { label: 'Silver', Icon: Medal, cls: 'rank-award-silver' },
+  { label: 'Bronze', Icon: Medal, cls: 'rank-award-bronze' },
+  { label: 'Platinum', Icon: Gem, cls: 'rank-award-platinum' },
+  { label: 'Excellence', Icon: Award, cls: 'rank-award-blue' },
+];
 
 const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
-  const freelancers = dedupe(gigs);
-  if (loading || freelancers.length === 0) return null;
-  const track = [...freelancers, ...freelancers];
+  const top = rankFreelancers(gigs);
+  if (loading || top.length === 0) return null;
 
   return (
     <section aria-labelledby="freelancers-heading" className="home-story-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ScrollReveal className="max-w-3xl mb-12" from="left">
-          <span className="home-kicker"><Star className="h-3.5 w-3.5" aria-hidden /> Live marketplace talent</span>
-          <h2 id="freelancers-heading" className="home-story-title">
-            Freelancers selling on FIVESOM
-          </h2>
-          <p className="text-muted-foreground text-base sm:text-lg">
-            Every profile below belongs to a freelancer with live services on the platform. Open a
-            profile to see their skills, portfolio, packages and reviews before you order.
-          </p>
-        </ScrollReveal>
+        <div className="rank-panel grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <ScrollReveal from="left" className="lg:sticky lg:top-28 self-start">
+            <span className="rank-kicker">Freelancers selling on FIVESOM</span>
+            <h2 id="freelancers-heading" className="rank-title">Meet the Talent. See the Results.</h2>
+            <p className="rank-copy">
+              Discover FIVESOM's highest-performing freelancers. Ranked by their performance, quality,
+              completed projects, and client satisfaction. Find the right professional and turn your
+              next idea into reality.
+            </p>
+            <Link to="/explore" className="rank-cta">
+              Explore Top Freelancers <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
+            <p className="rank-trust"><BadgeCheck className="h-4 w-4" aria-hidden /> Top talent. Proven performance. Trusted results.</p>
+          </ScrollReveal>
 
-      </div>
-
-      <div
-        className="group relative overflow-hidden"
-        style={{
-          maskImage: 'linear-gradient(90deg, transparent, black 6%, black 94%, transparent)',
-          WebkitMaskImage: 'linear-gradient(90deg, transparent, black 6%, black 94%, transparent)',
-        }}
-      >
-        <ul className="flex gap-5 w-max px-4 sm:px-6 lg:px-8 animate-marquee-left group-hover:[animation-play-state:paused] motion-reduce:animate-none motion-reduce:overflow-x-auto">
-          {track.map((f, idx) => (
-            <li key={`${f.id}-${idx}`} className="w-[280px] sm:w-[320px] shrink-0" aria-hidden={idx >= freelancers.length}>
-              <Link
-                to={f.username ? `/freelancer/${f.username}` : `/profile/${f.id}`}
-                className="group h-full flex flex-col rounded-xl border border-border bg-card/95 p-6 hover:border-primary/50 hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
-              >
-                <div className="flex items-center gap-4 mb-4">
-                  {f.avatar ? (
-                    <img
-                      src={f.avatar}
-                      alt={f.name}
-                      loading="lazy"
-                      className="w-14 h-14 rounded-full object-cover"
-                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                    />
-                  ) : (
-                    <div className="w-14 h-14 rounded-full bg-primary/15 text-primary font-bold text-lg flex items-center justify-center">
-                      {f.name.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-foreground truncate flex items-center gap-1.5">
-                      {f.name}
-                      {f.hasBlueTick && <BlueTickBadge size="sm" />}
-                    </h3>
-                    <span className="inline-flex items-center gap-1.5 text-xs mt-0.5">
-                      <span className={`inline-block w-2 h-2 rounded-full ${f.isOnline ? 'bg-green-500' : 'bg-muted-foreground/40'}`} />
-                      <span className={f.isOnline ? 'text-green-600 dark:text-green-400 font-medium' : 'text-muted-foreground'}>
-                        {f.isOnline ? 'Online' : 'Offline'}
-                      </span>
+          <ol className="flex flex-col items-center gap-4">
+            {top.map((f, i) => {
+              const award = AWARDS[i];
+              return (
+                <li key={f.id} className={`w-full max-w-md ${["", "sm:ml-5", "sm:ml-10"][i % 3]}`}>
+                  <Link
+                    to={f.username ? `/freelancer/${f.username}` : `/profile/${f.id}`}
+                    className={`rank-pill rank-pill-${i + 1} ${award ? 'rank-pill-top' : ''}`}
+                    aria-label={`Rank ${i + 1}: ${f.name}, score ${f.score}`}
+                  >
+                    <span className={`rank-avatar ${award?.cls ?? ''}`}>
+                      {f.avatar ? (
+                        <img src={f.avatar} alt="" loading="lazy" className="h-full w-full rounded-full object-cover" />
+                      ) : (
+                        <span className="text-xl font-bold">{f.name.charAt(0).toUpperCase()}</span>
+                      )}
                     </span>
-                    {f.location && (
-                      <p className="text-xs text-muted-foreground inline-flex items-center gap-1 mt-0.5">
-                        <MapPin className="w-3 h-3" aria-hidden /> {f.location}
-                      </p>
-                    )}
-                    {f.isVerified && (
-                      <span className="block mt-1">
-                        <VerifiedBadge size="sm" />
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <ul className="space-y-1.5 mb-4 flex-1">
-                  {f.services.map((s, i) => (
-                    <li key={i} className="text-sm text-muted-foreground line-clamp-1">
-                      • {s}
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="flex items-center justify-between pt-4 border-t border-border text-xs text-muted-foreground">
-                  <span className="inline-flex items-center gap-3">
-                    {f.reviews > 0 && (
-                      <span className="inline-flex items-center gap-1">
-                        <Star className="w-3.5 h-3.5 fill-primary text-primary" aria-hidden />
-                        <span className="font-semibold text-foreground">{f.rating.toFixed(1)}</span> ({f.reviews})
-                      </span>
-                    )}
-                    {f.completedOrders > 0 && (
-                      <span className="inline-flex items-center gap-1">
-                        <PackageCheck className="w-3.5 h-3.5" aria-hidden /> {f.completedOrders} completed
-                      </span>
-                    )}
-                  </span>
-                  <span className="font-semibold text-primary inline-flex items-center gap-1">
-                    View profile
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden />
-                  </span>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-semibold truncate">{f.name}</span>
+                      <span className="block text-2xl font-bold leading-tight">{f.score.toFixed(1)} <span className="text-sm font-medium opacity-80">Score</span></span>
+                      <span className="block text-xs opacity-85 truncate">{f.skill}</span>
+                      <span className="rank-more">{f.completedOrders} completed · {f.reviews > 0 ? `${f.rating.toFixed(1)}★ (${f.reviews})` : 'No reviews yet'}</span>
+                    </span>
+                    <span className="flex flex-col items-center shrink-0">
+                      {award && (
+                        <span className={`rank-medal ${award.cls}`} title={award.label}>
+                          <award.Icon className="h-4 w-4" aria-hidden />
+                        </span>
+                      )}
+                      <span className="text-lg font-black">#{i + 1}</span>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </div>
     </section>
   );
