@@ -53,6 +53,174 @@ export type Database = {
         }
         Relationships: []
       }
+      academy_courses: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          duration: string | null
+          id: string
+          instructor_id: string
+          intro_video_url: string | null
+          language: string
+          level: string
+          objectives: string | null
+          price: number
+          requirements: string | null
+          review_reason: string | null
+          short_description: string
+          status: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          duration?: string | null
+          id?: string
+          instructor_id: string
+          intro_video_url?: string | null
+          language?: string
+          level?: string
+          objectives?: string | null
+          price?: number
+          requirements?: string | null
+          review_reason?: string | null
+          short_description: string
+          status?: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          duration?: string | null
+          id?: string
+          instructor_id?: string
+          intro_video_url?: string | null
+          language?: string
+          level?: string
+          objectives?: string | null
+          price?: number
+          requirements?: string | null
+          review_reason?: string | null
+          short_description?: string
+          status?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      academy_enrollments: {
+        Row: {
+          completed_lessons: string[]
+          course_id: string
+          created_at: string
+          id: string
+          student_id: string
+        }
+        Insert: {
+          completed_lessons?: string[]
+          course_id: string
+          created_at?: string
+          id?: string
+          student_id: string
+        }
+        Update: {
+          completed_lessons?: string[]
+          course_id?: string
+          created_at?: string
+          id?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academy_enrollments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "academy_courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      academy_lesson_content: {
+        Row: {
+          attachment_path: string | null
+          lesson_id: string
+          text_body: string | null
+          video_path: string | null
+        }
+        Insert: {
+          attachment_path?: string | null
+          lesson_id: string
+          text_body?: string | null
+          video_path?: string | null
+        }
+        Update: {
+          attachment_path?: string | null
+          lesson_id?: string
+          text_body?: string | null
+          video_path?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academy_lesson_content_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: true
+            referencedRelation: "academy_lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      academy_lessons: {
+        Row: {
+          course_id: string
+          created_at: string
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          is_preview: boolean
+          module: string
+          position: number
+          title: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_preview?: boolean
+          module?: string
+          position?: number
+          title: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_preview?: boolean
+          module?: string
+          position?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academy_lessons_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "academy_courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       accepted_deliveries: {
         Row: {
           accepted_at: string | null
@@ -1191,6 +1359,117 @@ export type Database = {
           updated_at?: string
           user_id?: string
           verified_until?: string
+        }
+        Relationships: []
+      }
+      instructor_applications: {
+        Row: {
+          availability_days: string[]
+          availability_times: string | null
+          background: string
+          bio: string
+          certificate_paths: string[]
+          city: string
+          country: string
+          created_at: string
+          date_of_birth: string | null
+          display_name: string
+          expertise: string
+          id: string
+          id_document_path: string
+          internal_notes: string | null
+          intro_video_path: string
+          legal_name: string
+          links: string | null
+          phone: string
+          plan: string
+          qualifications: string | null
+          review_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          selfie_path: string | null
+          status: string
+          student_levels: string[]
+          subjects: string
+          taught_before: boolean
+          teaching_languages: string[]
+          time_zone: string | null
+          updated_at: string
+          user_id: string
+          why_qualified: string
+          years_experience: number
+        }
+        Insert: {
+          availability_days?: string[]
+          availability_times?: string | null
+          background: string
+          bio: string
+          certificate_paths?: string[]
+          city: string
+          country: string
+          created_at?: string
+          date_of_birth?: string | null
+          display_name: string
+          expertise: string
+          id?: string
+          id_document_path: string
+          internal_notes?: string | null
+          intro_video_path: string
+          legal_name: string
+          links?: string | null
+          phone: string
+          plan: string
+          qualifications?: string | null
+          review_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selfie_path?: string | null
+          status?: string
+          student_levels?: string[]
+          subjects: string
+          taught_before?: boolean
+          teaching_languages?: string[]
+          time_zone?: string | null
+          updated_at?: string
+          user_id: string
+          why_qualified: string
+          years_experience?: number
+        }
+        Update: {
+          availability_days?: string[]
+          availability_times?: string | null
+          background?: string
+          bio?: string
+          certificate_paths?: string[]
+          city?: string
+          country?: string
+          created_at?: string
+          date_of_birth?: string | null
+          display_name?: string
+          expertise?: string
+          id?: string
+          id_document_path?: string
+          internal_notes?: string | null
+          intro_video_path?: string
+          legal_name?: string
+          links?: string | null
+          phone?: string
+          plan?: string
+          qualifications?: string | null
+          review_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selfie_path?: string | null
+          status?: string
+          student_levels?: string[]
+          subjects?: string
+          taught_before?: boolean
+          teaching_languages?: string[]
+          time_zone?: string | null
+          updated_at?: string
+          user_id?: string
+          why_qualified?: string
+          years_experience?: number
         }
         Relationships: []
       }
@@ -2731,6 +3010,9 @@ export type Database = {
       }
     }
     Functions: {
+      academy_can_view_course: { Args: { _course: string }; Returns: boolean }
+      academy_course_owner: { Args: { _course: string }; Returns: string }
+      academy_has_access: { Args: { _lesson: string }; Returns: boolean }
       accept_job_agreement: {
         Args: { _agreement_id: string }
         Returns: undefined
@@ -2944,6 +3226,7 @@ export type Database = {
         Returns: boolean
       }
       is_admin_user: { Args: { _user_id: string }; Returns: boolean }
+      is_approved_instructor: { Args: { _uid: string }; Returns: string }
       is_dispute_participant: {
         Args: { _dispute_id: string; _user_id: string }
         Returns: boolean
@@ -3028,6 +3311,10 @@ export type Database = {
         Args: { _content: string; _context: string; _ref_id?: string }
         Returns: Json
       }
+      review_academy_course: {
+        Args: { _decision: string; _id: string; _reason: string }
+        Returns: undefined
+      }
       review_buyer_job: {
         Args: { _action: string; _feedback?: string; _job_id: string }
         Returns: {
@@ -3075,6 +3362,15 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      review_instructor_application: {
+        Args: {
+          _decision: string
+          _id: string
+          _notes: string
+          _reason: string
+        }
+        Returns: undefined
       }
       review_job_application: {
         Args: { _application_id: string; _status: string }
