@@ -38,8 +38,8 @@ const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
 
   return (
     <section aria-labelledby="freelancers-heading" className="home-story-section">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rank-panel grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <div className="w-full">
+        <div className="rank-panel rank-panel-bleed grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <ScrollReveal from="left" className="lg:sticky lg:top-28 self-start">
             <span className="rank-kicker">Freelancers selling on FIVESOM</span>
             <h2 id="freelancers-heading" className="rank-title">Meet the Talent. See the Results.</h2>
@@ -54,64 +54,59 @@ const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
             <p className="rank-trust"><BadgeCheck className="h-4 w-4" aria-hidden /> Top talent. Proven performance. Trusted results.</p>
           </ScrollReveal>
 
-          <ol
-            className="rank-stage relative w-full"
-            style={{ height: `${Math.min(VISIBLE, top.length) * SLOT_GAP}px` }}
+          <div
+            className="rank-columns"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
-            onFocusCapture={() => setPaused(true)}
-            onBlurCapture={() => setPaused(false)}
+            data-paused={paused || undefined}
           >
-            {top.map((f, i) => {
-              const award = AWARDS[i];
-              const n = top.length;
-              const slot = (i - offset + n) % n;
-              const visible = slot < VISIBLE;
-              const y = visible ? slot * SLOT_GAP : slot === n - 1 ? -SLOT_GAP : VISIBLE * SLOT_GAP;
-              const scale = visible ? SLOT_SCALE[slot] : 0.7;
+            {[0, 1].map((col) => {
+              const items = top.map((f, i) => ({ f, i })).filter(({ i }) => i % 2 === col);
               return (
-                <li
-                  key={f.id}
-                  className="rank-slot"
-                  aria-hidden={!visible}
-                  style={{
-                    transform: `translate(-50%, ${y}px) scale(${scale})`,
-                    opacity: visible ? 1 : 0,
-                    zIndex: VISIBLE - Math.min(slot, VISIBLE),
-                    pointerEvents: visible ? 'auto' : 'none',
-                  }}
-                >
-                  <Link
-                    to={f.username ? `/freelancer/${f.username}` : `/profile/${f.id}`}
-                    tabIndex={visible ? 0 : -1}
-                    className={`rank-pill rank-pill-${i + 1} ${award ? 'rank-pill-top' : ''}`}
-                    aria-label={`Rank ${i + 1}: ${f.name}, score ${f.score}`}
-                  >
-                    <span className={`rank-avatar ${award?.cls ?? ''}`}>
-                      {f.avatar ? (
-                        <img src={f.avatar} alt="" loading="lazy" className="h-full w-full rounded-full object-cover" />
-                      ) : (
-                        <span className="text-xl font-bold">{f.name.charAt(0).toUpperCase()}</span>
-                      )}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block font-semibold truncate">{f.name}</span>
-                      <span className="block text-2xl font-bold leading-tight">{f.score.toFixed(0)} <span className="text-sm font-medium opacity-80">Score</span></span>
-                      <span className="block text-xs opacity-85 truncate">{f.skill}</span>
-                    </span>
-                    <span className="flex flex-col items-center shrink-0">
-                      {award && (
-                        <span className={`rank-medal ${award.cls}`} title={award.label}>
-                          <award.Icon className="h-4 w-4" aria-hidden />
-                        </span>
-                      )}
-                      <span className="text-lg font-black">#{i + 1}</span>
-                    </span>
-                  </Link>
-                </li>
+                <div key={col} className="rank-col" aria-hidden={col === 1 ? undefined : undefined}>
+                  <ul className={`rank-track ${col === 0 ? 'rank-track-down' : 'rank-track-up'}`}>
+                    {[...items, ...items].map(({ f, i }, k) => {
+                      const award = AWARDS[i];
+                      const dup = k >= items.length;
+                      return (
+                        <li key={`${f.id}-${k}`} aria-hidden={dup || undefined}>
+                          <Link
+                            to={f.username ? `/freelancer/${f.username}` : `/profile/${f.id}`}
+                            tabIndex={dup ? -1 : 0}
+                            className={`rank-card rank-pill-${i + 1}`}
+                            aria-label={`Rank ${i + 1}: ${f.name}, score ${f.score}`}
+                          >
+                            <span className="flex items-start justify-between gap-2">
+                              <span className="min-w-0">
+                                <span className="block text-xl font-semibold leading-tight line-clamp-2">{f.name}</span>
+                                <span className="block text-xs opacity-85 truncate mt-1">{f.skill}</span>
+                              </span>
+                              <span className="flex flex-col items-center shrink-0">
+                                {award && (
+                                  <span className={`rank-medal ${award.cls}`} title={award.label}>
+                                    <award.Icon className="h-4 w-4" aria-hidden />
+                                  </span>
+                                )}
+                                <span className="text-lg font-black">#{i + 1}</span>
+                              </span>
+                            </span>
+                            <span className={`rank-card-photo ${award?.cls ?? ''}`}>
+                              {f.avatar ? (
+                                <img src={f.avatar} alt="" loading="lazy" className="h-full w-full object-cover" />
+                              ) : (
+                                <span className="text-4xl font-bold">{f.name.charAt(0).toUpperCase()}</span>
+                              )}
+                            </span>
+                            <span className="block text-2xl font-bold">{f.score.toFixed(0)} <span className="text-sm font-medium opacity-80">Score</span></span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
               );
             })}
-          </ol>
+          </div>
         </div>
       </div>
     </section>
