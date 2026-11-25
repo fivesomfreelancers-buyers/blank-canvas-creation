@@ -2921,6 +2921,18 @@ export type Database = {
         Returns: number
       }
       get_job_buyer: { Args: { _job_id: string }; Returns: Json }
+      get_top_ranked_freelancers: {
+        Args: { _limit?: number }
+        Returns: {
+          avatar: string
+          freelancer_id: string
+          full_name: string
+          ranking_score: number
+          skill: string
+          user_id: string
+          username: string
+        }[]
+      }
       get_withdrawal_fee_percent: { Args: never; Returns: number }
       gig_owner_user: { Args: { _freelancer_id: string }; Returns: string }
       gig_review_bypass: { Args: never; Returns: boolean }
@@ -3204,6 +3216,10 @@ export type Database = {
       set_buyer_job_status: {
         Args: { _job_id: string; _status: string }
         Returns: undefined
+      }
+      set_freelancer_ranking_score: {
+        Args: { _freelancer_id: string; _score: number }
+        Returns: number
       }
       set_job_agreement_terms: {
         Args: { _agreement_id: string; _days: number; _price: number }
