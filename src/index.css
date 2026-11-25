@@ -50,6 +50,10 @@
 
     /* Neutral light plate behind brand tool logos so they stay legible in both themes */
     --tool-logo-bg: 0 0% 100%;
+    --brand-wordmark: 0 0% 0%;
+    --hero-glass-surface: 0 0% 100%;
+    --hero-glass-shadow: 200 19% 18%;
+    --shadow-hero-glass: 0 16px 48px -20px hsl(var(--hero-glass-shadow) / 0.3), inset 0 1px 0 hsl(var(--hero-glass-surface) / 0.85);
 
 
     --sidebar-background: 0 0% 98%;
@@ -213,6 +217,21 @@
 
 /* Homepage narrative motion: transform-only, observed once, and fully optional. */
 @layer components {
+  .brand-wordmark { color: hsl(var(--brand-wordmark)); letter-spacing: 0; }
+
+  .home-hero-veil {
+    background: linear-gradient(180deg, hsl(var(--background) / 0.84), hsl(var(--secondary) / 0.72) 55%, hsl(var(--background)));
+    backdrop-filter: blur(3px);
+  }
+
+  .home-search-glass {
+    background: hsl(var(--hero-glass-surface) / 0.66);
+    border-color: hsl(var(--hero-glass-surface) / 0.85);
+    box-shadow: var(--shadow-hero-glass);
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+  }
+
   .home-story {
     position: relative;
     isolation: isolate;

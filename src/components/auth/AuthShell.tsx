@@ -19,7 +19,7 @@ const AuthShell = ({ eyebrow, title, description, children, benefits }: AuthShel
         <div className="pointer-events-none absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-primary/20 blur-3xl" aria-hidden="true" />
         <Link to="/" className="relative inline-flex w-fit items-center gap-3" aria-label="FIVESOM home">
           <img src={logo} alt="" className="h-11 w-auto object-contain" />
-          <span className="font-heading text-2xl font-bold text-primary">Fivesom</span>
+          <span className="brand-wordmark font-heading text-2xl font-bold">Fivesom</span>
         </Link>
 
         <div className="relative max-w-lg animate-fade-in-up">
@@ -46,7 +46,7 @@ const AuthShell = ({ eyebrow, title, description, children, benefits }: AuthShel
         <div className="w-full max-w-2xl animate-fade-in-up">
           <Link to="/" className="mb-8 inline-flex items-center gap-2 lg:hidden" aria-label="FIVESOM home">
             <img src={logo} alt="" className="h-10 w-auto object-contain" />
-            <span className="font-heading text-xl font-bold text-primary">Fivesom</span>
+            <span className="brand-wordmark font-heading text-xl font-bold">Fivesom</span>
           </Link>
           {children}
         </div>

@@ -29,7 +29,7 @@ const Index = () => {
       />
       <Navbar />
       <main>
-        <HomeHero gigCount={activeGigs} freelancerCount={freelancers} gigs={gigs} />
+        <HomeHero gigCount={activeGigs} freelancerCount={freelancers} />
         <div className="home-story">
           <PopularServices />
           <HowFivesomWorks />

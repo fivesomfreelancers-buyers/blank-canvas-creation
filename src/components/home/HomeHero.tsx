@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Search, ArrowRight, ShieldCheck, Globe2, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import TypingHeadline from './TypingHeadline';
-import TalentFlow from './TalentFlow';
-import type { SearchGigResult } from '@/hooks/useGigSearch';
 import { CATEGORIES } from '@/lib/categories';
 import { Button } from '@/components/ui/button';
 import { MARKETPLACE_POSITIONING } from '@/content/marketplacePositioning';
@@ -29,10 +27,9 @@ const POPULAR = [
 interface HomeHeroProps {
   gigCount: number;
   freelancerCount: number;
-  gigs?: SearchGigResult[];
 }
 
-const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount, gigs = [] }) => {
+const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
   const [q, setQ] = useState('');
   const navigate = useNavigate();
 
@@ -86,7 +83,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount, gigs = [
   };
 
   return (
-    <section className="relative isolate overflow-hidden border-b border-border bg-background px-4 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8">
+    <section className="home-hero-glass relative isolate overflow-hidden bg-background px-4 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8">
       {/* Background layer: still image first, video fades in on top of it */}
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
         <img
@@ -118,8 +115,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount, gigs = [
           </video>
         )}
         {/* Readability overlay */}
-        <div className="absolute inset-0 bg-background/65 sm:bg-background/60" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/30 to-background" />
+        <div className="home-hero-veil absolute inset-0" />
       </div>
 
       <div className="relative mx-auto max-w-6xl text-center">
@@ -148,17 +144,15 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount, gigs = [
           {MARKETPLACE_POSITIONING.intro} {MARKETPLACE_POSITIONING.identity}
         </p>
 
-        <TalentFlow gigs={gigs} />
-
-        <div className="mx-auto mb-6 mt-4 max-w-3xl">
+        <div className="mx-auto mb-6 mt-8 max-w-4xl">
           <form
             onSubmit={submit}
-            className="flex items-stretch gap-2 rounded-lg border border-border bg-card p-1.5 shadow-lg"
+            className="home-search-glass flex items-stretch gap-2 rounded-3xl border p-2 sm:p-3"
           >
             <label htmlFor="hero-search" className="sr-only">
               Search freelance services
             </label>
-            <div className="flex-1 flex items-center px-4 relative">
+            <div className="relative flex min-w-0 flex-1 items-center px-2 sm:px-4">
               <Search className="w-5 h-5 mr-3 text-muted-foreground shrink-0" aria-hidden />
               <input
                 id="hero-search"
@@ -184,8 +178,8 @@ const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount, gigs = [
                 </span>
               )}
             </div>
-            <Button type="submit" size="lg" className="h-auto shrink-0 px-6">
-              Search <ArrowRight className="w-4 h-4" aria-hidden />
+            <Button type="submit" size="lg" aria-label="Search" className="h-auto shrink-0 px-4 sm:px-6">
+              <span className="hidden sm:inline">Search</span> <ArrowRight className="w-4 h-4" aria-hidden />
             </Button>
           </form>
         </div>

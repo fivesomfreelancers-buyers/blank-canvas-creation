@@ -1,5 +1,9 @@
 # Mobile-first FIVESOM redesign
 
+## Homepage appearance follow-up
+- [x] Remove the first-section freelancer animation; use black brand wordmarks and scoped glass search styling without restyling other sections.
+- [x] Verify homepage search and updated appearance in the browser; black wordmarks, no freelancer animation, working search and no horizontal overflow at 390px.
+
 ## Jobs marketplace
 - [x] Add secure buyer jobs, manual one-hour review, applications, follows, CV snapshots and hiring agreements
 - [x] Add Explore Jobs, buyer My Jobs, Admin/Founder Job Approvals and freelancer applications

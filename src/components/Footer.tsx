@@ -29,7 +29,7 @@ export const Footer: React.FC = () => {
                 height="50"
                 className="object-contain transition-opacity duration-300"
               />
-              <span className="text-xl font-bold text-foreground">
+              <span className="brand-wordmark text-xl font-bold">
                 Fivesom
               </span>
             </div>

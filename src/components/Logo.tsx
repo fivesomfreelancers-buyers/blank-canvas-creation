@@ -20,7 +20,7 @@ export const Logo: React.FC<LogoProps> = ({ className = "", linkTo = "/" }) => {
         alt="FIVESOM" 
         className={`h-11 w-auto object-contain transition-opacity duration-300 ${className}`}
       />
-      <span className="text-2xl font-bold text-primary tracking-tight">
+      <span className="brand-wordmark text-2xl font-bold">
         Fivesom
       </span>
     </div>
