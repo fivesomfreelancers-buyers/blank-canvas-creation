@@ -534,7 +534,7 @@
 
 /* Keep authentication fields legible in Safari and password-manager autofill. */
 .auth-shell {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 .auth-shell input,

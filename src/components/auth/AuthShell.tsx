@@ -12,13 +12,14 @@ interface AuthShellProps {
 }
 
 const AuthShell = ({ eyebrow, title, description, children, benefits }: AuthShellProps) => (
-  <main className="auth-shell dark min-h-screen bg-background pt-16 font-body text-foreground">
+  <main className="auth-shell min-h-screen bg-background pt-16 font-body text-foreground">
     <div className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-[1440px] lg:grid-cols-[0.9fr_1.1fr]">
-      <section className="relative hidden overflow-hidden border-r border-border bg-card px-12 py-14 lg:flex lg:flex-col lg:justify-between xl:px-20">
+      <section className="relative hidden overflow-hidden border-r border-border bg-gradient-to-br from-secondary/70 via-background to-muted px-12 py-14 lg:flex lg:flex-col lg:justify-between xl:px-20">
         <div className="absolute inset-x-0 top-0 h-1 bg-primary" aria-hidden="true" />
+        <div className="pointer-events-none absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-primary/20 blur-3xl" aria-hidden="true" />
         <Link to="/" className="relative inline-flex w-fit items-center gap-3" aria-label="FIVESOM home">
-          <img src={logo} alt="" className="h-11 w-11 object-contain" />
-          <span className="font-heading text-xl font-bold text-foreground">Fivesom</span>
+          <img src={logo} alt="" className="h-11 w-auto object-contain" />
+          <span className="font-heading text-2xl font-bold text-primary">Fivesom</span>
         </Link>
 
         <div className="relative max-w-lg animate-fade-in-up">
@@ -30,7 +31,7 @@ const AuthShell = ({ eyebrow, title, description, children, benefits }: AuthShel
               const Icon = index === 0 ? BadgeCheck : index === 1 ? ShieldCheck : LockKeyhole;
               return (
                 <div key={item} className="flex items-center gap-3 text-sm text-foreground">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-primary"><Icon className="h-4 w-4" /></span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary"><Icon className="h-4 w-4" /></span>
                   <span className="font-medium">{item}</span>
                 </div>
               );
@@ -44,8 +45,8 @@ const AuthShell = ({ eyebrow, title, description, children, benefits }: AuthShel
       <section className="flex items-start justify-center px-4 py-10 sm:px-8 lg:items-center lg:px-12 lg:py-14">
         <div className="w-full max-w-2xl animate-fade-in-up">
           <Link to="/" className="mb-8 inline-flex items-center gap-2 lg:hidden" aria-label="FIVESOM home">
-            <img src={logo} alt="" className="h-10 w-10 object-contain" />
-            <span className="font-heading text-lg font-bold text-foreground">FIVESOM</span>
+            <img src={logo} alt="" className="h-10 w-auto object-contain" />
+            <span className="font-heading text-xl font-bold text-primary">Fivesom</span>
           </Link>
           {children}
         </div>
