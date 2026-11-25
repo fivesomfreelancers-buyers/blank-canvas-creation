@@ -53,23 +53,23 @@ const AdminRanking = () => {
   useEffect(() => { fetchRanking(); }, []);
 
   const updateScore = async (id: string, score: number) => {
-    const { error } = await supabase.from('freelancers').update({ ranking_score: score }).eq('id', id);
-    if (error) { toast.error('Failed'); return; }
+    const { error } = await (supabase.rpc as any)('set_freelancer_ranking_score', { _freelancer_id: id, _score: score });
+    if (error) { toast.error(error.message || 'Failed'); return; }
     toast.success('Score updated');
     fetchRanking();
   };
 
   const toggleFeatured = async (id: string, current: boolean) => {
     const { error } = await supabase.from('freelancers').update({ is_featured: !current }).eq('id', id);
-    if (error) { toast.error('Failed'); return; }
+    if (error) { toast.error(error.message || 'Failed'); return; }
     toast.success(!current ? 'Featured as Weekly Winner!' : 'Feature removed');
     fetchRanking();
   };
 
   const forceToTop = async (id: string) => {
     const topScore = freelancers.length > 0 ? Number(freelancers[0].ranking_score || 0) + 100 : 1000;
-    const { error } = await supabase.from('freelancers').update({ ranking_score: topScore }).eq('id', id);
-    if (error) { toast.error('Failed'); return; }
+    const { error } = await (supabase.rpc as any)('set_freelancer_ranking_score', { _freelancer_id: id, _score: topScore });
+    if (error) { toast.error(error.message || 'Failed'); return; }
     toast.success('User promoted to #1!');
     fetchRanking();
   };

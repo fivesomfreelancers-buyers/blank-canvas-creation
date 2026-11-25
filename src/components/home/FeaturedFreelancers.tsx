@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Crown, Medal, Award, Gem, BadgeCheck } from 'lucide-react';
 import type { SearchGigResult } from '@/hooks/useGigSearch';
-import { rankFreelancers } from '@/lib/freelancerRanking';
+import { supabase } from '@/integrations/supabase/client';
 import ScrollReveal from './ScrollReveal';
 
 interface Props { gigs: SearchGigResult[]; loading: boolean }
@@ -16,8 +16,21 @@ const AWARDS = [
 ];
 
 const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
-  const top = rankFreelancers(gigs);
-  if (loading || top.length === 0) return null;
+  const [top, setTop] = React.useState<{ id: string; name: string; avatar: string; username: string | null; skill: string; score: number }[]>([]);
+  const [shown, setShown] = React.useState(0);
+  React.useEffect(() => {
+    (supabase.rpc as any)('get_top_ranked_freelancers', { _limit: 10 }).then(({ data }: any) => {
+      setTop((data ?? []).map((r: any) => ({ id: r.freelancer_id, name: r.full_name || 'Freelancer', avatar: r.profile_image_url ?? r.avatar ?? '', username: r.username, skill: r.skill, score: Number(r.ranking_score) })));
+    });
+  }, []);
+  React.useEffect(() => {
+    if (shown >= top.length) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { setShown(top.length); return; }
+    const t = setTimeout(() => setShown((n) => n + 1), shown === 0 ? 300 : 1000);
+    return () => clearTimeout(t);
+  }, [shown, top.length]);
+  if (top.length === 0) return null;
 
   return (
     <section aria-labelledby="freelancers-heading" className="home-story-section">
@@ -37,11 +50,11 @@ const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
             <p className="rank-trust"><BadgeCheck className="h-4 w-4" aria-hidden /> Top talent. Proven performance. Trusted results.</p>
           </ScrollReveal>
 
-          <ol className="flex flex-col items-center gap-4">
+          <ol className="flex flex-col items-center gap-4" style={{ minHeight: `${top.length * 6}rem` }}>
             {top.map((f, i) => {
               const award = AWARDS[i];
               return (
-                <li key={f.id} className={`w-full max-w-md ${["", "sm:ml-5", "sm:ml-10"][i % 3]}`}>
+                <li key={f.id} data-shown={i < shown} className={`rank-drop w-full max-w-md ${["", "sm:ml-5", "sm:ml-10"][i % 3]}`}>
                   <Link
                     to={f.username ? `/freelancer/${f.username}` : `/profile/${f.id}`}
                     className={`rank-pill rank-pill-${i + 1} ${award ? 'rank-pill-top' : ''}`}
@@ -56,9 +69,8 @@ const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block font-semibold truncate">{f.name}</span>
-                      <span className="block text-2xl font-bold leading-tight">{f.score.toFixed(1)} <span className="text-sm font-medium opacity-80">Score</span></span>
+                      <span className="block text-2xl font-bold leading-tight">{f.score.toFixed(0)} <span className="text-sm font-medium opacity-80">Score</span></span>
                       <span className="block text-xs opacity-85 truncate">{f.skill}</span>
-                      <span className="rank-more">{f.completedOrders} completed · {f.reviews > 0 ? `${f.rating.toFixed(1)}★ (${f.reviews})` : 'No reviews yet'}</span>
                     </span>
                     <span className="flex flex-col items-center shrink-0">
                       {award && (
