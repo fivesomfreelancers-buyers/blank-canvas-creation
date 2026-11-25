@@ -1,6 +1,7 @@
 # Project rules
 
-- Homepage glass effects stay scoped to hero classes so other pages and homepage sections retain their existing surfaces.
+- Homepage glass effects stay scoped to hero and client-showcase classes so other pages and sections retain their existing surfaces.
+- Client showcases derive selectable panels from the client array and expand only the selected panel, supporting hover, keyboard and touch without duplicating project data.
 - Homepage discovery uses published search results for service cards and tag-frequency suggestions; this avoids invented profiles and search analytics.
 
 - New and corrected gigs share the server review submission helper; confirm the persisted review state before reporting success so editing cannot bypass approval.

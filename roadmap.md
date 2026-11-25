@@ -1,6 +1,7 @@
 # Mobile-first FIVESOM redesign
 
 ## Homepage appearance follow-up
+- [x] Remove the marked three freelancer discovery cards and replace client cards with a one-at-a-time glass showcase; hover, keyboard and touch selection verified at 320/390/834px plus desktop.
 - [x] Rebuild the video hero with large search, quick/trending tabs and working service suggestions.
 - [x] Add original LifeWolf/WaliNews client logos and clearly labelled draft testimonials; add three real-gig discovery cards.
 - [x] Show Stripe, Supabase, OneDrive and WorldRemit technology logos; user confirmed both additional services are used.

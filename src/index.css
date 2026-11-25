@@ -57,6 +57,12 @@
     --hero-foreground: 0 0% 100%;
     --hero-muted: 205 14% 85%;
     --client-logo-background: 0 0% 100%;
+    --client-showcase-background: 200 19% 5%;
+    --client-showcase-surface: 0 0% 100%;
+    --client-showcase-foreground: 0 0% 98%;
+    --client-showcase-muted: 205 12% 76%;
+    --client-showcase-border: 205 12% 34%;
+    --client-showcase-shadow: 0 18px 50px -30px hsl(var(--client-showcase-background) / 0.65);
     --shadow-hero-glass: 0 16px 48px -20px hsl(var(--hero-glass-shadow) / 0.3), inset 0 1px 0 hsl(var(--hero-glass-surface) / 0.85);
 
 
@@ -235,6 +241,45 @@
   }
 
   .client-logo-surface { background: hsl(var(--client-logo-background)); }
+
+  .client-showcase {
+    --foreground: var(--client-showcase-foreground);
+    --muted-foreground: var(--client-showcase-muted);
+    --border: var(--client-showcase-border);
+    background: hsl(var(--client-showcase-background));
+    overflow: hidden;
+  }
+  .client-showcase-panels { display: flex; gap: 1.5rem; align-items: stretch; }
+  .client-project-panel {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 25rem;
+    padding: 1.5rem;
+    border: 1px solid hsl(var(--client-showcase-border));
+    border-radius: 1rem;
+    background: hsl(var(--client-showcase-surface) / 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--client-showcase-shadow);
+    transition: flex-grow 400ms ease, background-color 300ms ease;
+  }
+  .client-project-panel[data-active='true'] { flex-grow: 3; background: hsl(var(--client-showcase-surface) / 0.12); }
+  .client-project-selector,
+  .client-project-selector:hover,
+  .client-project-selector:focus-visible { background: transparent; color: hsl(var(--client-showcase-foreground)); }
+  .client-project-selector::selection,
+  .client-project-selector *::selection { background: transparent; }
+  .client-project-details { animation: client-reveal 250ms ease; }
+  @keyframes client-reveal { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 767px) {
+    .client-showcase-panels { flex-direction: column; gap: 1rem; }
+    .client-project-panel { flex: none; min-height: auto; padding: 1.25rem; transition: background-color 300ms ease; }
+    .client-project-panel[data-active='true'] { flex: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .client-project-panel { transition: none; }
+    .client-project-details { animation: none; }
+  }
 
   .home-hero-veil {
     background: linear-gradient(180deg, hsl(var(--hero-background) / 0.76), hsl(var(--hero-background) / 0.60) 55%, hsl(var(--hero-background) / 0.91));
