@@ -90,13 +90,29 @@ const BecomeInstructor = () => {
 
   if (!user) return shell(<Card><CardContent className="p-8 text-center space-y-3"><p>Sign in to apply as an instructor.</p><Button asChild><Link to="/login">Sign in</Link></Button></CardContent></Card>);
   if (existing === undefined) return shell(<Loader2 className="h-6 w-6 animate-spin mx-auto" />);
+  const approveNow = async () => {
+    setBusy('Approving…');
+    const { error } = await db.rpc('review_instructor_application', { _id: existing.id, _decision: 'approved', _reason: null, _notes: 'Approved instantly (testing)' });
+    setBusy('');
+    if (error) { toast.error(error.message.includes('authorized') ? 'Only Fivesom Admin or Founder can approve instantly.' : error.message); return; }
+    const { data } = await db.from('instructor_applications').select('*').eq('user_id', user.id).maybeSingle();
+    setExisting(data); toast.success('Approved. You can now add lessons in Instructor Studio.');
+  };
   if (existing && !['changes_requested', 'rejected'].includes(existing.status)) return shell(
-    <Card><CardContent className="p-8 space-y-3 text-center">
-      <h1 className="text-2xl font-bold">Instructor application: {existing.status.replace('_', ' ')}</h1>
-      {existing.status === 'pending_review' && <p className="text-muted-foreground">Your instructor application has been submitted successfully. Our Fivesom team will review your information and aim to provide a decision within 1 hour.</p>}
-      {existing.status === 'approved' && <Button asChild><Link to="/academy/studio">Open Instructor Studio</Link></Button>}
+    <div className="min-h-[60vh] flex items-center justify-center py-10">
+    <Card className="w-full max-w-2xl rounded-3xl border-primary/20 shadow-xl"><CardContent className="p-8 sm:p-12 space-y-6 text-center">
+      <div className="mx-auto h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center text-3xl">{existing.status === 'approved' ? '🎓' : '⏳'}</div>
+      <h1 className="text-2xl sm:text-3xl font-bold capitalize">Instructor application: {existing.status.replace('_', ' ')}</h1>
+      {existing.status === 'pending_review' && <>
+        <p className="text-muted-foreground">Your application was submitted successfully. The Fivesom team will review it soon.</p>
+        <Button size="lg" className="w-full sm:w-auto" disabled={!!busy} onClick={approveNow}>{busy || 'Approve now (Admin / Founder)'}</Button>
+      </>}
+      {existing.status === 'approved' && <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <Button size="lg" asChild><Link to="/academy/studio">Open Instructor Studio — add lessons</Link></Button>
+        <Button size="lg" variant="outline" asChild><Link to="/academy">View Academy</Link></Button>
+      </div>}
       {existing.review_reason && <p className="text-sm">Note from Fivesom: {existing.review_reason}</p>}
-    </CardContent></Card>);
+    </CardContent></Card></div>);
 
   const field = (k: string, label: string, props: any = {}) => (
     <div className="space-y-1.5"><Label htmlFor={k}>{label}</Label><Input id={k} value={f[k] ?? ''} onChange={set(k)} {...props} /></div>);
