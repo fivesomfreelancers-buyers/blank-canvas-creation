@@ -35,8 +35,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
       <div
         key={conv.conversationId}
         onClick={() => onSelect(conv.conversationId, conv.partnerId)}
-        className={`min-h-[76px] p-3.5 sm:p-4 cursor-pointer hover:bg-accent active:bg-accent border-b transition-colors ${
-          selectedConversationId === conv.conversationId ? 'bg-accent border-l-4 border-l-primary' : ''
+        className={`min-h-[72px] px-4 py-3 cursor-pointer border-l-[3px] border-l-transparent hover:bg-muted/60 transition-colors ${
+          selectedConversationId === conv.conversationId ? 'bg-primary/5 border-l-primary' : ''
         }`}
       >
         <div className="flex items-center space-x-3">
@@ -64,7 +64,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
                 {conv.pinned && <Pin className="w-3 h-3 text-muted-foreground" />}
               </p>
               {conv.unreadCount > 0 && (
-                <Badge variant="destructive" className="text-xs ml-2">{conv.unreadCount}</Badge>
+                <span className="ml-2 flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-destructive" /><span className="text-[11px] font-semibold text-destructive">{conv.unreadCount}</span></span>
               )}
             </div>
             <p className="text-sm text-muted-foreground truncate">{conv.lastMessage}</p>
@@ -78,14 +78,14 @@ const ConversationList: React.FC<ConversationListProps> = ({
   };
 
   return (
-    <Card className="flex flex-col flex-1 h-full min-h-0 overflow-hidden rounded-none border-x-0 sm:rounded-lg sm:border-x">
+    <Card className="flex flex-col flex-1 h-full min-h-0 overflow-hidden rounded-none border-0 lg:border-r shadow-none">
       <CardHeader className="px-4 pb-3 pt-4">
-        <CardTitle>Conversations</CardTitle>
+        <CardTitle className="text-lg">Messages</CardTitle>
         <div className="relative">
           <Search className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="Search conversations..."
-            className="pl-10"
+            className="pl-10 rounded-full bg-muted/60 border-transparent"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />

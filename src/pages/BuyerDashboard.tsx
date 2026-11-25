@@ -15,7 +15,9 @@ import {
   DollarSign,
   Wallet,
   ArrowLeft,
-  Scale
+  Scale,
+  Search,
+  Briefcase,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -46,6 +48,8 @@ import BuyerHelp from './buyer/BuyerHelp';
 import BuyerSettings from './buyer/BuyerSettings';
 import { useNewDeliveries } from '@/hooks/useNewDeliveries';
 import MyJobs from './jobs/MyJobs';
+import DashboardShell, { StatTile } from '@/components/dashboard/DashboardShell';
+import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 
 const sidebarItems = [
   { title: "Dashboard", icon: Home, key: "dashboard" },
@@ -65,81 +69,6 @@ interface ProfileData {
   bio: string | null;
 }
 
-const BuyerSidebar = ({ activeSection, setActiveSection, profile }: { activeSection: string; setActiveSection: (section: string) => void; profile: ProfileData | null }) => {
-  const initials = profile?.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'B';
-  const { newDeliveryCount, markSeen } = useNewDeliveries();
-  // Shared photo so the dashboard always matches the website header.
-  const myIdentity = useMyPhoto();
-  const sidebarPhoto = myIdentity.photoUrl || profile?.profile_image_url || undefined;
-
-  React.useEffect(() => {
-    if (activeSection === 'orders') markSeen();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSection]);
-
-  return (
-    <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>
-            <Link to="/" className="flex items-center space-x-2 p-2">
-              <img 
-                src={fivesomLogo} 
-                alt="FIVESOM Logo" 
-                width="40"
-                height="40"
-                className="w-[40px] h-[40px] object-contain cursor-pointer"
-              />
-              <span className="font-bold text-lg">FIVESOM</span>
-            </Link>
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {sidebarItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <button 
-                      onClick={() => setActiveSection(item.key)}
-                      className={`flex items-center space-x-2 w-full ${
-                        activeSection === item.key ? 'text-primary font-medium' : ''
-                      }`}
-                    >
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
-                      {item.key === 'orders' && newDeliveryCount > 0 && (
-                        <span className="ml-auto flex items-center gap-1">
-                          <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
-                          <span className="min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none">
-                            {newDeliveryCount > 99 ? '99+' : newDeliveryCount}
-                          </span>
-                        </span>
-                      )}
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter>
-        <div className="p-4 border-t">
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={sidebarPhoto} className="object-cover" />
-              <AvatarFallback className="bg-purple-500 text-white text-xs">{initials}</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="text-sm font-medium">{profile?.full_name || 'Buyer'}</p>
-              <p className="text-xs text-muted-foreground">Online</p>
-            </div>
-          </div>
-        </div>
-      </SidebarFooter>
-    </Sidebar>
-  );
-};
-
 const BuyerDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -148,6 +77,8 @@ const BuyerDashboard = () => {
   const { user } = useAuth();
   const myIdentity = useMyPhoto();
   const navigate = useNavigate();
+  const { newDeliveryCount, markSeen } = useNewDeliveries();
+  const { unreadCount } = useUnreadMessages();
 
   const fetchProfile = async () => {
     if (!user) return;
@@ -233,15 +164,15 @@ const BuyerDashboard = () => {
         return (
           <div className="space-y-6">
             <SomAdSlot placement="dashboard_banner" viewerRole="buyer" className="rounded-lg overflow-hidden" >
-              <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 sm:p-6 rounded-lg">
+              <div className="p-1">
                 <div className="flex items-center gap-4">
-                  <Avatar className="h-14 w-14 border-2 border-white/50">
+                  <Avatar className="h-14 w-14">
                     <AvatarImage src={myPhoto} className="object-cover" />
-                    <AvatarFallback className="bg-card/20 text-white text-lg">{initials}</AvatarFallback>
+                    <AvatarFallback className="text-lg">{initials}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <h1 className="text-xl sm:text-2xl font-bold mb-1">Welcome back, {profile?.full_name || 'Buyer'}! 👋</h1>
-                    <p className="text-purple-100 text-sm sm:text-base">
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1">Welcome back, {profile?.full_name || 'Buyer'}! 👋</h1>
+                    <p className="text-muted-foreground text-sm sm:text-base">
                       {profile?.email}{profile?.location ? ` · ${profile.location}` : ''}
                     </p>
                   </div>
@@ -272,62 +203,25 @@ const BuyerDashboard = () => {
               </section>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Active Orders</CardTitle>
-                  <ShoppingBag className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.activeOrders}</div>
-                  <p className="text-xs text-muted-foreground">{stats.activeOrders === 0 ? 'No active orders' : 'Orders in progress'}</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Completed Projects</CardTitle>
-                  <CheckCircle className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.completedOrders}</div>
-                  <p className="text-xs text-muted-foreground">{stats.completedOrders === 0 ? 'Start ordering services' : 'Successfully completed'}</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">${stats.totalSpent.toFixed(2)}</div>
-                  <p className="text-xs text-muted-foreground">All time</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Available Balance</CardTitle>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">${Number(stats.walletBalance).toFixed(2)}</div>
-                  <p className="text-xs text-muted-foreground">Wallet balance</p>
-                </CardContent>
-              </Card>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <StatTile featured label="Active Orders" value={stats.activeOrders} hint={stats.activeOrders ? 'In progress now' : 'No active orders'} icon={ShoppingBag} />
+              <StatTile label="Completed Projects" value={stats.completedOrders} hint="Successfully completed" icon={CheckCircle} />
+              <StatTile label="Total Spent" value={`$${stats.totalSpent.toFixed(2)}`} hint="All time" icon={DollarSign} />
+              <StatTile label="Available Balance" value={`$${Number(stats.walletBalance).toFixed(2)}`} hint="Wallet balance" icon={Wallet} />
             </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Clock className="w-5 h-5 mr-2" />
-                  Active Orders
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  No active orders yet. Browse services to get started!
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              {[
+                { t: 'Find talent', d: 'Browse professional services', icon: Search, go: () => navigate('/explore') },
+                { t: 'Post a job', d: 'Get proposals from freelancers', icon: Briefcase, go: () => setActiveSection('jobs') },
+                { t: 'My orders', d: newDeliveryCount ? `${newDeliveryCount} new deliveries` : 'Track your work', icon: Clock, go: () => setActiveSection('orders') },
+              ].map(c => (
+                <button key={c.t} type="button" onClick={c.go} className="group flex items-center gap-4 rounded-2xl border bg-card p-5 text-left transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><c.icon className="h-5 w-5" /></span>
+                  <span><span className="block font-semibold">{c.t}</span><span className="text-sm text-muted-foreground">{c.d}</span></span>
+                </button>
+              ))}
+            </div>
           </div>
         );
 
@@ -346,39 +240,27 @@ const BuyerDashboard = () => {
     }
   };
 
+  const navItems = [
+    { title: 'Dashboard', icon: Home, key: 'dashboard' },
+    { title: 'My Orders', icon: ShoppingBag, key: 'orders', count: newDeliveryCount },
+    { title: 'My Jobs', icon: Briefcase, key: 'jobs' },
+    { title: 'Messages', icon: MessageSquare, key: 'messages', count: unreadCount },
+    { title: 'Help Center', icon: HelpCircle, key: 'help', group: 'secondary' as const },
+    { title: 'Settings', icon: Settings, key: 'settings', group: 'secondary' as const },
+  ];
+
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <BuyerSidebar activeSection={activeSection} setActiveSection={setActiveSection} profile={profile} />
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-            <SidebarTrigger className="-ml-1" />
-            {activeSection !== 'dashboard' && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setActiveSection('dashboard')}
-                className="ml-1"
-              >
-                <ArrowLeft className="w-4 h-4 mr-1" />
-                Back to Dashboard
-              </Button>
-            )}
-            <div className="ml-auto flex items-center space-x-4">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src={myPhoto} className="object-cover" />
-                <AvatarFallback className="bg-purple-500 text-white text-xs">{initials}</AvatarFallback>
-              </Avatar>
-              <Badge variant="outline">Buyer</Badge>
-            </div>
-          </header>
-          
-          <div className="flex-1 p-4 sm:p-6">
-            {renderContent()}
-          </div>
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
+    <DashboardShell
+      items={navItems}
+      active={activeSection}
+      onSelect={(k) => { if (k === 'orders') markSeen(); setActiveSection(k); }}
+      roleLabel="Buyer"
+      name={profile?.full_name || 'Buyer'}
+      email={profile?.email}
+      photo={myPhoto}
+    >
+      {renderContent()}
+    </DashboardShell>
   );
 };
 

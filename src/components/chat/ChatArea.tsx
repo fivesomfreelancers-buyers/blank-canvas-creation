@@ -13,6 +13,7 @@ import supportLogo from '@/assets/fivesom-support-logo.png';
 import VerifiedBadge from '@/components/VerifiedBadge';
 import ReportDialog from '@/components/ReportDialog';
 import AttachmentPreview from './AttachmentPreview';
+import MessageText from './MessageText';
 import MessageActions from './MessageActions';
 import OnlineIndicator from '@/components/presence/OnlineIndicator';
 import type { ConversationItem, ChatMessage, ConversationKind } from '@/hooks/useConversations';
@@ -103,7 +104,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   const removeMessage = deleteMessage || deleteAttachment;
 
   return (
-    <Card className="lg:col-span-2 flex flex-col flex-1 h-full min-h-0 min-w-0 overflow-hidden rounded-none border-x-0 sm:rounded-lg sm:border-x">
+    <Card className="flex flex-col flex-1 h-full min-h-0 min-w-0 overflow-hidden rounded-none border-0 shadow-none">
       <CardHeader className="shrink-0 border-b bg-card/95 px-3 py-2.5 backdrop-blur supports-[backdrop-filter]:bg-card/85 sm:px-6 sm:py-4">
         <CardTitle>
           {selectedConvo ? (
@@ -166,7 +167,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
           </div>
         ) : (
           <>
-            <Conversation className="flex-1 min-h-0 min-w-0 bg-muted/20">
+            <Conversation className="flex-1 min-h-0 min-w-0 bg-background">
               <ConversationContent className="gap-1.5 px-3 py-4 sm:px-5">
 
               {messages.length === 0 && !partnerTyping ? (
@@ -201,13 +202,13 @@ const ChatArea: React.FC<ChatAreaProps> = ({
                           />
                         )}
                         <MessageContent
-                          className={`max-w-[88%] sm:max-w-[70%] min-w-0 gap-0 px-3.5 py-2 text-sm chat-text shadow-sm rounded-2xl ${
+                          className={`max-w-[88%] sm:max-w-[70%] min-w-0 gap-0 px-3.5 py-2 text-sm chat-text rounded-2xl ${
                             isMine
                               ? `bg-primary text-primary-foreground ${lastOfGroup ? 'rounded-br-md' : ''}`
-                              : `bg-card text-foreground border ${lastOfGroup ? 'rounded-bl-md' : ''}`
+                              : `bg-muted text-foreground ${lastOfGroup ? 'rounded-bl-md' : ''}`
                           }`}
                         >
-                          <p className="chat-text"><SuspiciousText text={msg.message} /></p>
+                          <MessageText text={msg.message} />
                           {msg.attachment_url && (
                             <AttachmentPreview
                               url={msg.attachment_url}

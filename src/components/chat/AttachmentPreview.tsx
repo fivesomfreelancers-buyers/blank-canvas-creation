@@ -178,11 +178,28 @@ const AttachmentPreview: React.FC<Props> = ({
   const ActionButton = () => (
     <div className="flex items-center gap-1 flex-shrink-0">
       {hideDownload ? null : allowDownload ? (
-        <Button asChild variant={isOwn ? 'secondary' : 'outline'} size="sm">
-          <a href={signedUrl} target="_blank" rel="noopener noreferrer" download={name} aria-label="Download">
-            <Download className="w-4 h-4 mr-2" />
-            Download
-          </a>
+        <Button
+          variant={isOwn ? 'secondary' : 'outline'}
+          size="sm"
+          aria-label="Download"
+          onClick={async () => {
+            if (!signedUrl) return;
+            try {
+              const res = await fetch(signedUrl);
+              if (!res.ok) throw new Error('fetch failed');
+              const blob = await res.blob();
+              const href = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = href; a.download = name || 'file';
+              document.body.appendChild(a); a.click(); a.remove();
+              setTimeout(() => URL.revokeObjectURL(href), 30_000);
+            } catch {
+              window.open(signedUrl, '_blank', 'noopener');
+            }
+          }}
+        >
+          <Download className="w-4 h-4 mr-2" />
+          Download
         </Button>
       ) : (
         <div className="flex items-center gap-2 text-xs text-muted-foreground">

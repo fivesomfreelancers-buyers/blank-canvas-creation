@@ -6,7 +6,7 @@ import { Link, Navigate } from 'react-router-dom';
 import fivesomLogo from '@/assets/fivesom-logo.png';
 import { 
   Home, Briefcase, ShoppingBag, MessageSquare, Package, Wallet, Settings, User,
-  Plus, Eye, DollarSign, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2, RefreshCw, ArrowLeft, Scale
+  Plus, Eye, DollarSign, FileText, GraduationCap, Clock, CheckCircle, UserCheck, HelpCircle, ShieldCheck, Loader2, RefreshCw, ArrowLeft, Scale
 } from 'lucide-react';
 
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -35,115 +35,14 @@ import BlueTickCard from '@/components/freelancer/BlueTickCard';
 import { useNewOrders } from '@/hooks/useNewOrders';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import MyApplications from './jobs/MyApplications';
+import DashboardShell, { StatTile } from '@/components/dashboard/DashboardShell';
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 interface UserProfile {
   full_name: string;
   email: string;
   profile_image_url: string | null;
 }
-
-const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userProfile, userId, completedOrders }: { 
-  activeSection: string; setActiveSection: (section: string) => void; isVerified: boolean; userProfile: UserProfile | null; userId: string | null; completedOrders: number
-}) => {
-  const { newOrderCount, markSeen } = useNewOrders();
-  const { unreadCount } = useUnreadMessages();
-  // Shared photo so the dashboard always matches the website header.
-  const myIdentity = useMyPhoto();
-  const sidebarPhoto = myIdentity.photoUrl || userProfile?.profile_image_url || null;
-  const sidebarItems = [
-    { title: "Dashboard", icon: Home, key: "dashboard" },
-    { title: "My Gigs", icon: Briefcase, key: "gigs" },
-    { title: "My Applications", icon: Briefcase, key: "applications" },
-    { title: "Orders Received", icon: ShoppingBag, key: "orders" },
-    { title: "Messages", icon: MessageSquare, key: "messages" },
-    { title: "Deliver Work", icon: Package, key: "deliver" },
-    { title: "Wallet", icon: Wallet, key: "wallet" },
-    { title: "Become an Instructor", icon: Briefcase, key: "instructor" },
-    { title: "Help Center", icon: HelpCircle, key: "help" },
-    { title: "Settings", icon: Settings, key: "settings" },
-    { title: "My Profile", icon: User, key: "profile" },
-  ];
-
-  return (
-    <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>
-            <Link to="/" className="flex items-center space-x-2 p-2">
-              <img 
-                src={fivesomLogo} 
-                alt="FIVESOM Logo" 
-                width="40" height="40"
-                className="w-[40px] h-[40px] object-contain cursor-pointer"
-              />
-              <span className="font-bold text-lg">FIVESOM</span>
-            </Link>
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {sidebarItems.map((item) => {
-                const count = item.key === 'orders' ? newOrderCount : item.key === 'messages' ? unreadCount : 0;
-                return (
-                <SidebarMenuItem key={item.key}>
-                  <SidebarMenuButton asChild>
-                    <button 
-                      onClick={() => {
-                        if (item.key === 'orders') markSeen();
-                        setActiveSection(item.key);
-                      }}
-                      className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-colors ${
-                        activeSection === item.key 
-                          ? 'bg-primary text-primary-foreground' 
-                          : 'text-foreground hover:bg-accent'
-                      }`}
-                    >
-                      <span className="relative flex items-center">
-                        <item.icon className="w-5 h-5" />
-                        {count > 0 && (
-                          <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-background" />
-                        )}
-                      </span>
-                      <span className="flex-1 text-left">{item.title}</span>
-                      {count > 0 && (
-                        <span className="min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none">
-                          {count > 99 ? '99+' : count}
-                        </span>
-                      )}
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              );})}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        {isVerified && completedOrders >= 1 && (
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <BlueTickCard userId={userId} onOpen={() => setActiveSection('verify')} />
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
-      </SidebarContent>
-      <SidebarFooter>
-        <div className="p-4 border-t">
-          <div className="flex items-center space-x-3">
-            {sidebarPhoto ? (
-              <img src={sidebarPhoto} alt="" className="w-8 h-8 rounded-full object-cover" />
-            ) : (
-              <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                {userProfile?.full_name?.[0]?.toUpperCase() || 'F'}
-              </div>
-            )}
-            <div className="min-w-0">
-              <p className="text-sm font-medium truncate inline-flex items-center gap-1">{userProfile?.full_name || 'Freelancer'}{isVerified && <VerifiedBadge size="sm" />}</p>
-              <p className="text-xs text-muted-foreground truncate">{userProfile?.email || 'Online'}</p>
-            </div>
-          </div>
-        </div>
-      </SidebarFooter>
-    </Sidebar>
-  );
-};
 
 const FreelancerDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -157,6 +56,10 @@ const FreelancerDashboard = () => {
   const [revisionRequests, setRevisionRequests] = useState<any[]>([]);
   const [activeDisputes, setActiveDisputes] = useState<any[]>([]);
   const navigate = useNavigate();
+  const { newOrderCount, markSeen } = useNewOrders();
+  const { unreadCount } = useUnreadMessages();
+  const myIdentity = useMyPhoto();
+  const [weekly, setWeekly] = useState<{ day: string; orders: number }[]>([]);
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -259,6 +162,15 @@ const FreelancerDashboard = () => {
           setActiveDisputes([]);
         }
 
+        const since = new Date(); since.setHours(0,0,0,0); since.setDate(since.getDate() - 6);
+        const { data: weekOrders } = await supabase
+          .from('orders').select('created_at').eq('freelancer_id', freelancer.id).gte('created_at', since.toISOString());
+        const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(since); d.setDate(since.getDate() + i); return d; });
+        setWeekly(days.map(d => ({
+          day: d.toLocaleDateString([], { weekday: 'short' }),
+          orders: (weekOrders || []).filter((o: any) => new Date(o.created_at).toDateString() === d.toDateString()).length,
+        })));
+
         const { data: latestOrders } = await supabase
           .from('orders')
           .select('*, gigs(title)')
@@ -360,53 +272,43 @@ const FreelancerDashboard = () => {
         return (
           <div className="space-y-6">
             <SomAdSlot placement="dashboard_banner" viewerRole="freelancer" className="rounded-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-4 sm:p-6 rounded-lg">
-                <h1 className="text-xl sm:text-2xl font-bold mb-2 inline-flex items-center gap-2">Welcome back, {userProfile?.full_name?.split(' ')[0] || 'Freelancer'}{isVerified && <VerifiedBadge size="lg" />}! 👋</h1>
-                <p className="text-cyan-100 text-sm sm:text-base">Ready to take on new challenges today?</p>
+              <div className="p-1">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1 inline-flex items-center gap-2">Welcome back, {userProfile?.full_name?.split(' ')[0] || 'Freelancer'}{isVerified && <VerifiedBadge size="lg" />}! 👋</h1>
+                <p className="text-muted-foreground text-sm sm:text-base">Here is what is happening with your work today.</p>
               </div>
             </SomAdSlot>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Gigs</CardTitle>
-                  <Briefcase className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalGigs}</div>
-                  <p className="text-xs text-muted-foreground">{stats.totalGigs === 0 ? 'Create your first gig' : 'Active service offerings'}</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Active Orders</CardTitle>
-                  <ShoppingBag className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.activeOrders}</div>
-                  <p className="text-xs text-muted-foreground">{stats.activeOrders === 0 ? 'No active orders' : 'Orders in progress'}</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Pending Earnings</CardTitle>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">${stats.pendingEarnings.toFixed(2)}</div>
-                  <p className="text-xs text-muted-foreground">{stats.pendingEarnings === 0 ? 'Complete orders to earn' : 'From active orders'}</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Completed Orders</CardTitle>
-                  <CheckCircle className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.completedOrders}</div>
-                  <p className="text-xs text-muted-foreground">{stats.completedOrders === 0 ? 'Start delivering' : 'Successfully delivered'}</p>
-                </CardContent>
-              </Card>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <StatTile featured label="Active Orders" value={stats.activeOrders} hint={stats.activeOrders ? 'In progress now' : 'No active orders'} icon={ShoppingBag} />
+              <StatTile label="Total Gigs" value={stats.totalGigs} hint={stats.totalGigs ? 'Service offerings' : 'Create your first gig'} icon={Briefcase} />
+              <StatTile label="Pending Earnings" value={`$${stats.pendingEarnings.toFixed(2)}`} hint="From active orders" icon={DollarSign} />
+              <StatTile label="Completed Orders" value={stats.completedOrders} hint="Successfully delivered" icon={CheckCircle} />
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+              <div className="rounded-2xl border bg-card p-5 lg:col-span-2">
+                <div className="mb-4 flex items-center justify-between">
+                  <p className="font-semibold">Orders this week</p>
+                  <span className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">Weekly</span>
+                </div>
+                <div className="h-56">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={weekly}>
+                      <XAxis dataKey="day" axisLine={false} tickLine={false} fontSize={12} />
+                      <YAxis allowDecimals={false} axisLine={false} tickLine={false} fontSize={12} width={28} />
+                      <Tooltip cursor={{ fill: 'hsl(var(--muted))' }} />
+                      <Bar dataKey="orders" radius={[12, 12, 12, 12]} fill="hsl(var(--primary))" barSize={34} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              <div className="space-y-3 rounded-2xl border bg-card p-5">
+                <p className="font-semibold">Quick actions</p>
+                <Button className="w-full justify-start" onClick={() => setActiveSection('gigs')}><Plus className="mr-2 h-4 w-4" />Create new gig</Button>
+                <Button variant="outline" className="w-full justify-start" onClick={() => setActiveSection('deliver')}><Package className="mr-2 h-4 w-4" />Deliver work</Button>
+                <Button variant="outline" className="w-full justify-start" onClick={() => setActiveSection('wallet')}><Wallet className="mr-2 h-4 w-4" />View wallet</Button>
+                <Button variant="outline" className="w-full justify-start" onClick={() => setActiveSection('messages')}><MessageSquare className="mr-2 h-4 w-4" />Messages{unreadCount > 0 ? ` (${unreadCount})` : ''}</Button>
+              </div>
             </div>
 
             {activeDisputes.length > 0 && (
@@ -571,8 +473,8 @@ const FreelancerDashboard = () => {
               </Card>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
+            <div className="grid grid-cols-1 gap-6">
+              <Card className="rounded-2xl">
                 <CardHeader>
                   <CardTitle className="flex justify-between items-center">
                     <span>Recent Order Requests</span>
@@ -605,25 +507,6 @@ const FreelancerDashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader><CardTitle>Quick Actions</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-                    <Button className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2" onClick={() => setActiveSection('gigs')}>
-                      <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
-                      <span className="text-xs sm:text-sm">Create New Gig</span>
-                    </Button>
-                    <Button variant="outline" className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2" onClick={() => setActiveSection('wallet')}>
-                      <Eye className="w-5 h-5 sm:w-6 sm:h-6" />
-                      <span className="text-xs sm:text-sm">View Wallet</span>
-                    </Button>
-                    <Button variant="outline" className="h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 lg:col-span-2" onClick={() => setActiveSection('messages')}>
-                      <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
-                      <span className="text-xs sm:text-sm">Check Messages</span>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
         );
@@ -650,34 +533,33 @@ const FreelancerDashboard = () => {
     }
   };
 
+  const navItems = [
+    { title: 'Dashboard', icon: Home, key: 'dashboard' },
+    { title: 'My Gigs', icon: Briefcase, key: 'gigs' },
+    { title: 'Orders Received', icon: ShoppingBag, key: 'orders', count: newOrderCount },
+    { title: 'Deliver Work', icon: Package, key: 'deliver' },
+    { title: 'My Applications', icon: FileText, key: 'applications' },
+    { title: 'Messages', icon: MessageSquare, key: 'messages', count: unreadCount },
+    { title: 'Wallet', icon: Wallet, key: 'wallet' },
+    { title: 'My Profile', icon: User, key: 'profile' },
+    { title: 'Become an Instructor', icon: GraduationCap, key: 'instructor', group: 'secondary' as const },
+    { title: 'Help Center', icon: HelpCircle, key: 'help', group: 'secondary' as const },
+    { title: 'Settings', icon: Settings, key: 'settings', group: 'secondary' as const },
+  ];
+
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <FreelancerSidebar activeSection={activeSection} setActiveSection={setActiveSection} isVerified={isVerified} userProfile={userProfile} userId={userId} completedOrders={stats.completedOrders} />
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-            <SidebarTrigger className="-ml-1" />
-            {activeSection !== 'dashboard' && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setActiveSection('dashboard')}
-                className="ml-1"
-              >
-                <ArrowLeft className="w-4 h-4 mr-1" />
-                Back to Dashboard
-              </Button>
-            )}
-            <div className="ml-auto flex items-center space-x-4">
-              <Badge variant="outline">Freelancer</Badge>
-            </div>
-          </header>
-          <div className="flex-1 p-4 sm:p-6">
-            {renderContent()}
-          </div>
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
+    <DashboardShell
+      items={navItems}
+      active={activeSection}
+      onSelect={(k) => { if (k === 'orders') markSeen(); setActiveSection(k); }}
+      roleLabel={isVerified ? 'Verified freelancer' : 'Freelancer'}
+      name={userProfile?.full_name || 'Freelancer'}
+      email={userProfile?.email}
+      photo={myIdentity.photoUrl || userProfile?.profile_image_url}
+      sidebarExtra={isVerified && stats.completedOrders >= 1 ? <BlueTickCard userId={userId} onOpen={() => setActiveSection('verify')} /> : undefined}
+    >
+      {renderContent()}
+    </DashboardShell>
   );
 };
 
