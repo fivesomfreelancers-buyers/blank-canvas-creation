@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import HomeHero from '../components/home/HomeHero';
 import ClientProjects from '../components/home/ClientProjects';
-import HowFivesomWorks from '../components/home/HowFivesomWorks';
+import CategoryGrid from '../components/home/CategoryGrid';
 import EscrowSection from '../components/home/EscrowSection';
 import FeaturedFreelancers from '../components/home/FeaturedFreelancers';
 import HomeCta from '../components/home/HomeCta';
@@ -30,7 +30,7 @@ const Index = () => {
         <HomeHero gigs={gigs} />
         <div className="home-story">
           <ClientProjects />
-          <HowFivesomWorks />
+          <CategoryGrid />
           <FeaturedFreelancers gigs={gigs} loading={loading} />
           <EscrowSection />
           <HomeFAQ />

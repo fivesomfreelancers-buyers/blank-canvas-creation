@@ -197,6 +197,7 @@ const Navbar = () => {
                 </div>
               </DropdownMenuContent>
             </DropdownMenu>
+            <Link to="/pricing" className="text-muted-foreground hover:text-foreground transition-colors">Pricing</Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -378,6 +379,7 @@ const Navbar = () => {
                 </div>
               )}
             </div>
+            <Link to="/pricing" onClick={() => setIsMenuOpen(false)} className="flex min-h-12 items-center text-base text-foreground hover:text-primary">Pricing</Link>
             {user ? (
               <>
                 <div className="flex items-center space-x-3 py-2 border-t border-border pt-4">
