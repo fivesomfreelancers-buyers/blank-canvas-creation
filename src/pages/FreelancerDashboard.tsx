@@ -51,6 +51,8 @@ const FreelancerDashboard = () => {
   const [removalInfo, setRemovalInfo] = useState<{ at: string | null; reason: string | null } | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const [isInstructor, setIsInstructor] = useState(false);
+  useEffect(() => { if (!userId) return; (supabase as any).rpc('is_approved_instructor', { _uid: userId }).then(({ data }: any) => setIsInstructor(!!data)); }, [userId]);
   const [stats, setStats] = useState({ totalGigs: 0, activeOrders: 0, pendingEarnings: 0, completedOrders: 0 });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [revisionRequests, setRevisionRequests] = useState<any[]>([]);
@@ -511,7 +513,7 @@ const FreelancerDashboard = () => {
           </div>
         );
       case 'gigs': return <FreelancerGigs />;
-      case 'instructor': return <Navigate to="/academy/become-instructor" replace />;
+      case 'instructor': return <Navigate to={isInstructor ? '/academy/studio' : '/academy/become-instructor'} replace />;
       case 'applications': return <MyApplications />;
       case 'orders': return <FreelancerOrders />;
       case 'messages': return <FreelancerMessages />;
@@ -542,7 +544,7 @@ const FreelancerDashboard = () => {
     { title: 'Messages', icon: MessageSquare, key: 'messages', count: unreadCount },
     { title: 'Wallet', icon: Wallet, key: 'wallet' },
     { title: 'My Profile', icon: User, key: 'profile' },
-    { title: 'Become an Instructor', icon: GraduationCap, key: 'instructor', group: 'secondary' as const },
+    { title: isInstructor ? 'Instructor Studio' : 'Become an Instructor', icon: GraduationCap, key: 'instructor', group: 'secondary' as const },
     { title: 'Help Center', icon: HelpCircle, key: 'help', group: 'secondary' as const },
     { title: 'Settings', icon: Settings, key: 'settings', group: 'secondary' as const },
   ];

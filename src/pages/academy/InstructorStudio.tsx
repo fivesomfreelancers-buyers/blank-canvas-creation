@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Loader2, Trash2, LayoutGrid, GraduationCap, ChevronDown, Users, Crown, BookOpen, FilePlus2, Layers, Eye } from 'lucide-react';
+import { Loader2, Trash2, Video, MessagesSquare, LayoutGrid, GraduationCap, ChevronDown, Users, Crown, BookOpen, FilePlus2, Layers, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { ACADEMY_PLANS, courseLimit, db, uploadAcademyFile, uploadPublicCourseMedia, videoDurationSeconds } from '@/lib/academy';
@@ -33,6 +33,24 @@ const InstructorStudio = () => {
   const [lv, setLv] = useState<File | null>(null);
   const [la, setLa] = useState<File | null>(null);
   const [busy, setBusy] = useState('');
+  const [lives, setLives] = useState<any[]>([]);
+  const [lvf, setLvf] = useState<any>({ course_id: '', title: '', starts_at: '', duration: '60', meeting_url: '', notes: '' });
+  const [posts, setPosts] = useState<any[]>([]);
+  const [cc, setCc] = useState('');
+  const [post, setPost] = useState('');
+  const loadLives = async () => { if (!user) return; const { data } = await db.from('academy_live_sessions').select('*').eq('instructor_id', user.id).order('starts_at'); setLives(data ?? []); };
+  const loadPosts = async (id: string) => { setCc(id); const { data } = await db.from('academy_community_posts').select('*').eq('course_id', id).order('created_at', { ascending: false }); setPosts(data ?? []); };
+  useEffect(() => { loadLives(); }, [user]);
+  const addLive = async () => {
+    if (!user || !lvf.course_id || !lvf.title.trim() || !lvf.starts_at) { toast.error('Course, title and start time are required.'); return; }
+    const { error } = await db.from('academy_live_sessions').insert({ course_id: lvf.course_id, instructor_id: user.id, title: lvf.title, starts_at: new Date(lvf.starts_at).toISOString(), duration_minutes: parseInt(lvf.duration) || 60, meeting_url: lvf.meeting_url || null, notes: lvf.notes || null });
+    if (error) toast.error(error.message); else { toast.success('Live class scheduled'); setLvf({ ...lvf, title: '', starts_at: '', meeting_url: '', notes: '' }); loadLives(); }
+  };
+  const addPost = async () => {
+    if (!user || !cc || !post.trim()) return;
+    const { error } = await db.from('academy_community_posts').insert({ course_id: cc, author_id: user.id, body: post.trim() });
+    if (error) toast.error(error.message); else { setPost(''); loadPosts(cc); }
+  };
 
   const load = async () => {
     if (!user) return;
@@ -93,7 +111,7 @@ const InstructorStudio = () => {
   };
   const removeLesson = async (id: string) => { await db.from('academy_lessons').delete().eq('id', id); loadLessons(selected); };
 
-  const shell = (c: React.ReactNode) => (<div className="min-h-screen bg-background"><SEO title="Instructor Studio — Fivesom Academy" description="Manage your Fivesom Academy courses." canonical="/academy/studio" /><Navbar /><main className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-10">{c}</main><Footer /></div>);
+  const shell = (c: React.ReactNode) => (<div className="min-h-screen bg-background"><SEO title="Instructor Studio — Fivesom Academy" description="Manage your Fivesom Academy courses." canonical="/academy/studio" /><Navbar /><main className="w-full max-w-[1800px] mx-auto px-4 sm:px-8 pt-24 pb-10">{c}</main><Footer /></div>);
   if (plan === undefined) return shell(<Loader2 className="h-6 w-6 animate-spin mx-auto" />);
   if (!plan) return shell(<Card><CardContent className="p-8 text-center space-y-3"><p>Instructor Studio opens after your instructor application is approved.</p><Button asChild><Link to="/academy/become-instructor">Become an Instructor</Link></Button></CardContent></Card>);
 
@@ -113,10 +131,12 @@ const InstructorStudio = () => {
       { key: 'published', title: 'Published', count: by(['published']).length },
       { key: 'rejected', title: 'Rejected', count: by(['rejected']).length } ] },
     { key: 'content', title: 'Course Content', icon: Layers },
+    { key: 'live', title: 'Live Classes', icon: Video },
+    { key: 'community', title: 'Community', icon: MessagesSquare },
     { key: 'students', title: 'Students', icon: Users },
     { key: 'plan', title: 'Subscription & Plan', icon: Crown },
   ];
-  const titles: Record<string, string> = { overview: 'Overview', all: 'My Courses', create: 'Add New Course', draft: 'Draft Courses', pending: 'Pending Review', published: 'Published Courses', rejected: 'Rejected Courses', content: 'Course Content', students: 'Students', plan: 'Subscription & Plan' };
+  const titles: Record<string, string> = { overview: 'Overview', all: 'My Courses', create: 'Add New Course', draft: 'Draft Courses', pending: 'Pending Review', published: 'Published Courses', rejected: 'Rejected Courses', content: 'Course Content', students: 'Students', live: 'Live Classes', community: 'Community', plan: 'Subscription & Plan' };
 
   const sidebar = (<aside className="lg:w-64 shrink-0 rounded-3xl border border-border bg-card p-3 lg:sticky lg:top-24 self-start">
     <p className="px-3 pt-2 pb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Instructor Studio</p>
@@ -199,6 +219,24 @@ const InstructorStudio = () => {
       <div className="flex items-center justify-between"><h2 className="text-xl font-bold">Course List</h2><Button onClick={() => setView('create')}><FilePlus2 className="h-4 w-4" /> New course</Button></div>{table(courses)}</div>),
     all: table(courses), draft: table(by(['draft', 'changes_requested', 'unpublished'])), pending: table(by(['pending_review'])), published: table(by(['published'])), rejected: table(by(['rejected'])),
     create, content,
+    live: (<div className="space-y-5"><div className="rounded-2xl border border-border bg-card p-5 space-y-4"><h2 className="text-lg font-bold">Schedule a live class</h2><div className="grid sm:grid-cols-2 gap-3">
+      <div className="space-y-1.5"><Label>Course *</Label><select className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm" value={lvf.course_id} onChange={(e) => setLvf({ ...lvf, course_id: e.target.value })}><option value="">Choose course</option>{courses.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}</select></div>
+      <div className="space-y-1.5"><Label>Title *</Label><Input value={lvf.title} onChange={(e) => setLvf({ ...lvf, title: e.target.value })} /></div>
+      <div className="space-y-1.5"><Label>Date & time *</Label><Input type="datetime-local" value={lvf.starts_at} onChange={(e) => setLvf({ ...lvf, starts_at: e.target.value })} /></div>
+      <div className="space-y-1.5"><Label>Duration (minutes)</Label><Input type="number" value={lvf.duration} onChange={(e) => setLvf({ ...lvf, duration: e.target.value })} /></div>
+      <div className="space-y-1.5 sm:col-span-2"><Label>Meeting link (Zoom, Google Meet…)</Label><Input value={lvf.meeting_url} onChange={(e) => setLvf({ ...lvf, meeting_url: e.target.value })} /></div>
+      <div className="space-y-1.5 sm:col-span-2"><Label>Notes for students</Label><Textarea rows={2} value={lvf.notes} onChange={(e) => setLvf({ ...lvf, notes: e.target.value })} /></div></div>
+      <p className="text-xs text-muted-foreground">{p?.name} plan: {p?.liveDays} live day(s) per week.</p><Button onClick={addLive}>Schedule class</Button></div>
+      <div className="overflow-hidden rounded-2xl border border-border bg-card">{lives.length === 0 ? <p className="p-8 text-center text-sm text-muted-foreground">No live classes scheduled.</p> : lives.map((l) => (<div key={l.id} className="flex flex-wrap items-center gap-3 border-b border-border p-4 last:border-0">
+        <div className="flex-1 min-w-0"><p className="font-semibold">{l.title}</p><p className="text-xs text-muted-foreground">{courses.find((c) => c.id === l.course_id)?.title} · {new Date(l.starts_at).toLocaleString()} · {l.duration_minutes} min</p></div>
+        {new Date(l.starts_at) > new Date() ? <Badge>Upcoming</Badge> : <Badge variant="secondary">Past</Badge>}
+        {l.meeting_url && <Button size="sm" asChild><a href={l.meeting_url} target="_blank" rel="noreferrer">Go live</a></Button>}
+        <Button size="sm" variant="ghost" aria-label="Delete" onClick={async () => { await db.from('academy_live_sessions').delete().eq('id', l.id); loadLives(); }}><Trash2 className="h-4 w-4" /></Button></div>))}</div></div>),
+    community: (<div className="rounded-2xl border border-border bg-card p-5 space-y-4">
+      <div className="flex flex-wrap gap-2">{courses.length === 0 ? <p className="text-sm text-muted-foreground">Create a course first.</p> : courses.map((c) => <Button key={c.id} size="sm" variant={cc === c.id ? 'default' : 'outline'} onClick={() => loadPosts(c.id)}>{c.title}</Button>)}</div>
+      {cc && (<><div className="flex gap-2"><Textarea rows={2} placeholder="Post an announcement or answer students…" value={post} onChange={(e) => setPost(e.target.value)} /><Button onClick={addPost}>Post</Button></div>
+      <div className="space-y-2">{posts.length === 0 ? <p className="text-sm text-muted-foreground">No posts yet.</p> : posts.map((x) => (<div key={x.id} className="rounded-xl border border-border p-3"><div className="flex justify-between text-xs text-muted-foreground"><span>{x.author_id === user?.id ? 'You (instructor)' : 'Student'} · {new Date(x.created_at).toLocaleString()}</span><button onClick={async () => { await db.from('academy_community_posts').delete().eq('id', x.id); loadPosts(cc); }}>Delete</button></div><p className="mt-1 whitespace-pre-wrap text-sm">{x.body}</p></div>))}</div></>)}
+    </div>),
     students: (<div className="overflow-hidden rounded-2xl border border-border bg-card"><table className="w-full text-sm"><thead className="bg-muted/50 text-left text-muted-foreground"><tr><th className="p-4">Course</th><th className="p-4">Enrolled students</th></tr></thead><tbody>{courses.map((c) => <tr key={c.id} className="border-t border-border"><td className="p-4 font-medium">{c.title}</td><td className="p-4">{students[c.id] ?? 0}</td></tr>)}</tbody></table>{courses.length === 0 && <p className="p-8 text-center text-sm text-muted-foreground">No students yet.</p>}</div>),
     plan: (<div className="grid gap-4 sm:grid-cols-3">{stat('Current plan', p.name, Crown)}{stat('Courses used', `${used}/${limit}`, GraduationCap)}{stat('Live days / week', p.liveDays, Users)}</div>),
   };
