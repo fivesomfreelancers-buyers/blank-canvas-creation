@@ -709,3 +709,7 @@
 .rank-drop { opacity: 0; transform: translateY(-24px); transition: opacity .5s ease, transform .5s cubic-bezier(.2,.8,.2,1); }
 .rank-drop[data-shown='true'] { opacity: 1; transform: none; }
 @media (max-width: 767px) { .client-project-panel { height: auto; } .client-project-panel[data-active='false'] { height: 7rem; } .client-project-panel[data-active='true'] { height: 44rem; } }
+
+.rank-stage { overflow: visible; }
+.rank-slot { position:absolute; top:0; left:50%; width:min(100%, 28rem); transform-origin: center top; transition: transform .8s cubic-bezier(.22,.8,.24,1), opacity .6s ease; will-change: transform, opacity; }
+@media (prefers-reduced-motion: reduce) { .rank-slot { transition:none; } }

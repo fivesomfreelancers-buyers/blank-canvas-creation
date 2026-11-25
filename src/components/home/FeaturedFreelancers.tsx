@@ -7,6 +7,10 @@ import ScrollReveal from './ScrollReveal';
 
 interface Props { gigs: SearchGigResult[]; loading: boolean }
 
+const VISIBLE = 5;
+const SLOT_SCALE = [1, 0.93, 0.86, 0.8, 0.74];
+const SLOT_GAP = 112;
+
 const AWARDS = [
   { label: 'Champion', Icon: Crown, cls: 'rank-award-gold' },
   { label: 'Silver', Icon: Medal, cls: 'rank-award-silver' },
@@ -17,19 +21,19 @@ const AWARDS = [
 
 const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
   const [top, setTop] = React.useState<{ id: string; name: string; avatar: string; username: string | null; skill: string; score: number }[]>([]);
-  const [shown, setShown] = React.useState(0);
+  const [offset, setOffset] = React.useState(0);
+  const [paused, setPaused] = React.useState(false);
   React.useEffect(() => {
     (supabase.rpc as any)('get_top_ranked_freelancers', { _limit: 10 }).then(({ data }: any) => {
-      setTop((data ?? []).map((r: any) => ({ id: r.freelancer_id, name: r.full_name || 'Freelancer', avatar: r.profile_image_url ?? r.avatar ?? '', username: r.username, skill: r.skill, score: Number(r.ranking_score) })));
+      setTop((data ?? []).map((r: any) => ({ id: r.freelancer_id, name: r.full_name || 'Freelancer', avatar: r.avatar ?? '', username: r.username, skill: r.skill, score: Number(r.ranking_score) })));
     });
   }, []);
   React.useEffect(() => {
-    if (shown >= top.length) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) { setShown(top.length); return; }
-    const t = setTimeout(() => setShown((n) => n + 1), shown === 0 ? 300 : 1000);
-    return () => clearTimeout(t);
-  }, [shown, top.length]);
+    if (paused || top.length <= VISIBLE) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const t = setInterval(() => setOffset((o) => (o + 1) % top.length), 2000);
+    return () => clearInterval(t);
+  }, [paused, top.length]);
   if (top.length === 0) return null;
 
   return (
@@ -50,13 +54,36 @@ const FeaturedFreelancers: React.FC<Props> = ({ gigs, loading }) => {
             <p className="rank-trust"><BadgeCheck className="h-4 w-4" aria-hidden /> Top talent. Proven performance. Trusted results.</p>
           </ScrollReveal>
 
-          <ol className="flex flex-col items-center gap-4" style={{ minHeight: `${top.length * 6}rem` }}>
+          <ol
+            className="rank-stage relative w-full"
+            style={{ height: `${Math.min(VISIBLE, top.length) * SLOT_GAP}px` }}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            onFocusCapture={() => setPaused(true)}
+            onBlurCapture={() => setPaused(false)}
+          >
             {top.map((f, i) => {
               const award = AWARDS[i];
+              const n = top.length;
+              const slot = (i - offset + n) % n;
+              const visible = slot < VISIBLE;
+              const y = visible ? slot * SLOT_GAP : slot === n - 1 ? -SLOT_GAP : VISIBLE * SLOT_GAP;
+              const scale = visible ? SLOT_SCALE[slot] : 0.7;
               return (
-                <li key={f.id} data-shown={i < shown} className={`rank-drop w-full max-w-md ${["", "sm:ml-5", "sm:ml-10"][i % 3]}`}>
+                <li
+                  key={f.id}
+                  className="rank-slot"
+                  aria-hidden={!visible}
+                  style={{
+                    transform: `translate(-50%, ${y}px) scale(${scale})`,
+                    opacity: visible ? 1 : 0,
+                    zIndex: VISIBLE - Math.min(slot, VISIBLE),
+                    pointerEvents: visible ? 'auto' : 'none',
+                  }}
+                >
                   <Link
                     to={f.username ? `/freelancer/${f.username}` : `/profile/${f.id}`}
+                    tabIndex={visible ? 0 : -1}
                     className={`rank-pill rank-pill-${i + 1} ${award ? 'rank-pill-top' : ''}`}
                     aria-label={`Rank ${i + 1}: ${f.name}, score ${f.score}`}
                   >
