@@ -26,7 +26,7 @@ function playPing() {
 function showBrowserNotif(title: string, body: string) {
   if (typeof window === 'undefined' || !('Notification' in window)) return;
   if (Notification.permission === 'granted') {
-    try { new Notification(title, { body, icon: '/favicon.ico' }); } catch {}
+    try { new Notification(title, { body, icon: '/favicon.png' }); } catch {}
   } else if (Notification.permission !== 'denied') {
     Notification.requestPermission().catch(() => {});
   }
