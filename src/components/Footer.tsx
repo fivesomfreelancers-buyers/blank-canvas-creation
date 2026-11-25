@@ -1,158 +1,114 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Moon, Phone, Sun } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
-import { Button } from './ui/button';
-import { SocialLinks }  from './SocialLinks';
 import logoLight from '@/assets/logo.png';
 import logoDark from '@/assets/logo-new.png';
 import { openCookiePreferences } from '@/lib/cookieConsent';
-import { MARKETS } from '@/content/markets';
 
-export const SUPPORT_EMAIL = 'fivesomsupport@gmail.com';
+const linkClass =
+  'text-sm transition-colors text-muted-foreground hover:text-foreground';
+
+const CATEGORIES = [
+  { name: 'Logo Design', slug: 'logo-design' },
+  { name: 'Motion Graphics', slug: 'motion-graphics' },
+  { name: 'Video Editing', slug: 'video-editing' },
+  { name: 'Web Design', slug: 'web-design' },
+  { name: 'Content Writing', slug: 'content-writing' },
+  { name: 'Web Development', slug: 'web-development' },
+];
 
 export const Footer: React.FC = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
 
   return (
     <footer className="relative overflow-hidden border-t border-border bg-muted/30 px-4 pt-16 sm:px-6 lg:px-8">
-      <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent"
+      />
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-          <div className="md:col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
-              <img 
-                src={isDarkMode ? logoLight : logoDark} 
-                alt="FIVESOM Logo" 
-                width="50"
-                height="50"
-                className="object-contain transition-opacity duration-300"
-              />
-              <span className="brand-wordmark text-xl font-bold">
-                Fivesom
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground mb-4">
-              Connect with talented freelancers and grow your business with confidence.
-            </p>
-
-            <div className="mb-6">
-              <h4 className="font-semibold mb-3 text-foreground">Contact Us</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a
-                    href="https://wa.me/393208057092"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Chat with Fivesom on WhatsApp"
-                    className="text-sm transition-colors text-muted-foreground hover:text-foreground inline-flex items-center gap-2"
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-4 w-4 text-[#25D366]">
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.174-.297-.019-.458.13-.606.134-.133.347-.347.52-.52.174-.174.232-.298.347-.497.115-.198.057-.372-.058-.52-.115-.15-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.075-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.05 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.36-.214-3.742.982.999-3.648-.235-.375a9.86 9.86 0 0 1-1.51-5.26c0-5.445 4.436-9.879 9.888-9.879a9.82 9.82 0 0 1 6.99 2.898 9.82 9.82 0 0 1 2.894 6.99c-.003 5.446-4.437 9.884-9.889 9.884m8.413-18.297A11.82 11.82 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.548 4.142 1.588 5.945L0 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.82 11.82 0 0 0 20.463 3.49"/>
-                    </svg>
-                    +39 320 805 7092
-                  </a>
-                </li>
-
-                <li>
-                  <a href="tel:+252636371510" className="text-sm transition-colors text-muted-foreground hover:text-foreground inline-flex items-center gap-2">
-                    <Phone className="h-4 w-4" />
-                    +252 63 637 1510
-                  </a>
-                </li>
-                <li>
-                  <a href={`mailto:${SUPPORT_EMAIL}`} className="text-sm transition-colors text-muted-foreground hover:text-foreground inline-flex items-center gap-2">
-                    <Mail className="h-4 w-4" />
-                    {SUPPORT_EMAIL}
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <SocialLinks iconSize={18} showLabel />
-
-            {/* Theme Toggle */}
+        {/* Brand + bio */}
+        <div className="mb-12 max-w-md">
+          <div className="mb-4 flex items-center space-x-3">
+            <img
+              src={isDarkMode ? logoLight : logoDark}
+              alt="FIVESOM Logo"
+              width="50"
+              height="50"
+              className="object-contain transition-opacity duration-300"
+            />
+            <span className="brand-wordmark text-xl font-bold">Fivesom</span>
           </div>
-          
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            Fivesom is an African-born, Somali-rooted freelance marketplace
+            connecting talented freelancers with clients across Africa, Asia,
+            Europe and beyond. Every order is protected by escrow, so buyers
+            get the work they paid for and freelancers get paid for the work
+            they deliver.
+          </p>
+        </div>
+
+        {/* Link columns */}
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           <div>
-            <h4 className="font-semibold mb-4 text-foreground">
-              Categories
-            </h4>
+            <h4 className="mb-4 font-semibold text-foreground">Categories</h4>
             <ul className="space-y-2">
-              {[
-                { name: 'Logo Design', slug: 'logo-design' },
-                { name: 'Motion Graphics', slug: 'motion-graphics' },
-                { name: 'Video Editing', slug: 'video-editing' },
-                { name: 'Web Design', slug: 'web-design' },
-                { name: 'Content Writing', slug: 'content-writing' },
-                { name: 'App UI Design', slug: 'app-ui-design' },
-                { name: 'Graphic Design', slug: 'graphic-design' },
-                { name: 'App Development', slug: 'app-development' },
-                { name: 'Web Development', slug: 'web-development' },
-              ].map((item) => (
+              {CATEGORIES.map((item) => (
                 <li key={item.slug}>
-                  <Link to={`/services/${item.slug}`} className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                  <Link to={`/services/${item.slug}`} className={linkClass}>
                     {item.name}
                   </Link>
                 </li>
               ))}
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-semibold mb-4 text-foreground">
-              Support
-            </h4>
-            <ul className="space-y-2">
               <li>
-                <Link to="/docs" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
-                  Documentation
+                <Link to="/explore" className={linkClass}>
+                  All Categories
                 </Link>
               </li>
               <li>
-                <span className="text-sm text-muted-foreground inline-flex items-center gap-1 cursor-not-allowed opacity-70">
-                  <span>VIP Membership</span>
-                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-gradient-to-r from-[#FFD166] to-[#FF9F1C] text-black">Coming Soon</span>
-                </span>
-              </li>
-              <li>
-                <Link to="/support/help-center" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link to="/support/contact" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/support/trust-safety" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
-                  Trust &amp; Safety
-                </Link>
-              </li>
-              <li>
-                <Link to="/freelancers/africa" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                <Link to="/freelancers/africa" className={linkClass}>
                   Freelancers in Africa
                 </Link>
               </li>
               <li>
-                <Link to="/freelancers/somalia" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
-                  Somali freelancer marketplace
+                <Link to="/freelancers/somalia" className={linkClass}>
+                  Somali Freelancer Marketplace
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="mb-4 font-semibold text-foreground">Support</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/support/help-center" className={linkClass}>
+                  Help Center
                 </Link>
               </li>
               <li>
-                <Link to="/legal/terms" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                <Link to="/support/contact" className={linkClass}>
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/support/trust-safety" className={linkClass}>
+                  Trust &amp; Safety
+                </Link>
+              </li>
+              <li>
+                <Link to="/legal/terms" className={linkClass}>
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link to="/legal/privacy" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                <Link to="/legal/privacy" className={linkClass}>
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/legal/cookies" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                <Link to="/legal/cookies" className={linkClass}>
                   Cookie Policy
                 </Link>
               </li>
@@ -160,64 +116,73 @@ export const Footer: React.FC = () => {
                 <button
                   type="button"
                   onClick={openCookiePreferences}
-                  className="text-sm text-left transition-colors text-muted-foreground hover:text-foreground"
+                  className={`${linkClass} text-left`}
                 >
                   Cookie Settings
                 </button>
               </li>
               <li>
-                <Link to="/delete-account" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                <Link to="/delete-account" className={linkClass}>
                   Delete Account
                 </Link>
               </li>
-
-
             </ul>
           </div>
-          
+
           <div>
-            <h4 className="font-semibold mb-4 text-foreground">
-              Community
-            </h4>
+            <h4 className="mb-4 font-semibold text-foreground">Resources</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/blog" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                <Link to="/docs" className={linkClass}>
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link to="/blog" className={linkClass}>
                   Blog
                 </Link>
               </li>
               <li>
-                <Link to="/how-it-works" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
-                  Events
+                <Link to="/academy" className={linkClass}>
+                  Academy
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-sm transition-colors text-muted-foreground hover:text-foreground">
+                <Link to="/pricing" className={linkClass}>
+                  Pricing
+                </Link>
+              </li>
+              <li>
+                <Link to="/how-it-works" className={linkClass}>
+                  How It Works
+                </Link>
+              </li>
+              <li>
+                <Link to="/jobs" className={linkClass}>
+                  Jobs
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="mb-4 font-semibold text-foreground">Company</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/about" className={linkClass}>
                   About
+                </Link>
+              </li>
+              <li>
+                <Link to="/how-it-works" className={linkClass}>
+                  Events
                 </Link>
               </li>
             </ul>
           </div>
         </div>
-        
-        {/* Country landing pages: internal links so every market page is
-            reachable from any page on the site. */}
-        <nav aria-label="Freelancers by country" className="border-t pt-8 mt-8 border-border">
-          <h4 className="font-semibold mb-3 text-foreground">Freelancers by country</h4>
-          <ul className="flex flex-wrap gap-x-4 gap-y-2">
-            {MARKETS.map((m) => (
-              <li key={m.slug}>
-                <Link
-                  to={`/freelancers/${m.slug}`}
-                  className="text-sm transition-colors text-muted-foreground hover:text-foreground"
-                >
-                  {m.slug === 'africa' ? 'Freelancers in Africa' : `${m.name} freelancers`}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
 
-        <div className="border-t pt-8 mt-8 text-center border-border">
+        <div className="mt-12 border-t border-border pt-8 text-center">
           <p className="text-sm text-muted-foreground">
             © 2026 FIVESOM. All rights reserved.
           </p>
