@@ -22,7 +22,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({ chat, heightClass = '' 
 
   if (isMobile) {
     return (
-      <div className="mobile-screen min-h-[26rem] flex flex-col -mx-3 -mb-3 overflow-hidden sm:mx-0 sm:mb-0">
+      <div className="mobile-screen min-h-[26rem] flex flex-col w-full overflow-hidden h-[calc(100dvh-4rem)]">
         {showChat ? (
           <ChatArea
             selectedConvo={chat.selectedConvo}
