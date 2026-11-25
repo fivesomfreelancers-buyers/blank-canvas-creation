@@ -53,6 +53,38 @@ export type Database = {
         }
         Relationships: []
       }
+      academy_community_posts: {
+        Row: {
+          author_id: string
+          body: string
+          course_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          course_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          course_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academy_community_posts_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "academy_courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       academy_courses: {
         Row: {
           category: string
@@ -214,6 +246,50 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "academy_lessons_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "academy_courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      academy_live_sessions: {
+        Row: {
+          course_id: string
+          created_at: string
+          duration_minutes: number
+          id: string
+          instructor_id: string
+          meeting_url: string | null
+          notes: string | null
+          starts_at: string
+          title: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          instructor_id: string
+          meeting_url?: string | null
+          notes?: string | null
+          starts_at: string
+          title: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          instructor_id?: string
+          meeting_url?: string | null
+          notes?: string | null
+          starts_at?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academy_live_sessions_course_id_fkey"
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "academy_courses"
@@ -3227,6 +3303,10 @@ export type Database = {
       }
       is_admin_user: { Args: { _user_id: string }; Returns: boolean }
       is_approved_instructor: { Args: { _uid: string }; Returns: string }
+      is_course_member: {
+        Args: { _course: string; _uid: string }
+        Returns: boolean
+      }
       is_dispute_participant: {
         Args: { _dispute_id: string; _user_id: string }
         Returns: boolean
