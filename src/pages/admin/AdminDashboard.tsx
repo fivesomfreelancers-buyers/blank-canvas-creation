@@ -18,6 +18,7 @@ import BuyerAcquisition from './BuyerAcquisition';
 import AdminUsers from './AdminUsers';
 import AdminEscrow from './AdminEscrow';
 import AdminDisputes from './AdminDisputes';
+import AdminAcademy from '@/pages/admin/AdminAcademy';
 import AdminRanking from './AdminRanking';
 import AdminVerifications from './AdminVerifications';
 import AdminOrders from './AdminOrders';
@@ -87,6 +88,7 @@ const menuGroups: { label: string; items: { key: string; label: string; icon: an
     { key: 'categories', label: 'Categories', icon: FolderTree },
     { key: 'notifications', label: 'Notifications', icon: Bell },
     { key: 'ranking', label: 'Ranking', icon: Trophy },
+    { key: 'academy', label: 'Academy', icon: Trophy },
     { key: 'logs', label: 'Activity Logs', icon: Activity },
     { key: 'about_team', label: 'About / Team', icon: Users },
     { key: 'seo_checks', label: 'SEO Checks', icon: Globe },
@@ -154,6 +156,7 @@ const AdminDashboardInner = () => {
       case 'categories': return <AdminCategories />;
       case 'notifications': return <AdminNotifications />;
       case 'ranking': return <AdminRanking />;
+      case 'academy': return <AdminAcademy />;
       case 'logs': return <AdminLogs />;
       case 'blog': return <AdminBlog />;
       case 'about_team': return <AdminAboutTeam />;

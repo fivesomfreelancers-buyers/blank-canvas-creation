@@ -27,6 +27,7 @@ import AdminChats from '@/pages/admin/AdminChats';
 import AdminFivesomSupport from '@/pages/admin/AdminFivesomSupport';
 import AdminFivesomNews from '@/pages/admin/AdminFivesomNews';
 import AdminReports from '@/pages/admin/AdminReports';
+import AdminAcademy from '@/pages/admin/AdminAcademy';
 import AdminRanking from '@/pages/admin/AdminRanking';
 import AdminDisputes from '@/pages/admin/AdminDisputes';
 import AdminGigs from '@/pages/admin/AdminGigs';
@@ -40,7 +41,7 @@ import { ShieldAlert } from 'lucide-react';
 
 type TabKey =
   | 'overview' | 'verifications' | 'gig_review' | 'orders' | 'chats'
-  | 'fivesom_support' | 'fivesom_news' | 'reports' | 'ranking' | 'disputes'
+  | 'fivesom_support' | 'fivesom_news' | 'reports' | 'ranking' | 'academy' | 'disputes'
   | 'gigs' | 'users' | 'about_team' | 'blog' | 'job_approvals' | 'buyer_acquisition' | 'anti_scam';
 
 const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
@@ -58,6 +59,7 @@ const menu: { key: TabKey; label: string; icon: any; badge?: string }[] = [
   { key: 'blog', label: 'Blog / CMS', icon: Newspaper },
   { key: 'reports', label: 'User Reports', icon: Flag, badge: 'reports' },
   { key: 'ranking', label: 'Ranking', icon: Trophy },
+  { key: 'academy', label: 'Academy', icon: Trophy },
   { key: 'disputes', label: 'Disputes', icon: Scale, badge: 'disputes' },
   { key: 'anti_scam', label: 'Security & Anti-Scam', icon: ShieldAlert },
   { key: 'about_team', label: 'About / Team', icon: Users },
@@ -78,6 +80,7 @@ const titles: Record<TabKey, string> = {
   fivesom_news: 'Fivesom News',
   reports: 'User Reports',
   ranking: 'Ranking',
+  academy: 'Academy',
   disputes: 'Disputes',
   blog: 'Blog / CMS',
   about_team: 'About / Team',
@@ -131,6 +134,7 @@ const FounderDashboardInner = () => {
       case 'fivesom_news': return <AdminFivesomNews />;
       case 'reports': return <AdminReports />;
       case 'ranking': return <AdminRanking />;
+      case 'academy': return <AdminAcademy />;
       case 'disputes': return <AdminDisputes />;
       case 'blog': return <AdminBlog />;
       case 'about_team': return <AdminAboutTeam />;

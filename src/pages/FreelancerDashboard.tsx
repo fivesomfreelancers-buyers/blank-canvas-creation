@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import SomAdSlot from '@/components/ads/SomAdSlot';
 import { supabase } from '@/integrations/supabase/client';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import fivesomLogo from '@/assets/fivesom-logo.png';
 import { 
   Home, Briefcase, ShoppingBag, MessageSquare, Package, Wallet, Settings, User,
@@ -58,6 +58,7 @@ const FreelancerSidebar = ({ activeSection, setActiveSection, isVerified, userPr
     { title: "Messages", icon: MessageSquare, key: "messages" },
     { title: "Deliver Work", icon: Package, key: "deliver" },
     { title: "Wallet", icon: Wallet, key: "wallet" },
+    { title: "Become an Instructor", icon: Briefcase, key: "instructor" },
     { title: "Help Center", icon: HelpCircle, key: "help" },
     { title: "Settings", icon: Settings, key: "settings" },
     { title: "My Profile", icon: User, key: "profile" },
@@ -627,6 +628,7 @@ const FreelancerDashboard = () => {
           </div>
         );
       case 'gigs': return <FreelancerGigs />;
+      case 'instructor': return <Navigate to="/academy/become-instructor" replace />;
       case 'applications': return <MyApplications />;
       case 'orders': return <FreelancerOrders />;
       case 'messages': return <FreelancerMessages />;

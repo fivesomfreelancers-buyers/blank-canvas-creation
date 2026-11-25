@@ -108,6 +108,12 @@ const Navbar = () => {
       icon: Newspaper,
     },
     {
+      title: 'Academy',
+      description: 'Courses and live classes from approved Fivesom instructors.',
+      to: '/academy',
+      icon: BookOpenText,
+    },
+    {
       title: 'Events',
       description: 'Explore the complete Fivesom marketplace journey.',
       to: '/how-it-works',
