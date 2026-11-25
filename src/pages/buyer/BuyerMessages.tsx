@@ -32,13 +32,8 @@ const BuyerMessages = () => {
   }, [location.state, chat.conversations, chat.selectedConversationId]);
 
   return (
-    <div className="min-h-screen bg-background p-3 sm:p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-4 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Messages</h1>
-          <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Communicate with your freelancers</p>
-        </div>
-
+    <div className="bg-background -m-4 sm:-m-6 lg:-m-8">
+      <div className="w-full">
         {chat.loading ? (
           <div className="text-center py-12 text-muted-foreground">Loading messages...</div>
         ) : (

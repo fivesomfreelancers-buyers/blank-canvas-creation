@@ -121,7 +121,7 @@ const DashboardShell: React.FC<Props> = ({ items, active, onSelect, roleLabel, n
           </header>
           <div className="p-4 sm:p-6 lg:p-8">
             {active !== 'dashboard' && current && <h1 className="mb-6 hidden text-2xl font-bold tracking-tight md:block">{current.title}</h1>}
-            <div key={active} className="animate-in fade-in-0 slide-in-from-bottom-1 duration-300">{children}</div>
+            <div key={active} >{children}</div>
           </div>
         </main>
       </div>

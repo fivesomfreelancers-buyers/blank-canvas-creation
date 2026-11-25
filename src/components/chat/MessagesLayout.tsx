@@ -57,7 +57,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({ chat, heightClass = '' 
   }
 
   return (
-    <div className={`grid grid-cols-1 lg:grid-cols-[360px_1fr] xl:grid-cols-[400px_1fr] overflow-hidden rounded-2xl border bg-card shadow-sm h-[calc(100dvh-10rem)] min-h-[560px] [&>*]:min-h-0 ${heightClass}`}>
+    <div className={`grid grid-cols-1 lg:grid-cols-[360px_1fr] xl:grid-cols-[400px_1fr] overflow-hidden border-y bg-card h-[calc(100dvh-4rem)] min-h-[560px] [&>*]:min-h-0 ${heightClass}`}>
       <ConversationList
         conversations={chat.conversations}
         selectedConversationId={chat.selectedConversationId}
