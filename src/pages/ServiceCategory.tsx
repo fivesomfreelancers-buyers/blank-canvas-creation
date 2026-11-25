@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronRight, Star, Circle } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 import Navbar from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import SEO, { SITE_URL } from '@/components/SEO';
@@ -31,6 +32,7 @@ const ServiceCategory: React.FC = () => {
   const [searchParams] = useSearchParams();
   const page = Math.max(1, Number(searchParams.get('page') || 1));
 
+  const { user } = useAuth();
   const category = getCategoryBySlug(categorySlug);
   const subcategory = category?.subcategories.find((s) => s.slug === subcategorySlug);
   const content = getCategoryContent(categorySlug);
@@ -81,6 +83,10 @@ const ServiceCategory: React.FC = () => {
     : content?.summary ??
       `Hire ${category.name.toLowerCase()} freelancers on FIVESOM. Compare packages, prices and reviews, and pay safely through escrow.`;
 
+  const onlineTop = [...gigs].filter((g) => g.isOnline).sort((a, b) => b.rating - a.rating || b.reviews - a.reviews).slice(0, 6);
+  const rated = gigs.filter((g) => g.reviews > 0);
+  const avgRating = rated.length ? rated.reduce((s, g) => s + g.rating, 0) / rated.length : 0;
+  const reviewTotal = rated.reduce((s, g) => s + g.reviews, 0);
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const hasGigs = total > 0;
 
@@ -174,31 +180,50 @@ const ServiceCategory: React.FC = () => {
           </nav>
 
           {/* Hero */}
-          <header className="max-w-3xl mb-10">
-            <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-              {subcategory
-                ? `${subcategory.name} services`
-                : `${category.name} services — ${content?.headline ?? `hire ${category.name.toLowerCase()} freelancers`}`}
-            </h1>
-            <p className="text-base sm:text-lg text-muted-foreground">
-              {subcategory
-                ? `Order ${subcategory.name.toLowerCase()} from freelance ${category.name.toLowerCase()} specialists on FIVESOM. Compare packages, delivery times and reviews, then pay into escrow — the freelancer is paid only after you accept the work.`
-                : content?.intro?.[0]}
+          <header className="text-center max-w-3xl mx-auto mb-10">
+            <p className="text-sm font-semibold text-primary mb-2">
+              Welcome{user ? ' back' : ', buyer'} — let's find your {name.toLowerCase()} expert
             </p>
-            {!subcategory && content?.intro?.[1] && (
-              <p className="text-base text-muted-foreground mt-4">{content.intro[1]}</p>
+            <h1 className="text-3xl sm:text-5xl font-bold text-foreground mb-4">Find the Best {name} Freelancers</h1>
+            {reviewTotal > 0 && (
+              <div className="flex items-center justify-center gap-2 text-foreground font-medium">
+                Buyers rate these freelancers
+                <span className="flex">{[0,1,2,3,4].map((i) => <Star key={i} className="w-5 h-5 fill-primary text-primary" />)}</span>
+                {avgRating.toFixed(1)}/5
+              </div>
             )}
-            <div className="flex flex-wrap gap-3 mt-6">
+            {reviewTotal > 0 && <p className="text-sm text-muted-foreground mt-1">Based on {reviewTotal} real review{reviewTotal === 1 ? '' : 's'}</p>}
+            <p className="text-base text-muted-foreground mt-4">
+              {subcategory
+                ? `Order ${subcategory.name.toLowerCase()} from freelance ${category.name.toLowerCase()} specialists on FIVESOM. Pay into escrow — the freelancer is paid only after you accept the work.`
+                : content?.intro?.[0] ?? `Hire ${category.name.toLowerCase()} freelancers and pay safely through escrow.`}
+            </p>
+            <div className="flex flex-wrap justify-center gap-3 mt-6">
               <Button asChild>
-                <Link to={`/explore?category=${category.slug}${subcategory ? `&subcategory=${subcategory.slug}` : ''}`}>
-                  Browse all {name.toLowerCase()} gigs
-                </Link>
+                <Link to={`/explore?category=${category.slug}${subcategory ? `&subcategory=${subcategory.slug}` : ''}`}>Browse all {name} gigs</Link>
               </Button>
-              <Button asChild variant="outline">
-                <Link to="/how-it-works">How ordering works</Link>
-              </Button>
+              <Button asChild variant="outline"><Link to="/how-it-works">How ordering works</Link></Button>
             </div>
           </header>
+
+          {/* Selected + sibling subcategories */}
+          <ul className="flex flex-wrap justify-center gap-2 mb-12">
+            <li><Link to={`/services/${category.slug}`} className={`inline-flex px-4 py-2 rounded-full text-sm transition-colors ${!subcategory ? 'bg-primary text-primary-foreground' : 'bg-muted/70 text-foreground hover:bg-primary/15'}`}>All {category.name}</Link></li>
+            {category.subcategories.map((s) => (
+              <li key={s.slug}><Link to={`/services/${category.slug}/${s.slug}`} className={`inline-flex px-4 py-2 rounded-full text-sm transition-colors ${s.slug === subcategory?.slug ? 'bg-primary text-primary-foreground' : 'bg-muted/70 text-foreground hover:bg-primary/15'}`}>{s.name}</Link></li>
+            ))}
+          </ul>
+
+          {onlineTop.length > 0 && (
+            <section aria-labelledby="online-heading" className="mb-14">
+              <h2 id="online-heading" className="flex items-center gap-2 text-xl sm:text-2xl font-bold text-foreground mb-5">
+                <Circle className="w-3 h-3 fill-primary text-primary" /> Top {name} gigs — freelancers online now
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                {onlineTop.map((gig) => <GigCard key={gig.id} gig={gig} />)}
+              </div>
+            </section>
+          )}
 
           {/* Gig grid — real internal links to every gig page */}
           <section aria-labelledby="gigs-heading" className="mb-14">

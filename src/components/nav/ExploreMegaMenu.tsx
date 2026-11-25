@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  AppWindow, ChevronDown, ChevronRight, Clapperboard, Code2, Film, Globe, History, Palette, PenTool, Smartphone, Sparkles, Type, X,
+  AppWindow, ChevronDown, ChevronRight, Clapperboard, Code2, Film, Globe, History, Palette, PenTool, Smartphone, Sparkles, Type, X, Languages, Mic, Database, Wand2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { CATEGORIES } from '@/lib/categories';
@@ -11,6 +11,7 @@ import { clearInterests, readInterests, recordInterest, topInterests, type Inter
 const ICONS: Record<string, LucideIcon> = {
   'logo-design': PenTool, 'video-editing': Film, 'motion-graphics': Clapperboard, 'web-design': Globe,
   'content-writing': Type, 'app-ui-design': AppWindow, 'graphic-design': Palette, 'app-development': Smartphone, 'web-development': Code2,
+  translation: Languages, 'voice-audio': Mic, 'data-entry': Database, 'ai-product-video': Wand2,
 };
 export const categoryIcon = (slug: string) => ICONS[slug] ?? Sparkles;
 
@@ -38,6 +39,7 @@ const loadTags = () => {
 };
 
 const exploreHref = (cat?: string, sub?: string, q?: string) => {
+  if (cat && !q) return `/services/${cat}${sub ? `/${sub}` : ''}`;
   const p = new URLSearchParams();
   if (cat) p.set('category', cat);
   if (sub) p.set('subcategory', sub);
