@@ -30,7 +30,7 @@ export const Footer: React.FC = () => {
                 className="object-contain transition-opacity duration-300"
               />
               <span className="text-xl font-bold text-foreground">
-                {'\n'}
+                Fivesom
               </span>
             </div>
             <p className="text-sm text-muted-foreground mb-4">
@@ -73,29 +73,6 @@ export const Footer: React.FC = () => {
             <SocialLinks iconSize={18} showLabel />
 
             {/* Theme Toggle */}
-            <div className="flex items-center space-x-2 mt-4">
-              <span className="text-sm text-muted-foreground">Theme:</span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={toggleTheme}
-                className="flex items-center space-x-2 px-3 py-2 h-9 transition-all duration-300 hover:scale-105"
-                aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
-                aria-pressed={isDarkMode}
-              >
-                {isDarkMode ? (
-                  <>
-                    <Sun className="h-4 w-4 transition-transform duration-300" />
-                    <span className="text-xs font-medium">Light</span>
-                  </>
-                ) : (
-                  <>
-                    <Moon className="h-4 w-4 transition-transform duration-300" />
-                    <span className="text-xs font-medium">Dark</span>
-                  </>
-                )}
-              </Button>
-            </div>
           </div>
           
           <div>

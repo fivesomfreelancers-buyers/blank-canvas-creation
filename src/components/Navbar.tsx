@@ -192,14 +192,6 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              aria-label="Toggle theme"
-            >
-              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
 
             {user ? (
               <>
@@ -378,10 +370,6 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-            <button onClick={toggleTheme} className="flex items-center space-x-2 w-full text-left">
-              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              <span>Toggle Theme</span>
-            </button>
             {user ? (
               <>
                 <div className="flex items-center space-x-3 py-2 border-t border-border pt-4">

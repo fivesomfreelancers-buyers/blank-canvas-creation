@@ -19,7 +19,7 @@ const applyThemeClass = (theme: Theme) => {
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
-      return (localStorage.getItem("theme") as Theme) || "light";
+      return "light";
     }
     return "light";
   });
@@ -88,8 +88,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       });
   };
 
-  const setTheme = (newTheme: Theme) => changeTheme(newTheme);
-  const toggleTheme = () => changeTheme(theme === "dark" ? "light" : "dark");
+  // The platform uses a single light theme; theme switching is disabled.
+  void changeTheme;
+  const setTheme = (_newTheme: Theme) => setThemeState("light");
+  const toggleTheme = () => setThemeState("light");
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>

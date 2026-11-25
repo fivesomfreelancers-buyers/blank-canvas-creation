@@ -18,10 +18,10 @@ export const Logo: React.FC<LogoProps> = ({ className = "", linkTo = "/" }) => {
       <img 
         src={isDarkMode ? logoLight : logoDark} 
         alt="FIVESOM" 
-        className={`h-[60px] w-auto object-contain transition-opacity duration-300 ${className}`}
+        className={`h-11 w-auto object-contain transition-opacity duration-300 ${className}`}
       />
-      <span className="text-2xl font-bold text-foreground tracking-tight">
-        {'\n'}
+      <span className="text-2xl font-bold text-primary tracking-tight">
+        Fivesom
       </span>
     </div>
   );
