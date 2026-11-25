@@ -1,234 +1,89 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Search, ArrowRight, ShieldCheck, Globe2, Star } from 'lucide-react';
+import { Search, ArrowUpRight, TrendingUp } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import TypingHeadline from './TypingHeadline';
-import { CATEGORIES } from '@/lib/categories';
+import type { SearchGigResult } from '@/hooks/useGigSearch';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { MARKETPLACE_POSITIONING } from '@/content/marketplacePositioning';
-import { trackBuyerEvent } from '@/lib/buyerAnalytics';
-// Served as plain static files from /public so they work on any host (Netlify included).
-const HERO_POSTER = '/media/hero-bg-poster.jpg';
+import { QUICK_SEARCHES, popularServiceTags } from '@/lib/homeDiscovery';
+import stripeLogo from '@/assets/tools/stripe.svg';
+import supabaseLogo from '@/assets/partners/supabase.svg.asset.json';
+import oneDriveLogo from '@/assets/partners/onedrive.svg.asset.json';
+import worldRemitLogo from '@/assets/partners/worldremit.svg.asset.json';
+import poster from '@/assets/hero-bg-poster.jpg.asset.json';
+import videoMp4 from '@/assets/hero-bg.mp4.asset.json';
+import videoWebm from '@/assets/hero-bg.webm.asset.json';
+import video2Mp4 from '@/assets/hero-bg2.mp4.asset.json';
+import video2Webm from '@/assets/hero-bg2.webm.asset.json';
 
-// Background clips play one after the other: when one ends, the next one starts.
-const HERO_CLIPS = [
-  { webm: '/media/hero-bg.webm', mp4: '/media/hero-bg.mp4' },
-  { webm: '/media/hero-bg2.webm', mp4: '/media/hero-bg2.mp4' },
-];
+const CLIPS = [{ webm: videoWebm.url, mp4: videoMp4.url }, { webm: video2Webm.url, mp4: video2Mp4.url }];
 
-const POPULAR = [
-  'Logo Design',
-  'Video Editing',
-  'Web Development',
-  'Content Writing',
-  'App UI Design',
-  'Digital Marketing',
-];
-
-interface HomeHeroProps {
-  gigCount: number;
-  freelancerCount: number;
-}
-
-const HomeHero: React.FC<HomeHeroProps> = ({ gigCount, freelancerCount }) => {
-  const [q, setQ] = useState('');
-  const navigate = useNavigate();
-
-  // Hero background video: fades in once it can play, silently falls back to the
-  // existing background if it fails or the visitor prefers reduced motion.
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoReady, setVideoReady] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+const HomeHero: React.FC<{ gigs: SearchGigResult[] }> = ({ gigs }) => {
+  const [query, setQuery] = useState('');
   const [clipIndex, setClipIndex] = useState(0);
-  const clip = HERO_CLIPS[clipIndex];
-
+  const [ready, setReady] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const navigate = useNavigate();
+  const trending = popularServiceTags(gigs);
+  const clip = CLIPS[clipIndex];
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      setReducedMotion(true);
-    }
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const change = () => setReducedMotion(media.matches);
+    media.addEventListener('change', change);
+    return () => media.removeEventListener('change', change);
   }, []);
-
-  // Load and play whichever clip is current; on the first one this is the autoplay start.
   useEffect(() => {
-    const el = videoRef.current;
-    if (!el || reducedMotion) return;
-    setVideoReady(false);
-    el.load();
-    el.play().catch(() => {
-      /* autoplay blocked — the still image stays visible */
-    });
+    const video = videoRef.current;
+    if (!video || reducedMotion) return;
+    setReady(false);
+    video.load();
+    video.play().catch(() => {});
   }, [clipIndex, reducedMotion]);
-
-  // Rotating example service names (the 9 official categories) shown in the search box.
-  const examples = CATEGORIES.map((c) => c.name);
-  const [exampleIndex, setExampleIndex] = useState(0);
-  const [exampleVisible, setExampleVisible] = useState(true);
-
-  useEffect(() => {
-    if (examples.length < 2) return;
-    const fadeOut = window.setInterval(() => {
-      setExampleVisible(false);
-      window.setTimeout(() => {
-        setExampleIndex((i) => (i + 1) % examples.length);
-        setExampleVisible(true);
-      }, 350);
-    }, 2600);
-    return () => window.clearInterval(fadeOut);
-  }, [examples.length]);
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const term = q.trim();
-    navigate(term ? `/explore?q=${encodeURIComponent(term)}` : '/explore');
+  const search = (event: React.FormEvent) => {
+    event.preventDefault();
+    navigate(query.trim() ? `/explore?q=${encodeURIComponent(query.trim())}` : '/explore');
   };
-
   return (
-    <section className="home-hero-glass relative isolate overflow-hidden bg-background px-4 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8">
-      {/* Background layer: still image first, video fades in on top of it */}
+    <section className="home-hero-glass relative isolate overflow-hidden px-4 pb-10 pt-28 sm:px-6 sm:pb-12 sm:pt-32 lg:px-8">
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-        <img
-          src={HERO_POSTER}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-          loading="eager"
-          decoding="async"
-        />
-        {!reducedMotion && (
-          <video
-            ref={videoRef}
-            key={clipIndex}
-            poster={HERO_POSTER}
-            autoPlay
-            muted
-            playsInline
-            preload="auto"
-            disablePictureInPicture
-            tabIndex={-1}
-            onCanPlay={() => setVideoReady(true)}
-            onEnded={() => setClipIndex((i) => (i + 1) % HERO_CLIPS.length)}
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out ${
-              videoReady ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <source src={clip.webm} type="video/webm" />
-            <source src={clip.mp4} type="video/mp4" />
-          </video>
-        )}
-        {/* Readability overlay */}
+        <img src={poster.url} alt="" className="absolute inset-0 h-full w-full object-cover" fetchPriority="high" />
+        {!reducedMotion && <video ref={videoRef} key={clipIndex} autoPlay muted playsInline preload="metadata" poster={poster.url} tabIndex={-1} disablePictureInPicture onCanPlay={() => setReady(true)} onEnded={() => setClipIndex(i => (i + 1) % CLIPS.length)} className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${ready ? 'opacity-100' : 'opacity-0'}`}><source src={clip.webm} type="video/webm" /><source src={clip.mp4} type="video/mp4" /></video>}
         <div className="home-hero-veil absolute inset-0" />
       </div>
-
-      <div className="relative mx-auto max-w-6xl text-center">
-        <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-semibold text-primary">
-          <Globe2 className="w-3.5 h-3.5" />
-          Global freelance marketplace with an African heart
-        </div>
-
-        <h1 className="mx-auto mb-3 max-w-5xl text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl">
-          {MARKETPLACE_POSITIONING.heading}
-        </h1>
-        <p aria-hidden="true" className="mx-auto mb-6 min-h-[1.3em] max-w-5xl text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
-          <TypingHeadline
-            className="text-primary"
-            phrases={[
-              'Bring your next project to life.',
-              'Find a designer for your brand.',
-              'Build a website for your business.',
-              'Create videos your audience remembers.',
-              'Compare services. Choose your freelancer.',
-            ]}
-          />
-        </p>
-
-        <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-          {MARKETPLACE_POSITIONING.intro} {MARKETPLACE_POSITIONING.identity}
-        </p>
-
-        <div className="mx-auto mb-6 mt-8 max-w-4xl">
-          <form
-            onSubmit={submit}
-            className="home-search-glass flex items-stretch gap-2 rounded-3xl border p-2 sm:p-3"
-          >
-            <label htmlFor="hero-search" className="sr-only">
-              Search freelance services
-            </label>
-            <div className="relative flex min-w-0 flex-1 items-center px-2 sm:px-4">
-              <Search className="w-5 h-5 mr-3 text-muted-foreground shrink-0" aria-hidden />
-              <input
-                id="hero-search"
-                type="text"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder={`What service do you need? e.g. ${examples[exampleIndex]}`}
-                className="w-full py-3.5 bg-transparent outline-none text-sm sm:text-base text-foreground placeholder:text-transparent relative z-10"
-              />
-              {!q && (
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute left-12 right-4 flex items-center gap-1.5 text-sm sm:text-base text-muted-foreground truncate"
-                >
-                  What service do you need? e.g.
-                  <span
-                    className={`text-primary font-medium transition-all duration-300 ${
-                      exampleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'
-                    }`}
-                  >
-                    {examples[exampleIndex]}
-                  </span>
-                </span>
-              )}
-            </div>
-            <Button type="submit" size="lg" aria-label="Search" className="h-auto shrink-0 px-4 sm:px-6">
-              <span className="hidden sm:inline">Search</span> <ArrowRight className="w-4 h-4" aria-hidden />
-            </Button>
+      <div className="mx-auto max-w-5xl text-center">
+        <p className="mb-5 text-sm font-medium text-muted-foreground">African roots. Global talent. Your next great project.</p>
+        <h1 className="mx-auto max-w-4xl text-3xl font-semibold leading-tight text-foreground sm:text-4xl lg:text-5xl">{MARKETPLACE_POSITIONING.heading}</h1>
+        <div className="home-search-glass mx-auto mt-9 max-w-4xl rounded-2xl border p-3 text-left sm:mt-10 sm:p-6">
+          <form onSubmit={search} className="flex min-h-16 items-center gap-2 rounded-full bg-card px-4 py-2 text-card-foreground sm:px-6">
+            <label htmlFor="hero-search" className="sr-only">Search for services, skills, or professionals</label>
+            <input id="hero-search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Search for services, skills, or professionals..." className="home-search-input min-w-0 flex-1 bg-transparent py-3 text-base outline-none placeholder:text-muted-foreground sm:text-lg" />
+            <Button type="submit" size="icon" aria-label="Search" className="h-11 w-11 shrink-0"><Search className="h-5 w-5" /></Button>
           </form>
+          <Tabs defaultValue="quick" className="mt-5">
+            <TabsList className="grid h-12 w-full grid-cols-2 rounded-none border-b border-border bg-transparent p-0">
+              <TabsTrigger value="quick" className="home-search-tab h-full gap-2 rounded-none bg-transparent text-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none"><Search className="h-4 w-4" />Quick Search</TabsTrigger>
+              <TabsTrigger value="trending" className="home-search-tab h-full gap-2 rounded-none bg-transparent text-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none"><TrendingUp className="h-4 w-4" />Trending Searches</TabsTrigger>
+            </TabsList>
+            <TabsContent value="quick" className="mt-0 min-h-[200px] sm:min-h-[220px]">
+              {QUICK_SEARCHES.map(item => <Button key={item.query} variant="ghost" asChild className="home-suggestion h-auto min-h-11 w-full justify-between whitespace-normal rounded-none border-b border-border px-2 py-3 text-left text-foreground"><Link to={`/explore?q=${encodeURIComponent(item.query)}`}><span>{item.label}</span><ArrowUpRight className="shrink-0" /></Link></Button>)}
+            </TabsContent>
+            <TabsContent value="trending" className="mt-0 min-h-[200px] sm:min-h-[220px]">
+              <p className="px-2 pt-3 text-xs text-muted-foreground">Popular tags on live services</p>
+              {trending.length ? trending.map(item => <Button key={item.label} variant="ghost" asChild className="home-suggestion h-auto min-h-10 w-full justify-between whitespace-normal rounded-none border-b border-border px-2 py-2 text-left text-foreground"><Link to={`/explore?q=${encodeURIComponent(item.label)}`}><span>{item.label}</span><ArrowUpRight className="shrink-0" /></Link></Button>) : <p className="px-2 py-6 text-sm text-muted-foreground">Popular services will appear here when available.</p>}
+            </TabsContent>
+          </Tabs>
         </div>
-
-        <div className="flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center mb-8">
-          <Button size="lg" asChild><Link to="/buyer/jobs/new" onClick={() => trackBuyerEvent('post_project_click')}>Post Your Project <ArrowRight className="h-4 w-4" aria-hidden /></Link></Button>
-          <Button size="lg" variant="outline" asChild><Link to="/explore">Find a Freelancer</Link></Button>
-          <Link to="/register/freelancer" className="px-3 py-3 text-sm font-semibold text-primary underline-offset-4 hover:underline">Join as a Freelancer</Link>
-        </div>
-
-        <ul className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-muted-foreground mb-8">
-          <li className="inline-flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-primary" aria-hidden /> Escrow-protected payments
-          </li>
-          <li className="inline-flex items-center gap-2"><Globe2 className="w-4 h-4 text-primary" aria-hidden /> Flat $1 Buyer Service Fee</li>
-          <li className="inline-flex items-center gap-2">
-            <Star className="w-4 h-4 text-primary" aria-hidden /> Compare portfolios and seller reviews
-          </li>
-          {gigCount > 0 && (
-            <li className="inline-flex items-center gap-2">
-              <Search className="w-4 h-4 text-primary" aria-hidden />
-              {gigCount} service{gigCount === 1 ? '' : 's'} available now
-            </li>
-          )}
-          {freelancerCount > 0 && (
-            <li className="inline-flex items-center gap-2">
-              <Globe2 className="w-4 h-4 text-primary" aria-hidden />
-              {freelancerCount} registered freelancer{freelancerCount === 1 ? '' : 's'}
-            </li>
-          )}
-        </ul>
-
-        <div>
-          <p className="text-xs sm:text-sm text-muted-foreground mb-3">Find services for your project:</p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {POPULAR.map((term) => (
-              <Link
-                key={term}
-                to={`/explore?q=${encodeURIComponent(term)}`}
-                className="px-4 py-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary text-xs sm:text-sm font-medium transition-colors"
-              >
-                {term}
-              </Link>
-            ))}
-          </div>
-        </div>
+        <p className="mt-7 text-sm text-muted-foreground"><Link to="/explore" className="hover:text-foreground">Browse all services</Link><span className="mx-3" aria-hidden>·</span><Link to="/buyer/jobs/new" className="hover:text-foreground">Post your project <ArrowUpRight className="inline h-3.5 w-3.5" /></Link></p>
+      </div>
+      <div className="home-partners mx-auto mt-9 grid max-w-4xl grid-cols-2 items-center justify-items-center gap-x-4 gap-y-4 rounded-lg bg-card px-4 py-4 text-card-foreground sm:mt-10 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-8 sm:px-6">
+        <span className="text-xs font-medium text-muted-foreground">Powered by</span>
+        <span className="inline-flex items-center gap-2 font-semibold"><img src={stripeLogo} alt="" className="h-6 w-6 object-contain" />Stripe</span>
+        <span className="inline-flex items-center gap-2 font-semibold"><img src={supabaseLogo.url} alt="" className="h-6 w-6 object-contain" />Supabase</span>
+        <span className="inline-flex items-center gap-2 text-sm font-semibold"><img src={oneDriveLogo.url} alt="" className="h-7 w-9 object-contain" />Microsoft OneDrive</span>
+        <span className="home-worldremit inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold"><img src={worldRemitLogo.url} alt="" className="h-6 w-6 object-contain" />WorldRemit</span>
       </div>
     </section>
   );
 };
-
 export default HomeHero;

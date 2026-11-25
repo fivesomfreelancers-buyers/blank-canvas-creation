@@ -1,6 +1,10 @@
 # Mobile-first FIVESOM redesign
 
 ## Homepage appearance follow-up
+- [x] Rebuild the video hero with large search, quick/trending tabs and working service suggestions.
+- [x] Add original LifeWolf/WaliNews client logos and clearly labelled draft testimonials; add three real-gig discovery cards.
+- [x] Show Stripe, Supabase, OneDrive and WorldRemit technology logos; user confirmed both additional services are used.
+- [x] Verify the redesigned homepage, search tabs, links and playing video; 320/390/834px layouts have no horizontal overflow and four tests passed.
 - [x] Remove the first-section freelancer animation; use black brand wordmarks and scoped glass search styling without restyling other sections.
 - [x] Verify homepage search and updated appearance in the browser; black wordmarks, no freelancer animation, working search and no horizontal overflow at 390px.
 

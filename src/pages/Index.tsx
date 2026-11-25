@@ -1,7 +1,8 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import HomeHero from '../components/home/HomeHero';
-import PopularServices from '../components/home/PopularServices';
+import ClientProjects from '../components/home/ClientProjects';
+import ServiceDiscovery from '../components/home/ServiceDiscovery';
 import HowFivesomWorks from '../components/home/HowFivesomWorks';
 import EscrowSection from '../components/home/EscrowSection';
 import FeaturedFreelancers from '../components/home/FeaturedFreelancers';
@@ -12,12 +13,10 @@ import SEO from '../components/SEO';
 import { organizationSchema, webSiteSchema, serviceSchema } from '@/lib/seo/schemas';
 import { faqPageSchema } from '@/lib/seo/homeFaq';
 import { useGigSearch } from '@/hooks/useGigSearch';
-import { useHomeStats } from '@/hooks/useHomeStats';
 import { MARKETPLACE_POSITIONING } from '@/content/marketplacePositioning';
 
 const Index = () => {
   const { gigs, loading } = useGigSearch({ pageSize: 48 });
-  const { activeGigs, freelancers } = useHomeStats();
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-300">
@@ -29,9 +28,10 @@ const Index = () => {
       />
       <Navbar />
       <main>
-        <HomeHero gigCount={activeGigs} freelancerCount={freelancers} />
+        <HomeHero gigs={gigs} />
         <div className="home-story">
-          <PopularServices />
+          <ClientProjects />
+          <ServiceDiscovery gigs={gigs} loading={loading} />
           <HowFivesomWorks />
           <FeaturedFreelancers gigs={gigs} loading={loading} />
           <EscrowSection />

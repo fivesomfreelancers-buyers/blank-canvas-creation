@@ -2,7 +2,7 @@
 export const MARKETPLACE_POSITIONING = {
   title: 'FIVESOM | Hire African Freelancers & Post Your Project',
   description: 'Hire skilled African freelancers for design, websites, video and writing. Compare prices or post your project. Global hiring with a flat $1 Buyer Service Fee.',
-  heading: 'FIVESOM — Hire Skilled Freelancers',
+  heading: 'Hire talented professionals who bring your ideas to life.',
   intro: 'Your project deserves great talent. Find professional design, websites, video editing and writing at prices that fit your budget.',
   identity: 'African-focused, Somali-rooted and global. Connecting businesses and individuals in Africa, Asia, Europe and beyond with digital talent.',
   buyerHeading: 'Bring your project. Find your professional.',

@@ -1,6 +1,7 @@
 # Project rules
 
 - Homepage glass effects stay scoped to hero classes so other pages and homepage sections retain their existing surfaces.
+- Homepage discovery uses published search results for service cards and tag-frequency suggestions; this avoids invented profiles and search analytics.
 
 - New and corrected gigs share the server review submission helper; confirm the persisted review state before reporting success so editing cannot bypass approval.
 - Message, order, and system notification sends share the provider helper and stable event idempotency keys; report success only with a provider acceptance ID.

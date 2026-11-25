@@ -53,6 +53,10 @@
     --brand-wordmark: 0 0% 0%;
     --hero-glass-surface: 0 0% 100%;
     --hero-glass-shadow: 200 19% 18%;
+    --hero-background: 200 19% 5%;
+    --hero-foreground: 0 0% 100%;
+    --hero-muted: 205 14% 85%;
+    --client-logo-background: 0 0% 100%;
     --shadow-hero-glass: 0 16px 48px -20px hsl(var(--hero-glass-shadow) / 0.3), inset 0 1px 0 hsl(var(--hero-glass-surface) / 0.85);
 
 
@@ -219,17 +223,39 @@
 @layer components {
   .brand-wordmark { color: hsl(var(--brand-wordmark)); letter-spacing: 0; }
 
+  .home-hero-glass {
+    --background: var(--hero-background);
+    --foreground: var(--hero-foreground);
+    --muted-foreground: var(--hero-muted);
+    --card: 0 0% 100%;
+    --card-foreground: 200 19% 18%;
+    --border: 0 0% 100% / 0.18;
+    background: hsl(var(--hero-background));
+    color: hsl(var(--hero-foreground));
+  }
+
+  .client-logo-surface { background: hsl(var(--client-logo-background)); }
+
   .home-hero-veil {
-    background: linear-gradient(180deg, hsl(var(--background) / 0.84), hsl(var(--secondary) / 0.72) 55%, hsl(var(--background)));
-    backdrop-filter: blur(3px);
+    background: linear-gradient(180deg, hsl(var(--hero-background) / 0.76), hsl(var(--hero-background) / 0.60) 55%, hsl(var(--hero-background) / 0.91));
   }
 
   .home-search-glass {
-    background: hsl(var(--hero-glass-surface) / 0.66);
-    border-color: hsl(var(--hero-glass-surface) / 0.85);
+    background: hsl(var(--hero-glass-surface) / 0.12);
+    border-color: hsl(var(--hero-glass-surface) / 0.25);
     box-shadow: var(--shadow-hero-glass);
     backdrop-filter: blur(22px) saturate(140%);
     -webkit-backdrop-filter: blur(22px) saturate(140%);
+  }
+
+  .home-search-tab[data-state='active'] { border-bottom: 2px solid hsl(var(--hero-foreground)); }
+  .home-suggestion:hover { background: hsl(var(--hero-glass-surface) / 0.1); color: hsl(var(--hero-foreground)); }
+  .home-search-input, .home-partners { --muted-foreground: 201 7% 40%; }
+  .home-worldremit { background: hsl(var(--hero-background)); color: hsl(var(--hero-foreground)); }
+  @media (max-width: 639px) {
+    .home-partners > :first-child { grid-column: 1 / -1; }
+    .home-partners > span { font-size: 0.75rem; }
+    .home-partners > span img { width: 1.5rem; }
   }
 
   .home-story {
