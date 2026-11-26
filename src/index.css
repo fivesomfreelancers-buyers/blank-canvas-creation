@@ -744,6 +744,10 @@
 .classroom-live-grid { height: calc(100dvh - 145px); min-height: 540px; display: grid; min-width: 0; }
 .classroom-with-host { grid-template-columns: minmax(0, 1fr) 250px; }
 .classroom-live-grid .lk-video-conference { min-width: 0; height: 100%; }
+.academy-classroom .lk-prejoin { width: 100%; max-width: 100%; min-width: 0; }
+.academy-classroom .lk-prejoin .lk-button { white-space: normal; }
+.academy-classroom header > div { min-width: 0; }
+.academy-classroom h1 { overflow-wrap: anywhere; }
 @media (max-width: 900px) {
  .classroom-with-host { grid-template-columns: minmax(0, 1fr); height: auto; }
  .classroom-live-grid .lk-video-conference { height: calc(100dvh - 190px); min-height: 420px; }

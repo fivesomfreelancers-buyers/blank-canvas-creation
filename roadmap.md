@@ -1,10 +1,11 @@
 # Mobile-first FIVESOM redesign
 
 ## Academy live classroom
-- [ ] Add internal classroom entry, device preview and responsive teaching layout.
-- [ ] Connect secure multiparty video — requires LiveKit URL, API key and API secret.
-- [ ] Add student live schedules/My Learning and secure session lifecycle, scheduling limits and attendance.
-- [ ] Verify authenticated instructor/student live classroom end-to-end.
+- [x] Add internal classroom entry, device preview and responsive teaching layout.
+- [x] Verify saved LiveKit credentials against the room service; four deployed-function/security tests and eleven Academy rule tests pass.
+- [x] Add student live schedules/My Learning and secure session lifecycle, scheduling limits and attendance.
+- [x] Add enrolled-student course community, connection-error recovery and mobile classroom sizing.
+- [ ] Verify authenticated instructor/student live classroom end-to-end — user-managed Supabase cannot supply a testing session; sandbox WebRTC connection timed out although the LiveKit room service accepted credentials. No live sessions exist yet.
 
 ## Homepage appearance follow-up
 - [x] Remove the marked three freelancer discovery cards and replace client cards with a one-at-a-time glass showcase; hover, keyboard and touch selection verified at 320/390/834px plus desktop.

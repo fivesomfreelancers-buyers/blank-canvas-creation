@@ -22,3 +22,5 @@
 - Off-platform contact detection lives in the database (detect_offplatform_contact + enforce_content_safety triggers); the browser highlighter and report_content_scan RPC only display and log, so blocking cannot be bypassed client-side.
 
 - Academy classrooms use LiveKit with server-issued enrollment-scoped tokens; no egress/recording calls are allowed, and scheduling limits remain database-enforced.
+- The classroom function owns its Deno dependency configuration so server SDK tests resolve independently of frontend packages.
+- Enrolled students access course community through the same RLS-protected posts as Instructor Studio; never expose community posts on public course previews.
