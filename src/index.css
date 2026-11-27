@@ -754,3 +754,7 @@
  .classroom-host { border-left: 0; border-top: 1px solid hsl(var(--border)); max-height: 300px; }
  .academy-classroom .lk-control-bar { flex-wrap: wrap; height: auto; gap: 6px; }
 }
+
+.chat-pattern{background-size:1000px auto;background-repeat:repeat;opacity:.7;}
+.dark .chat-pattern{filter:invert(1) hue-rotate(180deg);mix-blend-mode:screen;opacity:.35;}
+.chat-pattern~*{position:relative;z-index:1;}

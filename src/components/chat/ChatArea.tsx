@@ -1,3 +1,4 @@
+import chatPattern from "@/assets/chat-pattern.png.asset.json";
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -160,7 +161,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({
           ) : 'Select a conversation'}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col flex-1 min-h-0 min-w-0 p-0 overflow-hidden">
+      <CardContent className="relative flex flex-col flex-1 min-h-0 min-w-0 p-0 overflow-hidden">
+        <div aria-hidden className="chat-pattern pointer-events-none absolute inset-0" style={{ backgroundImage: `url(${chatPattern.url})` }} />
         {!selectedConvo ? (
           <div className="flex-1 flex items-center justify-center text-muted-foreground">
             Select a conversation to view messages

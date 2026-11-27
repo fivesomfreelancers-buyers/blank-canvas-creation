@@ -1,3 +1,4 @@
+import { ColorModePicker } from "@/components/ColorModePicker";
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -152,6 +153,7 @@ const BuyerSettings = ({ onProfileUpdated }: BuyerSettingsProps) => {
           <p className="text-muted-foreground mt-2">Manage your account preferences and information</p>
         </div>
 
+        <ColorModePicker />
         <Tabs defaultValue="profile" className="space-y-6">
           <TabsList className="grid w-full grid-cols-1">
             <TabsTrigger value="profile" className="flex items-center space-x-2">
