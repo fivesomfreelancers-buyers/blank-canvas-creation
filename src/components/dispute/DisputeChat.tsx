@@ -225,7 +225,7 @@ const DisputeChat: React.FC<DisputeChatProps> = ({ orderId, disputeId: initialDi
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col min-w-0 p-0 overflow-hidden">
-        <div className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-4 space-y-3 max-h-[420px] min-h-[280px]">
+        <div className="chat-bg flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-4 space-y-3 max-h-[420px] min-h-[280px]">
           {messages.length === 0 ? (
             <div className="text-center text-sm text-muted-foreground py-8">
               No messages yet. Share your side of the story — Fivesom will mediate.

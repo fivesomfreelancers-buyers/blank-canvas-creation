@@ -35,7 +35,7 @@ export default function CourseCommunity({ courseId, instructorId }: { courseId: 
     } catch { toast.error('Could not send your community message. Please try again.'); }
     finally { setBusy(false); }
   };
-  return <section className="space-y-4">
+  return <section className="chat-bg space-y-4 rounded-2xl p-4">
     <h2 className="flex items-center gap-2 text-xl font-bold"><MessageSquare className="h-5 w-5 text-primary" />Course community</h2>
     <Textarea aria-label="Community message" placeholder="Message your course community…" value={body} onChange={e => setBody(e.target.value)} rows={3} />
     <Button onClick={send} disabled={busy || !body.trim()}><Send className="h-4 w-4" />{busy ? 'Sending…' : 'Send message'}</Button>
