@@ -29,8 +29,8 @@ const Index = () => {
       <main>
         <HomeHero gigs={gigs} />
         <div className="home-story">
-          <ClientProjects />
           <CategoryGrid />
+          <ClientProjects />
           <FeaturedFreelancers gigs={gigs} loading={loading} />
           <EscrowSection />
           <HomeFAQ />

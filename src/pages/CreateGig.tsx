@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Check } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import StepIndicator from '@/components/gig/StepIndicator';
 import GigOverview from '@/components/gig/GigOverview';
@@ -53,6 +55,7 @@ const CreateGig = () => {
   const { gigId } = useParams<{ gigId?: string }>();
   const isEditMode = !!gigId;
   const [currentStep, setCurrentStep] = useState(1);
+  const [confirmation, setConfirmation] = useState<'pending' | 'updated' | null>(null);
   const [loadingGig, setLoadingGig] = useState(!!gigId);
   const [hasExistingMedia, setHasExistingMedia] = useState(false);
   const [gigData, setGigData] = useState<GigData>({
@@ -363,13 +366,7 @@ const CreateGig = () => {
         !isEditMode || !['approved', 'published'].includes(gigRecord.review_status));
       const pendingReview = saved.review_status === 'pending_review';
 
-      toast({
-        title: pendingReview ? "Gig Submitted for Review!" : "Gig Updated!",
-        description: pendingReview
-          ? "Our team will review your gig within 5 hours. You will get an answer — approved or returned with corrections."
-          : "Your gig has been updated.",
-      });
-      navigate('/freelancer/gigs');
+      setConfirmation(pendingReview ? 'pending' : 'updated');
     } catch (error) {
       console.error('Error publishing gig:', error);
       const message = error && typeof error === 'object' && 'message' in error
@@ -385,7 +382,7 @@ const CreateGig = () => {
   const CurrentStepComponent = steps[currentStep - 1].component;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10 py-4 sm:py-8 px-3 sm:px-4 pt-8">
+    <div className="min-h-screen bg-background px-3 py-8 sm:px-6 sm:py-10">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-2xl font-bold text-foreground mb-1">{isEditMode ? 'Edit Gig' : 'Create New Gig'}</h1>
@@ -394,7 +391,7 @@ const CreateGig = () => {
         <div className="mb-6 sm:mb-8 overflow-x-auto">
           <StepIndicator currentStep={currentStep} steps={steps} />
         </div>
-        <div className="bg-card/80 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-xl border border-border mt-4 sm:mt-8">
+        <div className="mt-4 rounded-lg border border-border bg-card p-4 sm:mt-8 sm:p-6 lg:p-8">
           <CurrentStepComponent gigData={gigData} updateGigData={updateGigData} onNext={goToNextStep} onPrevious={goToPreviousStep} onPublish={handlePublish} hasExistingMedia={hasExistingMedia} isFirstStep={currentStep === 1} isLastStep={currentStep === 4} />
         </div>
         <div className="mt-4 sm:mt-6 text-center">
@@ -404,6 +401,16 @@ const CreateGig = () => {
           </Link>
         </div>
       </div>
+      <Dialog open={confirmation !== null} onOpenChange={(open) => { if (!open) navigate('/freelancer/gigs'); }}>
+        <DialogContent className="max-w-md text-center">
+          <div className="gig-success-mark mx-auto mt-3 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary"><Check className="h-10 w-10" strokeWidth={2.5} /></div>
+          <DialogHeader className="sm:text-center">
+            <DialogTitle className="text-2xl">{confirmation === 'pending' ? 'Gig submitted successfully' : 'Gig updated successfully'}</DialogTitle>
+            <DialogDescription className="pt-2 leading-relaxed">{confirmation === 'pending' ? 'Your gig is Pending Review. Our team will review it within 5 hours. It becomes visible after approval.' : 'Your changes have been saved.'}</DialogDescription>
+          </DialogHeader>
+          <Button className="mt-3 w-full" onClick={() => navigate('/freelancer/gigs')}><Check />Done</Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

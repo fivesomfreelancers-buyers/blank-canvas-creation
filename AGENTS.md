@@ -24,3 +24,4 @@
 - Academy classrooms use LiveKit with server-issued enrollment-scoped tokens; no egress/recording calls are allowed, and scheduling limits remain database-enforced.
 - The classroom function owns its Deno dependency configuration so server SDK tests resolve independently of frontend packages.
 - Enrolled students access course community through the same RLS-protected posts as Instructor Studio; never expose community posts on public course previews.
+- Marketplace presentation shares semantic theme tokens and existing cards; dashboard activity derives from live order counts, and gig confirmations appear only after the existing persisted-state check.

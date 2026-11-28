@@ -13,7 +13,7 @@ import type { SearchGigResult } from '@/hooks/useGigSearch';
 const GigCard: React.FC<{ gig: SearchGigResult }> = ({ gig }) => (
   <Link
     to={gigPath(gig)}
-    className="group overflow-hidden rounded-lg border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl"
+    className="marketplace-card group flex min-w-0 flex-col overflow-hidden rounded-lg border border-border bg-card transition-[border-color,box-shadow] duration-200 hover:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
   >
     <div className="relative overflow-hidden">
       {gig.image ? (
@@ -25,7 +25,7 @@ const GigCard: React.FC<{ gig: SearchGigResult }> = ({ gig }) => (
           height={300}
           loading="lazy"
           decoding="async"
-          className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="aspect-[4/3] w-full object-cover transition-transform duration-300 motion-safe:group-hover:scale-[1.03]"
         />
       ) : (
         <div className="aspect-[4/3] w-full bg-muted flex items-center justify-center">
@@ -37,7 +37,7 @@ const GigCard: React.FC<{ gig: SearchGigResult }> = ({ gig }) => (
       </div>
     </div>
 
-    <div className="p-4">
+    <div className="flex flex-1 flex-col p-3 sm:p-4">
       <h3 className="mb-3 min-h-[2.75rem] line-clamp-2 text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
         {gig.title}
       </h3>
@@ -58,7 +58,7 @@ const GigCard: React.FC<{ gig: SearchGigResult }> = ({ gig }) => (
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
         <div className="flex items-center gap-0.5">
           <Star className="h-3.5 w-3.5 fill-primary text-primary" />
           <span className="text-xs font-medium text-foreground">

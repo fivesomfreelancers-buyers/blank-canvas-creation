@@ -338,8 +338,8 @@ const GigDetails = () => {
 
       />
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 py-8 pt-24">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="gig-detail-page mx-auto max-w-7xl px-4 pb-12 pt-24 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-10">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
             {/* Unified Media Gallery (video + images) */}

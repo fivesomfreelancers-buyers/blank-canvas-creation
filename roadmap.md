@@ -59,3 +59,10 @@
 ## Completed follow-ups (Sep 27)
 - [x] Copy-link buttons on freelancer profile and gig pages (verified at 390px, no errors)
 - [x] Production build + prerender verified (238 static pages, canonical/meta present)
+
+## Consistent website refresh
+- [x] Refine shared light/dark tokens, Home, Explore, gig/job cards and gig detail spacing.
+- [x] Simplify Buyer/Freelancer dashboard navigation and real-data order activity indicators.
+- [x] Add animated gig confirmation after persisted success, retaining Pending Review.
+- [x] Check Home, Explore, Jobs, filters, search and a real gig at 390px/1280px; 13 regression tests pass.
+- [ ] Verify signed-in dashboards and animated gig submission end-to-end — user-managed Supabase cannot supply a testing session.

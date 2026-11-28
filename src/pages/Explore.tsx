@@ -114,11 +114,11 @@ const Explore = () => {
       
       <div className="px-4 pb-16 pt-24 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <nav className="mb-8 flex gap-2 border-b border-border pb-4" aria-label="Marketplace"><Button variant={marketplace === 'gigs' ? 'default' : 'ghost'} onClick={() => setMarketplace('gigs')}>Talents</Button><Button variant={marketplace === 'jobs' ? 'default' : 'ghost'} onClick={() => setMarketplace('jobs')}>Jobs</Button></nav>
+          <nav className="mb-8 flex gap-2 border-b border-border pb-4" aria-label="Marketplace"><Button aria-pressed={marketplace === 'gigs'} variant={marketplace === 'gigs' ? 'default' : 'ghost'} onClick={() => setMarketplace('gigs')}>Talents</Button><Button aria-pressed={marketplace === 'jobs'} variant={marketplace === 'jobs' ? 'default' : 'ghost'} onClick={() => setMarketplace('jobs')}>Jobs</Button></nav>
           {marketplace === 'jobs' ? <JobsMarketplace /> : <>
           <div className="mb-8 max-w-3xl">
             <span className="mb-3 block text-sm font-semibold text-primary">Fivesom marketplace</span>
-            <h1 className="mb-3 text-3xl font-bold text-foreground md:text-5xl">Find the right service for your next project</h1>
+            <h1 className="mb-3 text-3xl font-semibold leading-tight text-foreground md:text-4xl">Find the right service for your next project</h1>
             <p className="text-base text-muted-foreground sm:text-lg">Compare real work, seller ratings, delivery options, and clear starting prices.</p>
             <p className="mt-3 text-sm font-medium text-foreground">
               {loading ? 'Loading...' : `Showing ${currentGigs.length} of ${total} gigs`}
@@ -126,8 +126,8 @@ const Explore = () => {
           </div>
 
           {/* Search and Filters */}
-          <div className="mb-8 rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5">
-            <div className="flex flex-col lg:flex-row gap-4">
+          <div className="mb-8 border-y border-border py-5">
+            <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap">
               <div className="flex-1 relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
@@ -144,7 +144,7 @@ const Explore = () => {
                 aria-label="Filter by category"
                 value={selectedCategory}
                 onChange={(e) => { setSelectedCategory(e.target.value); setSelectedSubcategory('all'); setCurrentPage(1); }}
-                className="h-12 rounded-md border border-input bg-background px-4 text-foreground outline-none focus:ring-2 focus:ring-ring"
+                className="h-12 min-w-0 max-w-full rounded-md border border-input bg-card px-4 text-foreground outline-none focus:ring-2 focus:ring-ring"
               >
                 {categories.map(category => (
                   <option key={category.slug} value={category.slug}>{category.name}</option>
@@ -156,7 +156,7 @@ const Explore = () => {
                   aria-label="Filter by subcategory"
                   value={selectedSubcategory}
                   onChange={(e) => { setSelectedSubcategory(e.target.value); setCurrentPage(1); }}
-                  className="h-12 rounded-md border border-input bg-background px-4 text-foreground outline-none focus:ring-2 focus:ring-ring"
+                  className="h-12 min-w-0 max-w-full rounded-md border border-input bg-card px-4 text-foreground outline-none focus:ring-2 focus:ring-ring"
                 >
                   <option value="all">All {activeCategory.name}</option>
                   {activeCategory.subcategories.map(sub => (
@@ -187,7 +187,7 @@ const Explore = () => {
                       <label className="block text-sm font-medium mb-3 text-foreground">Minimum Rating</label>
                       <div className="flex space-x-2">
                         {[0, 3, 4, 4.5, 5].map((rating) => (
-                          <button
+                          <Button
                             key={rating}
                             onClick={() => setSelectedRating(rating)}
                             className={`px-3 py-1 rounded-lg text-sm transition-colors ${
@@ -195,7 +195,7 @@ const Explore = () => {
                             }`}
                           >
                             {rating === 0 ? 'Any' : `${rating}+`} ⭐
-                          </button>
+                          </Button>
                         ))}
                       </div>
                     </div>

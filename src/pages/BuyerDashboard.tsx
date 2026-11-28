@@ -48,7 +48,7 @@ import BuyerHelp from './buyer/BuyerHelp';
 import BuyerSettings from './buyer/BuyerSettings';
 import { useNewDeliveries } from '@/hooks/useNewDeliveries';
 import MyJobs from './jobs/MyJobs';
-import DashboardShell, { StatTile } from '@/components/dashboard/DashboardShell';
+import DashboardShell, { StatTile, OrderActivity } from '@/components/dashboard/DashboardShell';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 
 const sidebarItems = [
@@ -210,16 +210,18 @@ const BuyerDashboard = () => {
               <StatTile label="Available Balance" value={`$${Number(stats.walletBalance).toFixed(2)}`} hint="Wallet balance" icon={Wallet} />
             </div>
 
+            <OrderActivity active={stats.activeOrders} completed={stats.completedOrders} />
+
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               {[
                 { t: 'Find talent', d: 'Browse professional services', icon: Search, go: () => navigate('/explore') },
                 { t: 'Post a job', d: 'Get proposals from freelancers', icon: Briefcase, go: () => setActiveSection('jobs') },
                 { t: 'My orders', d: newDeliveryCount ? `${newDeliveryCount} new deliveries` : 'Track your work', icon: Clock, go: () => setActiveSection('orders') },
               ].map(c => (
-                <button key={c.t} type="button" onClick={c.go} className="group flex items-center gap-4 rounded-2xl border bg-card p-5 text-left transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+                <Button variant="outline" key={c.t} type="button" onClick={c.go} className="group flex h-auto items-center justify-start gap-4 whitespace-normal rounded-lg border bg-card p-5 text-left hover:border-primary/40">
                   <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><c.icon className="h-5 w-5" /></span>
                   <span><span className="block font-semibold">{c.t}</span><span className="text-sm text-muted-foreground">{c.d}</span></span>
-                </button>
+                </Button>
               ))}
             </div>
           </div>

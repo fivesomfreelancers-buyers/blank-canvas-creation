@@ -35,7 +35,7 @@ import BlueTickCard from '@/components/freelancer/BlueTickCard';
 import { useNewOrders } from '@/hooks/useNewOrders';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import MyApplications from './jobs/MyApplications';
-import DashboardShell, { StatTile } from '@/components/dashboard/DashboardShell';
+import DashboardShell, { StatTile, OrderActivity } from '@/components/dashboard/DashboardShell';
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 interface UserProfile {
@@ -287,8 +287,10 @@ const FreelancerDashboard = () => {
               <StatTile label="Completed Orders" value={stats.completedOrders} hint="Successfully delivered" icon={CheckCircle} />
             </div>
 
+            <OrderActivity active={stats.activeOrders} completed={stats.completedOrders} />
+
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-              <div className="rounded-2xl border bg-card p-5 lg:col-span-2">
+              <div className="rounded-lg border bg-card p-5 lg:col-span-2">
                 <div className="mb-4 flex items-center justify-between">
                   <p className="font-semibold">Orders this week</p>
                   <span className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">Weekly</span>
@@ -298,13 +300,13 @@ const FreelancerDashboard = () => {
                     <BarChart data={weekly}>
                       <XAxis dataKey="day" axisLine={false} tickLine={false} fontSize={12} />
                       <YAxis allowDecimals={false} axisLine={false} tickLine={false} fontSize={12} width={28} />
-                      <Tooltip cursor={{ fill: 'hsl(var(--muted))' }} />
-                      <Bar dataKey="orders" radius={[12, 12, 12, 12]} fill="hsl(var(--primary))" barSize={34} />
+                      <Tooltip cursor={{ fill: 'hsl(var(--muted))' }} contentStyle={{ background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))', borderRadius: 8 }} />
+                      <Bar dataKey="orders" radius={[4, 4, 0, 0]} fill="hsl(var(--primary))" barSize={28} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
-              <div className="space-y-3 rounded-2xl border bg-card p-5">
+              <div className="space-y-3 rounded-lg border bg-card p-5">
                 <p className="font-semibold">Quick actions</p>
                 <Button className="w-full justify-start" onClick={() => setActiveSection('gigs')}><Plus className="mr-2 h-4 w-4" />Create new gig</Button>
                 <Button variant="outline" className="w-full justify-start" onClick={() => setActiveSection('deliver')}><Package className="mr-2 h-4 w-4" />Deliver work</Button>
